@@ -1,0 +1,4426 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "1.0.0",
+    "title": "eGov Pension module.",
+    "description": "APIs for Pension module. This modules handles Below functionality.\n  1. Save Employee To Pension Notification Register\n  2. Search Employee in Pension Notification Register \n  3. Process Workflow\n  4. Search Workflow\n  5. Search Employee From HRMS\n  6. Search Pensioner\n  7. Search Pensioner For Pension Revision\n  8. Upadte Revised Pension\n  9. Create Revised Pension\n  10. Workflow Accessibility\n  11. Claim Workflow\n  12. Release Workflow\n  13. Close Workflow\n  14. Calculate Benefit\n  15. Check dependent eligibility for Benefit\n  16. Search Pension Register\n  17. Push Manual Register to Pension Notification Register\n  18. Save Employee Disability (Disability Registration)\n  19. Get Employee Disability\n  20. Search Pension Employees\n  21. Discontinuation of Pensioner Pension\n  22. Search Closed Application\n  23. Initiate ReComputation of Workflow\n    \n",
+    "contact": {
+      "name": "eGovernments Foundation",
+      "email": "contacts@egovernments.org"
+    }
+  },
+  "schemes": [
+    "https"
+  ],
+  "basePath": "/pension-services",
+  "x-api-id": "org.egov.pension.services",
+  "x-common-path": "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-1-1.yml",
+  "paths": {
+    "/v1/_saveEmployeeToPensionNotificationRegister": {
+      "post": {
+        "summary": "Save employee list from Pension Schedular to Pension Notification Register",
+        "description": "Save employee list from Pension Schedular to Pension Notification Register",
+        "parameters": [
+          {
+            "name": "saveRequest",
+            "in": "body",
+            "description": "Details for the employee + RequestInfo meta data.",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/SaveEmployeeForPensionNotificationRegisterRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ReponseInfo",
+            "schema": {
+              "$ref": "#/definitions/CommonResponseModel"
+            }
+          },
+          "400": {
+            "description": "Save failed",
+            "schema": {
+              "$ref": "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes"
+            }
+          }
+        },
+        "tags": [
+          "Save Employee To Pension Notification Register"
+        ]
+      }
+    },
+    "/v1/_searchPensionNotificationRegister": {
+      "post": {
+        "summary": "Get the list of employees",
+        "description": "Search and get the list of employees with name, code and date of birth.",
+        "parameters": [
+          {
+            "$ref": "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-1-1.yml#/parameters/requestInfo"
+          },
+          {
+            "$ref": "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-1-1.yml#/parameters/tenantId"
+          },
+          {
+            "name": "code",
+            "in": "query",
+            "description": "Search based on Employee Code",
+            "type": "string"
+          },
+          {
+            "name": "name",
+            "in": "query",
+            "description": "Search based on Employee Name",
+            "type": "string"
+          },
+          {
+            "name": "dob",
+            "in": "query",
+            "description": "Search based on Employee DOB",
+            "type": "integer"
+          },
+          {
+            "name": "endDate",
+            "in": "query",
+            "description": "Search based on retirement date",
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ReponseInfo with list of employees",
+            "schema": {
+              "$ref": "#/definitions/SearchPensionNotificationRegisterResponse"
+            }
+          },
+          "400": {
+            "description": "Search failed",
+            "schema": {
+              "$ref": "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes"
+            }
+          }
+        },
+        "tags": [
+          "Search Pension Notification Register"
+        ]
+      }
+    },
+    "/v1/_processWorkflow": {
+      "post": {
+        "summary": "Process workflow",
+        "description": "Intiate and all other actions related to workflow",
+        "parameters": [
+          {
+            "name": "processRequest",
+            "in": "body",
+            "description": "Workflow details + RequestInfo meta data.",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/ProcessWorkflowRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ReponseInfo",
+            "schema": {
+              "$ref": "#/definitions/CommonResponseModel"
+            }
+          },
+          "400": {
+            "description": "Process failed",
+            "schema": {
+              "$ref": "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes"
+            }
+          }
+        },
+        "tags": [
+          "Process workflow"
+        ]
+      }
+    },
+    "/v1/_searchWorkflow": {
+      "post": {
+        "summary": "Search workflow",
+        "description": "Get workflow details.",
+        "parameters": [
+          {
+            "$ref": "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-1-1.yml#/parameters/requestInfo"
+          },
+          {
+            "$ref": "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-1-1.yml#/parameters/tenantId"
+          },
+          {
+            "name": "businessIds",
+            "in": "query",
+            "description": "Search based on Application Number",
+            "type": "string",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ReponseInfo with details of Regular Retirement Pension",
+            "schema": {
+              "$ref": "#/definitions/SearchWorkflowResponse"
+            }
+          },
+          "400": {
+            "description": "Failed",
+            "schema": {
+              "$ref": "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes"
+            }
+          }
+        },
+        "tags": [
+          "Search Workflow"
+        ]
+      }
+    },
+    "/v1/_searchEmployeeFromHRMS": {
+      "post": {
+        "summary": "Get the list of employees",
+        "description": "Search and get the list of employees with name, code and date of birth.",
+        "parameters": [
+          {
+            "$ref": "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-1-1.yml#/parameters/requestInfo"
+          },
+          {
+            "$ref": "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-1-1.yml#/parameters/tenantId"
+          },
+          {
+            "name": "code",
+            "in": "query",
+            "description": "Search based on Employee Code",
+            "type": "string"
+          },
+          {
+            "name": "name",
+            "in": "query",
+            "description": "Search based on Employee Name",
+            "type": "string"
+          },
+          {
+            "name": "dob",
+            "in": "query",
+            "description": "Search based on Employee DOB",
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ReponseInfo with list of employees",
+            "schema": {
+              "$ref": "#/definitions/SearchEmployeeForDeathRegisterResponse"
+            }
+          },
+          "400": {
+            "description": "Search failed",
+            "schema": {
+              "$ref": "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes"
+            }
+          }
+        },
+        "tags": [
+          "Search Employee From HRMS"
+        ]
+      }
+    },
+    "/v1/_searchPensioner": {
+      "post": {
+        "summary": "Search Pensioner",
+        "description": "Search and get the list of pensioners.",
+        "parameters": [
+          {
+            "$ref": "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-1-1.yml#/parameters/requestInfo"
+          },
+          {
+            "$ref": "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-1-1.yml#/parameters/tenantId"
+          },
+          {
+            "name": "pensionerNumber",
+            "in": "query",
+            "description": "Search based on Pensioner Number",
+            "type": "string"
+          },
+          {
+            "name": "name",
+            "in": "query",
+            "description": "Search based on Pensioner Name",
+            "type": "string"
+          },
+          {
+            "name": "dob",
+            "in": "query",
+            "description": "Search based on Pensioner DOB",
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ReponseInfo with list of Pensioners",
+            "schema": {
+              "$ref": "#/definitions/SearchPensionerResponse"
+            }
+          },
+          "400": {
+            "description": "Search failed",
+            "schema": {
+              "$ref": "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes"
+            }
+          }
+        },
+        "tags": [
+          "Search Pensioner"
+        ]
+      }
+    },
+    "/v1/_searchPensionerForPensionRevision": {
+      "post": {
+        "summary": "Get the pension details of pensioners",
+        "description": "Search and get the pension details of pensioners.",
+        "parameters": [
+          {
+            "$ref": "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-1-1.yml#/parameters/requestInfo"
+          },
+          {
+            "$ref": "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-1-1.yml#/parameters/tenantId"
+          },
+          {
+            "name": "pensionerNumber",
+            "in": "query",
+            "description": "Search based on Pensioner Number",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ReponseInfo with list of Pensioners",
+            "schema": {
+              "$ref": "#/definitions/SearchPensionerForPensionRevisionResponse"
+            }
+          },
+          "400": {
+            "description": "Search failed",
+            "schema": {
+              "$ref": "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes"
+            }
+          }
+        },
+        "tags": [
+          "Search Pensioner For Pension Revision"
+        ]
+      }
+    },
+    "/v1/_updateRevisedPension": {
+      "post": {
+        "summary": "Update Revised Pension",
+        "description": "Update Revised Pension",
+        "parameters": [
+          {
+            "name": "processRequest",
+            "in": "body",
+            "description": "Pension details + RequestInfo meta data.",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/UpdateRevisedPensionRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ReponseInfo",
+            "schema": {
+              "$ref": "#/definitions/CommonResponseModel"
+            }
+          },
+          "400": {
+            "description": "Save failed",
+            "schema": {
+              "$ref": "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes"
+            }
+          }
+        },
+        "tags": [
+          "Update Revised Pension"
+        ]
+      }
+    },
+    "/v1/_createRevisedPension": {
+      "post": {
+        "summary": "Create Revised Pension",
+        "description": "Create Revised Pension",
+        "parameters": [
+          {
+            "name": "processRequest",
+            "in": "body",
+            "description": "Pension details + RequestInfo meta data.",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/CreateRevisedPensionRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ReponseInfo",
+            "schema": {
+              "$ref": "#/definitions/CommonResponseModel"
+            }
+          },
+          "400": {
+            "description": "Save failed",
+            "schema": {
+              "$ref": "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes"
+            }
+          }
+        },
+        "tags": [
+          "Create Revised Pension"
+        ]
+      }
+    },
+    "/v1/_getWorkflowAccessibility": {
+      "post": {
+        "summary": "Get Workflow Accessibility",
+        "description": "Get Workflow Accessibility (ie. user can claim, release or view workflow details)",
+        "parameters": [
+          {
+            "$ref": "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-1-1.yml#/parameters/requestInfo"
+          },
+          {
+            "$ref": "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-1-1.yml#/parameters/tenantId"
+          },
+          {
+            "name": "businessIds",
+            "in": "query",
+            "description": "Get Workflow Accessibility based on Application Number",
+            "type": "string",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ReponseInfo with Accessibility details",
+            "schema": {
+              "$ref": "#/definitions/WorkflowAccessibilityResponse"
+            }
+          },
+          "400": {
+            "description": "Failed",
+            "schema": {
+              "$ref": "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes"
+            }
+          }
+        },
+        "tags": [
+          "Get Workflow Accessibility"
+        ]
+      }
+    },
+    "/v1/_claimWorkflow": {
+      "post": {
+        "summary": "Claim Workflow",
+        "description": "Claim Workflow",
+        "parameters": [
+          {
+            "name": "processRequest",
+            "in": "body",
+            "description": "Workflow details + RequestInfo meta data.",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/ClaimReleaseWorkflowRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ReponseInfo",
+            "schema": {
+              "$ref": "#/definitions/CommonResponseModel"
+            }
+          },
+          "400": {
+            "description": "Claim failed",
+            "schema": {
+              "$ref": "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes"
+            }
+          }
+        },
+        "tags": [
+          "Claim Workflow"
+        ]
+      }
+    },
+    "/v1/_releaseWorkflow": {
+      "post": {
+        "summary": "Release Workflow",
+        "description": "Release Workflow",
+        "parameters": [
+          {
+            "name": "processRequest",
+            "in": "body",
+            "description": "Workflow details + RequestInfo meta data.",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/ClaimReleaseWorkflowRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ReponseInfo",
+            "schema": {
+              "$ref": "#/definitions/CommonResponseModel"
+            }
+          },
+          "400": {
+            "description": "Claim failed",
+            "schema": {
+              "$ref": "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes"
+            }
+          }
+        },
+        "tags": [
+          "Release Workflow"
+        ]
+      }
+    },
+    "/v1/_closeWorkflow": {
+      "post": {
+        "summary": "Close Workflow",
+        "description": "Close Workflow",
+        "parameters": [
+          {
+            "name": "processRequest",
+            "in": "body",
+            "description": "Workflow details + RequestInfo meta data.",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/CloseRRPRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ReponseInfo",
+            "schema": {
+              "$ref": "#/definitions/CommonResponseModel"
+            }
+          },
+          "400": {
+            "description": "Process failed",
+            "schema": {
+              "$ref": "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes"
+            }
+          }
+        },
+        "tags": [
+          "Close Workflow"
+        ]
+      }
+    },
+    "/v1/_calculateBenefit": {
+      "post": {
+        "summary": "Get Benefit from rule-engine",
+        "description": "Internally call rule-engine and return benefits",
+        "parameters": [
+          {
+            "name": "processRequest",
+            "in": "body",
+            "description": "Workflow details + RequestInfo meta data.",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/CalculateBenefitRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ReponseInfo",
+            "schema": {
+              "$ref": "#/definitions/CalculateBenefitResponse"
+            }
+          },
+          "400": {
+            "description": "Process failed",
+            "schema": {
+              "$ref": "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes"
+            }
+          }
+        },
+        "tags": [
+          "Calculate Benefit"
+        ]
+      }
+    },
+    "/v1/_checkDependentEligibilityForBenefit": {
+      "post": {
+        "summary": "Check dependent eligibility for Benefit",
+        "description": "Internally call rule-engine and return gratuity eleigibility for a dependent",
+        "parameters": [
+          {
+            "name": "processRequest",
+            "in": "body",
+            "description": "Dependent details + RequestInfo meta data.",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/CheckDependentEligibilityForBenefitRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ReponseInfo",
+            "schema": {
+              "$ref": "#/definitions/CheckDependentEligibilityForBenefitResponse"
+            }
+          },
+          "400": {
+            "description": "Process failed",
+            "schema": {
+              "$ref": "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes"
+            }
+          }
+        },
+        "tags": [
+          "Check dependent eligibility for benefit"
+        ]
+      }
+    },
+    "/v1/_searchPensionRegister": {
+      "post": {
+        "summary": "Get the pension register of a pensioner",
+        "description": "Get the pension register of a pensioner",
+        "parameters": [
+          {
+            "$ref": "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-1-1.yml#/parameters/requestInfo"
+          },
+          {
+            "$ref": "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-1-1.yml#/parameters/tenantId"
+          },
+          {
+            "name": "pensionerNumber",
+            "in": "query",
+            "description": "Search based on Pensioner Number",
+            "type": "string"
+          },
+          {
+            "name": "year",
+            "in": "query",
+            "description": "Search based on year",
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ReponseInfo with list of Pensioners",
+            "schema": {
+              "$ref": "#/definitions/SearchPensionRegisterResponse"
+            }
+          },
+          "400": {
+            "description": "Search failed",
+            "schema": {
+              "$ref": "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes"
+            }
+          }
+        },
+        "tags": [
+          "Search Pension Register"
+        ]
+      }
+    },
+    "/v1/_pushManualRegisterToPensionNotificationRegister": {
+      "post": {
+        "summary": "Push data from Manual Register to Pension Notification Register",
+        "description": "Push data from Manual Register to Pension Notification Register",
+        "parameters": [
+          {
+            "name": "saveRequest",
+            "in": "body",
+            "description": "Details for the employee + RequestInfo meta data.",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/PushManualRegisterToPensionNotificationRegisterRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ReponseInfo",
+            "schema": {
+              "$ref": "#/definitions/CommonResponseModel"
+            }
+          },
+          "400": {
+            "description": "Save failed",
+            "schema": {
+              "$ref": "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes"
+            }
+          }
+        },
+        "tags": [
+          "Push Manual Register to Pension Notification Register"
+        ]
+      }
+    },
+    "/v1/_saveEmployeeDisability": {
+      "post": {
+        "summary": "Disability Registration",
+        "description": "Disability registration of an employee",
+        "parameters": [
+          {
+            "name": "saveRequest",
+            "in": "body",
+            "description": "Details for the employee + RequestInfo meta data.",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/DisabilityRegistrationRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ReponseInfo",
+            "schema": {
+              "$ref": "#/definitions/CommonResponseModel"
+            }
+          },
+          "400": {
+            "description": "Save failed",
+            "schema": {
+              "$ref": "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes"
+            }
+          }
+        },
+        "tags": [
+          "Save Employee Disability (Disability Registration)"
+        ]
+      }
+    },
+    "/v1/_getEmployeeDisability": {
+      "post": {
+        "summary": "Get Employee Disability",
+        "description": "Get Employee Disability",
+        "parameters": [
+          {
+            "$ref": "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-1-1.yml#/parameters/requestInfo"
+          },
+          {
+            "$ref": "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-1-1.yml#/parameters/tenantId"
+          },
+          {
+            "name": "code",
+            "in": "query",
+            "description": "Search based on Employee Code",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ReponseInfo with list of employees",
+            "schema": {
+              "$ref": "#/definitions/GetEmployeeDisabilityResponse"
+            }
+          },
+          "400": {
+            "description": "Search failed",
+            "schema": {
+              "$ref": "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes"
+            }
+          }
+        },
+        "tags": [
+          "Get Employee Disability"
+        ]
+      }
+    },
+    "/v1/_getPensionEmployees": {
+      "post": {
+        "summary": "Search Employee From Pension Module",
+        "description": "Search Employee From Pension Module",
+        "parameters": [
+          {
+            "$ref": "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-1-1.yml#/parameters/requestInfo"
+          },
+          {
+            "$ref": "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-1-1.yml#/parameters/tenantId"
+          },
+          {
+            "name": "code",
+            "in": "query",
+            "description": "Search based on Employee Code",
+            "type": "string"
+          },
+          {
+            "name": "name",
+            "in": "query",
+            "description": "Search based on Employee Name",
+            "type": "string"
+          },
+          {
+            "name": "dob",
+            "in": "query",
+            "description": "Search based on Employee DOB",
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ReponseInfo with list of employees",
+            "schema": {
+              "$ref": "#/definitions/SearchPensionEmployeesResponse"
+            }
+          },
+          "400": {
+            "description": "Search failed",
+            "schema": {
+              "$ref": "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes"
+            }
+          }
+        },
+        "tags": [
+          "Search Pension Employees"
+        ]
+      }
+    },
+    "/v1/_pensionerPensionDiscontinuation": {
+      "post": {
+        "summary": "Discontinue Pensioner Pension",
+        "description": "Discontinue Pensioner Pension",
+        "parameters": [
+          {
+            "name": "processRequest",
+            "in": "body",
+            "description": "Pension details + RequestInfo meta data.",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/PensionerPensionDiscontinuationRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ReponseInfo",
+            "schema": {
+              "$ref": "#/definitions/CommonResponseModel"
+            }
+          },
+          "400": {
+            "description": "Save failed",
+            "schema": {
+              "$ref": "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes"
+            }
+          }
+        },
+        "tags": [
+          "Discontinuation of Pensioner Pension"
+        ]
+      }
+    },
+    "/v1/_searchClosedApplication": {
+      "post": {
+        "summary": "Get the list of closed application",
+        "description": "Search and get the list of closed application",
+        "parameters": [
+          {
+            "$ref": "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-1-1.yml#/parameters/requestInfo"
+          },
+          {
+            "$ref": "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-1-1.yml#/parameters/tenantId"
+          },
+          {
+            "name": "businessService",
+            "in": "query",
+            "description": "Search based on Application type",
+            "type": "string"
+          },
+          {
+            "name": "businessId",
+            "in": "query",
+            "description": "Search based on Application Number",
+            "type": "string"
+          },
+          {
+            "name": "name",
+            "in": "query",
+            "description": "Search based on Employee Name",
+            "type": "string"
+          },
+          {
+            "name": "startDate",
+            "in": "query",
+            "description": "Search based on Application Closed date",
+            "type": "integer"
+          },
+          {
+            "name": "endDate",
+            "in": "query",
+            "description": "Search based on Application Closed date",
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ReponseInfo with list of employees",
+            "schema": {
+              "$ref": "#/definitions/SearchClosedApplicationResponse"
+            }
+          },
+          "400": {
+            "description": "Search failed",
+            "schema": {
+              "$ref": "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes"
+            }
+          }
+        },
+        "tags": [
+          "Search Closed Application"
+        ]
+      }
+    },
+    "/v1/_initiateReComputation": {
+      "post": {
+        "summary": "Initiate ReComputation of Workflow",
+        "description": "Initiate ReComputation of Workflow",
+        "parameters": [
+          {
+            "name": "processRequest",
+            "in": "body",
+            "description": "Workflow details + RequestInfo meta data.",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/InitiateReComputationRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ReponseInfo",
+            "schema": {
+              "$ref": "#/definitions/CommonResponseModel"
+            }
+          },
+          "400": {
+            "description": "Process failed",
+            "schema": {
+              "$ref": "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes"
+            }
+          }
+        },
+        "tags": [
+          "Initiate ReComputation of Workflow"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "SaveEmployeeForPensionNotificationRegisterRequest": {
+      "description": "Contract class to save request. Employee detailes to be saved.",
+      "properties": {
+        "RequestInfo": {
+          "$ref": "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-1-1.yml#/definitions/RequestInfo"
+        },
+        "Employees": {
+          "description": "Employee list with details fetched from HRMS",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/EmployeeModel"
+          }
+        }
+      }
+    },
+    "SearchPensionNotificationRegisterResponse": {
+      "description": "Contract class to send response. Array of Employees are used.",
+      "properties": {
+        "ResponseInfo": {
+          "$ref": "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo"
+        },
+        "Employees": {
+          "description": "Used for search result",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SearchPensionNotificationRegisterModel"
+          }
+        }
+      }
+    },
+    "SearchWorkflowResponse": {
+      "description": "Contract class to send response.",
+      "properties": {
+        "ResponseInfo": {
+          "$ref": "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo"
+        },
+        "ProcessInstances": {
+          "description": "Used for search result",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SearchWorkflowResultModel"
+          }
+        }
+      }
+    },
+    "ProcessWorkflowRequest": {
+      "description": "Contract class to process Pension Workflow.",
+      "properties": {
+        "RequestInfo": {
+          "$ref": "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-1-1.yml#/definitions/RequestInfo"
+        },
+        "ProcessInstances": {
+          "description": "Workflow details",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ProcessWorkflowModel"
+          }
+        }
+      }
+    },
+    "ProcessWorkflowModel": {
+      "description": "Process workflow model",
+      "type": "object",
+      "properties": {
+        "moduleName": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 250,
+          "description": "Module Name(eg. RRPension_Service)"
+        },
+        "tenantId": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 1024,
+          "description": "tenantId"
+        },
+        "businessService": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 250,
+          "description": "Application Type"
+        },
+        "businessId": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 1024,
+          "description": "Application Number"
+        },
+        "action": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 250,
+          "description": "Action"
+        },
+        "comment": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 1024,
+          "description": "comment"
+        },
+        "documents": {
+          "description": "Documents",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/WorkflowDocumentProcessModel"
+          }
+        },
+        "assignee": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 1024,
+          "description": "assignee"
+        },
+        "sla": {
+          "type": "integer",
+          "minLength": 2,
+          "maxLength": 64,
+          "description": "sla"
+        },
+        "previousStatus": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 250,
+          "description": "Previous Status"
+        },
+        "active": {
+          "type": "boolean",
+          "description": "active"
+        },
+        "workflowHeader": {
+          "description": "Workflow Header Details",
+          "$ref": "#/definitions/WorkflowHeaderProcessModel"
+        },
+        "employee": {
+          "description": "Employee Details(same as HRMS response)",
+          "type": "object"
+        },
+        "employeeOtherDetails": {
+          "description": "Employee Other Information Details",
+          "$ref": "#/definitions/EmployeeOtherDetailsModel"
+        },
+        "pensionCalculationDetails": {
+          "description": "Regular Retirement Pension Calculation details",
+          "$ref": "#/definitions/PensionCalculationModel"
+        },
+        "pensionCalculationUpdateDetails": {
+          "description": "Pension Calculation details",
+          "$ref": "#/definitions/PensionCalculationUpdateModel"
+        },
+        "dependents": {
+          "description": "Dependents",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/DependentModel"
+          }
+        }
+      }
+    },
+    "SearchEmployeeForDeathRegisterResponse": {
+      "description": "Contract class to send response. Array of Employees are used.",
+      "properties": {
+        "ResponseInfo": {
+          "$ref": "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo"
+        },
+        "Employees": {
+          "description": "Used for search result",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SearchEmployeeResultModel"
+          }
+        }
+      }
+    },
+    "SearchPensionerResponse": {
+      "description": "Contract class to send response. Array of Employees are used.",
+      "properties": {
+        "ResponseInfo": {
+          "$ref": "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo"
+        },
+        "Pensioners": {
+          "description": "Used for search result",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SearchPensionerResultModel"
+          }
+        }
+      }
+    },
+    "SearchPensionerForPensionRevisionResponse": {
+      "description": "Contract class to send response.",
+      "properties": {
+        "ResponseInfo": {
+          "$ref": "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo"
+        },
+        "ProcessInstances": {
+          "description": "Used for details result",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SearchPensionerPensionRevisionResultModel"
+          }
+        }
+      }
+    },
+    "UpdateRevisedPensionRequest": {
+      "description": "Contract class to update revised pension of pensioner.",
+      "properties": {
+        "RequestInfo": {
+          "$ref": "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-1-1.yml#/definitions/RequestInfo"
+        },
+        "ProcessInstances": {
+          "description": "Used for save data",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ProcessRevisedPensionModel"
+          }
+        }
+      }
+    },
+    "CreateRevisedPensionRequest": {
+      "description": "Contract class to create revised pension of pensioner.",
+      "properties": {
+        "RequestInfo": {
+          "$ref": "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-1-1.yml#/definitions/RequestInfo"
+        },
+        "ProcessInstances": {
+          "description": "Used for save data",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ProcessCreateRevisedPensionModel"
+          }
+        }
+      }
+    },
+    "EmployeeModel": {
+      "description": "Employee Model",
+      "type": "object",
+      "properties": {
+        "pensionEmployeeId": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 1024,
+          "description": "uuid for tbl_pension_employee"
+        },
+        "auditUuid": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 1024,
+          "description": "uuid for tbl_pension_employee_audit"
+        },
+        "id": {
+          "type": "integer",
+          "minLength": 2,
+          "maxLength": 64,
+          "description": "Employee Id"
+        },
+        "uuid": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 1024,
+          "description": "uuid of employee"
+        },
+        "code": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 250,
+          "description": "Employee Code"
+        },
+        "name": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 250,
+          "description": "Employee Name"
+        },
+        "dob": {
+          "type": "integer",
+          "minLength": 2,
+          "maxLength": 64,
+          "description": "Date Of Birth"
+        },
+        "dateOfRetirement": {
+          "type": "integer",
+          "minLength": 2,
+          "maxLength": 64,
+          "description": "Date Of Retirement"
+        },
+        "dateOfDeath": {
+          "type": "integer",
+          "minLength": 2,
+          "maxLength": 64,
+          "description": "Date Of Death"
+        },
+        "tenantId": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 1024,
+          "description": "tenantId"
+        },
+        "lastAssignment": {
+          "description": "Last Assignment",
+          "$ref": "#/definitions/LastAssignmentModel"
+        },
+        "notificationRegister": {
+          "description": "Notification Register",
+          "$ref": "#/definitions/NotificationRegisterModel"
+        },
+        "active": {
+          "type": "boolean",
+          "description": "active"
+        },
+        "auditDetails": {
+          "description": "Audit Details",
+          "$ref": "#/definitions/AuditDetailsModel"
+        }
+      }
+    },
+    "LastAssignmentModel": {
+      "description": "Last Assignment Model",
+      "type": "object",
+      "properties": {
+        "uuid": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 1024,
+          "description": "uuid"
+        },
+        "position": {
+          "type": "integer",
+          "minLength": 2,
+          "maxLength": 64,
+          "description": "Position Id"
+        },
+        "designation": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 250,
+          "description": "Designation"
+        },
+        "department": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 250,
+          "description": "Department"
+        },
+        "fromDate": {
+          "type": "integer",
+          "minLength": 2,
+          "maxLength": 64,
+          "description": "From Date"
+        },
+        "toDate": {
+          "type": "integer",
+          "minLength": 2,
+          "maxLength": 64,
+          "description": "To Date"
+        },
+        "active": {
+          "type": "boolean",
+          "description": "active"
+        }
+      }
+    },
+    "SearchPensionNotificationRegisterModel": {
+      "description": "Search result in Pension Notification Register",
+      "type": "object",
+      "properties": {
+        "pensionNotificationRegisterId": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 1026,
+          "description": "Pension Notification Register Id"
+        },
+        "pensionEmployeeId": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 1026,
+          "description": "Employee UUID in Pension Module"
+        },
+        "id": {
+          "type": "integer",
+          "minLength": 2,
+          "maxLength": 64,
+          "description": "Employee Id"
+        },
+        "code": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 250,
+          "description": "Employee Code"
+        },
+        "name": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 250,
+          "description": "Name of the employee",
+          "readOnly": true
+        },
+        "dob": {
+          "type": "integer",
+          "minLength": 2,
+          "maxLength": 64,
+          "description": "DOB of employee",
+          "readOnly": true
+        },
+        "dateOfRetirement": {
+          "type": "integer",
+          "minLength": 2,
+          "maxLength": 64,
+          "description": "Retirement date of employee",
+          "readOnly": true
+        },
+        "tenantId": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 1024,
+          "description": "tenantid"
+        },
+        "gender": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 20,
+          "description": "gender"
+        },
+        "employeeStatus": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 250,
+          "description": "Employee Status"
+        },
+        "employeeType": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 250,
+          "description": "Employee Type"
+        },
+        "dateOfAppointment": {
+          "type": "integer",
+          "minLength": 2,
+          "maxLength": 64,
+          "description": "Date of Joining"
+        },
+        "action": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 250,
+          "description": "action (Initiate)",
+          "readOnly": true
+        }
+      }
+    },
+    "NotificationRegisterModel": {
+      "description": "Notification Register Model",
+      "type": "object",
+      "properties": {
+        "pensionNotificationRegisterId": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 1024,
+          "description": "uuid"
+        },
+        "isInitiated": {
+          "type": "boolean",
+          "description": "isInitiated"
+        },
+        "active": {
+          "type": "boolean",
+          "description": "active"
+        },
+        "notificationRegisterAudit": {
+          "description": "Notification Register Audit Details",
+          "$ref": "#/definitions/NotificationRegisterAuditModel"
+        }
+      }
+    },
+    "NotificationRegisterAuditModel": {
+      "description": "Notification Register Audit Model",
+      "type": "object",
+      "properties": {
+        "pensionNotificationRegisterAuditId": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 1024,
+          "description": "uuid"
+        }
+      }
+    },
+    "NotificationRegisterProcessWorkflowModel": {
+      "description": "Notification Register Model",
+      "type": "object",
+      "properties": {
+        "pensionNotificationRegisterId": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 1024,
+          "description": "uuid"
+        }
+      }
+    },
+    "WorkflowHeaderProcessModel": {
+      "description": "Pension Workflow Header Model",
+      "type": "object",
+      "properties": {
+        "workflowHeaderId": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 1024,
+          "description": "Workflow Header Id"
+        }
+      }
+    },
+    "WorkflowHeaderModelForSearchWorkflow": {
+      "description": "Pension Workflow Header Model",
+      "type": "object",
+      "properties": {
+        "workflowHeaderId": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 1024,
+          "description": "Workflow Header Id"
+        },
+        "applicationDate": {
+          "type": "integer",
+          "minLength": 2,
+          "maxLength": 64,
+          "description": "Submission date"
+        }
+      }
+    },
+    "WorkflowHeaderAuditModel": {
+      "description": "Pension Workflow Header Audit  Model",
+      "type": "object",
+      "properties": {
+        "workflowHeaderAuditId": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 1024,
+          "description": "Workflow Header Audit UUID"
+        }
+      }
+    },
+    "AuditDetailsModel": {
+      "description": "Audit Details",
+      "type": "object",
+      "properties": {
+        "createdBy": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 1024,
+          "description": "Created By"
+        },
+        "lastModifiedBy": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 1024,
+          "description": "Created By"
+        },
+        "createdDate": {
+          "type": "integer",
+          "minLength": 2,
+          "maxLength": 64,
+          "description": "To Date"
+        },
+        "lastModifiedDate": {
+          "type": "integer",
+          "minLength": 2,
+          "maxLength": 64,
+          "description": "To Date"
+        }
+      }
+    },
+    "CommonResponseModel": {
+      "description": "Contract class to send response.",
+      "properties": {
+        "ResponseInfo": {
+          "$ref": "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo"
+        }
+      }
+    },
+    "SearchWorkflowResultModel": {
+      "description": "Workflow details model",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 1024,
+          "description": "Workflow UUID"
+        },
+        "tenantId": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 1024,
+          "description": "tenantId"
+        },
+        "businessService": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 250,
+          "description": "Business Service(eg. RRP_SERVICE)"
+        },
+        "businessId": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 250,
+          "description": "Application Number"
+        },
+        "action": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 250,
+          "description": "Workflow Action"
+        },
+        "moduleName": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 250,
+          "description": "Module Name(eg. RRP_SERVICE)"
+        },
+        "state": {
+          "description": "state",
+          "$ref": "#/definitions/WorkflowStateModel"
+        },
+        "comment": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 1024,
+          "description": "comment"
+        },
+        "documents": {
+          "description": "Documents",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/WorkflowDocumentViewModel"
+          }
+        },
+        "stateSla": {
+          "type": "integer",
+          "minLength": 2,
+          "maxLength": 64,
+          "description": "stateSla"
+        },
+        "businesssServiceSla": {
+          "type": "integer",
+          "minLength": 2,
+          "maxLength": 64,
+          "description": "businesssServiceSla"
+        },
+        "previousStatus": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 1024,
+          "description": "previousStatus"
+        },
+        "entity": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 1024,
+          "description": "entity"
+        },
+        "auditDetails": {
+          "description": "Audit",
+          "$ref": "#/definitions/AuditDetailsModel"
+        },
+        "workflowHeader": {
+          "description": "Workflow Header Details",
+          "$ref": "#/definitions/WorkflowHeaderModelForSearchWorkflow"
+        },
+        "employee": {
+          "description": "Employee Details",
+          "type": "object"
+        },
+        "employeeOtherDetails": {
+          "description": "Employee Other Information Details",
+          "$ref": "#/definitions/EmployeeOtherDetailsModel"
+        },
+        "pensionCalculationDetails": {
+          "description": "Pension Calculation details",
+          "$ref": "#/definitions/PensionCalculationModel"
+        },
+        "pensionCalculationUpdateDetails": {
+          "description": "Pension Calculation details",
+          "$ref": "#/definitions/PensionCalculationUpdateModel"
+        },
+        "dependents": {
+          "description": "Dependents",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/DependentModel"
+          }
+        },
+        "actorAcccessLevel": {
+          "description": "actorAcccessLevel",
+          "$ref": "#/definitions/AcctorAcccessLevelModel"
+        },
+        "employeeDisability": {
+          "description": "employee Disability",
+          "$ref": "#/definitions/DisabilityModelForWorkflow"
+        }
+      }
+    },
+    "PensionCalculationModel": {
+      "description": "Pension Calculation Sytem Model",
+      "type": "object",
+      "properties": {
+        "basicPensionSystem": {
+          "type": "number",
+          "format": "float",
+          "description": "Basic pension Sytem Generated"
+        },
+        "pensionDeductionsSystem": {
+          "type": "number",
+          "format": "float",
+          "description": "Pension Sytem Generated"
+        },
+        "additionalPensionSystem": {
+          "type": "number",
+          "format": "float",
+          "description": "Additional Pension Sytem Generated"
+        },
+        "commutedPensionSystem": {
+          "type": "number",
+          "format": "float",
+          "description": "Commuted Pension Sytem Generated"
+        },
+        "commutedValueSystem": {
+          "type": "number",
+          "format": "float",
+          "description": "Commuted Value Sytem Generated"
+        },
+        "familyPensionISystem": {
+          "type": "number",
+          "format": "float",
+          "description": "family_pension_i"
+        },
+        "familyPensionIISystem": {
+          "type": "number",
+          "format": "float",
+          "description": "family_pension_ii"
+        },
+        "dcrgSystem": {
+          "type": "number",
+          "format": "float",
+          "description": "Death-cum-retirement gratuity"
+        },
+        "netDeductionsSystem": {
+          "type": "number",
+          "format": "float",
+          "description": "Net deductions system generated"
+        },
+        "finalCalculatedPensionSystem": {
+          "type": "number",
+          "format": "float",
+          "description": "Final calculated pension system generated"
+        },
+        "interimReliefSystem": {
+          "type": "number",
+          "format": "float",
+          "description": "Interim Relief system generated"
+        },
+        "daSystem": {
+          "type": "number",
+          "format": "float",
+          "description": "Dearness Allowance system generated"
+        },
+        "nqsYearSystem": {
+          "type": "integer",
+          "minLength": 2,
+          "maxLength": 64,
+          "description": "nqsYear system generated"
+        },
+        "nqsMonthSystem": {
+          "type": "integer",
+          "minLength": 2,
+          "maxLength": 64,
+          "description": "nqsMonth system generated"
+        },
+        "nqsDaySystem": {
+          "type": "integer",
+          "minLength": 2,
+          "maxLength": 64,
+          "description": "nqsDay system generated"
+        },
+        "duesDeductionsSystem": {
+          "type": "number",
+          "format": "float",
+          "description": "Dues deductions system generated"
+        },
+        "compassionatePensionSystem": {
+          "type": "number",
+          "format": "float",
+          "description": "Compassionate Pension system generated"
+        },
+        "compensationPensionSystem": {
+          "type": "number",
+          "format": "float",
+          "description": "Compensation Pension system generated"
+        },
+        "terminalBenefitSystem": {
+          "type": "number",
+          "format": "float",
+          "description": "Terminal Benefit system generated"
+        },
+        "finalCalculatedGratuitySystem": {
+          "type": "number",
+          "format": "float",
+          "description": "Final Calculated Gratuity system generated"
+        },
+        "familyPensionIStartDateSystem": {
+          "type": "number",
+          "format": "float",
+          "description": "familyPensionIStartDateSystem"
+        },
+        "familyPensionIEndDateSystem": {
+          "type": "number",
+          "format": "float",
+          "description": "familyPensionIEndDateSystem"
+        },
+        "familyPensionIIStartDateSystem": {
+          "type": "number",
+          "format": "float",
+          "description": "familyPensionIIStartDateSystem"
+        },
+        "exGratiaSystem": {
+          "type": "number",
+          "format": "float",
+          "description": "exGratia System"
+        },
+        "pensionerFamilyPensionSystem": {
+          "type": "number",
+          "format": "float",
+          "description": "pensioner Family Pension System"
+        },
+        "totalPensionSystem": {
+          "type": "number",
+          "format": "float",
+          "description": "total Pension System"
+        },
+        "provisionalPensionSystem": {
+          "type": "number",
+          "format": "float",
+          "description": "provisional Pension System"
+        },
+        "invalidPensionSystem": {
+          "type": "number",
+          "format": "float",
+          "description": "invalid Pension System"
+        },
+        "woundExtraordinaryPensionSystem": {
+          "type": "number",
+          "format": "float",
+          "description": "wound or Extraordinary Pension System"
+        },
+        "attendantAllowanceSystem": {
+          "type": "number",
+          "format": "float",
+          "description": "attendant Allowance System"
+        },
+        "notificationTextSystem": {
+          "type": "string",
+          "description": "notification Text System"
+        }
+      }
+    },
+    "PensionCalculationUpdateModel": {
+      "description": "Pension Calculation Sytem Model",
+      "type": "object",
+      "properties": {
+        "basicPensionVerified": {
+          "type": "number",
+          "format": "float",
+          "description": "Basic pension Verified"
+        },
+        "pensionDeductionsVerified": {
+          "type": "number",
+          "format": "float",
+          "description": "Pension Verified"
+        },
+        "additionalPensionVerified": {
+          "type": "number",
+          "format": "float",
+          "description": "Additional Pension Verified"
+        },
+        "commutedPensionVerified": {
+          "type": "number",
+          "format": "float",
+          "description": "Commuted Pension Verified"
+        },
+        "commutedValueVerified": {
+          "type": "number",
+          "format": "float",
+          "description": "Commuted Value Verified"
+        },
+        "familyPensionIVerified": {
+          "type": "number",
+          "format": "float",
+          "description": "family_pension_i (Death workflow)"
+        },
+        "familyPensionIIVerified": {
+          "type": "number",
+          "format": "float",
+          "description": "family_pension_ii (Death workflow)"
+        },
+        "dcrgVerified": {
+          "type": "number",
+          "format": "float",
+          "description": "Death-cum-retirement gratuity"
+        },
+        "netDeductionsVerified": {
+          "type": "number",
+          "format": "float",
+          "description": "Net deductions Verified"
+        },
+        "finalCalculatedPensionVerified": {
+          "type": "number",
+          "format": "float",
+          "description": "Final calculated pension verified"
+        },
+        "interimReliefVerified": {
+          "type": "number",
+          "format": "float",
+          "description": "Interim Relief verified"
+        },
+        "daVerified": {
+          "type": "number",
+          "format": "float",
+          "description": "Dearness Allowance verified"
+        },
+        "nqsYearVerified": {
+          "type": "integer",
+          "minLength": 2,
+          "maxLength": 64,
+          "description": "nqsYear verified"
+        },
+        "nqsMonthVerified": {
+          "type": "integer",
+          "minLength": 2,
+          "maxLength": 64,
+          "description": "nqsMonth verified"
+        },
+        "nqsDayVerified": {
+          "type": "integer",
+          "minLength": 2,
+          "maxLength": 64,
+          "description": "nqsDay verified"
+        },
+        "duesDeductionsVerified": {
+          "type": "number",
+          "format": "float",
+          "description": "Dues deductions verified"
+        },
+        "compassionatePensionVerified": {
+          "type": "number",
+          "format": "float",
+          "description": "Compassionate Pension verified"
+        },
+        "compensationPensionVerified": {
+          "type": "number",
+          "format": "float",
+          "description": "Compensation Pension verified"
+        },
+        "terminalBenefitVerified": {
+          "type": "number",
+          "format": "float",
+          "description": "Terminal Benefit verified"
+        },
+        "finalCalculatedGratuityVerified": {
+          "type": "number",
+          "format": "float",
+          "description": "Final Calculated Gratuity verified"
+        },
+        "familyPensionIStartDateVerified": {
+          "type": "number",
+          "format": "float",
+          "description": "familyPensionIStartDateVerified"
+        },
+        "familyPensionIEndDateVerified": {
+          "type": "number",
+          "format": "float",
+          "description": "familyPensionIEndDateVerified"
+        },
+        "familyPensionIIStartDateVerified": {
+          "type": "number",
+          "format": "float",
+          "description": "familyPensionIIStartDateVerified"
+        },
+        "exGratiaVerified": {
+          "type": "number",
+          "format": "float",
+          "description": "exGratiaVerified"
+        },
+        "pensionerFamilyPensionVerified": {
+          "type": "number",
+          "format": "float",
+          "description": "pensionerFamilyPensionVerified"
+        },
+        "totalPensionVerified": {
+          "type": "number",
+          "format": "float",
+          "description": "totalPensionVerified"
+        },
+        "provisionalPensionVerified": {
+          "type": "number",
+          "format": "float",
+          "description": "provisional Pension verified"
+        },
+        "invalidPensionVerified": {
+          "type": "number",
+          "format": "float",
+          "description": "invalid Pension verified"
+        },
+        "woundExtraordinaryPensionVerified": {
+          "type": "number",
+          "format": "float",
+          "description": "wound or Extraordinary Pension verified"
+        },
+        "attendantAllowanceVerified": {
+          "type": "number",
+          "format": "float",
+          "description": "attendant Allowance verified"
+        },
+        "notificationTextVerified": {
+          "type": "string",
+          "description": "notification Text verified"
+        }
+      }
+    },
+    "EmployeeOtherDetailsModel": {
+      "description": "Pension Calculation Input Model",
+      "type": "object",
+      "properties": {
+        "ltc": {
+          "type": "number",
+          "format": "float",
+          "description": "Leave Travel Concession"
+        },
+        "lpd": {
+          "type": "number",
+          "format": "float",
+          "description": "Last Pay Drawn"
+        },
+        "pensionArrear": {
+          "type": "number",
+          "format": "float",
+          "description": "Pension Arrear"
+        },
+        "isDaMedicalAdmissible": {
+          "type": "boolean",
+          "description": "Is da medical admissible"
+        },
+        "fma": {
+          "type": "number",
+          "format": "float",
+          "description": "Fixed Medical Allowance"
+        },
+        "medicalRelief": {
+          "type": "number",
+          "format": "float",
+          "description": "Medical relief"
+        },
+        "miscellaneous": {
+          "type": "number",
+          "format": "float",
+          "description": "Miscellaneous"
+        },
+        "overPayment": {
+          "type": "number",
+          "format": "float",
+          "description": "Over payment amount"
+        },
+        "incomeTax": {
+          "type": "number",
+          "format": "float",
+          "description": "Income Tax"
+        },
+        "cess": {
+          "type": "number",
+          "format": "float",
+          "description": "Cess"
+        },
+        "bankAddress": {
+          "type": "string",
+          "maxLength": 250,
+          "description": "Bank address"
+        },
+        "accountNumber": {
+          "type": "string",
+          "maxLength": 250,
+          "description": "Account number"
+        },
+        "claimant": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 250,
+          "description": "claimant information (Death workflow)"
+        },
+        "wef": {
+          "type": "integer",
+          "maxLength": 64,
+          "description": "With effective from"
+        },
+        "totalNoPayLeavesDays": {
+          "type": "integer",
+          "maxLength": 64,
+          "description": "Total No-Pay Leaves days"
+        },
+        "dues": {
+          "type": "number",
+          "format": "float",
+          "description": "dues"
+        },
+        "isEmploymentActive": {
+          "type": "boolean",
+          "description": "Is Convicted of Serious Crime or be Guilty of Grave Misconduct"
+        },
+        "isConvictedSeriousCrimeOrGraveMisconduct": {
+          "type": "boolean",
+          "description": "Is Current Assignment"
+        },
+        "isAnyJudicialProceedingIsContinuing": {
+          "type": "boolean",
+          "description": "Is any Judicial Proceeding is Continuing"
+        },
+        "isAnyMisconductInsolvencyInefficiency": {
+          "type": "boolean",
+          "description": "Is any Misconduct, Insolvency or Inefficiency"
+        },
+        "isEmployeeDiesInTerroristAttack": {
+          "type": "boolean",
+          "description": "Is Employee Dies in Terrorist Attack"
+        },
+        "isEmployeeDiesInAccidentalDeath": {
+          "type": "boolean",
+          "description": "If Employee Dies in Accidental Death"
+        },
+        "isCommutationOpted": {
+          "type": "boolean",
+          "description": "Is Commutation Opted"
+        },
+        "reasonForRetirement": {
+          "type": "string",
+          "maxLength": 250,
+          "description": "Reason For Retirement"
+        },
+        "isEligibleForPension": {
+          "type": "boolean",
+          "description": "Is Eligible For Pension"
+        },
+        "isDuesPresent": {
+          "type": "boolean",
+          "description": "Is Dues Present"
+        },
+        "isDuesAmountDecided": {
+          "type": "boolean",
+          "description": "Is Dues Amount Decided"
+        },
+        "isTakenMonthlyPensionAndGratuity": {
+          "type": "boolean",
+          "description": "Is Taken Monthly Pension And Gratuity"
+        },
+        "isTakenGratuityCommutationTerminalBenefit": {
+          "type": "boolean",
+          "description": "Is Taken Gratuity Commutation Terminal Benefit"
+        },
+        "isTakenCompensationPensionAndGratuity": {
+          "type": "boolean",
+          "description": "Is Taken Compensation Pension And Gratuity"
+        },
+        "diesInExtremistsDacoitsSmugglerAntisocialAttack": {
+          "type": "boolean",
+          "description": "diesInExtremistsDacoitsSmugglerAntisocialAttack"
+        },
+        "isCompassionatePensionGranted": {
+          "type": "boolean",
+          "description": "isCompassionatePensionGranted"
+        },
+        "totalNoPayLeavesMonths": {
+          "type": "integer",
+          "maxLength": 64,
+          "description": "Total No-Pay Leaves months"
+        },
+        "totalNoPayLeavesYears": {
+          "type": "integer",
+          "maxLength": 64,
+          "description": "Total No-Pay Leaves years"
+        },
+        "noDuesForAvailGovtAccomodation": {
+          "type": "boolean",
+          "description": "No Dues For Avail Govt Accomodation"
+        },
+        "employeeGroup": {
+          "type": "string",
+          "maxLength": 250,
+          "description": "Employee Group"
+        },
+        "dateOfContingent": {
+          "type": "integer",
+          "maxLength": 64,
+          "description": "date of Contingent"
+        }
+      }
+    },
+    "WorkflowDocumentViewModel": {
+      "description": "Object holds the attachments",
+      "type": "object",
+      "properties": {
+        "pensionAttachmentId": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 1024,
+          "description": "UUID"
+        },
+        "tenantId": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 1024,
+          "description": "tenantid(eg. ch)"
+        },
+        "fileStoreId": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 64,
+          "description": "Unique file store id of uploaded document"
+        },
+        "documentType": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 250,
+          "description": "1.Unique document type code from common master. 2. This is defined under mdms common master. 3. Object defination is defined under 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-1-1.yml#/definitions/DocumentType'"
+        },
+        "documentTypeName": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 250,
+          "description": "Document Type Name"
+        },
+        "isMandatory": {
+          "type": "boolean",
+          "description": "isMandatory"
+        },
+        "url": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 1024,
+          "description": "Document Url"
+        },
+        "comment": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 1064,
+          "description": "comment"
+        },
+        "documentsUpload": {
+          "type": "boolean",
+          "description": "documentsUpload"
+        },
+        "documentComment": {
+          "type": "boolean",
+          "description": "documentComment"
+        },
+        "documentAudit": {
+          "description": "Document Audit",
+          "items": {
+            "$ref": "#/definitions/WorkflowDocumentAuditModel"
+          }
+        }
+      }
+    },
+    "WorkflowDocumentProcessModel": {
+      "description": "Object holds the attachments",
+      "type": "object",
+      "properties": {
+        "pensionAttachmentId": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 1024,
+          "description": "UUID"
+        },
+        "tenantId": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 1024,
+          "description": "tenantid(eg. ch)"
+        },
+        "fileStoreId": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 64,
+          "description": "Unique file store id of uploaded document"
+        },
+        "documentType": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 250,
+          "description": "1.Unique document type code from common master. 2. This is defined under mdms common master. 3. Object defination is defined under 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-1-1.yml#/definitions/DocumentType'"
+        },
+        "documentTypeName": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 250,
+          "description": "Document Type Name"
+        },
+        "isMandatory": {
+          "type": "boolean",
+          "description": "isMandatory"
+        },
+        "url": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 1024,
+          "description": "Document Url"
+        },
+        "comment": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 1064,
+          "description": "comment"
+        }
+      }
+    },
+    "WorkflowDocumentAuditModel": {
+      "description": "Object holds the attachments history",
+      "type": "object",
+      "properties": {
+        "state": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 250,
+          "description": "state"
+        },
+        "comment": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 1064,
+          "description": "comment"
+        },
+        "commentedBy": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 250,
+          "description": "state"
+        }
+      }
+    },
+    "LeaveProcessModel": {
+      "description": "Employee Leave model",
+      "type": "object",
+      "properties": {
+        "leaveType": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 250,
+          "description": "Leave Type"
+        },
+        "leaveFrom": {
+          "type": "integer",
+          "minLength": 2,
+          "maxLength": 64,
+          "description": "Leave from"
+        },
+        "leaveTo": {
+          "type": "integer",
+          "minLength": 2,
+          "maxLength": 64,
+          "description": "Leave to"
+        },
+        "leaveCount": {
+          "type": "integer",
+          "minLength": 2,
+          "maxLength": 64,
+          "description": "Leave count"
+        }
+      }
+    },
+    "LeaveViewModel": {
+      "description": "Employee Leave model",
+      "type": "object",
+      "properties": {
+        "leaveType": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 250,
+          "description": "Leave Type"
+        },
+        "leaveTypeName": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 250,
+          "description": "Leave Type"
+        },
+        "leaveFrom": {
+          "type": "integer",
+          "minLength": 2,
+          "maxLength": 64,
+          "description": "Leave from"
+        },
+        "leaveTo": {
+          "type": "integer",
+          "minLength": 2,
+          "maxLength": 64,
+          "description": "Leave to"
+        },
+        "leaveCount": {
+          "type": "integer",
+          "minLength": 2,
+          "maxLength": 64,
+          "description": "Leave count"
+        }
+      }
+    },
+    "WorkflowStateModel": {
+      "description": "Workflow State Model",
+      "type": "object",
+      "properties": {
+        "uuid": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 1024,
+          "description": "uuid"
+        },
+        "tenantId": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 1024,
+          "description": "tenantId"
+        },
+        "businessServiceId": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 250,
+          "description": "businessServiceId"
+        },
+        "sla": {
+          "type": "integer",
+          "minLength": 2,
+          "maxLength": 64,
+          "description": "sla"
+        },
+        "applicationStatus": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 250,
+          "description": "applicationStatus"
+        },
+        "docUploadRequired": {
+          "type": "boolean",
+          "description": "docUploadRequired"
+        },
+        "isStartState": {
+          "type": "boolean",
+          "description": "isStartState"
+        },
+        "isTerminateState": {
+          "type": "boolean",
+          "description": "isTerminateState"
+        },
+        "isStateUpdatable": {
+          "type": "boolean",
+          "description": "isTerminateState"
+        },
+        "actions": {
+          "description": "actions",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/WorkflowActionModel"
+          }
+        }
+      }
+    },
+    "WorkflowActionModel": {
+      "description": "Workflow Action Model",
+      "type": "object",
+      "properties": {
+        "uuid": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 1024,
+          "description": "uuid"
+        },
+        "tenantId": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 1024,
+          "description": "tenantId"
+        },
+        "currentState": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 250,
+          "description": "currentState"
+        },
+        "action": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 250,
+          "description": "action"
+        },
+        "nextState": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 1024,
+          "description": "nextState"
+        }
+      }
+    },
+    "SearchEmployeeResultModel": {
+      "description": "Used for search result",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "minLength": 2,
+          "maxLength": 64,
+          "description": "Employee Id"
+        },
+        "code": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 250,
+          "description": "Employee Code"
+        },
+        "name": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 250,
+          "description": "Name of the employee",
+          "readOnly": true
+        },
+        "dob": {
+          "type": "integer",
+          "minLength": 2,
+          "maxLength": 64,
+          "description": "DOB of employee",
+          "readOnly": true
+        },
+        "dateOfRetirement": {
+          "type": "integer",
+          "minLength": 2,
+          "maxLength": 64,
+          "description": "Retirement date of employee",
+          "readOnly": true
+        },
+        "tenantId": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 1024,
+          "description": "tenantid"
+        }
+      }
+    },
+    "DependentModel": {
+      "description": "Dependent model",
+      "type": "object",
+      "properties": {
+        "tenantId": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 1024,
+          "description": "tenantid"
+        },
+        "name": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 250,
+          "description": "name"
+        },
+        "dob": {
+          "type": "integer",
+          "minLength": 2,
+          "maxLength": 64,
+          "description": "dob"
+        },
+        "address": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 1024,
+          "description": "address"
+        },
+        "relationship": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 250,
+          "description": "relationship"
+        },
+        "mobileNumber": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 20,
+          "description": "mobile Number"
+        },
+        "isDisabled": {
+          "type": "boolean",
+          "description": "is disabled"
+        },
+        "maritalStatus": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 250,
+          "description": "marital Status"
+        },
+        "isHollyDependent": {
+          "type": "boolean",
+          "description": "is Holly Dependent"
+        },
+        "noSpouseNoChildren": {
+          "type": "boolean",
+          "description": "noSpouseNoChildren"
+        },
+        "isGrandChildFromDeceasedSon": {
+          "type": "boolean",
+          "description": "is GrandChild From Deceased Son"
+        },
+        "isEligibleForGratuity": {
+          "type": "boolean",
+          "description": "is Eligible For Gratuity"
+        },
+        "isEligibleForPension": {
+          "type": "boolean",
+          "description": "is Eligible For Pension"
+        },
+        "gratuityPercentage": {
+          "type": "number",
+          "description": "gratuity Percentage"
+        },
+        "bankAccountNumber": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 50,
+          "description": "bank Account Number"
+        },
+        "bankDetails": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 1024,
+          "description": "bank Details"
+        }
+      }
+    },
+    "SearchPensionerPensionRevisionResultModel": {
+      "description": "Pension Revision details",
+      "type": "object",
+      "properties": {
+        "tenantId": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 1024,
+          "description": "tenantid"
+        },
+        "pensioner": {
+          "description": "pensionRevision",
+          "$ref": "#/definitions/PensionerModel"
+        },
+        "pensionRevision": {
+          "description": "pensionRevision",
+          "items": {
+            "$ref": "#/definitions/PensionRevisionModel"
+          }
+        },
+        "pensionerFinalCalculatedBenefitDetails": {
+          "description": "Pension Calculation details",
+          "$ref": "#/definitions/pensionerFinalCalculatedBenefitDetails"
+        }
+      }
+    },
+    "PensionerModel": {
+      "description": "Pensioner mOdel",
+      "type": "object",
+      "properties": {
+        "pensionerId": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 1024,
+          "description": "pensionerId"
+        },
+        "pensionEmployeeId": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 1024,
+          "description": "pension Employee Id"
+        },
+        "businessService": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 1024,
+          "description": "business Service"
+        },
+        "pensionerFinalCalculatedBenefitId": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 1024,
+          "description": "pensioner FinalCalculated Benefit Id"
+        },
+        "pensionerNumber": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 1024,
+          "description": "Pensioner Number"
+        },
+        "name": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 250,
+          "description": "Pensioner Name"
+        }
+      }
+    },
+    "PensionRevisionModel": {
+      "description": "Pension Revision details",
+      "type": "object",
+      "properties": {
+        "pensionRevisionId": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 1024,
+          "description": "pensionerId"
+        },
+        "effectiveStartYear": {
+          "type": "integer",
+          "minLength": 2,
+          "maxLength": 64,
+          "description": "effective Start Year"
+        },
+        "effectiveStartMonth": {
+          "type": "integer",
+          "minLength": 2,
+          "maxLength": 64,
+          "description": "effective Start Month"
+        },
+        "effectiveEndYear": {
+          "type": "integer",
+          "minLength": 2,
+          "maxLength": 64,
+          "description": "effective End Year"
+        },
+        "effectiveEndMonth": {
+          "type": "integer",
+          "minLength": 2,
+          "maxLength": 64,
+          "description": "effective End Month"
+        },
+        "pensionArrear": {
+          "type": "number",
+          "format": "float",
+          "description": "pension Arrear"
+        },
+        "fma": {
+          "type": "number",
+          "format": "float",
+          "description": "fma"
+        },
+        "miscellaneous": {
+          "type": "number",
+          "format": "float",
+          "description": "Miscellaneous"
+        },
+        "overPayment": {
+          "type": "number",
+          "format": "float",
+          "description": "Over payment amount"
+        },
+        "incomeTax": {
+          "type": "number",
+          "format": "float",
+          "description": "Income Tax"
+        },
+        "cess": {
+          "type": "number",
+          "format": "float",
+          "description": "Cess"
+        },
+        "basicPension": {
+          "type": "number",
+          "format": "float",
+          "description": "Basic pension"
+        },
+        "additionalPension": {
+          "type": "number",
+          "format": "float",
+          "description": "Additional Pension"
+        },
+        "commutedPension": {
+          "type": "number",
+          "format": "float",
+          "description": "Commuted Pension"
+        },
+        "netDeductions": {
+          "type": "number",
+          "format": "float",
+          "description": "Net deductions"
+        },
+        "finalCalculatedPension": {
+          "type": "number",
+          "format": "float",
+          "description": "final Calculated Pension"
+        },
+        "interimRelief": {
+          "type": "number",
+          "format": "float",
+          "description": "Interim Relief"
+        },
+        "da": {
+          "type": "number",
+          "format": "float",
+          "description": "DA"
+        },
+        "totalPension": {
+          "type": "number",
+          "format": "float",
+          "description": "total Pension"
+        },
+        "pensionDeductions": {
+          "type": "number",
+          "format": "float",
+          "description": "pension Deductions"
+        },
+        "woundExtraordinaryPension": {
+          "type": "number",
+          "format": "float",
+          "description": "wound Extraordinary Pension"
+        },
+        "attendantAllowance": {
+          "type": "number",
+          "format": "float",
+          "description": "attendantAllowance"
+        },
+        "isEditEnabled": {
+          "type": "boolean",
+          "description": "Edit Enabled"
+        }
+      }
+    },
+    "UpdateRevisedPensionModel": {
+      "description": "Revised Pension",
+      "type": "object",
+      "properties": {
+        "pensionRevisionId": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 1024,
+          "description": "pensionerId"
+        },
+        "effectiveStartYear": {
+          "type": "integer",
+          "minLength": 2,
+          "maxLength": 64,
+          "description": "effective Start Year"
+        },
+        "effectiveStartMonth": {
+          "type": "integer",
+          "minLength": 2,
+          "maxLength": 64,
+          "description": "effective Start Month"
+        },
+        "effectiveEndYear": {
+          "type": "integer",
+          "minLength": 2,
+          "maxLength": 64,
+          "description": "effective End Year"
+        },
+        "effectiveEndMonth": {
+          "type": "integer",
+          "minLength": 2,
+          "maxLength": 64,
+          "description": "effective End Month"
+        },
+        "pensionArrear": {
+          "type": "number",
+          "format": "float",
+          "description": "pension Arrear"
+        },
+        "fma": {
+          "type": "number",
+          "format": "float",
+          "description": "fma"
+        },
+        "miscellaneous": {
+          "type": "number",
+          "format": "float",
+          "description": "Miscellaneous"
+        },
+        "overPayment": {
+          "type": "number",
+          "format": "float",
+          "description": "Over payment amount"
+        },
+        "incomeTax": {
+          "type": "number",
+          "format": "float",
+          "description": "Income Tax"
+        },
+        "cess": {
+          "type": "number",
+          "format": "float",
+          "description": "Cess"
+        },
+        "basicPension": {
+          "type": "number",
+          "format": "float",
+          "description": "Basic pension"
+        },
+        "additionalPension": {
+          "type": "number",
+          "format": "float",
+          "description": "Additional Pension"
+        },
+        "commutedPension": {
+          "type": "number",
+          "format": "float",
+          "description": "Commuted Pension"
+        },
+        "netDeductions": {
+          "type": "number",
+          "format": "float",
+          "description": "Net deductions"
+        },
+        "finalCalculatedPension": {
+          "type": "number",
+          "format": "float",
+          "description": "final Calculated Pension"
+        },
+        "interimRelief": {
+          "type": "number",
+          "format": "float",
+          "description": "Interim Relief"
+        },
+        "da": {
+          "type": "number",
+          "format": "float",
+          "description": "DA"
+        },
+        "totalPension": {
+          "type": "number",
+          "format": "float",
+          "description": "total Pension"
+        },
+        "pensionDeductions": {
+          "type": "number",
+          "format": "float",
+          "description": "pension Deductions"
+        },
+        "woundExtraordinaryPension": {
+          "type": "number",
+          "format": "float",
+          "description": "wound Extraordinary Pension"
+        },
+        "attendantAllowance": {
+          "type": "number",
+          "format": "float",
+          "description": "attendantAllowance"
+        },
+        "remarks": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 1024,
+          "description": "remarks"
+        }
+      }
+    },
+    "CreateRevisedPensionModel": {
+      "description": "Revised Pension",
+      "type": "object",
+      "properties": {
+        "effectiveStartYear": {
+          "type": "integer",
+          "minLength": 2,
+          "maxLength": 64,
+          "description": "effective Start Year"
+        },
+        "effectiveStartMonth": {
+          "type": "integer",
+          "minLength": 2,
+          "maxLength": 64,
+          "description": "effective Start Month"
+        },
+        "effectiveEndYear": {
+          "type": "integer",
+          "minLength": 2,
+          "maxLength": 64,
+          "description": "effective End Year"
+        },
+        "effectiveEndMonth": {
+          "type": "integer",
+          "minLength": 2,
+          "maxLength": 64,
+          "description": "effective End Month"
+        },
+        "pensionArrear": {
+          "type": "number",
+          "format": "float",
+          "description": "pension Arrear"
+        },
+        "fma": {
+          "type": "number",
+          "format": "float",
+          "description": "fma"
+        },
+        "miscellaneous": {
+          "type": "number",
+          "format": "float",
+          "description": "Miscellaneous"
+        },
+        "overPayment": {
+          "type": "number",
+          "format": "float",
+          "description": "Over payment amount"
+        },
+        "incomeTax": {
+          "type": "number",
+          "format": "float",
+          "description": "Income Tax"
+        },
+        "cess": {
+          "type": "number",
+          "format": "float",
+          "description": "Cess"
+        },
+        "basicPension": {
+          "type": "number",
+          "format": "float",
+          "description": "Basic pension"
+        },
+        "additionalPension": {
+          "type": "number",
+          "format": "float",
+          "description": "Additional Pension"
+        },
+        "commutedPension": {
+          "type": "number",
+          "format": "float",
+          "description": "Commuted Pension"
+        },
+        "netDeductions": {
+          "type": "number",
+          "format": "float",
+          "description": "Net deductions"
+        },
+        "finalCalculatedPension": {
+          "type": "number",
+          "format": "float",
+          "description": "final Calculated Pension"
+        },
+        "interimRelief": {
+          "type": "number",
+          "format": "float",
+          "description": "Interim Relief"
+        },
+        "da": {
+          "type": "number",
+          "format": "float",
+          "description": "DA"
+        },
+        "totalPension": {
+          "type": "number",
+          "format": "float",
+          "description": "total Pension"
+        },
+        "pensionDeductions": {
+          "type": "number",
+          "format": "float",
+          "description": "pension Deductions"
+        },
+        "woundExtraordinaryPension": {
+          "type": "number",
+          "format": "float",
+          "description": "wound Extraordinary Pension"
+        },
+        "attendantAllowance": {
+          "type": "number",
+          "format": "float",
+          "description": "attendantAllowance"
+        },
+        "remarks": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 1024,
+          "description": "remarks"
+        }
+      }
+    },
+    "ProcessRevisedPensionModel": {
+      "description": "Process Revised Pension",
+      "type": "object",
+      "properties": {
+        "tenantId": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 1024,
+          "description": "tenantid"
+        },
+        "pensioner": {
+          "description": "pensionRevision",
+          "$ref": "#/definitions/PensionerModel"
+        },
+        "pensionRevision": {
+          "description": "pensionRevision",
+          "items": {
+            "$ref": "#/definitions/UpdateRevisedPensionModel"
+          }
+        }
+      }
+    },
+    "ProcessCreateRevisedPensionModel": {
+      "description": "Process Create Revised Pension",
+      "type": "object",
+      "properties": {
+        "tenantId": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 1024,
+          "description": "tenantid"
+        },
+        "pensioner": {
+          "description": "pensionRevision",
+          "$ref": "#/definitions/PensionerModel"
+        },
+        "pensionRevision": {
+          "description": "revisedPension",
+          "items": {
+            "$ref": "#/definitions/CreateRevisedPensionModel"
+          }
+        }
+      }
+    },
+    "AcctorAcccessLevelModel": {
+      "description": "Access Level",
+      "type": "object",
+      "properties": {
+        "employeeOtherDetailsUpdate": {
+          "type": "boolean",
+          "description": "employeeOtherDetailsUpdate"
+        },
+        "employeeLeaveUpdate": {
+          "type": "boolean",
+          "description": "employeeLeaveUpdate"
+        },
+        "pensionCalculation": {
+          "type": "boolean",
+          "description": "pensionCalculation"
+        },
+        "pensionDataUpdate": {
+          "type": "boolean",
+          "description": "pensionDataUpdate"
+        }
+      }
+    },
+    "WorkflowAccessibilityResponse": {
+      "description": "Contract class to send response.",
+      "properties": {
+        "ResponseInfo": {
+          "$ref": "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo"
+        },
+        "ProcessInstances": {
+          "description": "Used for Workflow Accessibility",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/WorkflowAccessibilityModel"
+          }
+        }
+      }
+    },
+    "WorkflowAccessibilityModel": {
+      "description": "Dependent model",
+      "type": "object",
+      "properties": {
+        "assignee": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 1024,
+          "description": "workflow assignee uuid"
+        },
+        "assigneeName": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 250,
+          "description": "workflow assignee name"
+        },
+        "isClaimEnabled": {
+          "type": "boolean",
+          "description": "is workflow can be claimed by user"
+        },
+        "isReleaseEnabled": {
+          "type": "boolean",
+          "description": "is workflow can be released by user"
+        },
+        "isViewEnabled": {
+          "type": "boolean",
+          "description": "is workflow can be opened by user"
+        }
+      }
+    },
+    "ClaimReleaseWorkflowRequest": {
+      "description": "Contract class to process Pension Workflow.",
+      "properties": {
+        "RequestInfo": {
+          "$ref": "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-1-1.yml#/definitions/RequestInfo"
+        },
+        "ProcessInstances": {
+          "description": "Workflow details",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ClaimReleaseWorkflowModel"
+          }
+        }
+      }
+    },
+    "ClaimReleaseWorkflowModel": {
+      "description": "Process workflow model",
+      "type": "object",
+      "properties": {
+        "businessId": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 1024,
+          "description": "Application Number"
+        }
+      }
+    },
+    "CloseRRPRequest": {
+      "description": "Contract class to close Regular Retirement Pension.",
+      "properties": {
+        "RequestInfo": {
+          "$ref": "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-1-1.yml#/definitions/RequestInfo"
+        },
+        "ProcessInstances": {
+          "description": "Workflow details",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CloseRRPModel"
+          }
+        }
+      }
+    },
+    "CloseRRPModel": {
+      "description": "Process workflow model",
+      "type": "object",
+      "properties": {
+        "tenantId": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 1024,
+          "description": "tenantId(eg. ch)"
+        },
+        "businessService": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 250,
+          "description": "Business Service(eg. RRP_SERVICE)"
+        },
+        "businessId": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 1024,
+          "description": "Application Number"
+        },
+        "isContingentBillGenerated": {
+          "type": "boolean",
+          "description": "Is Contingent Bill Generated"
+        },
+        "dateOfContingent": {
+          "type": "integer",
+          "minLength": 2,
+          "maxLength": 64,
+          "description": "Date Of Contingent"
+        }
+      }
+    },
+    "CalculateBenefitRequest": {
+      "description": "Contract class to calculate benefit",
+      "properties": {
+        "RequestInfo": {
+          "$ref": "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-1-1.yml#/definitions/RequestInfo"
+        },
+        "ProcessInstances": {
+          "description": "Input details",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CalculateBenefitModel"
+          }
+        }
+      }
+    },
+    "CalculateBenefitModel": {
+      "description": "Calculate Benefit model",
+      "type": "object",
+      "properties": {
+        "tenantId": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 1024,
+          "description": "tenantId(eg. ch)"
+        },
+        "businessService": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 250,
+          "description": "Business Service(eg. RRPension_Service)"
+        },
+        "businessId": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 1024,
+          "description": "Application Number"
+        }
+      }
+    },
+    "CalculateBenefitResponse": {
+      "description": "Contract class to send response.",
+      "properties": {
+        "ResponseInfo": {
+          "$ref": "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo"
+        },
+        "ProcessInstances": {
+          "description": "Benefit details",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CalculateBenefitResultModel"
+          }
+        }
+      }
+    },
+    "CalculateBenefitResultModel": {
+      "description": "Benefit details model",
+      "type": "object",
+      "properties": {
+        "pensionCalculationDetails": {
+          "description": "Calculation details",
+          "$ref": "#/definitions/PensionCalculationModel"
+        },
+        "pensionCalculationUpdateDetails": {
+          "description": "Pension Calculation details",
+          "$ref": "#/definitions/PensionCalculationUpdateModel"
+        }
+      }
+    },
+    "CalculateRegularRetirementBenefitRequest": {
+      "description": "Contract class to Calculate Regular Retirement Benefit",
+      "properties": {
+        "ProcessInstances": {
+          "description": "Employee details",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ProcessBenefitModel"
+          }
+        }
+      }
+    },
+    "EmployeeModelForBenefitCalculation": {
+      "description": "Employee Model For Benefit Calculation",
+      "type": "object",
+      "properties": {
+        "dob": {
+          "type": "string",
+          "minLength": 10,
+          "maxLength": 10,
+          "description": "Date of Birth"
+        },
+        "dateOfRetirement": {
+          "type": "string",
+          "minLength": 10,
+          "maxLength": 10,
+          "description": "Date of Retirement"
+        },
+        "reasonForRetirement": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 250,
+          "description": "Reason for Retirement"
+        },
+        "lastDesignation": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 250,
+          "description": "Last Designation"
+        },
+        "totalNoPayLeaves": {
+          "type": "integer",
+          "description": "Total No-Pay Leave"
+        },
+        "lpd": {
+          "type": "number",
+          "format": "float",
+          "description": "Last Pay Drawn"
+        },
+        "dues": {
+          "type": "number",
+          "format": "float",
+          "description": "Dues"
+        },
+        "isCommutationOpted": {
+          "type": "boolean",
+          "description": "isCommutationOpted"
+        },
+        "isEmploymentActive": {
+          "type": "boolean",
+          "description": "isEmploymentActive"
+        },
+        "isConvictedSeriousCrimeOrGraveMisconduct": {
+          "type": "boolean",
+          "description": "isConvictedSeriousCrimeOrGraveMisconduct"
+        },
+        "isAnyJudicialProceedingIsContinuing": {
+          "type": "boolean",
+          "description": "isAnyJudicialProceedingIsContinuing"
+        },
+        "isAnyMisconductInsolvencyInefficiency": {
+          "type": "boolean",
+          "description": "isAnyMisconductInsolvencyInefficiency"
+        },
+        "isEmployeeDiesInTerroristAttack": {
+          "type": "boolean",
+          "description": "isEmployeeDiesInTerroristAttack"
+        },
+        "isEmployeeDiesInAccidentalDeath": {
+          "type": "boolean",
+          "description": "isEmployeeDiesInAccidentalDeath"
+        },
+        "serviceHistory": {
+          "description": "Service History",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/EmployeeServiceHistoryModelForBenefitCalculation"
+          }
+        }
+      }
+    },
+    "EmployeeServiceHistoryModelForBenefitCalculation": {
+      "description": "Employee Service History Model For Benefit Calculation",
+      "type": "object",
+      "properties": {
+        "serviceFrom": {
+          "type": "string",
+          "minLength": 10,
+          "maxLength": 10,
+          "description": "Service From"
+        },
+        "serviceTo": {
+          "type": "string",
+          "minLength": 10,
+          "maxLength": 10,
+          "description": "Service To"
+        }
+      }
+    },
+    "ProcessBenefitModel": {
+      "description": "Process Benefit model",
+      "type": "object",
+      "properties": {
+        "employee": {
+          "description": "Employee Details",
+          "$ref": "#/definitions/EmployeeModelForBenefitCalculation"
+        }
+      }
+    },
+    "NotificationModelForBenefitCalculation": {
+      "description": "Notification model",
+      "type": "object",
+      "properties": {
+        "notificationText": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 1024,
+          "description": "tenantId(eg. ch)"
+        }
+      }
+    },
+    "CheckDependentEligibilityForBenefitRequest": {
+      "description": "Contract class to check gratuity eleigibilty for a dependent",
+      "properties": {
+        "RequestInfo": {
+          "$ref": "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-1-1.yml#/definitions/RequestInfo"
+        },
+        "ProcessInstances": {
+          "description": "Input details",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/DependentEligibilityForBenefitProcessModel"
+          }
+        }
+      }
+    },
+    "DependentEligibilityForBenefitProcessModel": {
+      "description": "Dependent Eligibility For Gratuity Process Model",
+      "type": "object",
+      "properties": {
+        "tenantId": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 1024,
+          "description": "tenantId"
+        },
+        "dependents": {
+          "description": "Dependent details",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/DependentEligibilityForBenefitModel"
+          }
+        }
+      }
+    },
+    "DependentEligibilityForBenefitModel": {
+      "description": "Dependent Eligibility For Benefit Model",
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 250,
+          "description": "Name"
+        },
+        "dob": {
+          "type": "integer",
+          "minLength": 2,
+          "maxLength": 64,
+          "description": "Date of Birth"
+        },
+        "address": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 1024,
+          "description": "Address"
+        },
+        "mobileNumber": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 20,
+          "description": "Mobile Number"
+        },
+        "relationship": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 250,
+          "description": "Relationship"
+        },
+        "isDisabled": {
+          "type": "boolean",
+          "description": "Is Disabled"
+        },
+        "maritalStatus": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 250,
+          "description": "Marital Status"
+        },
+        "isHollyDependent": {
+          "type": "boolean",
+          "description": "Is Holly Dependent"
+        },
+        "noSpouseNoChildren": {
+          "type": "boolean",
+          "description": "No Spouse No Children"
+        },
+        "isGrandChildFromDeceasedSon": {
+          "type": "boolean",
+          "description": "Is GrandChild From Deceased Son"
+        },
+        "isEligibleForGratuity": {
+          "type": "boolean",
+          "description": "Is Eligible For Gratuity"
+        },
+        "isEligibleForPension": {
+          "type": "boolean",
+          "description": "Is Eligible For Pension"
+        }
+      }
+    },
+    "CheckDependentEligibilityForBenefitResponse": {
+      "description": "Contract class to send response.",
+      "properties": {
+        "ResponseInfo": {
+          "$ref": "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo"
+        },
+        "ProcessInstances": {
+          "description": "Dependent with eligibility details",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/DependentEligibilityResultModel"
+          }
+        }
+      }
+    },
+    "DependentEligibilityResultModel": {
+      "description": "Dependent Eligibility Result Model",
+      "type": "object",
+      "properties": {
+        "dependents": {
+          "description": "Dependent details",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/DependentEligibilityForBenefitModel"
+          }
+        }
+      }
+    },
+    "SearchPensionerResultModel": {
+      "description": "Used for search result",
+      "type": "object",
+      "properties": {
+        "pensionerId": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 1024,
+          "description": "Pensioner uuid"
+        },
+        "tenantId": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 1024,
+          "description": "tenantid"
+        },
+        "name": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 250,
+          "description": "Name of pensioner",
+          "readOnly": true
+        },
+        "code": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 1024,
+          "description": "Employee code"
+        },
+        "pensionerNumber": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 1024,
+          "description": "Pensioner Number"
+        },
+        "businessService": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 1024,
+          "description": "business Service"
+        },
+        "dob": {
+          "type": "integer",
+          "minLength": 2,
+          "maxLength": 64,
+          "description": "DOB of pensioner"
+        },
+        "gender": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 250,
+          "description": "Gender of pensioner"
+        },
+        "dateOfRetirement": {
+          "type": "integer",
+          "minLength": 2,
+          "maxLength": 64,
+          "description": "date Of Retirement",
+          "readOnly": true
+        },
+        "dateOfDeath": {
+          "type": "integer",
+          "minLength": 2,
+          "maxLength": 64,
+          "description": "date Of Death"
+        },
+        "dateOfAppointment": {
+          "type": "integer",
+          "minLength": 2,
+          "maxLength": 64,
+          "description": "date Of Appointment"
+        },
+        "lpd": {
+          "type": "number",
+          "format": "float",
+          "description": "lpd"
+        },
+        "ltc": {
+          "type": "number",
+          "format": "float",
+          "description": "lpd"
+        },
+        "wef": {
+          "type": "integer",
+          "minLength": 2,
+          "maxLength": 64,
+          "description": "wef"
+        },
+        "claimantName": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 250,
+          "description": "claimant Name"
+        },
+        "claimantDob": {
+          "type": "integer",
+          "minLength": 2,
+          "maxLength": 64,
+          "description": "claimant Dob"
+        },
+        "address": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 250,
+          "description": "address"
+        },
+        "bankDetails": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 250,
+          "description": "bank Details"
+        },
+        "bankAccountNumber": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 250,
+          "description": "bank Account Number"
+        },
+        "designation": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 250,
+          "description": "designation"
+        }
+      }
+    },
+    "pensionerFinalCalculatedBenefitDetails": {
+      "description": "Pensioner final calculated benefit",
+      "type": "object",
+      "properties": {
+        "basicPension": {
+          "type": "number",
+          "format": "float",
+          "description": "Basic pension"
+        },
+        "pensionDeductions": {
+          "type": "number",
+          "format": "float",
+          "description": "Pension"
+        },
+        "additionalPension": {
+          "type": "number",
+          "format": "float",
+          "description": "Additional Pension"
+        },
+        "commutedPension": {
+          "type": "number",
+          "format": "float",
+          "description": "Commuted Pension"
+        },
+        "commutedValue": {
+          "type": "number",
+          "format": "float",
+          "description": "Commuted Value"
+        },
+        "familyPensionI": {
+          "type": "number",
+          "format": "float",
+          "description": "family_pension_i (Death workflow)"
+        },
+        "familyPensionII": {
+          "type": "number",
+          "format": "float",
+          "description": "family_pension_ii (Death workflow)"
+        },
+        "dcrg": {
+          "type": "number",
+          "format": "float",
+          "description": "Death-cum-retirement gratuity"
+        },
+        "netDeductions": {
+          "type": "number",
+          "format": "float",
+          "description": "Net deductions"
+        },
+        "finalCalculatedPension": {
+          "type": "number",
+          "format": "float",
+          "description": "Final calculated pension"
+        },
+        "interimRelief": {
+          "type": "number",
+          "format": "float",
+          "description": "Interim Relief"
+        },
+        "da": {
+          "type": "number",
+          "format": "float",
+          "description": "Dearness Allowance"
+        },
+        "nqsYear": {
+          "type": "integer",
+          "minLength": 2,
+          "maxLength": 64,
+          "description": "nqsYear"
+        },
+        "nqsMonth": {
+          "type": "integer",
+          "minLength": 2,
+          "maxLength": 64,
+          "description": "nqsMonth"
+        },
+        "nqsDay": {
+          "type": "integer",
+          "minLength": 2,
+          "maxLength": 64,
+          "description": "nqsDay"
+        },
+        "duesDeductions": {
+          "type": "number",
+          "format": "float",
+          "description": "Dues deductions"
+        },
+        "compassionatePension": {
+          "type": "number",
+          "format": "float",
+          "description": "Compassionate Pension"
+        },
+        "compensationPension": {
+          "type": "number",
+          "format": "float",
+          "description": "Compensation Pension"
+        },
+        "terminalBenefit": {
+          "type": "number",
+          "format": "float",
+          "description": "Terminal Benefit"
+        },
+        "finalCalculatedGratuity": {
+          "type": "number",
+          "format": "float",
+          "description": "Final Calculated Gratuity"
+        },
+        "familyPensionIStartDate": {
+          "type": "number",
+          "format": "float",
+          "description": "familyPensionIStartDate"
+        },
+        "familyPensionIEndDate": {
+          "type": "number",
+          "format": "float",
+          "description": "familyPensionIEndDate"
+        },
+        "familyPensionIIStartDate": {
+          "type": "number",
+          "format": "float",
+          "description": "familyPensionIIStartDate"
+        },
+        "exGratia": {
+          "type": "number",
+          "format": "float",
+          "description": "exGratia"
+        },
+        "pensionerFamilyPension": {
+          "type": "number",
+          "format": "float",
+          "description": "pensionerFamilyPension"
+        },
+        "totalPension": {
+          "type": "number",
+          "format": "float",
+          "description": "totalPension"
+        },
+        "woundExtraordinaryPension": {
+          "type": "number",
+          "format": "float",
+          "description": "wound Extraordinary Pension"
+        },
+        "attendantAllowance": {
+          "type": "number",
+          "format": "float",
+          "description": "attendantAllowance"
+        }
+      }
+    },
+    "SearchPensionRegisterResponse": {
+      "description": "Contract class to send response.",
+      "properties": {
+        "ResponseInfo": {
+          "$ref": "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo"
+        },
+        "ProcessInstances": {
+          "description": "Used for details result",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SearchPensionRegisterResultModel"
+          }
+        }
+      }
+    },
+    "SearchPensionRegisterResultModel": {
+      "description": "Pension Register details",
+      "type": "object",
+      "properties": {
+        "pensioner": {
+          "description": "pensioner",
+          "$ref": "#/definitions/SearchPensionerResultModel"
+        },
+        "pensionRegister": {
+          "description": "pensionRevision",
+          "items": {
+            "$ref": "#/definitions/PensionRegisterModel"
+          }
+        },
+        "pensionerFinalCalculatedBenefitDetails": {
+          "description": "Pension Calculation details",
+          "$ref": "#/definitions/pensionerFinalCalculatedBenefitDetails"
+        }
+      }
+    },
+    "PensionRegisterModel": {
+      "description": "Pension Register details",
+      "type": "object",
+      "properties": {
+        "effectiveYear": {
+          "type": "integer",
+          "minLength": 2,
+          "maxLength": 64,
+          "description": "effective  Year"
+        },
+        "effectiveMonth": {
+          "type": "integer",
+          "minLength": 2,
+          "maxLength": 64,
+          "description": "effective Month"
+        },
+        "pensionArrear": {
+          "type": "number",
+          "format": "float",
+          "description": "pension Arrear"
+        },
+        "fma": {
+          "type": "number",
+          "format": "float",
+          "description": "fma"
+        },
+        "miscellaneous": {
+          "type": "number",
+          "format": "float",
+          "description": "Miscellaneous"
+        },
+        "overPayment": {
+          "type": "number",
+          "format": "float",
+          "description": "Over payment amount"
+        },
+        "incomeTax": {
+          "type": "number",
+          "format": "float",
+          "description": "Income Tax"
+        },
+        "cess": {
+          "type": "number",
+          "format": "float",
+          "description": "Cess"
+        },
+        "basicPension": {
+          "type": "number",
+          "format": "float",
+          "description": "Basic pension"
+        },
+        "additionalPension": {
+          "type": "number",
+          "format": "float",
+          "description": "Additional Pension"
+        },
+        "commutedPension": {
+          "type": "number",
+          "format": "float",
+          "description": "Commuted Pension"
+        },
+        "netDeductions": {
+          "type": "number",
+          "format": "float",
+          "description": "Net deductions"
+        },
+        "finalCalculatedPension": {
+          "type": "number",
+          "format": "float",
+          "description": "final Calculated Pension"
+        },
+        "interimRelief": {
+          "type": "number",
+          "format": "float",
+          "description": "Interim Relief"
+        },
+        "da": {
+          "type": "number",
+          "format": "float",
+          "description": "DA"
+        },
+        "totalPension": {
+          "type": "number",
+          "format": "float",
+          "description": "total Pension"
+        },
+        "pensionDeductions": {
+          "type": "number",
+          "format": "float",
+          "description": "pension Deductions"
+        },
+        "woundExtraordinaryPension": {
+          "type": "number",
+          "format": "float",
+          "description": "wound Extraordinary Pension"
+        },
+        "attendantAllowance": {
+          "type": "number",
+          "format": "float",
+          "description": "attendantAllowance"
+        }
+      }
+    },
+    "PushManualRegisterToPensionNotificationRegisterRequest": {
+      "description": "Contract class to save request. Employee detailes to be saved.",
+      "properties": {
+        "RequestInfo": {
+          "$ref": "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-1-1.yml#/definitions/RequestInfo"
+        },
+        "Employees": {
+          "description": "Employee",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/EmployeeModelForPushManualRegisterToPensionNotificationRegister"
+          }
+        }
+      }
+    },
+    "EmployeeModelForPushManualRegisterToPensionNotificationRegister": {
+      "description": "Employee Model",
+      "type": "object",
+      "properties": {
+        "tenantId": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 1024,
+          "description": "tenantId"
+        },
+        "code": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 250,
+          "description": "Employee Code"
+        }
+      }
+    },
+    "DisabilityRegistrationRequest": {
+      "description": "Contract class to process request.",
+      "properties": {
+        "RequestInfo": {
+          "$ref": "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-1-1.yml#/definitions/RequestInfo"
+        },
+        "Employees": {
+          "description": "Employee",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/EmployeeModelForDisabilityRegistration"
+          }
+        }
+      }
+    },
+    "EmployeeModelForDisabilityRegistration": {
+      "description": "Employee Model",
+      "type": "object",
+      "properties": {
+        "tenantId": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 1024,
+          "description": "tenantId"
+        },
+        "code": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 250,
+          "description": "Employee code"
+        },
+        "severityOfDisability": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 250,
+          "description": "Severity Of Disability"
+        },
+        "disabilityPercentage": {
+          "type": "number",
+          "format": "float",
+          "description": "disability Percentage"
+        },
+        "dateOfInjury": {
+          "type": "integer",
+          "minLength": 2,
+          "maxLength": 64,
+          "description": "Date Of Injury"
+        },
+        "injuryApplicationDate": {
+          "type": "integer",
+          "minLength": 2,
+          "maxLength": 64,
+          "description": "Injury Application Date"
+        },
+        "woundExtraordinaryPension": {
+          "type": "number",
+          "format": "float",
+          "description": "Wound or Extraordinary Pension Amount"
+        },
+        "attendantAllowanceGranted": {
+          "type": "boolean",
+          "description": "Attendant Allowance Granted or not"
+        },
+        "comments": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 20,
+          "description": "Comments"
+        }
+      }
+    },
+    "SearchPensionEmployeesResponse": {
+      "description": "Contract class to send response. Array of Employees are used.",
+      "properties": {
+        "ResponseInfo": {
+          "$ref": "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo"
+        },
+        "Employees": {
+          "description": "Used for search result",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SearchPensionEmployeesResultModel"
+          }
+        }
+      }
+    },
+    "SearchPensionEmployeesResultModel": {
+      "description": "Search Pension EmployeesResult Model",
+      "type": "object",
+      "properties": {
+        "uuid": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 1024,
+          "description": "uuid"
+        },
+        "tenantId": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 1024,
+          "description": "tenantId"
+        },
+        "hrmsId": {
+          "type": "integer",
+          "minLength": 2,
+          "maxLength": 64,
+          "description": "hrmsId"
+        },
+        "code": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 250,
+          "description": "Employee Code"
+        },
+        "name": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 250,
+          "description": "Name of the employee",
+          "readOnly": true
+        },
+        "dob": {
+          "type": "integer",
+          "minLength": 2,
+          "maxLength": 64,
+          "description": "DOB of employee",
+          "readOnly": true
+        },
+        "dateOfRetirement": {
+          "type": "integer",
+          "minLength": 2,
+          "maxLength": 64,
+          "description": "Retirement date of employee",
+          "readOnly": true
+        },
+        "hrmsUuid": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 1024,
+          "description": "hrmsUuid"
+        },
+        "salutation": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 20,
+          "description": "salutation"
+        },
+        "gender": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 20,
+          "description": "gender"
+        },
+        "employeeStatus": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 250,
+          "description": "Employee Status"
+        },
+        "employeeType": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 250,
+          "description": "Employee Type"
+        }
+      }
+    },
+    "GetEmployeeDisabilityResponse": {
+      "description": "Contract class to send response. Array of Employees are used.",
+      "properties": {
+        "ResponseInfo": {
+          "$ref": "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo"
+        },
+        "Employees": {
+          "description": "Used for search result",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/EmployeeDisabilityResultModel"
+          }
+        }
+      }
+    },
+    "EmployeeDisabilityResultModel": {
+      "description": "Employee Model",
+      "type": "object",
+      "properties": {
+        "tenantId": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 1024,
+          "description": "tenantId"
+        },
+        "severityOfDisability": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 250,
+          "description": "Severity Of Disability"
+        },
+        "disabilityPercentage": {
+          "type": "number",
+          "format": "float",
+          "description": "disability Percentage"
+        },
+        "dateOfInjury": {
+          "type": "integer",
+          "minLength": 2,
+          "maxLength": 64,
+          "description": "Date Of Injury"
+        },
+        "injuryApplicationDate": {
+          "type": "integer",
+          "minLength": 2,
+          "maxLength": 64,
+          "description": "Injury Application Date"
+        },
+        "woundExtraordinaryPension": {
+          "type": "number",
+          "format": "float",
+          "description": "Wound or Extraordinary Pension Amount"
+        },
+        "attendantAllowanceGranted": {
+          "type": "boolean",
+          "description": "Attendant Allowance Granted or not"
+        },
+        "comments": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 20,
+          "description": "Comments"
+        }
+      }
+    },
+    "DisabilityModelForWorkflow": {
+      "description": "Disability Model For Workflow",
+      "type": "object",
+      "properties": {
+        "disabilityPercentage": {
+          "type": "number",
+          "format": "float",
+          "description": "disability Percentage"
+        },
+        "woundExtraordinaryPension": {
+          "type": "number",
+          "format": "float",
+          "description": "wound or Extraordinary Pension"
+        },
+        "attendantAllowanceGranted": {
+          "type": "boolean",
+          "description": "employeeLeaveUpdate"
+        }
+      }
+    },
+    "PensionerPensionDiscontinuationRequest": {
+      "description": "Contract class to discontinue pension of pensioner.",
+      "properties": {
+        "RequestInfo": {
+          "$ref": "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-1-1.yml#/definitions/RequestInfo"
+        },
+        "ProcessInstances": {
+          "description": "Used for save data",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ProcessPensionerPensionDiscontinuationModel"
+          }
+        }
+      }
+    },
+    "ProcessPensionerPensionDiscontinuationModel": {
+      "description": "Process Discontinue Pensioner Pension",
+      "type": "object",
+      "properties": {
+        "tenantId": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 1024,
+          "description": "tenantid"
+        },
+        "pensioner": {
+          "description": "Pensioner",
+          "$ref": "#/definitions/PensionerModelForPensionDiscontinuation"
+        }
+      }
+    },
+    "PensionerModelForPensionDiscontinuation": {
+      "description": "Pensioner mOdel",
+      "type": "object",
+      "properties": {
+        "pensionerNumber": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 1024,
+          "description": "Pensioner Number"
+        }
+      }
+    },
+    "SearchClosedApplicationResponse": {
+      "description": "Contract class to send response. Array of Applications.",
+      "properties": {
+        "ResponseInfo": {
+          "$ref": "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo"
+        },
+        "ProcessInstances": {
+          "description": "Used for search result",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SearchClosedApplicationResultModel"
+          }
+        }
+      }
+    },
+    "SearchClosedApplicationResultModel": {
+      "description": "Search result for closed applications",
+      "type": "object",
+      "properties": {
+        "workflowHeaderId": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 1026,
+          "description": "workflow uuid"
+        },
+        "tenantId": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 1026,
+          "description": "tenantId"
+        },
+        "businessService": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 250,
+          "description": "Application Type"
+        },
+        "businessId": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 250,
+          "description": "Application Number"
+        },
+        "applicationDate": {
+          "type": "integer",
+          "minLength": 2,
+          "maxLength": 64,
+          "description": "Application Start Date",
+          "readOnly": true
+        },
+        "lastModifiedDate": {
+          "type": "integer",
+          "minLength": 2,
+          "maxLength": 64,
+          "description": "Application last Modification Date",
+          "readOnly": true
+        },
+        "recomputedBusinessId": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 250,
+          "description": "Recomputed Application Number"
+        },
+        "pensionEmployeeId": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 250,
+          "description": "Pension Employee uuid"
+        },
+        "code": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 250,
+          "description": "Employee Code"
+        },
+        "name": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 250,
+          "description": "Employee Name"
+        }
+      }
+    },
+    "InitiateReComputationRequest": {
+      "description": "Contract class to initiate orecomputation of workflow.",
+      "properties": {
+        "RequestInfo": {
+          "$ref": "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-1-1.yml#/definitions/RequestInfo"
+        },
+        "ProcessInstances": {
+          "description": "Workflow details",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ProcessInitiateReComputationModel"
+          }
+        }
+      }
+    },
+    "ProcessInitiateReComputationModel": {
+      "description": "Process workflow model",
+      "type": "object",
+      "properties": {
+        "moduleName": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 250,
+          "description": "Module Name"
+        },
+        "tenantId": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 1024,
+          "description": "tenantId"
+        },
+        "businessService": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 250,
+          "description": "Application Type"
+        },
+        "businessId": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 1024,
+          "description": "Application Number"
+        },
+        "action": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 250,
+          "description": "Action"
+        },
+        "comment": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 1024,
+          "description": "comment"
+        },
+        "assignee": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 1024,
+          "description": "assignee"
+        },
+        "sla": {
+          "type": "integer",
+          "minLength": 2,
+          "maxLength": 64,
+          "description": "sla"
+        },
+        "previousStatus": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 250,
+          "description": "Previous Status"
+        },
+        "closedWorkflow": {
+          "description": "Workflow Header Details",
+          "$ref": "#/definitions/ClosedWorkflowModelForInitiateRecomputation"
+        }
+      }
+    },
+    "ClosedWorkflowModelForInitiateRecomputation": {
+      "description": "Closed Workflow Model For Initiate Recomputation",
+      "type": "object",
+      "properties": {
+        "businessId": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 1024,
+          "description": "Closed Application Number"
+        }
+      }
+    }
+  }
+}

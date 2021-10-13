@@ -1,0 +1,27 @@
+{
+	"RequestInfo": {
+		"apiId": "Mihy",
+		"ver": ".01",
+		"action": "",
+		"did": "1",
+		"key": "",
+		"msgId": "20170310130900|en_IN",
+		"requesterId": "",
+		"authToken": "64244cf2-42ce-40ab-b060-a8f651e5e923"
+	},
+	"auditDetails": {
+		"createdBy": "35cdc0a4-cbe0-4992-ba3a-ef11839550a0",
+		"createdTime": 1590501023297,
+		"lastModifiedBy": "35cdc0a4-cbe0-4992-ba3a-ef11839550a0",
+		"lastModifiedTime": 1590501085207
+	},
+	"RequestBody": {
+		"paymentMode": "ONLINE",
+		"paymentGateway": "PAYU",
+		"transactionId": "PB_PG_2020_05_26_000652_82",
+		"pgStatus": "success",
+		"paymentStatus": "PAID",
+		"challanUuid": "e839e784-78ab-4154-be32-b561d34f1f88",
+		"tenantId": "ch.chandigarh"
+	}
+}

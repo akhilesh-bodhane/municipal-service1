@@ -1,0 +1,1 @@
+ALTER TABLE public.egec_store_item_register ADD COLUMN damaged_quantity bigint;

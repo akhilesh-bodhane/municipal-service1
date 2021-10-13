@@ -1,0 +1,54 @@
+{ 
+   "RequestInfo":{ 
+      "userInfo":{ 
+         "id":93,
+         "userName":"vaishnavi",
+         "name":"vaishnavi",
+         "type":"CITIZEN",
+         "roles":[ 
+            { 
+               "code":"CITIZEN"
+            }
+         ],
+         "tenantId":"pb.amritsar",
+         "uuid":"65a14e00-ba5e-4347-be81-08fc04bb0529"
+      }
+   },
+   "applicationType":"PETNOC",
+   "applicationId": "PMS-2020-03-11-042081",
+   "tenantId":"CH",
+   "applicationStatus":"INITIATE",
+   "dataPayload":{ 
+      "nameOfPetDog":"Rocky",
+      "applicantName":"Prakash Rao",
+      "houseNo":"14",
+      "sector":"Akshardham",
+      "age":"4",
+      "sex":"Male",
+      "breed":"Indian",
+      "color":"Blue",
+      "identificationMark":"aaa",
+      "immunizationNameVeterinaryDoctor":"Test",
+      "veterinaryCouncilRegistrationNo":"11",
+      "immunizationContactDetail":"9988779988",
+      "immunizationClinicNo":"1223",
+      "immunizationSector":"aaa",
+      "uploadPetPicture":[ 
+         { 
+            "fileStoreId":"aa12345"
+         }
+      ],
+      "uploadVaccinationCertificate":[ 
+         { 
+            "fileStoreId":"aaaa12345"
+         }
+      ],
+      "remarks":""
+   },
+   "auditDetails":{ 
+      "createdBy":1,
+      "lastModifiedBy":1,
+      "createdTime":1578894136873,
+      "lastModifiedTime":1578894136873
+   }
+}

@@ -1,0 +1,128 @@
+package org.egov.assets.common;
+
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+import org.egov.assets.model.AuditDetails;
+import org.egov.assets.model.Page;
+import org.egov.assets.model.StatusNums.StatusEnum;
+//import org.egov.assets.model.ResponseInfo;
+//import org.egov.assets.model.ResponseInfo.StatusEnum;
+import org.egov.assets.model.Uom;
+import org.egov.assets.service.UomService;
+import org.egov.common.contract.request.RequestInfo;
+import org.egov.common.contract.response.ResponseInfo;
+import org.egov.tracer.kafka.LogAwareKafkaTemplate;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+
+@Service
+public class DomainService {
+
+	@Autowired
+	protected LogAwareKafkaTemplate<String, Object> kafkaQue;
+
+	protected SimpleDateFormat ddMMYYYYHHMMSS = new SimpleDateFormat("dd/MM/yyyy hh:mm::ss");
+	protected SimpleDateFormat ddMMYYYY = new SimpleDateFormat("dd/MM/yyyy");
+
+	private static final Logger LOG = LoggerFactory.getLogger(DomainService.class);
+
+	@Value("${app.timezone}")
+	private String timeZone;
+
+	@Autowired
+	private UomService uomService;
+
+	private String assetSearchUrl = "";
+
+	private String assetListFiled = "assets";
+
+	public AuditDetails mapAuditDetails(RequestInfo requestInfo) {
+		long dateTime = new Date().getTime();
+		return AuditDetails.builder().createdBy(requestInfo.getUserInfo().getId().toString())
+				.lastModifiedBy(requestInfo.getUserInfo().getId().toString()).createdTime(dateTime)
+				.lastModifiedTime(dateTime).build();
+	}
+
+	public AuditDetails mapAuditDetailsForUpdate(RequestInfo requestInfo) {
+		long dateTime = new Date().getTime();
+		return AuditDetails.builder().lastModifiedBy(requestInfo.getUserInfo().getId().toString())
+				.lastModifiedTime(dateTime).build();
+	}
+
+	public ResponseInfo getResponseInfo(RequestInfo requestInfo) {
+		return ResponseInfo.builder().apiId(requestInfo.getApiId()).ver(requestInfo.getVer())
+				.resMsgId(requestInfo.getMsgId()).resMsgId("placeholder").status(StatusEnum.SUCCESSFUL.toString())
+				.build();
+	}
+
+	protected <T> Page getPage(Pagination<T> search) {
+		return new Page().currentPage(search.getCurrentPage() + 1).pageSize(search.getPageSize())
+				.totalResults(search.getTotalResults()).totalPages(search.getTotalPages());
+	}
+
+	public AuditDetails getAuditDetails(RequestInfo requestInfo, String action) {
+		AuditDetails auditDetails = new AuditDetails();
+		if (action.equalsIgnoreCase(Constants.ACTION_CREATE)) {
+			if (requestInfo.getUserInfo() != null && requestInfo.getUserInfo().getId() != null) {
+				auditDetails.createdBy(requestInfo.getUserInfo().getId().toString());
+				auditDetails.lastModifiedBy(requestInfo.getUserInfo().getId().toString());
+			}
+			auditDetails.createdTime(new Date().getTime());
+			auditDetails.lastModifiedTime(new Date().getTime());
+			return auditDetails;
+		} else {
+			if (requestInfo.getUserInfo() != null && requestInfo.getUserInfo().getId() != null) {
+				auditDetails.lastModifiedBy(requestInfo.getUserInfo().getId().toString());
+			}
+			auditDetails.lastModifiedTime(new Date().getTime());
+			return auditDetails;
+		}
+	}
+
+	public Uom getUom(String tenantId, String uomCode, RequestInfo requestInfo) {
+		return uomService.getUom(tenantId, uomCode, requestInfo);
+	}
+
+	public BigDecimal getSaveConvertedQuantity(BigDecimal quantity, BigDecimal conversionFactor) {
+		return quantity.multiply(conversionFactor);
+	}
+
+	public BigDecimal getSearchConvertedQuantity(BigDecimal quantity, BigDecimal conversionFactor) {
+		return quantity.divide(conversionFactor, 10, RoundingMode.HALF_UP);
+	}
+
+	public BigDecimal getSaveConvertedRate(BigDecimal rate, BigDecimal conversionFactor) {
+		return rate.divide(conversionFactor, 10, RoundingMode.HALF_UP);
+	}
+
+	public BigDecimal getSearchConvertedRate(BigDecimal rate, BigDecimal conversionFactor) {
+		return rate.multiply(conversionFactor);
+	}
+
+	public String toDateStr(Long epoch) {
+		Date date = new Date(epoch);
+		String dateStr = ddMMYYYYHHMMSS.format(date);
+		LOG.info("date for epoch " + epoch + " is: " + dateStr);
+		return dateStr;
+	}
+
+	public Long currentEpochWithoutTime() {
+		try {
+			String dateStr = ddMMYYYY.format(new Date());
+			Date date = ddMMYYYY.parse(dateStr);
+			return date.getTime();
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+}

@@ -1,0 +1,71 @@
+{
+	"RequestInfo": {
+		"apiId": "Rainmaker",
+		"ver": ".01",
+		"action": "",
+		"did": "1",
+		"key": "",
+		"msgId": "20170310130900|en_IN",
+		"requesterId": "",
+		"authToken": "7074b666-b0d5-4408-a457-25fcfde1b220",
+		"userInfo": {
+			"id": 102,
+			"userName": "eaoadmin",
+			"salutation": null,
+			"name": "EncroachmentAdminOfficer",
+			"gender": "MALE",
+			"mobileNumber": "9421959604",
+			"emailId": null,
+			"altContactNumber": null,
+			"pan": null,
+			"aadhaarNumber": "215329445184",
+			"permanentAddress": "string",
+			"permanentCity": "ch.chandigarh",
+			"permanentPinCode": null,
+			"correspondenceAddress": "string",
+			"correspondenceCity": "ch.chandigarh",
+			"correspondencePinCode": null,
+			"active": true,
+			"locale": "string",
+			"type": "EMPLOYEE",
+			"accountLocked": false,
+			"accountLockedDate": 0,
+			"fatherOrHusbandName": "string",
+			"signature": "string",
+			"bloodGroup": null,
+			"photo": null,
+			"identificationMark": "string",
+			"createdBy": 93,
+			"lastModifiedBy": 93,
+			"tenantId": "ch.chandigarh",
+			"roles": [{
+				"code": "EAO",
+				"name": null,
+				"tenantId": "ch.chandigarh"
+			}],
+			"uuid": "3895909c-310f-4761-93f6-cfd9d56723a0",
+			"createdDate": "20-04-2020 12:51:12",
+			"lastModifiedDate": "20-04-2020 12:51:12",
+			"dob": "17/1/2020",
+			"pwdExpiryDate": "19-07-2020 12:51:12"
+		}
+	},
+	"applicationType": "Item-Master",
+	"applicationStatus": null,
+	"applicationId": "2eb1c228-4880-47d6-ab05-55df83b66291",
+	"tenantId": "ch.chandigarh",
+	"requestBody": {
+		"itemUuid": "2eb1c228-4880-47d6-ab05-55df83b66291",
+		"itemName": "test 3",
+		"description": "Testing Description After Approval",
+		"tenantId": "ch.chandigarh",
+		"approvalStatus": "PENDING",
+		"isActive": true
+	},
+	"auditDetails": {
+		"createdBy": 102,
+		"lastModifiedBy": 102,
+		"createdTime": 1578894136873,
+		"lastModifiedTime": 1578894136873
+	}
+}

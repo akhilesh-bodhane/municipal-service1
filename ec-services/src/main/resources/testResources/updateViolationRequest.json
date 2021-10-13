@@ -1,0 +1,119 @@
+{
+   "RequestInfo":{  
+   "apiId":"emp",
+   "ver":"1.0",
+   "ts":"20201212",
+   "action":"create",
+   "did":"1",
+   "key":"abcdkey",
+   "msgId":"20170310130900",
+   "requesterId":"",
+   "authToken":"",
+   "userInfo":{
+      "id":102,
+      "userName":"eaoadmin",
+      "salutation":null,
+      "name":"EncroachmentAdminOfficer",
+      "gender":"MALE",
+      "mobileNumber":"9421959604",
+      "emailId":null,
+      "altContactNumber":null,
+      "pan":null,
+      "aadhaarNumber":"215329445184",
+      "permanentAddress":"string",
+      "permanentCity":"ch.chandigarh",
+      "permanentPinCode":null,
+      "correspondenceAddress":"string",
+      "correspondenceCity":"ch.chandigarh",
+      "correspondencePinCode":null,
+      "active":true,
+      "locale":"string",
+      "type":"EMPLOYEE",
+      "accountLocked":false,
+      "accountLockedDate":0,
+      "fatherOrHusbandName":"string",
+      "signature":"string",
+      "bloodGroup":null,
+      "photo":null,
+      "identificationMark":"string",
+      "createdBy":93,
+      "lastModifiedBy":93,
+      "tenantId":"ch.chandigarh",
+      "roles":[
+         {
+            "code":"EAO",
+            "name":"EAO",
+            "tenantId":"ch.chandigarh"
+         }
+      ],
+      "uuid":"3895909c-310f-4761-93f6-cfd9d56723a0",
+      "createdDate":"20-04-2020 12:51:12",
+      "lastModifiedDate":"20-04-2020 12:51:12",
+      "dob":"17/1/2020",
+      "pwdExpiryDate":"19-07-2020 12:51:12"
+   }
+},
+"RequestBody":{
+"violationUuid":"3895909c-310f-4761-93f6-cfd9d56723a0",
+"tenantId":"ch.chandigarh",
+"numberOfViolation":"5",
+"encroachmentType":"Shopkeeper/Corridor",
+"violationDate":"25/04/2020",
+"violationTime":"12:12",
+"violatorName":"Pooja",
+"sector":"Sector 4",
+"location":"30.7363° N 76.7884° E",
+"adddress":"Pune",
+"emailid":"postmantest@gmail.com",
+"fatherName":"PostmanTest",
+"contactNumber":9292123621,
+"status":"pending",
+"isActive":true,
+"siName":"si_112334",
+"licenseNoCov":"lis15",
+"paymentDetails":{
+
+},
+"notificationTemplate":{"email":"rushikesh.narkhede@extrapreneursindia.com",
+"subject":"challan",
+"body":"Dear Applicant,<br/><p>Your application id - [:applicationId for permission for keeping of Pets has been approved. Kindly visit the MMC Chandigarh portal for details.</p><br/>Regards,<br/>Portal Administrator (MCC Chandigarh)",
+"attachmentUrls":null,
+"mobileNumber":998525852,
+"message":"blah blah",
+"isHtml":true,
+"paymentMode":""
+},
+"violationItem":[
+   {
+      "itemName":"xyz",
+      "quantity":"21",
+      "remark":"qweqwe",
+      "violationUuid":"",
+      "isActive":true,
+      "itemType":""
+   }
+],
+"document":[
+   {
+      "fileStoreId":"458e5f45-9c1c-42b0-84de-1f6b45369c35",
+      "documentType":"img",
+      "challanId":"",
+      "violationUuid":"",
+      "isActive":true
+   },
+   {
+      "fileStoreId":"458e5f45-9c1c-42b0-84de-1f6b45369c36",
+      "documentType":"img",
+      "challanId":"",
+      "violationUuid":"",
+      "isActive":true
+   }
+]
+},
+"AuditDetails":{"createdBy":"RN",
+"createdTime":"123446",
+"lastModifiedBy":"RN",
+"lastModifiedTime":"12312",
+"userRole":"HOD"
+}
+}

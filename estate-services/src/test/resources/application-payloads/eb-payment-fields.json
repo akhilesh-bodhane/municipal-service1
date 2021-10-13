@@ -1,0 +1,13 @@
+{
+"transferCharges" : 12,
+"GST":9,
+"applicationFee" :21,
+"inspectionFee" : null,
+"securityFee" : null,
+"extensionFee" :null,
+"DocumentCopyingFee":12,
+"allotmentFee" : 12,
+"conversionFee" :9,
+"propertyTransferCharge" :0
+  
+}

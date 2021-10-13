@@ -1,0 +1,1024 @@
+{
+    "EVENTCREATE": {
+        "eventTitle": {
+            "mandatory": "false",
+            "validateRegularExp": "^[a-zA-Z0-9 ]{1,180}$"
+        },
+        "eventLocation": {
+            "mandatory": "false",
+            "validateRegularExp": "^[a-zA-Z0-9-/,& ]{1,180}$"
+        },
+        "sector": {
+            "mandatory": "false",
+            "validateRegularExp": "^[a-zA-Z0-9_-. ]$"
+        },
+        "organizerDepartmentName": {
+            "mandatory": "false",
+            "validateRegularExp": "^[a-zA-Z0-9_-. ]$"
+        },
+        "organizerUsernName": {
+            "mandatory": "false",
+            "validateRegularExp": "^[a-zA-Z0-9_-. ]$"
+        },
+        "eventType": {
+            "mandatory": "false",
+            "validateRegularExp": "^[a-zA-Z0-9_-. ]$"
+        },
+        "eventBudget": {
+            "mandatory": "false",
+            "validateRegularExp": "^[0-9]{0,9}(\\.[0-9]{0,2})?$"
+        },
+        "startDate": {
+            "mandatory": "false",
+            "validateRegularExp": "^([0-2][0-9]|(3)[0-1])(\\/)(((0)[0-9])|((1)[0-2]))(\\/)\\d{4}$"
+        },
+        "endDate": {
+            "mandatory": "false",
+            "validateRegularExp": "^([0-2][0-9]|(3)[0-1])(\\/)((\\(0)[0-9])|((1)[0-2]))(\\/)\\d{4}$"
+        },
+        "startTime": {
+            "mandatory": "false",
+            "validateRegularExp": "^([0-1][0-9]|[2][0-3]):([0-5][0-9])$"
+        },
+        "endTime": {
+            "mandatory": "false",
+            "validateRegularExp": "^([0-1][0-9]|[2][0-3]):([0-5][0-9])$"
+        },
+        "eventDescription": {
+            "mandatory": "false",
+            "validateRegularExp": "/^[^\\$\"'?\\\\~@\\n\\r$\\*.:]{1,500}$"
+        },
+        "eventImage": {
+            "mandatory": "false",
+            "validateRegularExp": "\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+        },
+        "facebookUrl": {
+            "mandatory": "false",
+            "validateRegularExp":"^(?:http(s)?:\\/\\/)?[\\w.-](?:\\.[\\w\\.-])[\\w\\-\\._~:/?#[\\]@\\$&'\\(\\)\\*\\,;.]{1,255}$"
+        },
+        "twitterUrl": {
+            "mandatory": "false",
+            "validateRegularExp":"^(?:http(s)?:\\/\\/)?[\\w.-](?:\\.[\\w\\.-])[\\w\\-\\._~:/?#[\\]@\\$&'\\(\\)\\*\\,;.]{1,255}$"
+        },
+        "instagramUrl": {
+            "mandatory": "false",
+            "validateRegularExp":"^(?:http(s)?:\\/\\/)?[\\w.-](?:\\.[\\w\\.-])[\\w\\-\\._~:/?#[\\]@\\$&'\\(\\)\\*\\,;.]{1,255}$"
+        },
+        "committeeUuid": {
+            "mandatory": "false",
+            "validateRegularExp": "^[a-zA-Z0-9- ]{1,200}$"
+        },
+        "eventStatus": {
+            "mandatory": "false",
+            "validateRegularExp": "^[a-zA-Z0-9-, ]{1,200}"
+        },
+        "tenantId": {
+            "mandatory": "false",
+            "validateRegularExp": "^[a-z.]{1,180}$"
+        },
+        "area": {
+            "mandatory": "false",
+            "validateRegularExp": "^[a-zA-Z0-9_-. ]$"
+        },
+        "moduleCode": {
+            "mandatory": "false",
+            "validateRegularExp": "^[A-Z]{1,180}$"
+        }
+    },
+    "EVENTUPDATE": {
+        "eventDetailUuid": {
+            "mandatory": "false",
+            "validateRegularExp": "^[a-zA-Z0-9- ]{1,200}$"
+        },
+        "eventTitle": {
+            "mandatory": "false",
+            "validateRegularExp": "^[a-zA-Z0-9 ]{1,180}$"
+        },
+        "eventLocation": {
+            "mandatory": "false",
+            "validateRegularExp": "^[a-zA-Z0-9-/,& ]{1,180}$"
+        },
+        "sector": {
+            "mandatory": "false",
+            "validateRegularExp": "^[a-zA-Z0-9_-. ]$"
+        },
+        "organizerDepartmentName": {
+            "mandatory": "false",
+            "validateRegularExp": "^[a-zA-Z0-9_-. ]$"
+        },
+        "organizerUsernName": {
+            "mandatory": "false",
+            "validateRegularExp": "^[a-zA-Z0-9_-. ]$"
+        },
+        "eventType": {
+            "mandatory": "false",
+            "validateRegularExp": "^[a-zA-Z0-9_-. ]$"
+        },
+        "eventBudget": {
+            "mandatory": "false",
+            "validateRegularExp":"^[0-9]{0,9}(\\.[0-9]{0,2})?$"
+        },
+        "startDate": {
+            "mandatory": "false",
+            "validateRegularExp": "^([0-2][0-9]|(3)[0-1])(\\/)(((0)[0-9])|((1)[0-2]))(\\/)\\d{4}$"
+        },
+        "endDate": {
+            "mandatory": "false",
+            "validateRegularExp": "^([0-2][0-9]|(3)[0-1])(\\/)(((0)[0-9])|((1)[0-2]))(\\/)\\d{4}$"
+        },
+        "startTime": {
+            "mandatory": "false",
+            "validateRegularExp": "^([0-1][0-9]|[2][0-3]):([0-5][0-9])$"
+        },
+        "endTime": {
+            "mandatory": "false",
+            "validateRegularExp": "^([0-1][0-9]|[2][0-3]):([0-5][0-9])$"
+        },
+        "eventDescription": {
+            "mandatory": "false",
+            "validateRegularExp": "/^[\\$\"'?\\\\~@\n\r$\\*.:]{1,500}$"
+        },
+        "eventImage": {
+            "mandatory": "false",
+            "validateRegularExp": "\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+        },
+        "facebookUrl": {
+            "mandatory": "false",
+            "validateRegularExp":"^(?:http(s)?:\\/\\/)?[\\w.-](?:\\.[\\w\\.-])[\\w\\-\\._~:/?#[\\]@\\$&'\\(\\)\\*\\,;.]{1,255}$"
+        },
+        "twitterUrl": {
+            "mandatory": "false",
+            "validateRegularExp":"^(?:http(s)?:\\/\\/)?[\\w.-](?:\\.[\\w\\.-])[\\w\\-\\._~:/?#[\\]@\\$&'\\(\\)\\*\\,;.]{1,255}$"
+        },
+        "instagramUrl": {
+            "mandatory": "false",
+            "validateRegularExp":"^(?:http(s)?:\\/\\/)?[\\w.-](?:\\.[\\w\\.-])[\\w\\-\\._~:/?#[\\]@\\$&'\\(\\)\\*\\,;.]{1,255}$"
+        },
+        "committeeUuid": {
+            "mandatory": "false",
+            "validateRegularExp": "^[a-zA-Z0-9- ]{1,200}$"
+        },
+        "eventStatus": {
+            "mandatory": "false",
+            "validateRegularExp": "^[a-zA-Z ]{1,200}"
+        },
+        "tenantId": {
+            "mandatory": "false",
+            "validateRegularExp": "^[a-z.]$"
+        },
+        "area": {
+            "mandatory": "false",
+            "validateRegularExp": "^[a-zA-Z0-9_-. ]$"
+        },
+        "moduleCode": {
+            "mandatory": "false",
+            "validateRegularExp": "^[A-Z]{1,180}$"
+        }
+    },
+    "EVENTGET": {
+        "tenantId": {
+            "mandatory": "false",
+            "validateRegularExp": "^[a-z.]{1,180}$"
+        },
+        "moduleCode": {
+            "mandatory": "false",
+            "validateRegularExp": "^[A-Z]{1,180}$"
+        },
+        "eventDetailUuid": {
+            "mandatory": "false",
+            "validateRegularExp": "^[a-zA-Z0-9- ]{1,200}$"
+        },
+        "eventTitle": {
+            "mandatory": "false",
+            "validateRegularExp": "^[a-zA-Z0-9 ]{1,180}$"
+        },
+        "eventStatus": {
+            "mandatory": "false",
+            "validateRegularExp": "^[a-zA-Z ]{1,50}$"
+        },
+        "status": {
+            "mandatory": "false",
+            "validateRegularExp": "^[a-zA-Z ]{1,50}$"
+        },
+        "startDate": {
+            "mandatory": "false",
+            "validateRegularExp": "^([0-2][0-9]|(3)[0-1])(\\/)(((0)[0-9])|((1)[0-2]))(\\/)\\d{4}$"
+        },
+        "endDate": {
+            "mandatory": "false",
+            "validateRegularExp": "^([0-2][0-9]|(3)[0-1])(\\/)(((0)[0-9])|((1)[0-2]))(\\/)\\d{4}$"
+        },
+        "defaultGrid": {
+            "mandatory": "false",
+            "validateRegularExp": "^[(false|false)]$"
+        }
+    },
+    "EVENTPUBLISH": {
+        "tenantId": {
+            "mandatory": "false",
+            "validateRegularExp": "^[a-z.]{1,180}$"
+        },
+        "moduleCode": {
+            "mandatory": "false",
+            "validateRegularExp": "^[A-Z]{1,180}$"
+        },
+        "eventDetailUuid": {
+            "mandatory": "false",
+            "validateRegularExp": "^[a-zA-Z0-9- ]{1,200}$"
+        },
+        "eventStatus": {
+            "mandatory": "false",
+            "validateRegularExp": "^[a-zA-Z ]$"
+        },
+        "isActive": {
+            "mandatory": "false",
+            "validateRegularExp": "^[(false|false)]$"
+        }
+    },
+    "GETEVENTTEMPLATE": {
+        "tenantId": {
+            "mandatory": "false",
+            "validateRegularExp": "^[a-z.]{1,180}$"
+        },
+        "moduleCode": {
+            "mandatory": "false",
+            "validateRegularExp": "^[A-Z]{1,180}$"
+        },
+        "templateType": {
+            "mandatory": "false",
+            "validateRegularExp": "^[a-zA-Z0-9_-. ]$"
+        },
+        "templateMappedUuid": {
+            "mandatory": "false",
+            "validateRegularExp": "^[a-zA-Z0-9- ]$"
+        },
+        "moduleName": {
+            "mandatory": "false",
+            "validateRegularExp": "^[A-Z]{1,180}$"
+        }
+    },
+    "GETPRASSNOTETEMPLATE": {
+        "tenantId": {
+            "mandatory": "false",
+            "validateRegularExp": "^[a-z.]{1,180}$"
+        },
+        "moduleCode": {
+            "mandatory": "false",
+            "validateRegularExp": "^[A-Z]{1,180}$"
+        },
+        "templateType": {
+            "mandatory": "false",
+            "validateRegularExp": "^[a-zA-Z0-9_-. ]$"
+        },
+        "templateMappedUuid": {
+            "mandatory": "false",
+            "validateRegularExp": "^[a-zA-Z0-9- ]$"
+        },
+        "moduleName": {
+            "mandatory": "false",
+            "validateRegularExp": "^[A-Z]{1,180}$"
+        }
+    },
+    "GETTENDERTEMPLATE": {
+        "tenantId": {
+            "mandatory": "false",
+            "validateRegularExp": "^[a-z.]{1,180}$"
+        },
+        "moduleCode": {
+            "mandatory": "false",
+            "validateRegularExp": "^[A-Z]{1,180}$"
+        },
+        "templateType": {
+            "mandatory": "false",
+            "validateRegularExp": "^[a-zA-Z0-9_-. ]$"
+        },
+        "templateMappedUuid": {
+            "mandatory": "false",
+            "validateRegularExp": "^[a-zA-Z0-9- ]$"
+        },
+        "moduleName": {
+            "mandatory": "false",
+            "validateRegularExp": "^[A-Z]{1,180}$"
+        }
+    },
+    "RESENDNOTIFICATION": {
+        "tenantId": {
+            "mandatory": "false",
+            "validateRegularExp": "^[a-z.]{1,180}$"
+        },
+        "moduleCode": {
+            "mandatory": "false",
+            "validateRegularExp": "^[A-Z]{1,180}$"
+        },
+        "moduleName": {
+            "mandatory": "false",
+            "validateRegularExp": "^[A-Z]{1,180}$"
+        },
+        "invitationUuid": {
+            "mandatory": "false",
+            "validateRegularExp": "^[a-zA-Z0-9- ]$"
+        },
+        "isActive": {
+            "mandatory": "false",
+            "validateRegularExp": "^[(false|false)]$"
+        },
+        "contactDetails": {
+            "mandatory": "false",
+            "validateRegularExp": "/^[6789][0-9]{9}$"
+        }
+    },
+    "ADDENVITEGUEST": {
+        "tenantId": {
+            "mandatory": "false",
+            "validateRegularExp": "^[a-z.]{1,180}$"
+        },
+        "eventDetailUuid": {
+            "mandatory": "false",
+            "validateRegularExp": "^[a-zA-Z0-9- ]$"
+        },
+        "eventGuestType": {
+            "mandatory": "false",
+            "validateRegularExp": "^[a-zA-Z0-9_-. ]$"
+        },
+        "departmentName": {
+            "mandatory": "false",
+            "validateRegularExp": "^[a-zA-Z0-9_-.' ]$"
+        },
+        "useruuid": {
+            "mandatory": "false",
+            "validateRegularExp": "^[a-zA-Z0-9- ]$"
+        },
+        "pressmasteruuid": {
+            "mandatory": "false",
+            "validateRegularExp": "^[a-zA-Z0-9- ]$"
+        },
+        "guestname": {
+            "mandatory": "false",
+            "validateRegularExp": "^[a-zA-Z0-9 ]*$"
+        },
+        "guestemail": {
+            "mandatory": "false",
+            "validateRegularExp": "^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$"
+        },
+        "guestMobile": {
+            "mandatory": "false",
+            "validateRegularExp": "^[0-9]{1,10}*$"
+        },
+        "inviteGuest": {
+            "mandatory": "false",
+            "validateRegularExp": "^[A-Z]{1,180}$"
+        },
+         "pressMasterUuid": {
+            "mandatory": "false",
+            "validateRegularExp": "^[A-Z]{1,180}$"
+        },
+        "moduleName": {
+            "mandatory": "false",
+            "validateRegularExp": "^[A-Z]{1,180}$"
+        }
+    },
+    "REMOVEENVITEGUEST": {
+        "tenantId": {
+            "mandatory": "false",
+            "validateRegularExp": "^[a-z.]{1,180}$"
+        },
+        "eventDetailUuid": {
+            "mandatory": "false",
+            "validateRegularExp": "^[a-zA-Z0-9- ]$"
+        },
+        "eventGuestType": {
+            "mandatory": "false",
+            "validateRegularExp": "^[a-zA-Z0-9_-. ]$"
+        },
+        "departmentName": {
+            "mandatory": "false",
+            "validateRegularExp": "^[a-zA-Z0-9_-.' ]$"
+        },
+        "useruuid": {
+            "mandatory": "false",
+            "validateRegularExp": "^[a-zA-Z0-9- ]$"
+        },
+        "pressmasteruuid": {
+            "mandatory": "false",
+            "validateRegularExp": "^[a-zA-Z0-9- ]$"
+        },
+        "guestname": {
+            "mandatory": "false",
+            "validateRegularExp": "^[a-zA-Z0-9 ]*$"
+        },
+        "guestemail": {
+            "mandatory": "false",
+            "validateRegularExp": "^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$"
+        },
+        "guestMobile": {
+            "mandatory": "false",
+            "validateRegularExp": "^[0-9]{1,10}*$"
+        },
+        "moduleName": {
+            "mandatory": "false",
+            "validateRegularExp": "^[A-Z]{1,180}$"
+        }
+    },
+    "GETENVITEGUEST": {
+        "tenantId": {
+            "mandatory": "false",
+            "validateRegularExp": "^[a-z.]{1,180}$"
+        },
+        "eventDetailUuid": {
+            "mandatory": "false",
+            "validateRegularExp": "^[a-zA-Z0-9- ]$"
+        },
+        "createdBy": {
+            "mandatory": "false",
+            "validateRegularExp": "^[0-9]*$"
+        },
+        "sentFlag": {
+            "mandatory": "false",
+            "validateRegularExp": "^[0-9]*$"
+        },
+        "moduleName": {
+            "mandatory": "false",
+            "validateRegularExp": "^[A-Z]{1,180}$"
+        },
+         "moduleCode": {
+            "mandatory": "false",
+            "validateRegularExp": "^[A-Z]{1,180}$"
+        }
+    },
+    "UPLOADEXTERNALENVITEGUESTLIST": {
+        "tenantId": {
+            "mandatory": "false",
+            "validateRegularExp": "^[a-z.]{1,180}$"
+        },
+        "eventDetailUuid": {
+            "mandatory": "false",
+            "validateRegularExp": "^[a-zA-Z0-9- ]$"
+        },
+        "externalFileStoreId": {
+            "mandatory": "false",
+            "validateRegularExp": "\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+        },
+        "eventGuestType": {
+            "mandatory": "false",
+            "validateRegularExp": "^[a-zA-Z0-9_-. ]$"
+        },
+        "moduleCode": {
+            "mandatory": "false",
+            "validateRegularExp": "^[A-Z]{1,180}$"
+        }
+    },
+    "SENDENVITEENVITATION": {
+        "tenantId": {
+            "mandatory": "false",
+            "validateRegularExp": "^[a-z.]{1,180}$"
+        },
+        "moduleCode": {
+            "mandatory": "false",
+            "validateRegularExp": "^[A-Z]{1,180}$"
+        },
+        "templateType": {
+            "mandatory": "false",
+            "validateRegularExp": "^[a-zA-Z0-9 ]$"
+        },
+        "eventDetailUuid": {
+            "mandatory": "false",
+            "validateRegularExp": "^[0-9-_]*$"
+        },
+        "smsContent": {
+            "mandatory": "false",
+            "validateRegularExp": "^[a-zA-Z0-9@\n\r#$&\\-.,/\" ]{1,180}$"
+        },
+        "emailContent": {
+            "mandatory": "false",
+            "validateRegularExp": "\\[\\{\"emailSubject\":\"(.*?)\",\"emailBody\":\"(.*?)\"\\}\\]"
+        },
+        "documentAttachment": {
+            "mandatory": "false",
+            "validateRegularExp": "\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+        }
+    },
+    "LIBRARYUPLOAD": {
+        "tenantId": {
+            "mandatory": "false",
+            "validateRegularExp": "^[a-z.]{1,180}$"
+        },
+        "moduleCode": {
+            "mandatory": "false",
+            "validateRegularExp": "^[A-Z]{1,180}$"
+        },
+        "eventDetailUuid": {
+            "mandatory": "false",
+            "validateRegularExp": "^[a-zA-Z0-9- ]$"
+        },
+        "documentList": {
+            "mandatory": "false",
+            "validateRegularExp": "\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+        }
+    },
+    "LIBRARYGET": {
+        "tenantId": {
+            "mandatory": "false",
+            "validateRegularExp": "^[a-z.]{1,180}$"
+        },
+        "eventDetailUuid": {
+            "mandatory": "false",
+            "validateRegularExp": "^[a-zA-Z0-9- ]$"
+        },
+        "moduleCode": {
+            "mandatory": "false",
+            "validateRegularExp": "^[A-Z]{1,180}$"
+        }
+    },
+    "LIBRARYDELETE": {
+        "tenantId": {
+            "mandatory": "false",
+            "validateRegularExp": "^[a-z.]{1,180}$"
+        },
+        "libraryUuid": {
+            "mandatory": "false",
+            "validateRegularExp": "^[a-zA-Z0-9- ]$"
+        },
+        "eventDetailUuid": {
+            "mandatory": "false",
+            "validateRegularExp": "^[a-zA-Z0-9- ]$"
+        },
+        "moduleCode": {
+            "mandatory": "false",
+            "validateRegularExp": "^[A-Z]{1,180}$"
+        },
+        "documentList": {
+            "mandatory": "false",
+            "validateRegularExp": "\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+        }
+    },
+    "COMMITTEEMASTERCREATE": {
+        "committeeName": {
+            "mandatory": "false",
+            "validateRegularExp": "^[a-zA-Z]{1,180}$"
+        },
+        "committeeDescription": {
+            "mandatory": "false",
+            "validateRegularExp": "^[a-zA-Z]{1,180}$"
+        },
+        "tenantId": {
+            "mandatory": "false",
+            "validateRegularExp": "^[a-z.]{1,180}$"
+        },
+        "moduleCode": {
+            "mandatory": "false",
+            "validateRegularExp": "^[A-Z]{1,180}$"
+        },
+        "committeeMember": {
+            "mandatory": "false",
+            "validateRegularExp": "\\[\\{\"committeeMember\":\"(.*?)\"\\}\\]"
+        },
+        "is_Active": {
+            "mandatory": "false",
+            "validateRegularExp": "^[(false|false)]$"
+        }
+    },
+    "COMMITTEEMASTERUPDATE": {
+        "committeeUuid": {
+            "mandatory": "false",
+            "validateRegularExp": "^[a-zA-Z0-9- ]$"
+        },
+        "committeeName": {
+            "mandatory": "false",
+            "validateRegularExp": "^[a-zA-Z]{1,180}$"
+        },
+        "committeeDescription": {
+            "mandatory": "false",
+            "validateRegularExp": "^[a-zA-Z]{1,180}$"
+        },
+        "is_Active": {
+            "mandatory": "false",
+            "validateRegularExp": "^[(false|false)]$"
+        },
+        "committeeMember": {
+            "mandatory": "false",
+            "validateRegularExp": "\\[\\{\"committeeMember\":\"(.*?)\"\\}\\]"
+        },
+        "tenantId": {
+            "mandatory": "false",
+            "validateRegularExp": "^[a-z.]{1,180}$"
+        },
+        "moduleCode": {
+            "mandatory": "false",
+            "validateRegularExp": "^[A-Z]{1,180}$"
+        }
+    },
+    "COMMITTEEMASTERGET": {
+        "committeeUuid": {
+            "mandatory": "false",
+            "validateRegularExp": "^[a-zA-Z0-9- ]$"
+        },
+        "committeeName": {
+            "mandatory": "false",
+            "validateRegularExp": "^[a-zA-Z]{1,180}$"
+        },
+        "committeeDescription": {
+            "mandatory": "false",
+            "validateRegularExp": "^[a-zA-Z]{1,180}$"
+        },
+        "is_Active": {
+            "mandatory": "false",
+            "validateRegularExp": "^[(false|false)]$"
+        },
+        "tenantId": {
+            "mandatory": "false",
+            "validateRegularExp": "^[a-z.]{1,180}$"
+        },
+        "moduleCode": {
+            "mandatory": "false",
+            "validateRegularExp": "^[A-Z]{1,180}$"
+        },
+        "committeeMember": {
+            "mandatory": "false",
+            "validateRegularExp": "\\[\\{\"committeeMember\":\"(.*?)\"\\}\\]"
+        }
+    },
+    "PRESSMASTERCREATE": {
+        "tenantId": {
+            "mandatory": "false",
+            "validateRegularExp": "^[a-z.]{1,180}$"
+        },
+        "personnelName": {
+            "mandatory": "false",
+            "validateRegularExp": "^[a-zA-Z]{1,180}$"
+        },
+        "pressType": {
+            "mandatory": "false",
+            "validateRegularExp": "^[a-zA-Z0-9_-. ]$"
+        },
+        "publicationName": {
+            "mandatory": "false",
+            "validateRegularExp": "^[a-zA-Z]{1,180}$"
+        },
+        "email": {
+            "mandatory": "false",
+            "validateRegularExp": "^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$"
+        },
+        "mobile": {
+            "mandatory": "false",
+            "validateRegularExp": "^[6789][0-9]{9}$"
+        },
+        "moduleCode": {
+            "mandatory": "false",
+            "validateRegularExp": "^[A-Z]{1,180}$"
+        }
+    },
+    "PRESSMASTERUPDATE": {
+        "tenantId": {
+            "mandatory": "false",
+            "validateRegularExp": "^[a-z.]{1,180}$"
+        },
+        "pressMasterUuid": {
+            "mandatory": "false",
+            "validateRegularExp": "^[a-zA-Z0-9- ]$"
+        },
+        "personnelName": {
+            "mandatory": "false",
+            "validateRegularExp": "^[a-zA-Z]{1,180}$"
+        },
+        "pressType": {
+            "mandatory": "false",
+            "validateRegularExp": "^[a-zA-Z0-9_-. ]$"
+        },
+        "publicationName": {
+            "mandatory": "false",
+            "validateRegularExp": "^[a-zA-Z]{1,180}$"
+        },
+        "email": {
+            "mandatory": "false",
+            "validateRegularExp": "^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$"
+        },
+        "mobile": {
+            "mandatory": "false",
+            "validateRegularExp": "^[6789][0-9]{9}$"
+        },
+        "moduleCode": {
+            "mandatory": "false",
+            "validateRegularExp": "^[A-Z]{1,180}$"
+        }
+    },
+    "PRESSMASTERGET": {
+        "tenantId": {
+            "mandatory": "false",
+            "validateRegularExp": "^[a-z.]{1,180}$"
+        },
+        "pressMasterUuid": {
+            "mandatory": "false",
+            "validateRegularExp": "^[a-zA-Z0-9- ]$"
+        },
+        "personnelName": {
+            "mandatory": "false",
+            "validateRegularExp": "^[a-zA-Z]{1,180}$"
+        },
+        "publicationName": {
+            "mandatory": "false",
+            "validateRegularExp": "^[a-zA-Z]{1,180}$"
+        },
+        "pressType": {
+            "mandatory": "false",
+            "validateRegularExp": "^[a-zA-Z0-9_-. ]$"
+        },
+        "moduleCode": {
+            "mandatory": "false",
+            "validateRegularExp": "^[A-Z]{1,180}$"
+        },
+        "defaultGrid": {
+            "mandatory": "false",
+            "validateRegularExp": "^[(false|false)]$"
+        }
+    },
+    "PRESSMASTERDELETE": {
+        "tenantId": {
+            "mandatory": "false",
+            "validateRegularExp": "^[a-z.]{1,180}$"
+        },
+        "pressMasterUuid": {
+            "mandatory": "false",
+            "validateRegularExp": "^[a-zA-Z0-9- ]$"
+        },
+        "moduleCode": {
+            "mandatory": "false",
+            "validateRegularExp": "^[A-Z]{1,180}$"
+        }
+    },
+    "PRESSNOTESCREATE": {
+        "tenantId": {
+            "mandatory": "false",
+            "validateRegularExp": "^[a-z.]{1,180}$"
+        },
+        "pressNoteSubject": {
+            "mandatory": "false",
+            "validateRegularExp": "^[a-zA-Z0-9-:@\n\r#?\\\\~$&?|\\-., ]{1,180}$"
+        },
+        "pressNoteDate": {
+            "mandatory": "false",
+            "validateRegularExp": "^([0-2][0-9]|(3)[0-1])(\\/)(((0)[0-9])|((1)[0-2]))(\\/)\\d{4}$"
+        },
+        "fileNumber": {
+            "mandatory": "false",
+            "validateRegularExp":"^[a-zA-Z0-9-:@#?\\\\~$&?|\\-., ]{1,50}$"
+        },
+        "noteContent": {
+            "mandatory": "false",
+            "validateRegularExp": "^[a-zA-Z0-9@\n\r#$&\\-., ]{1,180}$"
+        },
+        "smsContent": {
+            "mandatory": "false",
+            "validateRegularExp": "^[a-zA-Z0-9@\n\r#$&\\-., ]{1,180}$"
+        },
+        "emailContent": {
+            "mandatory": "false",
+            "validateRegularExp": "\\[\\{\"emailSubject\":\"(.*?)\",\"emailBody\":\"(.*?)\"\\}\\]"
+        },
+        "moduleCode": {
+            "mandatory": "false",
+            "validateRegularExp": "^[A-Z]{1,180}$"
+        },
+        "templateType": {
+            "mandatory": "false",
+            "validateRegularExp": "^[a-zA-Z0-9_-. ]$"
+        },
+        "documentAttachment": {
+            "mandatory": "false",
+            "validateRegularExp": "\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+        },
+        "publicationList": {
+            "mandatory": "false",
+            "validateRegularExp": "\\[\\{\"pressMasterUuid\":\"(.*?)\"\\}\\]"
+        }
+    },
+    "PRESSNOTEUPDATE": {
+        "tenantId": {
+            "mandatory": "false",
+            "validateRegularExp": "^[a-z.]{1,180}$"
+        },
+        "pressNoteUuid": {
+            "mandatory": "false",
+            "validateRegularExp": "^[a-zA-Z0-9- ]$"
+        },
+        "pressNoteSubject": {
+            "mandatory": "false",
+            "validateRegularExp": "^[a-zA-Z-_ ]*$"
+        },
+        "pressNoteDate": {
+            "mandatory": "false",
+            "validateRegularExp": "^[a-zA-Z ]{1,50}$"
+        },
+        "fileNumber": {
+            "mandatory": "false",
+            "validateRegularExp": "^([a-zA-Z]){5}([0-9]){4}([a-zA-Z]){1}?$"
+        },
+        "noteContent": {
+            "mandatory": "false",
+            "validateRegularExp": "^[a-zA-Z0-9@\n\r#$&\\-., ]{1,180}$"
+        },
+        "smsContent": {
+            "mandatory": "false",
+            "validateRegularExp": "^[a-zA-Z0-9@\n\r#$&\\-., ]{1,180}$"
+        },
+        "emailContent": {
+            "mandatory": "false",
+            "validateRegularExp": "\\[\\{\"emailSubject\":\"(.*?)\",\"emailBody\":\"(.*?)\"\\}\\]"
+        },
+        "moduleCode": {
+            "mandatory": "false",
+            "validateRegularExp": "^[A-Z]{1,180}$"
+        },
+        "templateType": {
+            "mandatory": "false",
+            "validateRegularExp": "^[a-zA-Z0-9_-. ]$"
+        },
+        "documentAttachment": {
+            "mandatory": "false",
+            "validateRegularExp": "\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+        }
+    },
+    "PRESSNOTEGET": {
+        "tenantId": {
+            "mandatory": "false",
+            "validateRegularExp": "^[a-z.]{1,180}$"
+        },
+        "pressNoteUuid": {
+            "mandatory": "false",
+            "validateRegularExp": "^[a-zA-Z0-9- ]$"
+        },
+        "moduleCode": {
+            "mandatory": "false",
+            "validateRegularExp": "^[A-Z]{1,180}$"
+        }
+    },
+    "TENDERNOTICECREATE": {
+        "tenantId": {
+            "mandatory": "false",
+            "validateRegularExp": "^[a-z.]{1,180}$"
+        },
+        "tenderNoticeStatus": {
+            "mandatory": "false",
+            "validateRegularExp": "^[a-zA-Z0-9_-. ]$"
+        },
+        "tenderSubject": {
+            "mandatory": "false",
+            "validateRegularExp":"[a-zA-Z0-9-:@\n\r#?\\\\~$&?|\\-., ]{1,180}$"
+        },
+        "tenderDate": {
+            "mandatory": "false",
+          "validateRegularExp":"^([0-2][0-9]|(3)[0-1])(\\/)(((0)[0-9])|((1)[0-2]))(\\/)\\d{4}$"
+        },
+        "fileNumber": {
+            "mandatory": "false",
+            "validateRegularExp": "^[a-zA-Z0-9-:*@#?\\\\~$&^?|\\-., ]{1,50}$"
+        },
+        "noteContent": {
+            "mandatory": "false",
+            "validateRegularExp": "^[a-zA-Z0-9@\n\r#$&\\-., ]{1,180}$"
+        },
+        "moduleCode": {
+            "mandatory": "false",
+            "validateRegularExp": "^[A-Z]{1,180}$"
+        },
+        "tenderDocument": {
+            "mandatory": "false",
+            "validateRegularExp": "\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+        }
+    },
+    "TENDERNOTICEUPDATE": {
+        "tenantId": {
+            "mandatory": "false",
+            "validateRegularExp": "^[a-z.]{1,180}$"
+        },
+        "tenderNoticeUuid": {
+            "mandatory": "false",
+            "validateRegularExp": "^[a-zA-Z0-9- ]$"
+        },
+        "tenderNoticeStatus": {
+            "mandatory": "false",
+            "validateRegularExp": "^[a-zA-Z0-9 ]$"
+        },
+        "tenderSubject": {
+            "mandatory": "false",
+            "validateRegularExp": "[a-zA-Z0-9-:@\n\r#?\\\\~$&|\\-., ]{1,180}$"
+        },
+        "tenderDate": {
+            "mandatory": "false",
+            "validateRegularExp": "^([0-2][0-9]|(3)[0-1])(\\/)(((0)[0-9])|((1)[0-2]))(\\/)\\d{4}$"
+        },
+        "fileNumber": {
+            "mandatory": "false",
+            "validateRegularExp": "^[a-zA-Z0-9-:*@#?\\\\~$&^?|\\-., ]{1,50}$"
+        },
+        "noteContent": {
+            "mandatory": "false",
+            "validateRegularExp": "^[a-zA-Z0-9@\n\r#$&\\-., ]{1,180}$"
+        },
+        "moduleCode": {
+            "mandatory": "false",
+            "validateRegularExp": "^[A-Z]{1,180}$"
+        },
+        "tenderDocument": {
+            "mandatory": "false",
+            "validateRegularExp": "\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+        }
+    },
+    "TENDERNOTICEGET": {
+        "tenantId": {
+            "mandatory": "false",
+            "validateRegularExp": "^[a-z.]{1,180}$"
+        },
+        "moduleCode": {
+            "mandatory": "false",
+            "validateRegularExp": "^[A-Z]{1,180}$"
+        },
+        "tenderNoticeId": {
+            "mandatory": "false",
+            "validateRegularExp": "^[a-zA-Z-0-9-]*$"
+        },
+        "tenderNoticeUuid": {
+            "mandatory": "false",
+            "validateRegularExp": "^[a-zA-Z0-9-]$"
+        },
+        "fileNumber": {
+            "mandatory": "false",
+            "validateRegularExp": "^[a-zA-Z0-9-:*@#?\\\\~$&^?|\\-., ]{1,50}$"
+        },
+        "tenderSubject": {
+            "mandatory": "false",
+            "validateRegularExp": "^[a-zA-Z0-9-:*@#?\\\\~$&^?|\\-., ]{1,180}$"
+        },
+        "tenderNoticeStatus": {
+            "mandatory": "false",
+            "validateRegularExp": "^[a-zA-Z0-9 ]*$"
+        },
+        "fromDate": {
+            "mandatory": "false",
+           "validateRegularExp":"^([0-2][0-9]|(3)[0-1])(\\/)(((0)[0-9])|((1)[0-2]))(\\/)\\d{4}$"
+        },
+        "toDate": {
+            "mandatory": "false",
+            "validateRegularExp":"^([0-2][0-9]|(3)[0-1])(\\/)(((0)[0-9])|((1)[0-2]))(\\/)\\d{4}$"
+        },
+        "defaultGrid": {
+            "mandatory": "false",
+            "validateRegularExp": "^[(false|false)]$"
+        }
+    },
+    "TENDERNOTICEPUBLISH": {
+        "tenantId": {
+            "mandatory": "false",
+            "validateRegularExp": "^[a-z.]{1,180}$"
+        },
+        "moduleCode": {
+            "mandatory": "false",
+            "validateRegularExp": "^[A-Z]{1,180}$"
+        },
+        "tenderNoticeUuid": {
+            "mandatory": "false",
+            "validateRegularExp": "^[a-zA-Z0-9- ]$"
+        },
+        "publicationSize": {
+            "mandatory": "false",
+            "validateRegularExp": "^[a-zA-Z0-9-:*@#?\\\\~$&^?|\\-., ]{1,50}$"
+        },
+        "tenderNoticeId": {
+            "mandatory": "false",
+            "validateRegularExp": "^[a-zA-Z0-9-]$"
+        },
+        "publicationList": {
+            "mandatory": "false",
+            "validateRegularExp": "^[a-zA-Z0-9-]$"
+        },
+        "tenderNoticeStatus": {
+            "mandatory": "false",
+            "validateRegularExp": "^[a-zA-Z0-9 ]*$"
+        }
+    },
+    "TENDERNOTICETEMPLATE": {
+    	"tenantId": {
+            "mandatory": "false",
+            "validateRegularExp": "^[a-z.]{1,180}$"
+        },
+        "moduleCode": {
+            "mandatory": "false",
+            "validateRegularExp": "^[A-Z]{1,180}$"
+        },
+        "templateType": {
+            "mandatory": "false",
+            "validateRegularExp": "^[a-zA-Z0-9_-. ]$"
+        },
+        "smsContent": {
+            "mandatory": "false",
+            "validateRegularExp": "^[a-zA-Z0-9@\n\r#$&\\-., ]{1,180}$"
+        },
+        "emailContent": {
+            "mandatory": "false",
+            "validateRegularExp": "\\[\\{\"emailSubject\":\"(.*?)\",\"emailBody\":\"(.*?)\"\\}\\]"
+        },
+        "documentAttachment": {
+            "mandatory": "false",
+            "validateRegularExp": "\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+        }
+    }
+}

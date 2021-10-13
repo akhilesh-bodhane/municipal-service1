@@ -1,0 +1,101 @@
+{
+  "tenantId": "ch",
+  "businessService": "RefundOfEmd",
+  "business": "EstateBranch",
+  "businessServiceSla": 86400000,
+  "states": [
+    {
+      "actions": [
+        {
+          "action": "SUBMIT",
+          "currentState": "",
+          "nextState": "PENDING_AC_APPROVAL",
+          "roles": [
+            "ES_EB_SECTION_OFFICER"
+          ]
+        }
+      ],
+      "sla": 2,
+      "state": "",
+      "applicationStatus": "",
+      "docUploadRequired": false,
+      "isStartState": false,
+      "isTerminateState": false,
+      "isStateUpdatable": true
+    },
+    {
+      "actions": [
+        {
+          "action": "SUBMIT",
+          "currentState": "PENDING_SO_CLARIFICATION",
+          "nextState": "PENDING_AC_APPROVAL",
+          "roles": [
+            "ES_EB_SECTION_OFFICER"
+          ]
+        }
+      ],
+      "sla": 86400000,
+      "state": "PENDING_SO_CLARIFICATION",
+      "applicationStatus": "ES_PENDING_SO_CLARIFICATION",
+      "docUploadRequired": false,
+      "isStartState": false,
+      "isTerminateState": false,
+      "isStateUpdatable": true
+    },
+    {
+      "actions": [
+        {
+          "action": "REJECT",
+          "currentState": "PENDING_AC_APPROVAL",
+          "nextState": "REJECTED",
+          "roles": [
+            "ES_ADDITIONAL_COMMISSIONER"
+          ]
+        },
+        {
+          "action": "APPROVE",
+          "currentState": "PENDING_AC_APPROVAL",
+          "nextState": "APPROVED",
+          "roles": [
+            "ES_ADDITIONAL_COMMISSIONER"
+          ]
+        },
+        {
+          "action": "SENDBACK",
+          "currentState": "PENDING_AC_APPROVAL",
+          "nextState": "PENDING_SO_CLARIFICATION",
+          "roles": [
+            "ES_ADDITIONAL_COMMISSIONER"
+          ]
+        }
+      ],
+      "sla": 2,
+      "state": "PENDING_AC_APPROVAL",
+      "applicationStatus": "ES_PENDING_AC_APPROVAL",
+      "docUploadRequired": false,
+      "isStartState": false,
+      "isTerminateState": false,
+      "isStateUpdatable": true
+    },
+    {
+      "actions": null,
+      "sla": 2,
+      "state": "APPROVED",
+      "applicationStatus": "ES_APPROVED",
+      "docUploadRequired": false,
+      "isStartState": false,
+      "isTerminateState": true,
+      "isStateUpdatable": false
+    },
+    {
+      "actions": null,
+      "sla": 2,
+      "state": "REJECTED",
+      "applicationStatus": "ES_REJECTED",
+      "docUploadRequired": false,
+      "isStartState": false,
+      "isTerminateState": true,
+      "isStateUpdatable": false
+    }
+  ]
+}

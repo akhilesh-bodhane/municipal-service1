@@ -1,0 +1,1 @@
+ALTER TABLE eg_pgr_service ADD COLUMN category character varying(64) null;

@@ -1,0 +1,1 @@
+alter table employee_post_detail_map add column org_unit_name character varying(200);

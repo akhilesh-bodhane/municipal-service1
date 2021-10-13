@@ -1,0 +1,599 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "1.0.0",
+    "title": "eGov Pension module.",
+    "description": "APIs for Pension Rule Engine module. This modules handles Below functionality.\n  1. Calculate Benefit\n  2. Calculate Revised Pension\n",
+    "contact": {
+      "name": "eGovernments Foundation",
+      "email": "contacts@egovernments.org"
+    }
+  },
+  "schemes": [
+    "https"
+  ],
+  "basePath": "/pension-calculator",
+  "x-api-id": "org.egov.pension.services",
+  "x-common-path": "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-1-1.yml",
+  "paths": {
+    "/v1/_calculateBenefit": {
+      "post": {
+        "summary": "Calculate Benefit",
+        "description": "Calculate Benefit",
+        "parameters": [
+          {
+            "name": "processRequest",
+            "in": "body",
+            "description": "Employee details",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/CalculateEmployeeBenefitRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ReponseInfo",
+            "schema": {
+              "$ref": "#/definitions/CalculateEmployeeBenefitResponse"
+            }
+          },
+          "400": {
+            "description": "Process failed",
+            "schema": {
+              "$ref": "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes"
+            }
+          }
+        },
+        "tags": [
+          "Calculate Benefit"
+        ]
+      }
+    },
+    "/v1/_calculateRevisedPension": {
+      "post": {
+        "summary": "Calculate Revised Pension",
+        "description": "Calculate Revised Pension",
+        "parameters": [
+          {
+            "name": "processRequest",
+            "in": "body",
+            "description": "Employee details",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/CalculateRevisedPensionRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ReponseInfo",
+            "schema": {
+              "$ref": "#/definitions/CalculateRevisedPensionResponse"
+            }
+          },
+          "400": {
+            "description": "Process failed",
+            "schema": {
+              "$ref": "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes"
+            }
+          }
+        },
+        "tags": [
+          "Calculate Revised Pension"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "CalculateEmployeeBenefitRequest": {
+      "description": "Contract class to Calculate Benefit",
+      "properties": {
+        "ProcessInstances": {
+          "description": "Employee details",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ProcessBenefitModel"
+          }
+        }
+      }
+    },
+    "ProcessBenefitModel": {
+      "description": "Process Benefit model",
+      "type": "object",
+      "properties": {
+        "employee": {
+          "description": "Employee Details",
+          "$ref": "#/definitions/EmployeeModelForBenefitCalculation"
+        }
+      }
+    },
+    "EmployeeModelForBenefitCalculation": {
+      "description": "Employee Model For Benefit Calculation",
+      "type": "object",
+      "properties": {
+        "dob": {
+          "type": "string",
+          "minLength": 10,
+          "maxLength": 10,
+          "description": "Date of Birth"
+        },
+        "employeeType": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 250,
+          "description": "Employee Type"
+        },
+        "dateOfRetirement": {
+          "type": "string",
+          "minLength": 10,
+          "maxLength": 10,
+          "description": "Date of Retirement"
+        },
+        "reasonForRetirement": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 250,
+          "description": "Reason for Retirement"
+        },
+        "lastDesignation": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 250,
+          "description": "Last Designation"
+        },
+        "totalNoPayLeaves": {
+          "type": "integer",
+          "description": "Total No-Pay Leave"
+        },
+        "lpd": {
+          "type": "number",
+          "format": "float",
+          "description": "Last Pay Drawn"
+        },
+        "fma": {
+          "type": "number",
+          "format": "float",
+          "description": "fma"
+        },
+        "dues": {
+          "type": "number",
+          "format": "float",
+          "description": "Dues"
+        },
+        "medicalRelief": {
+          "type": "number",
+          "format": "float",
+          "description": "medicalRelief"
+        },
+        "miscellaneous": {
+          "type": "number",
+          "format": "float",
+          "description": "miscellaneous"
+        },
+        "overPayment": {
+          "type": "number",
+          "format": "float",
+          "description": "overPayment"
+        },
+        "incomeTax": {
+          "type": "number",
+          "format": "float",
+          "description": "incomeTax"
+        },
+        "cess": {
+          "type": "number",
+          "format": "float",
+          "description": "cess"
+        },
+        "isCommutationOpted": {
+          "type": "boolean",
+          "description": "isCommutationOpted"
+        },
+        "isEmploymentActive": {
+          "type": "boolean",
+          "description": "isEmploymentActive"
+        },
+        "isConvictedSeriousCrimeOrGraveMisconduct": {
+          "type": "boolean",
+          "description": "isConvictedSeriousCrimeOrGraveMisconduct"
+        },
+        "isAnyJudicialProceedingIsContinuing": {
+          "type": "boolean",
+          "description": "isAnyJudicialProceedingIsContinuing"
+        },
+        "isAnyMisconductInsolvencyInefficiency": {
+          "type": "boolean",
+          "description": "isAnyMisconductInsolvencyInefficiency"
+        },
+        "isEmployeeDiesInTerroristAttack": {
+          "type": "boolean",
+          "description": "isEmployeeDiesInTerroristAttack"
+        },
+        "isEmployeeDiesInAccidentalDeath": {
+          "type": "boolean",
+          "description": "isEmployeeDiesInAccidentalDeath"
+        },
+        "isDuesPresent": {
+          "type": "boolean",
+          "description": "Is Dues Present"
+        },
+        "isDuesAmountDecided": {
+          "type": "boolean",
+          "description": "Is Dues Amount Decided"
+        },
+        "isTakenMonthlyPensionAndGratuity": {
+          "type": "boolean",
+          "description": "Is Taken Monthly Pension And Gratuity"
+        },
+        "isTakenGratuityCommutationTerminalBenefit": {
+          "type": "boolean",
+          "description": "Is Taken Gratuity Commutation Terminal Benefit"
+        },
+        "isTakenCompensationPensionAndGratuity": {
+          "type": "boolean",
+          "description": "Is Taken Compensation Pension And Gratuity"
+        },
+        "diesInExtremistsDacoitsSmugglerAntisocialAttack": {
+          "type": "boolean",
+          "description": "diesInExtremistsDacoitsSmugglerAntisocialAttack"
+        },
+        "isCompassionatePensionGranted": {
+          "type": "boolean",
+          "description": "isCompassionatePensionGranted"
+        },
+        "serviceHistory": {
+          "description": "Service History",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/EmployeeServiceHistoryModelForBenefitCalculation"
+          }
+        }
+      }
+    },
+    "EmployeeServiceHistoryModelForBenefitCalculation": {
+      "description": "Service History Model For Benefit Calculation",
+      "type": "object",
+      "properties": {
+        "serviceFrom": {
+          "type": "string",
+          "minLength": 10,
+          "maxLength": 10,
+          "description": "Service From"
+        },
+        "serviceTo": {
+          "type": "string",
+          "minLength": 10,
+          "maxLength": 10,
+          "description": "Service To"
+        }
+      }
+    },
+    "CalculateEmployeeBenefitResponse": {
+      "description": "Contract class to send response.",
+      "properties": {
+        "ProcessInstances": {
+          "description": "Benefit details",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CalculateBenefitResultModel"
+          }
+        }
+      }
+    },
+    "CalculateBenefitResultModel": {
+      "description": "Benefit details model",
+      "type": "object",
+      "properties": {
+        "pensionCalculationDetails": {
+          "description": "Calculation details",
+          "$ref": "#/definitions/PensionCalculationModel"
+        }
+      }
+    },
+    "PensionCalculationModel": {
+      "description": "Pension Calculation Sytem Model",
+      "type": "object",
+      "properties": {
+        "basicPensionSytem": {
+          "type": "number",
+          "format": "float",
+          "description": "Basic pension Sytem Generated"
+        },
+        "pensionSystem": {
+          "type": "number",
+          "format": "float",
+          "description": "Pension Sytem Generated"
+        },
+        "additionalPensionSystem": {
+          "type": "number",
+          "format": "float",
+          "description": "Additional Pension Sytem Generated"
+        },
+        "commutedPensionSystem": {
+          "type": "number",
+          "format": "float",
+          "description": "Commuted Pension Sytem Generated"
+        },
+        "commutedValueSystem": {
+          "type": "number",
+          "format": "float",
+          "description": "Commuted Value Sytem Generated"
+        },
+        "familyPensionISystem": {
+          "type": "number",
+          "format": "float",
+          "description": "family_pension_i"
+        },
+        "familyPensionIISystem": {
+          "type": "number",
+          "format": "float",
+          "description": "family_pension_ii"
+        },
+        "dcrgSystem": {
+          "type": "number",
+          "format": "float",
+          "description": "Death-cum-retirement gratuity"
+        },
+        "netDeductionsSystem": {
+          "type": "number",
+          "format": "float",
+          "description": "Net deductions system generated"
+        },
+        "finalCalculatedPensionSystem": {
+          "type": "number",
+          "format": "float",
+          "description": "Final calculated pension system generated"
+        },
+        "interimReliefSystem": {
+          "type": "number",
+          "format": "float",
+          "description": "Interim Relief system generated"
+        },
+        "daSystem": {
+          "type": "number",
+          "format": "float",
+          "description": "Dearness Allowance system generated"
+        },
+        "nqsYearSystem": {
+          "type": "integer",
+          "minLength": 2,
+          "maxLength": 64,
+          "description": "nqsYear system generated"
+        },
+        "nqsMonthSystem": {
+          "type": "integer",
+          "minLength": 2,
+          "maxLength": 64,
+          "description": "nqsMonth system generated"
+        },
+        "nqsDaySystem": {
+          "type": "integer",
+          "minLength": 2,
+          "maxLength": 64,
+          "description": "nqsDay system generated"
+        },
+        "duesDeductionsSystem": {
+          "type": "number",
+          "format": "float",
+          "description": "Dues deductions system generated"
+        },
+        "compassionatePensionSystem": {
+          "type": "number",
+          "format": "float",
+          "description": "Compassionate Pension system generated"
+        },
+        "compensationPensionSystem": {
+          "type": "number",
+          "format": "float",
+          "description": "Compensation Pension system generated"
+        },
+        "terminalBenefitSystem": {
+          "type": "number",
+          "format": "float",
+          "description": "Terminal Benefit system generated"
+        },
+        "finalCalculatedGratuitySystem": {
+          "type": "number",
+          "format": "float",
+          "description": "Final Calculated Gratuity system generated"
+        },
+        "familyPensionIStartDateSystem": {
+          "type": "number",
+          "format": "float",
+          "description": "familyPensionIStartDateSystem"
+        },
+        "familyPensionIEndDateSystem": {
+          "type": "number",
+          "format": "float",
+          "description": "familyPensionIEndDateSystem"
+        },
+        "familyPensionIIStartDateSystem": {
+          "type": "number",
+          "format": "float",
+          "description": "familyPensionIIStartDateSystem"
+        },
+        "exGratiaSystem": {
+          "type": "number",
+          "format": "float",
+          "description": "exGratia System"
+        },
+        "pensionerFamilyPensionSystem": {
+          "type": "number",
+          "format": "float",
+          "description": "pensioner Family Pension System"
+        },
+        "totalPensionSystem": {
+          "type": "number",
+          "format": "float",
+          "description": "total Pension System"
+        },
+        "provisionalPensionSystem": {
+          "type": "number",
+          "format": "float",
+          "description": "provisional Pension System"
+        },
+        "invalidPensionSystem": {
+          "type": "number",
+          "format": "float",
+          "description": "invalid Pension System"
+        },
+        "woundExtraordinaryPensionSystem": {
+          "type": "number",
+          "format": "float",
+          "description": "wound or Extraordinary Pension System"
+        },
+        "attendantAllowanceSystem": {
+          "type": "number",
+          "format": "float",
+          "description": "attendant Allowance System"
+        },
+        "notificationTextSystem": {
+          "type": "string",
+          "description": "notification Text System"
+        }
+      }
+    },
+    "CalculateRevisedPensionRequest": {
+      "description": "Contract class to calculate revised pension of pensioner.",
+      "properties": {
+        "RequestInfo": {
+          "$ref": "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-1-1.yml#/definitions/RequestInfo"
+        },
+        "ProcessInstances": {
+          "description": "Used for save data",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ProcessCalculateRevisedPensionModel"
+          }
+        }
+      }
+    },
+    "ProcessCalculateRevisedPensionModel": {
+      "description": "Process Calculate Revised Pension",
+      "type": "object",
+      "properties": {
+        "tenantId": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 1024,
+          "description": "tenantid"
+        },
+        "pensionRevision": {
+          "description": "revisedPension",
+          "items": {
+            "$ref": "#/definitions/CalculateRevisedPensionModel"
+          }
+        }
+      }
+    },
+    "CalculateRevisedPensionModel": {
+      "description": "Calculate Revised Pension Model",
+      "type": "object",
+      "properties": {
+        "pensionArrear": {
+          "type": "number",
+          "format": "float",
+          "description": "pension Arrear"
+        },
+        "fma": {
+          "type": "number",
+          "format": "float",
+          "description": "fma"
+        },
+        "miscellaneous": {
+          "type": "number",
+          "format": "float",
+          "description": "Miscellaneous"
+        },
+        "overPayment": {
+          "type": "number",
+          "format": "float",
+          "description": "Over payment amount"
+        },
+        "incomeTax": {
+          "type": "number",
+          "format": "float",
+          "description": "Income Tax"
+        },
+        "cess": {
+          "type": "number",
+          "format": "float",
+          "description": "Cess"
+        },
+        "basicPension": {
+          "type": "number",
+          "format": "float",
+          "description": "Basic pension"
+        },
+        "additionalPension": {
+          "type": "number",
+          "format": "float",
+          "description": "Additional Pension"
+        },
+        "commutedPension": {
+          "type": "number",
+          "format": "float",
+          "description": "Commuted Pension"
+        },
+        "netDeductions": {
+          "type": "number",
+          "format": "float",
+          "description": "Net deductions"
+        },
+        "finalCalculatedPension": {
+          "type": "number",
+          "format": "float",
+          "description": "final Calculated Pension"
+        },
+        "interimRelief": {
+          "type": "number",
+          "format": "float",
+          "description": "Interim Relief"
+        },
+        "da": {
+          "type": "number",
+          "format": "float",
+          "description": "DA"
+        },
+        "totalPension": {
+          "type": "number",
+          "format": "float",
+          "description": "total Pension"
+        },
+        "pensionDeductions": {
+          "type": "number",
+          "format": "float",
+          "description": "pension Deductions"
+        }
+      }
+    },
+    "CalculateRevisedPensionResponse": {
+      "description": "Contract class to send response.",
+      "properties": {
+        "ResponseInfo": {
+          "$ref": "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo"
+        },
+        "ProcessInstances": {
+          "description": "Used for search result",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CalculateRevisedPensionResultModel"
+          }
+        }
+      }
+    },
+    "CalculateRevisedPensionResultModel": {
+      "description": "Process Calculate Revised Pension",
+      "type": "object",
+      "properties": {
+        "pensionRevision": {
+          "description": "revisedPension",
+          "items": {
+            "$ref": "#/definitions/CalculateRevisedPensionModel"
+          }
+        }
+      }
+    }
+  }
+}

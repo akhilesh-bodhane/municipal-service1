@@ -1,0 +1,29 @@
+{
+   "RequestInfo":{
+      "userInfo":{
+         "id":93,
+         "userName":"vaishnavi",
+         "name":"vaishnavi",
+         "type":"CITIZEN",
+         "roles":[
+            {
+               "code":"CITIZEN"
+            }
+         ],
+         "tenantId":"CH",
+         "uuid":"65a14e00-ba5e-4347-be81-08fc04bb0529"
+      }
+   },
+   "applicationType":"ROADCUTNOC",
+   "tenantId":"CH",
+   "applicationId":"PMS-2020-02-25-041860",
+   "dataPayload":{
+      "requestDocumentType":"receiptData"
+   },
+   "auditDetails":{
+      "createdBy":1,
+      "lastModifiedBy":1,
+      "createdTime":1578894136873,
+      "lastModifiedTime":1578894136873
+   }
+}

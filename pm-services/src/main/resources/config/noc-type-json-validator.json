@@ -1,0 +1,314 @@
+{
+   "PETNOC":{
+      "applicantName":{
+         "mandatory":"true",
+         "validateRegularExp":"^[a-zA-Z ]{1,50}$"
+      },
+      "idName":{
+         "mandatory":"true",
+         "validateRegularExp":"^[a-zA-Z1-9. ]{1,50}$"
+      },
+      "houseNo":{
+         "mandatory":"true",
+         "validateRegularExp":"^[a-zA-Z0-9-\/,()_'&.\" ]{1,50}$"
+      },
+      "sector":{
+         "mandatory":"true",
+         "validateRegularExp":"^[a-zA-Z0-9-\/,()_'&.\" ]*$"
+      },
+      "nameOfPetDog":{
+         "mandatory":"true",
+         "validateRegularExp":"^[a-zA-Z ]{1,50}$"
+      },
+      "age":{
+         "mandatory":"true",
+         "validateRegularExp":"^[0-9-_]*$"
+      },
+      "sex":{
+         "mandatory":"true",
+         "validateRegularExp":"^[A-Z-_]{1,10}$"
+      },
+      "breed":{
+         "mandatory":"true",
+         "validateRegularExp":"^[a-zA-Z-_ ]{1,100}$"
+      },
+      "color":{
+         "mandatory":"true",
+         "validateRegularExp":"^[a-zA-Z-_ ]{1,35}$"
+      },
+      "identificationMark":{
+         "mandatory":"false",
+         "validateRegularExp":"^[a-zA-Z0-9!@#$%^&*(){}_+-<>\\\/~`:;,.? ]{1,100}$"
+      },
+      "uploadPetPicture":{
+         "mandatory":"true",
+         "validateRegularExp":"\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+      },
+      "uploadVaccinationCertificate":{
+         "mandatory":"true",
+         "validateRegularExp":"\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+      },
+      "ownerIdProof":{
+         "mandatory":"true",
+         "validateRegularExp":"\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+      },
+      "immunizationNameVeterinaryDoctor":{
+         "mandatory":"true",
+         "validateRegularExp":"^[a-zA-Z. ]{1,50}$"
+      },
+      "veterinaryCouncilRegistrationNo":{
+         "mandatory":"true",
+         "validateRegularExp":"[a-zA-Z0-9-\/ ]++$"
+      },
+      "immunizationContactDetail":{
+         "mandatory":"true",
+         "validateRegularExp":"(0/91)?[1-9][0-9]{9}"
+      },
+      "immunizationClinicNo":{
+         "mandatory":"true",
+         "validateRegularExp":"^[a-zA-Z0-9-\/, ]{1,100}$"
+      },
+      "immunizationSector":{
+         "mandatory":"true",
+         "validateRegularExp":"^[a-zA-Z0-9-\/,()_'&.\" ]*$"
+      },
+      "remarks":{
+         "mandatory":"false",
+         "validateRegularExp":""
+      }
+   },
+   "ROADCUTNOC":{
+      "typeOfApplicant":{
+         "mandatory":"false",
+         "validateRegularExp":"[a-zA-Z-_ ]++$"
+      },
+      "purposeOfRoadCutting":{
+         "mandatory":"true",
+         "validateRegularExp":"[a-zA-Z-_ ]++$"
+      },
+      "applicantName":{
+         "mandatory":"true",
+         "validateRegularExp":"^[a-zA-Z ]{1,50}$"
+      },
+      "idName":{
+         "mandatory":"true",
+         "validateRegularExp":"^[a-zA-Z1-9. ]{1,50}$"
+      },
+      "gstin":{
+         "mandatory":"false",
+         "validateRegularExp":"^([0]{1}[1-9]{1}|[1-2]{1}[0-9]{1}|[3]{1}[0-7]{1})([a-zA-Z]{5}[0-9]{4}[a-zA-Z]{1}[1-9a-zA-Z]{1}[zZ]{1}[0-9a-zA-Z]{1})+$"
+      },
+      "division":{
+         "mandatory":"true",
+         "validateRegularExp":"^[a-zA-Z0-9-\/,()_'&.\" ]{1,25}$"
+      },
+      "ward":{
+         "mandatory":"false",
+         "validateRegularExp":"^[a-zA-Z0-9-\/,()_'&.\" ]{1,25}$"
+      },
+      "sector":{
+         "mandatory":"true",
+         "validateRegularExp":"^[a-zA-Z0-9-\/,()_'&.\" ]*$"
+      },
+      "requestedLocation":{
+         "mandatory":"false",
+         "validateRegularExp":"^[a-zA-Z0-9!@#$&()\\-`.+,/\" ]{1,100}$"
+      },
+      "landmark":{
+         "mandatory":"true",
+         "validateRegularExp":"^[a-zA-Z0-9-\/,()_'&.\" ]{1,100}$"
+      },
+     "length":{
+         "mandatory":"true",
+         "validateRegularExp":"^(?=.*[0-9])[0-9]*[.,]?[0-9]{1,2}$"
+      },
+      "uploadDocuments":{
+         "mandatory":"true",
+         "validateRegularExp":"\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+      },
+      "remarks":{
+         "mandatory":"false",
+         "validateRegularExp":""
+      },
+     "roadCutType":{
+         "mandatory":"true",
+         "validateRegularExp":"^[a-zA-Z0-9-,_ ]{1,200}"
+      }
+   },
+   "SELLMEATNOC":{
+      "applicantName":{
+         "mandatory":"true",
+         "validateRegularExp":"[a-zA-Z ]{1,50}$"
+      },
+      "idName":{
+         "mandatory":"true",
+         "validateRegularExp":"^[a-zA-Z1-9. ]{1,50}$"
+      },
+      "fatherHusbandName":{
+         "mandatory":"true",
+         "validateRegularExp":"[a-zA-Z ]{1,50}$"
+      },
+      "houseNo":{
+         "mandatory":"true",
+         "validateRegularExp":"^[a-zA-Z0-9-\/,()_'&.\" ]{1,100}$"
+      },
+      "shopNumber":{
+         "mandatory":"true",
+         "validateRegularExp":"^[a-zA-Z0-9-\/,()_'&.\" ]*$"
+      },
+      "sector":{
+         "mandatory":"true",
+         "validateRegularExp":"^[a-zA-Z0-9-\/,()_'&.\" ]*$"
+      },
+      "ward":{
+         "mandatory":"false",
+         "validateRegularExp":"^[a-zA-Z0-9-\/,()_'&.\" ]*$"
+      },
+      "division":{
+         "mandatory":"false",
+         "validateRegularExp":"^[a-zA-Z0-9-\/,()_'&.\" ]*$"
+      },
+      "nocSought":{
+         "mandatory":"true",
+         "validateRegularExp":"^[a-zA-Z0-9-_\/,() ]*$"
+      },
+      "uploadDocuments":{
+         "mandatory":"true",
+         "validateRegularExp":"\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+      },
+      "idProof":{
+         "mandatory":"true",
+         "validateRegularExp":"\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+      },
+      "remarks":{
+         "mandatory":"false",
+         "validateRegularExp":""
+      },
+      "mobileNumber":{
+         "mandatory":"true",
+         "validateRegularExp":"(0/91)?[1-9][0-9]{9}"
+      }
+   },
+   "ADVERTISEMENTNOC":{
+      "typeOfApplicant":{
+         "mandatory":"true",
+         "validateRegularExp":"^[a-zA-Z-_ ]*$"
+      },
+      "idName":{
+         "mandatory":"true",
+         "validateRegularExp":"^[a-zA-Z1-9. ]{1,50}$"
+      },
+      "applicantName":{
+         "mandatory":"true",
+         "validateRegularExp":"^[a-zA-Z ]{1,50}$"
+      },
+      "tan":{
+         "mandatory":"false",
+         "validateRegularExp":"^([a-zA-Z]){5}([0-9]){4}([a-zA-Z]){1}?$"
+      },
+      "pan":{
+         "mandatory":"false",
+         "validateRegularExp":"^([a-zA-Z]){5}([0-9]){4}([a-zA-Z]){1}?$"
+      },
+      "cin":{
+         "mandatory":"false",
+         "validateRegularExp":"^([L|U]{1})([0-9]{5})([A-Za-z]{2})([0-9]{4})([A-Za-z]{3})([0-9]{6})$"
+      },
+      "gstin":{
+         "mandatory":"false",
+         "validateRegularExp":"^([0]{1}[1-9]{1}|[1-2]{1}[0-9]{1}|[3]{1}[0-7]{1})([a-zA-Z]{5}[0-9]{4}[a-zA-Z]{1}[1-9a-zA-Z]{1}[zZ]{1}[0-9a-zA-Z]{1})+$"
+      },
+      "applicantAddress":{
+         "mandatory":"false",
+         "validateRegularExp":"^[a-zA-Z0-9-\/,()_'&.\"\n\r ]{1,100}$"
+      },
+      "applicantLandmark":{
+         "mandatory":"false",
+         "validateRegularExp":"^[a-zA-Z0-9-\/,()_'&.\" ]{1,100}$"
+      },
+      "applicantDivision":{
+         "mandatory":"false",
+         "validateRegularExp":"^[a-zA-Z0-9-\/,()_'&.\" ]{1,100}$"
+      },
+      "applicantWard":{
+         "mandatory":"false",
+         "validateRegularExp":"^[a-zA-Z0-9-\/,()_'&.\" ]{1,100}$"
+      },
+      "sector":{
+         "mandatory":"false",
+         "validateRegularExp":"^[a-zA-Z0-9-\/,()_'&.\" ]*$"
+      },
+      "applicantVillageSuSector":{
+         "mandatory":"true",
+         "validateRegularExp":"^[a-zA-Z0-9-\/,()_'&.\" ]{1,100}$"
+      },
+      "mobileNo":{
+         "mandatory":"true",
+         "validateRegularExp":"(0/91)?[1-9][0-9]{9}"
+      },
+      "emailId":{
+         "mandatory":"true",
+         "validateRegularExp":"^(.+)@(.+)$"
+      },
+      "typeOfAdvertisement":{
+         "mandatory":"false",
+         "validateRegularExp":"^[a-zA-Z0-9-\/,()_'&.\" ]*$"
+      },
+      "subTypeOfAdvertisement":{
+         "mandatory":"false",
+         "validateRegularExp":"^[a-zA-Z0-9-\/,()_'&.\" ]*$"
+      },
+      "duration":{
+         "mandatory":"true",
+         "validateRegularExp":"[A-Za-z]++$"
+      },
+      "fromDateToDisplay":{
+         "mandatory":"true",
+         "validateRegularExp":"\\d{4}-(0?[1-9]|1[012])-(0?[1-9]|[12][0-9]|3[01])*"
+      },
+      "toDateToDisplay":{
+         "mandatory":"true",
+         "validateRegularExp":"\\d{4}-(0?[1-9]|1[012])-(0?[1-9]|[12][0-9]|3[01])*"
+      },
+      "locationOfAdvertisement":{
+         "mandatory":"false",
+         "validateRegularExp":"^[a-zA-Z0-9-\/,()_'&.\" ]{1,100}$"
+      },
+      "advertisementLandmark":{
+         "mandatory":"false",
+         "validateRegularExp":"^[a-zA-Z0-9-\/,()_'&.\" ]{1,100}$"
+      },
+      "advertisementSector":{
+         "mandatory":"false",
+         "validateRegularExp":"^[a-zA-Z0-9-\/,()_'&.\" ]*$"
+      },
+      "advertisementVillageSubSector":{
+         "mandatory":"false",
+         "validateRegularExp":"^[a-zA-Z0-9-\/,()_'&.\" ]{1,100}$"
+      },
+      "advertisementMatterDescription":{
+         "mandatory":"false",
+         "validateRegularExp":"^[a-zA-Z0-9-\/,()_'&.\"\n\r ]{1,100}$"
+      },
+      "space":{
+         "mandatory":"false",
+         "validateRegularExp":"[0-9.]++$"
+      },
+      "exemptedCategory":{
+         "mandatory":"true",
+         "validateRegularExp":"[0-1]++$"
+      },
+      "date":{
+         "mandatory":"true",
+         "validateRegularExp":"\\d{4}-(0?[1-9]|1[012])-(0?[1-9]|[12][0-9]|3[01])*"
+      },
+      "uploadDocuments":{
+         "mandatory":"true",
+         "validateRegularExp":"\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+      },
+      "remarks":{
+         "mandatory":"false",
+         "validateRegularExp":""
+      }
+   }
+}

@@ -1,0 +1,35 @@
+{
+"RequestInfo":{
+"apiId":"emp",
+"ver":"1.0",
+"ts":"20201212",
+"action":"create",
+"did":"1",
+"key":"abcdkey",
+"msgId":"20170310130900",
+"requesterId":"",
+"authToken":""
+},
+"RequestBody":
+{ 
+"vendorUuid": "d3ad502d-1c00-489b-9f09-e447fdb93f1b",
+"passNo": null,
+"covNo": "16372",
+"name": "BABLU THAKUR 6",
+"fatherSpouseName": "SURYA NARAYAN THAKUR",
+"address": null,
+"contactNumber": 123,
+"vendorCategory": "MOBILE VENDOR",
+"streetVendorArea": "8",
+"transportMode": "Cycle Rikshaw",
+"tenantId":"ch",
+"isActive":true
+            		
+},
+"AuditDetails":{
+"createdBy":"1",
+"createdTime":"123446",
+"lastModifiedBy":"1",
+"lastModifiedTime":"12312"
+}
+}

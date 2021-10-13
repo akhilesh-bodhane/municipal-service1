@@ -1,0 +1,31 @@
+{
+   "RequestInfo":{
+      "apiId":"emp",
+      "ver":"1.0",
+      "ts":"20201212",
+      "action":"create",
+      "did":"1",
+      "key":"abcdkey",
+      "msgId":"20170310130900",
+      "requesterId":"",
+      "authToken":""
+   },
+   "RequestBody":{
+      		"auctionUuid":"eec3aa7e-415a-41b1-9cd0-ec2bb737aed8",
+            "tenantId":"ch",
+            "isActive":true,
+            "challanUuid":"eec3aa7e-415a-41b1-9cd0-ec2bb737aed8",
+            "storeitemUuid":"kjsdi12345678",
+            "purchaser_name":"Test",
+            "auction_amount":12456,
+            "isAuctioned":true,
+            "violationItemUuid":"949041ae-e417-4993-8a84-963545ed020f",
+            "violationUuid":"082cb40e-07cf-478e-86c0-97ef5a7f1580"
+         },
+   "AuditDetails":{
+      "createdBy":"1",
+      "createdTime":"123446",
+      "lastModifiedBy":"1",
+      "lastModifiedTime":"12312"
+   }
+}

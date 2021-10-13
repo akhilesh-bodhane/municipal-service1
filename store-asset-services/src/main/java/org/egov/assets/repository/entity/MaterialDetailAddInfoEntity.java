@@ -1,0 +1,59 @@
+package org.egov.assets.repository.entity;
+
+import lombok.*;
+
+import java.math.BigDecimal;
+
+import org.egov.assets.model.MaterialReceiptDetail;
+import org.egov.assets.model.MaterialReceiptDetailAddnlinfo;
+
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
+public class MaterialDetailAddInfoEntity {
+
+    private String id;
+
+    private String tenantId;
+
+    private String lotNo;
+
+    private String serialNo;
+
+    private BigDecimal manufactureDate;
+
+    private String oldReceiptNumber;
+
+    private BigDecimal receivedDate;
+    
+    private BigDecimal quantity;
+   
+    private BigDecimal userQuantity;
+
+    private BigDecimal expiryDate;
+
+    private String receiptDetailId;
+
+    private String batchNo;
+
+
+    public MaterialReceiptDetailAddnlinfo toDomain() {
+        MaterialReceiptDetailAddnlinfo addnlinfo = new MaterialReceiptDetailAddnlinfo();
+
+        return addnlinfo
+                .id(id)
+                .tenantId(tenantId)
+                .lotNo(lotNo)
+                .userQuantity(userQuantity)
+                .quantity(quantity)
+                .serialNo(serialNo)
+                .manufactureDate(null != manufactureDate ? Long.valueOf(manufactureDate.toString()) : null)
+                .oldReceiptNumber(oldReceiptNumber)
+                .receivedDate(null != receivedDate ? Long.valueOf(receivedDate.toString()) : null)
+                .expiryDate(null != expiryDate ? Long.valueOf(expiryDate.toString()) : null)
+                .receiptDetailId(receiptDetailId)
+                .batchNo(batchNo);
+    }
+}

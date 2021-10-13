@@ -1,0 +1,50 @@
+{
+  "RequestInfo": {
+    "apiId": "Rainmaker",
+    "ver": ".01",
+    "ts": "",
+    "action": "_create",
+    "did": "1",
+    "key": "",
+    "msgId": "20170310130900|en_IN",
+    "authToken": "a7309aab-d258-45bd-9987-6228ad8c2015",
+    "userInfo":
+           {"id":94,"userName":"9865845654","salutation":null,"name":"Nikunj ","gender":null,"mobileNumber":"9865845654","emailId":"","altContactNumber":null,"pan":null,"aadhaarNumber":null,"permanentAddress":"pune","permanentCity":"ch.chandigarh","permanentPinCode":null,"correspondenceAddress":"pune","correspondenceCity":null,"correspondencePinCode":null,"active":true,"locale":null,"type":"CITIZEN","accountLocked":false,"accountLockedDate":0,"fatherOrHusbandName":"Test","signature":null,"bloodGroup":null,"photo":null,"identificationMark":null,"createdBy":0,"lastModifiedBy":1,"tenantId":"ch","roles":[{"code":"CITIZEN","name":"Citizen","tenantId":"ch"}],"uuid":"c1d197d5-17c0-40d0-afc6-3096339575ad","createdDate":"23-04-2020 10:20:29","lastModifiedDate":"27-04-2020 13:34:01","dob":"4/8/1986","pwdExpiryDate":"22-07-2020 10:20:29"}
+
+ },
+  "actionInfo": [
+    {
+      "media": [
+        "b8f3c1a1-1d20-438f-946e-c483c37c0212"
+      ]
+    }
+  ],
+  "services": [
+    {
+      "serviceType": "Removal of Dead/Dangerous/Dry Trees",
+            "subType": "DEAD",
+            "treeCount": "12",
+            "description": "dsdsd",
+            "latitude": 30.7333,
+            "longitude": 76.7794,
+            "address": "Himalaya Marg, 22B, Sector 21, Chandigarh, 160022, india",
+            "mohalla": "sector-2",
+            "housenoandstreetname": "2vvbdf",
+            "landmark": "dfdsfds",
+            "ownername": "dsd",
+            "contactnumber": "9405680399",
+            "email": "nikunjmishra8170@gmail.com",
+            "city": "ch.chandigarh",
+            "tenantid": "ch.chandigarh",
+            "media": [
+                "2089dedf-c1d8-4e3c-89e7-ff1665afc3be"
+            ],
+            "isEditState": 0
+    }
+  ],
+ "idRequests":[{
+ "idName":"ch.hc",
+ "tenantId":"ch.chandigarh",
+ "format":"MCC-HC-[SEQ_EG_HC_APL]"
+ }]
+ }

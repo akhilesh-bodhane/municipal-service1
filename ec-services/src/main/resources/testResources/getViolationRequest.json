@@ -1,0 +1,34 @@
+{
+   "RequestInfo":{
+      "apiId":"emp",
+      "ver":"1.0",
+      "ts":"20201212",
+      "action":"create",
+      "did":"1",
+      "key":"abcdkey",
+      "msgId":"20170310130900",
+      "requesterId":"",
+      "authToken":""
+   },
+   "RequestBody":{
+      "tenantId":"ch",
+      "action":"",
+      "encroachmentType":"",
+      "challanId":"1",
+      "status":"1000",
+      "mobileNumber":"1",
+      "fromDate":"",
+      "toDate":"",
+      "offset":1,
+      "limit":10,
+      "orderDir":"DESC",
+      "orderColumn":"violation_date",
+      "searchText":""
+   },
+   "AuditDetails":{
+      "createdBy":"1",
+      "createdTime":"123446",
+      "lastModifiedBy":"1",
+      "lastModifiedTime":"12312"
+   }
+}

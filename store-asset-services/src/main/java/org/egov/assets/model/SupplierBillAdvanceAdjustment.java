@@ -1,0 +1,180 @@
+package org.egov.assets.model;
+
+import java.math.BigDecimal;
+import java.util.Objects;
+
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+/**
+ * Asset information for the Contractor Bill
+ */
+
+public class SupplierBillAdvanceAdjustment {
+    @JsonProperty("id")
+    private String id = null;
+
+    @JsonProperty("tenantId")
+    private String tenantId = null;
+
+    @JsonProperty("supplierBill")
+    private String supplierBill = null;
+
+    @JsonProperty("supplierAdvanceRequisition")
+    private SupplierAdvanceRequisition supplierAdvanceRequisition = null;
+
+    @JsonProperty("advanceAdjustedAmount")
+    private BigDecimal advanceAdjustedAmount = null;
+
+    public SupplierBillAdvanceAdjustment id(String id) {
+        this.id = id;
+        return this;
+    }
+
+    /**
+     * Unique Identifier of the Supplier Bill
+     *
+     * @return id
+     **/
+        public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public SupplierBillAdvanceAdjustment tenantId(String tenantId) {
+        this.tenantId = tenantId;
+        return this;
+    }
+
+    /**
+     * Tenant id of the Supplier Bill
+     *
+     * @return tenantId
+     **/
+    
+    @NotNull
+
+    @Size(min = 2, max = 128)
+    public String getTenantId() {
+        return tenantId;
+    }
+
+    public void setTenantId(String tenantId) {
+        this.tenantId = tenantId;
+    }
+
+    public SupplierBillAdvanceAdjustment supplierBill(String supplierBill) {
+        this.supplierBill = supplierBill;
+        return this;
+    }
+
+    /**
+     * supplier bill number id as reference
+     *
+     * @return supplierBill
+     **/
+    
+    @NotNull
+
+
+    public String getSupplierBill() {
+        return supplierBill;
+    }
+
+    public void setSupplierBill(String supplierBill) {
+        this.supplierBill = supplierBill;
+    }
+
+    public SupplierBillAdvanceAdjustment supplierAdvanceRequisition(SupplierAdvanceRequisition supplierAdvanceRequisition) {
+        this.supplierAdvanceRequisition = supplierAdvanceRequisition;
+        return this;
+    }
+
+    /**
+     * SupplierAdvanceRequisition  reference
+     *
+     * @return supplierAdvanceRequisition
+     **/
+     @Valid
+    public SupplierAdvanceRequisition getSupplierAdvanceRequisition() {
+        return supplierAdvanceRequisition;
+    }
+
+    public void setSupplierAdvanceRequisition(SupplierAdvanceRequisition supplierAdvanceRequisition) {
+        this.supplierAdvanceRequisition = supplierAdvanceRequisition;
+    }
+
+    public SupplierBillAdvanceAdjustment advanceAdjustedAmount(BigDecimal advanceAdjustedAmount) {
+        this.advanceAdjustedAmount = advanceAdjustedAmount;
+        return this;
+    }
+
+    /**
+     * advance adjested amount in each advance requisition object.
+     *
+     * @return advanceAdjustedAmount
+     **/
+    
+    @NotNull
+    @Valid
+    public BigDecimal getAdvanceAdjustedAmount() {
+        return advanceAdjustedAmount;
+    }
+
+    public void setAdvanceAdjustedAmount(BigDecimal advanceAdjustedAmount) {
+        this.advanceAdjustedAmount = advanceAdjustedAmount;
+    }
+
+
+    @Override
+    public boolean equals(java.lang.Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        SupplierBillAdvanceAdjustment supplierBillAdvanceAdjustment = (SupplierBillAdvanceAdjustment) o;
+        return Objects.equals(this.id, supplierBillAdvanceAdjustment.id) &&
+                Objects.equals(this.tenantId, supplierBillAdvanceAdjustment.tenantId) &&
+                Objects.equals(this.supplierBill, supplierBillAdvanceAdjustment.supplierBill) &&
+                Objects.equals(this.supplierAdvanceRequisition, supplierBillAdvanceAdjustment.supplierAdvanceRequisition) &&
+                Objects.equals(this.advanceAdjustedAmount, supplierBillAdvanceAdjustment.advanceAdjustedAmount);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, tenantId, supplierBill, supplierAdvanceRequisition, advanceAdjustedAmount);
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("class SupplierBillAdvanceAdjustment {\n");
+
+        sb.append("    id: ").append(toIndentedString(id)).append("\n");
+        sb.append("    tenantId: ").append(toIndentedString(tenantId)).append("\n");
+        sb.append("    supplierBill: ").append(toIndentedString(supplierBill)).append("\n");
+        sb.append("    supplierAdvanceRequisition: ").append(toIndentedString(supplierAdvanceRequisition)).append("\n");
+        sb.append("    advanceAdjustedAmount: ").append(toIndentedString(advanceAdjustedAmount)).append("\n");
+        sb.append("}");
+        return sb.toString();
+    }
+
+    /**
+     * Convert the given object to string with each line indented by 4 spaces
+     * (except the first line).
+     */
+    private String toIndentedString(java.lang.Object o) {
+        if (o == null) {
+            return "null";
+        }
+        return o.toString().replace("\n", "\n    ");
+    }
+}
