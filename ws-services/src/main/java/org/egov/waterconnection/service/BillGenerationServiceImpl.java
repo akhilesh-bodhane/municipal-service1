@@ -157,7 +157,7 @@ public class BillGenerationServiceImpl implements BillGenerationService {
 						HashMap.class);
 				for (WaterApplication applicationList : application.getWaterApplicationList()) {
 					
-					//System.out.println("Connection no--> "+application.getConnectionNo()+"Application no--->"+applicationList.getApplicationNo());
+				//	System.out.println("Connection no--> "+application.getConnectionNo()+"Application no--->"+applicationList.getApplicationNo()+"usage"+application.getWaterProperty().getUsageCategory());
 					
 					if (WCConstants.ACTIVITY_TYPE_NEW_CONN.contains(applicationList.getActivityType())) {
 						String meterReading = addDetail.get(WCConstants.INITIAL_METER_READING_CONST) == null ? ""

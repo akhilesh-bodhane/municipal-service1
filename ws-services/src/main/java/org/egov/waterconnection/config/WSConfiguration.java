@@ -244,4 +244,8 @@ public class WSConfiguration {
 	private String wsMeterTesting;
 	
 	
+	@Value("${ws.sms.notification_template}")
+	private String notificationTemplate;
+	
+	
 }

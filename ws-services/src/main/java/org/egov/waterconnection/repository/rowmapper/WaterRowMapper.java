@@ -25,6 +25,7 @@ public class WaterRowMapper implements ResultSetExtractor<List<WaterConnection>>
 	public List<WaterConnection> extractData(ResultSet rs) throws SQLException, DataAccessException {
 		Map<String, WaterConnection> connectionListMap = new HashMap<>();
 		WaterConnection currentWaterConnection = new WaterConnection();
+		
 		while (rs.next()) {
 			String applicationNo = rs.getString("connection_Id");
 
@@ -246,12 +247,31 @@ public class WaterRowMapper implements ResultSetExtractor<List<WaterConnection>>
 
     private void addHoldersDeatilsToWaterConnection(ResultSet rs, WaterConnection waterConnection) throws SQLException {
         String uuid = rs.getString("userid");
+        String WSuuid = rs.getString("ws_application_id");
         List<ConnectionHolderInfo> connectionHolders = waterConnection.getConnectionHolders();
+
+        //Commented for Connection Holder changes
         if (!CollectionUtils.isEmpty(connectionHolders)) {
+           // System.out.println(connectionHolders.size());
             for (ConnectionHolderInfo connectionHolderInfo : connectionHolders) {
-                if (!StringUtils.isEmpty(connectionHolderInfo.getUuid()) && !StringUtils.isEmpty(uuid) && connectionHolderInfo.getUuid().equals(uuid))
-                    return;
-            }
+				
+            	 if(!StringUtils.isEmpty(connectionHolderInfo.getUuid())
+            			 &&!StringUtils.isEmpty(uuid) 
+            			 //&& connectionHolderInfo.getUuid().equals(uuid)
+            	)
+            	 {
+				  if (!StringUtils.isEmpty(connectionHolderInfo.getWs_application_id()) &&!StringUtils.isEmpty(WSuuid) && connectionHolderInfo.getWs_application_id().equals(WSuuid)) { 
+					 
+					  return; 
+				  } 
+				  }
+				 
+				  
+				
+				 
+            	
+            	
+           }
         }
         if(!StringUtils.isEmpty(uuid)){
             Double holderShipPercentage = rs.getDouble("holdershippercentage");
@@ -271,8 +291,12 @@ public class WaterRowMapper implements ResultSetExtractor<List<WaterConnection>>
                     .proposedGender(rs.getString("proposedGender"))
                     .proposedGuardianName(rs.getString("proposedGuardianName"))
                     .proposedMobileNo(rs.getString("proposedMobileNo"))
-                    .proposedName(rs.getString("proposedName")).build();
-            waterConnection.addConnectionHolderInfo(connectionHolderInfo);
+                    .proposedName(rs.getString("proposedName"))
+                    .ws_application_id(rs.getString("ws_application_id"))
+                    .lastModifiedDate(rs.getLong("holderlastmodifiedtime"))
+                    .build();
+            
+            waterConnection.addConnectionHolderInfoForConnectionHolderChanges(connectionHolderInfo);
         }
     }
 }

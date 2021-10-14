@@ -2,7 +2,9 @@ package org.egov.waterconnection.service;
 
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -12,6 +14,7 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import org.egov.common.contract.request.RequestInfo;
@@ -318,17 +321,20 @@ public class EnrichmentService {
 		if (CollectionUtils.isEmpty(waterConnectionList))
 			return;
 		Set<String> connectionHolderIds = new HashSet<>();
+		
 		for (WaterConnection waterConnection : waterConnectionList) {
 			if (!CollectionUtils.isEmpty(waterConnection.getConnectionHolders())) {
 				connectionHolderIds.addAll(waterConnection.getConnectionHolders().stream()
 						.map(ConnectionHolderInfo::getUuid).collect(Collectors.toSet()));
 			}
 		}
+		
 		if (CollectionUtils.isEmpty(connectionHolderIds))
 			return;
 		UserSearchRequest userSearchRequest = userService.getBaseUserSearchRequest(criteria.getTenantId(), requestInfo);
 		userSearchRequest.setUuid(connectionHolderIds);
 		UserDetailResponse userDetailResponse = userService.getUser(userSearchRequest);
+		
 		enrichConnectionHolderInfo(userDetailResponse, waterConnectionList);
 	}
 
@@ -347,15 +353,41 @@ public class EnrichmentService {
 		connectionHolderInfos.forEach(user -> userIdToConnectionHolderMap.put(user.getUuid(), user));
 		waterConnectionList.forEach(waterConnection -> {
 			if(!CollectionUtils.isEmpty(waterConnection.getConnectionHolders())){
+				List<ConnectionHolderInfo> ch = waterConnection.getConnectionHolders();
 				waterConnection.getConnectionHolders().forEach(holderInfo -> {
+				
 					if (userIdToConnectionHolderMap.get(holderInfo.getUuid()) == null)
 						throw new CustomException("OWNER SEARCH ERROR", "The owner of the water application"
 								+ waterConnection.getApplicationNo() + " is not coming in user search");
 					else
 						holderInfo.addUserDetail(userIdToConnectionHolderMap.get(holderInfo.getUuid()));
+					
+					
 				});
 			}
 		});
+		
+	//	 List<ConnectionHolderInfo> ch2 = new ArrayList<>();
+	/*
+	 * waterConnectionList.forEach(waterConnection -> {
+	 * if(!CollectionUtils.isEmpty(waterConnection.getConnectionHolders())){ final
+	 * List<ConnectionHolderInfo> ch = waterConnection.getConnectionHolders();
+	 * 
+	 * waterConnection.setConnectionHolders(null); ch.forEach(holderInfo -> { final
+	 * List<ConnectionHolderInfo> ch2 = ch.stream()
+	 * .sorted(Comparator.comparing(ConnectionHolderInfo::getLastModifiedDate))
+	 * .collect(Collectors.toList()); waterConnection.setConnectionHolders(ch2); });
+	 * 
+	 * } });
+	 */
+		
+		
+		
 	}
-
+		
+//List<ConnectionHolderInfo> sortedEmployees = employees.stream().sorted(compareByName).collect(Collectors.toList());
+		
+	
+	
+	
 }

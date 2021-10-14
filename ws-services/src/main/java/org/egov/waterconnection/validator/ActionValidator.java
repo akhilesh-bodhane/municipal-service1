@@ -33,6 +33,7 @@ public class ActionValidator {
 	public void validateUpdateRequest(WaterConnectionRequest request, BusinessService businessService, String applicationStatus) {
 		validateDocumentsForUpdate(request);
 		validateIds(request, businessService, applicationStatus);
+		validateConnectionNoForRibbon(request);
 	}
 
 	/**
@@ -76,12 +77,22 @@ public class ActionValidator {
 	
 	//Validating length and Null for Conneciton Number
 	private void validateConnectionNoForRibbon(WaterConnectionRequest request) {
-		if (WCConstants.WS_NEWCONNECTION.equalsIgnoreCase(request.getWaterConnection().getActivityType())
-				&& WCConstants.ACTION_INITIATE.equalsIgnoreCase(request.getWaterConnection().getProcessInstance().getAction())				
-				&& request.getWaterConnection().getApplicationNo() != null
-				&& request.getWaterConnection().getApplicationNo().length()<WCConstants.MAX_LENGTH) {
-			throw new CustomException("INVALID STATUS",
-					"Status cannot be INITIATE when application document are provided");
+		
+	
+		if ((
+			(WCConstants.WS_NEWCONNECTION.equalsIgnoreCase(request.getWaterConnection().getActivityType())
+				&& WCConstants.PENDING_FOR_CONNECTION_NUMBER_BY_SUPERINTENDENT.equalsIgnoreCase(request.getWaterConnection().getApplicationStatus()))||
+				
+			(WCConstants.WS_APPLY_FOR_TEMPORARY_CON_BILLING.equalsIgnoreCase(request.getWaterConnection().getActivityType())
+					&& WCConstants.PENDING_FOR_CONNECTION_NUMBER_BY_SUPERINTENDENT.equalsIgnoreCase(request.getWaterConnection().getApplicationStatus())))){
+			
+			if((null==request.getWaterConnection().getConnectionNo())||(request.getWaterConnection().getConnectionNo().isEmpty())||
+					(request.getWaterConnection().getConnectionNo().length()<WCConstants.MIN_LENGTH)) {
+			throw new CustomException("Invalid Connection Number",
+					"Connection Number Provided is Empty or length of the Connection Number is lesser than 14 characters ");
 		}
+			
+		}
+			
 	}
 }

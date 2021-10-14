@@ -13,9 +13,13 @@ import org.egov.waterconnection.config.WSConfiguration;
 import org.egov.waterconnection.constants.WCConstants;
 import org.egov.waterconnection.model.AuditDetails;
 import org.egov.waterconnection.model.Property;
+import org.egov.waterconnection.model.SMSRequest;
+import org.egov.waterconnection.model.SMSRequest.SMSRequestBuilder;
 import org.egov.waterconnection.model.SearchCriteria;
 import org.egov.waterconnection.model.WaterConnection;
 import org.egov.waterconnection.model.WaterConnectionRequest;
+import org.egov.waterconnection.model.WaterNotication;
+import org.egov.waterconnection.model.WaterNotificationRequest;
 import org.egov.waterconnection.model.workflow.BusinessService;
 import org.egov.waterconnection.repository.WaterDao;
 import org.egov.waterconnection.repository.WaterDaoImpl;
@@ -96,7 +100,7 @@ public class WaterServiceImpl implements WaterService {
 		waterConnectionValidator.validateWaterConnection(waterConnectionRequest, false);
 		Property property = validateProperty.getOrValidateProperty(waterConnectionRequest);
 		enrichmentService.enrichWaterConnection(waterConnectionRequest);
-		userService.createUser(waterConnectionRequest);
+		//userService.createUser(waterConnectionRequest);
 		// call work-flow
 		if (config.getIsExternalWorkFlowEnabled())
 			wfIntegrator.callWorkFlow(waterConnectionRequest, property);
@@ -142,9 +146,6 @@ public class WaterServiceImpl implements WaterService {
 		validateProperty.validatePropertyCriteria(property);
 		boolean isStateUpdatable = true;
 		BusinessService businessService = null;
-			
-		
-		
 		if (WCConstants.ACTION_INITIATE.equalsIgnoreCase(
 				waterConnectionRequest.getWaterConnection().getProcessInstance().getAction())) {
 			waterConnectionRequest.getWaterConnection().setDocuments(null);
@@ -152,7 +153,6 @@ public class WaterServiceImpl implements WaterService {
 			enrichmentService.enrichUpdateWaterConnection(waterConnectionRequest);
 			waterConnectionRequest.getWaterConnection().setApplicationStatus(WCConstants.STATUS_INITIATED);
 		}else {
-		
 			businessService = workflowService.getBusinessService(waterConnectionRequest.getWaterConnection().getTenantId(), 
 					waterConnectionRequest.getRequestInfo(), waterConnectionRequest.getWaterConnection().getActivityType());
 			log.info("businessService: {},Business: {}",businessService.getBusinessService(),businessService.getBusiness());
@@ -168,13 +168,16 @@ public class WaterServiceImpl implements WaterService {
 			waterDaoImpl.pushForEditNotification(waterConnectionRequest);
 			//Enrich file store Id After payment
 			enrichmentService.enrichFileStoreIds(waterConnectionRequest);
+			// Comment in Local
 			userService.updateUser(waterConnectionRequest, searchResult);
 			isStateUpdatable = waterServiceUtil.getStatusForUpdate(businessService, previousApplicationStatus);
 		}
 		//Call workflow
+		//Comment in Local
 		wfIntegrator.callWorkFlow(waterConnectionRequest, property);
-		enrichmentService.postStatusEnrichment(waterConnectionRequest, property);
-		
+		if(WCConstants.WS_APPLY_FOR_TEMPORARY_CON.equalsIgnoreCase(waterConnectionRequest.getWaterConnection().getActivityType())) {
+			enrichmentService.postStatusEnrichment(waterConnectionRequest, property);
+		}
 		waterConnectionRequest.getWaterConnection().getWaterApplication().setApplicationStatus(
 				waterConnectionRequest.getWaterConnection().getApplicationStatus());
 		waterConnectionRequest.getWaterConnection().getWaterApplication().setAction(
@@ -235,5 +238,17 @@ public class WaterServiceImpl implements WaterService {
 		waterDao.addConnectionMapping(waterConnectionRequest);
 		
 		return  Arrays.asList(waterConnectionRequest.getWaterConnection());
+	}
+	
+	@Override
+	public void sendSms(WaterNotificationRequest waterNotificationRequest) {
+		String template = config.getNotificationTemplate();
+		WaterNotication wn  = waterNotificationRequest.getWaterNotication();
+		template  = template.replace("<#var1>", wn.getApplication_no()).replace("<#var2>", wn.getConsumer_name()).replace("<#var3>",
+				wn.getHouse_no()).replace("<#var4>", wn.getSector_village()).replace("<#var5>", wn.getPhone_no()).replace("<#var6>", wn.getApplication_type())
+				.replace("<#var7>",wn.getApplication_status()).replace("<#var8>", wn.getAmount());
+		SMSRequest s = SMSRequest.builder().message(template).mobileNumber(wn.getPhone_no()).build();
+		System.out.println(template);
+		
 	}
 }

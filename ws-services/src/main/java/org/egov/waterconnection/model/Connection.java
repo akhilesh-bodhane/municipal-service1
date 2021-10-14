@@ -2,9 +2,16 @@
 package org.egov.waterconnection.model;
 
 import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Collectors;
 
+import javax.print.attribute.HashAttributeSet;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -549,6 +556,8 @@ public class Connection {
 		this.dateEffectiveFrom = dateEffectiveFrom;
 		return this;
 	}
+	
+	private Map<String,ConnectionHolderInfo> conHolderMap = new HashMap<>();
 
 	/**
 	 * Get dateEffectiveFrom
@@ -707,5 +716,16 @@ public class Connection {
 		this.waterApplicationList = waterApplicationList;
 		return this;
 	}
-
+	
+	public Connection addConnectionHolderInfoForConnectionHolderChanges(ConnectionHolderInfo connectionHolderInfo) {
+		if (this.connectionHolders == null) {
+			this.connectionHolders = new ArrayList<ConnectionHolderInfo>();
+		}
+		if(null==conHolderMap.get(connectionHolderInfo.getWs_application_id())) {
+			conHolderMap.put(connectionHolderInfo.getWs_application_id(), connectionHolderInfo);
+			this.connectionHolders.add(conHolderMap.get(connectionHolderInfo.getWs_application_id()));
+		}
+		 
+		return this;
+	}
 }

@@ -61,15 +61,26 @@ public class WaterDaoImpl implements WaterDao {
 			RequestInfo requestInfo) {
 		List<Object> preparedStatement = new ArrayList<>();
 		String query = wsQueryBuilder.getSearchQueryString(criteria, preparedStatement, requestInfo);
+		
+		//log.info("Query-->"+query);
+		
+		StringBuilder str = new StringBuilder("Water query: ").append(query);
+		//log.info(str.toString());
 		if (query == null)
 			return Collections.emptyList();
 //		if (log.isDebugEnabled()) {
 	//		StringBuilder str = new StringBuilder("Water query: ").append(query);
 //			log.info(str.toString());
 //		}
+		
+	//	log.info(jdbcTemplate.query(query, preparedStatement.toArray(),waterRowMapper).toString());
+		
 		List<WaterConnection> waterConnectionList = jdbcTemplate.query(query, preparedStatement.toArray(),
 				waterRowMapper);
 		
+		//System.out.println(preparedStatement.toArray());
+		//System.out.println(preparedStatement);
+		//System.out.println(waterRowMapper.toString());
 		if (waterConnectionList == null) {
 			return Collections.emptyList();
 		}
@@ -107,6 +118,7 @@ public class WaterDaoImpl implements WaterDao {
 	public void pushForEditNotification(WaterConnectionRequest waterConnectionRequest) {
 		if (!WCConstants.EDIT_NOTIFICATION_STATE
 				.contains(waterConnectionRequest.getWaterConnection().getProcessInstance().getAction())) {
+			//to uncommentte in commit
 			waterConnectionProducer.push(wsConfiguration.getEditNotificationTopic(), waterConnectionRequest);
 		}
 	}
