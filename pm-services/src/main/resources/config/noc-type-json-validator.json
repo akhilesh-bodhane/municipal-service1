@@ -133,6 +133,10 @@
      "roadCutType":{
          "mandatory":"true",
          "validateRegularExp":"^[a-zA-Z0-9-,_ ]{1,200}"
+      },
+       "mobileNumber":{
+         "mandatory":"true",
+         "validateRegularExp":"(0/91)?[1-9][0-9]{9}"
       }
    },
    "SELLMEATNOC":{
