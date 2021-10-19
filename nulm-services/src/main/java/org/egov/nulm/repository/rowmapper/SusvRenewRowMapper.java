@@ -58,6 +58,7 @@ public class SusvRenewRowMapper implements ResultSetExtractor<List<SusvRenewAppl
 							.nameOfProposedNewStreetVendor(rs.getString("name_of_proposed_new_street_vendor"))
 							.susvApplicationId(rs.getString("susv_applicaton_id"))
 							.isActive(rs.getBoolean("is_active"))
+							.relationshipWithVendor(rs.getString("relationship_with_vendor"))
 							.build();
 					List<SusvApplicationDocument> documentAttachment = null;
 					if (rs.getString("document") != null) {
