@@ -159,7 +159,7 @@ public class NULMQueryBuilder {
 			+ "TO_DATE(TO_CHAR(TO_TIMESTAMP(SA.created_time / 1000), 'YYYY-MM-DD'),'YYYY-MM-DD') END  AND UPPER(SA.name_of_applicant) like concat('%',case when UPPER(:nameOfApplicant)<>'' then UPPER(:nameOfApplicant) else UPPER(SA.name_of_applicant) end,'%')  ORDER BY created_time desc";
 
 	public static final String GET_SUSV_RENEW_QUERY = "SELECT SA.application_uuid, SA.application_id,SA.susv_applicaton_id, "
-			+ "SA.looking_for,SA.application_status, SA.name_of_street_vendor,SA.cov_no, SA.residential_address,SA.change_of_location, SA.proposed_address,SA.name_of_proposed_new_street_vendor,SA.tenant_id,SA.is_active, SA.created_by,\n"
+			+ "SA.looking_for,SA.application_status,SA.relationship_with_vendor, SA.name_of_street_vendor,SA.cov_no, SA.residential_address,SA.change_of_location, SA.proposed_address,SA.name_of_proposed_new_street_vendor,SA.tenant_id,SA.is_active, SA.created_by,\n"
 			+ "SA.created_time, SA.last_modified_by, SA.last_modified_time,ND.document,NF.familymembers\n"
 			+ "FROM public.nulm_susv_renew_application_detail SA  left join (SELECT count(application_uuid) docs, application_uuid,max(tenant_id) tenant_id, array_to_json(array_agg(json_build_object('documentType',document_type,'filestoreId',filestore_id,'documnetUuid',document_uuid,'isActive',is_active, \n"
 			+ "'tenantId',tenant_id,'applicationUuid',application_uuid) ))as document FROM nulm_susv_renew_application_document GROUP BY application_uuid) ND on SA.application_uuid=ND.application_uuid and SA.tenant_id=ND.tenant_id \n"
