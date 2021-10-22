@@ -227,7 +227,12 @@ public class UserService {
 	 */
 	private void addUserDefaultFields(String tenantId, Role role, ConnectionHolderInfo holderInfo) {
 		holderInfo.setActive(true);
-		holderInfo.setStatus(Status.ACTIVE);
+		
+		if(null!=holderInfo.getStatus()) {
+			holderInfo.setStatus(Status.ACTIVE);
+		}
+		
+		
 		holderInfo.setTenantId(tenantId);
 		holderInfo.setRoles(Collections.singletonList(role));
 		holderInfo.setType("CITIZEN");
