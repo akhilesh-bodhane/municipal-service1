@@ -30,6 +30,9 @@ public class CommonConstants {
 	public static final String ROLE = "role may not be null";	
 	
 	public static final String INVALID_SUH_REQUEST= "INVALID_SUH_REQUEST";
+	public static final String INVALID_SUSV_REQUEST= "INVALID_SUSV_REQUEST";
+	public static final String DIPLICATE_COV_NO_MESSAGE= "COV NO already exists";
+
 	public static final String INVALID_SUH_REQUEST_MESSAGE= "Shelter Name already exists";
 	public static final String INVALID_SUH_ASSIGNED_TO="please provide valid organization uuid";
 	public static final String APPLICATION_MINORITY_NULL_CODE = "SEP_APPLICATION_MINORITY_NULL_CODE";

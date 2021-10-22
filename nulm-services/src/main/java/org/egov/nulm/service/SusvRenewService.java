@@ -9,13 +9,16 @@ import java.util.Map;
 import java.util.UUID;
 
 import org.egov.common.contract.request.RequestInfo;
+import org.egov.common.contract.request.Role;
 import org.egov.common.contract.request.User;
 import org.egov.common.contract.response.ResponseInfo;
 import org.egov.nulm.common.CommonConstants;
 import org.egov.nulm.config.NULMConfiguration;
 import org.egov.nulm.idgen.model.IdGenerationResponse;
+import org.egov.nulm.model.NulmSuhRequest;
 import org.egov.nulm.model.NulmSusvRenewRequest;
 import org.egov.nulm.model.ResponseInfoWrapper;
+import org.egov.nulm.model.SuhApplication;
 import org.egov.nulm.model.SusvApplication;
 import org.egov.nulm.model.SusvApplicationDocument;
 import org.egov.nulm.model.SusvRenewApplication;
@@ -69,6 +72,7 @@ public class SusvRenewService {
 		try {
 			SusvRenewApplication susvRenewapplication = objectMapper.convertValue(request.getNulmSusvRenewRequest(),
 					SusvRenewApplication.class);
+			repository.checkCovNo(susvRenewapplication);
 			String susvId = UUID.randomUUID().toString();
 			susvRenewapplication.setApplicationUuId(susvId);
 			susvRenewapplication.setIsActive(true);
@@ -126,7 +130,22 @@ public class SusvRenewService {
 			throw new CustomException(CommonConstants.SUSV_RENEW_APPLICATION_EXCEPTION_CODE, e.getMessage());
 		}
 	}
-
+	
+	public ResponseEntity<ResponseInfoWrapper> checkCovNo(NulmSusvRenewRequest request) {
+		try {
+			SusvRenewApplication susvRenewapplication = objectMapper.convertValue(request.getNulmSusvRenewRequest(),
+					SusvRenewApplication.class);
+			List<Role> role=request.getRequestInfo().getUserInfo().getRoles();
+		     repository.checkCovNo(susvRenewapplication);
+			return new ResponseEntity<>(ResponseInfoWrapper.builder()
+					.responseInfo(ResponseInfo.builder().status(CommonConstants.SUCCESS).build())
+					.build(), HttpStatus.OK);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new CustomException(CommonConstants.SUH_APPLICATION_EXCEPTION_CODE, e.getMessage());
+		}
+	}
+	
 	public ResponseEntity<ResponseInfoWrapper> updateSusvRenewApplication(NulmSusvRenewRequest request) {
 		try {
 			SusvRenewApplication susvRenewApplication = objectMapper.convertValue(request.getNulmSusvRenewRequest(),

@@ -70,11 +70,13 @@ public class SusvRepository {
 		paramValues.put("fromDate", request.getFromDate());
 		paramValues.put("toDate", request.getToDate());
 		paramValues.put("nameOfApplicant", request.getNameOfApplicant());
+		paramValues.put("covNo", request.getCovNo());
 		try {
 			for (Role roleobj : role) {
 				if ((roleobj.getCode()).equalsIgnoreCase(config.getRoleCitizenUser())) {
 					
 					paramValues.put("createdBy",userId.toString());
+					paramValues.put("applicationId", request.getApplicationId());
 					paramValues.put("applicationId", request.getApplicationId());
 					List<Object> statusEmplyee = new ArrayList<>();
 					if (request.getApplicationStatus() == null) {
@@ -114,6 +116,7 @@ public class SusvRepository {
 			}
 			paramValues.put("applicationStaus",statusEmplyee);
 			paramValues.put("createdBy","");
+			paramValues.put("covNo", request.getCovNo());
 			paramValues.put("applicationId", request.getApplicationId());
 			return susv = namedParameterJdbcTemplate.query(NULMQueryBuilder.GET_SUSV_QUERY, paramValues, susvrowMapper);
 		
