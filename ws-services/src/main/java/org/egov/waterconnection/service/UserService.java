@@ -234,7 +234,7 @@ public class UserService {
 		if(null==holderInfo.getStatus()) {
 			holderInfo.setStatus(Status.ACTIVE);
 		}
-		log.info("Holder ws_app: "+holderInfo.getWs_application_id()+" Status:"+holderInfo.getStatus()+"  User:"+holderInfo.getUuid());
+		
 		
 		holderInfo.setTenantId(tenantId);
 		holderInfo.setRoles(Collections.singletonList(role));
