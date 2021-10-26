@@ -84,6 +84,11 @@ public class EnrichmentService {
 		waterConnectionRequest.getWaterConnection().setWaterApplication(waterApplication);
 		waterConnectionRequest.getWaterConnection().getWaterProperty().setId(UUID.randomUUID().toString());
 		
+		if(null==waterConnectionRequest.getWaterConnection().getWaterProperty().getUsageCategory() ||
+				waterConnectionRequest.getWaterConnection().getWaterProperty().getUsageCategory().isEmpty()) {
+			waterConnectionRequest.getWaterConnection().getWaterProperty().setUsageCategory("TEMPORARY_CONSTRUCTON");
+		}
+		
 		if(WCConstants.APPLICATION_PROPERTY_TYPE_DOMESTIC.equalsIgnoreCase(
 				waterConnectionRequest.getWaterConnection().getWaterProperty().getUsageCategory())) {
 			waterConnectionRequest.getWaterConnection().setConnectionUsagesType(WCConstants.APPLICATION_PROPERTY_TYPE_DOMESTIC);
