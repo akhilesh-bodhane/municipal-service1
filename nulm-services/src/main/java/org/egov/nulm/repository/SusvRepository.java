@@ -95,7 +95,18 @@ public class SusvRepository {
 						statusEmplyee.add(request.getApplicationStatus().toString());
 					}
 					paramValues.put("applicationStaus",statusEmplyee);
-					return susv = namedParameterJdbcTemplate.query(NULMQueryBuilder.GET_SUSV_QUERY, paramValues,
+					StringBuilder baseQuery = new StringBuilder(NULMQueryBuilder.GET_SUSV_QUERY);
+					
+					int i = 0;
+					i = jdbcTemplate.queryForObject(NULMQueryBuilder.GET_SUSV_RENEW_COUNT_QUERY,
+							new Object[] {request.getApplicationId(),request.getTenantId() }, Integer.class);
+					if(i>0)
+					{
+						baseQuery.append(" and SN.cov_no=(case when :covNo  <>'' then :covNo  else SN.cov_no end)");
+					}
+					
+					baseQuery.append(" )t ORDER BY t.created_time desc");
+					return susv = namedParameterJdbcTemplate.query(baseQuery.toString(), paramValues,
 							susvrowMapper);
 				}
 			}
@@ -118,7 +129,19 @@ public class SusvRepository {
 			paramValues.put("createdBy","");
 			paramValues.put("covNo", request.getCovNo());
 			paramValues.put("applicationId", request.getApplicationId());
-			return susv = namedParameterJdbcTemplate.query(NULMQueryBuilder.GET_SUSV_QUERY, paramValues, susvrowMapper);
+			System.out.println("*************"+statusEmplyee);
+			StringBuilder baseQuery = new StringBuilder(NULMQueryBuilder.GET_SUSV_QUERY);
+			
+			int i = 0;
+			i = jdbcTemplate.queryForObject(NULMQueryBuilder.GET_SUSV_RENEW_COUNT_QUERY,
+					new Object[] {request.getApplicationId(),request.getTenantId() }, Integer.class);
+			if(i>0)
+			{
+				baseQuery.append(" and SN.cov_no=(case when :covNo  <>'' then :covNo  else SN.cov_no end)");
+			}
+			
+			baseQuery.append(" )t ORDER BY t.created_time desc");
+			return susv = namedParameterJdbcTemplate.query(baseQuery.toString(), paramValues, susvrowMapper);
 		
 
 		} catch (Exception e) {
