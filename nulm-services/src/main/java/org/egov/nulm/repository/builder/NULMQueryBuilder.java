@@ -151,27 +151,27 @@ public class NULMQueryBuilder {
 			+ "left join (SELECT count(application_uuid) fmember, application_uuid,max(tenant_id) tenant_id, array_to_json(array_agg(json_build_object('uuid',uuid,'name',name,'age',age,'relation',relation,'isActive',is_active, \n"
 			+ "'tenantId',tenant_id,'applicationUuid',application_uuid))) as familymembers FROM nulm_susv_familiy_detail GROUP BY application_uuid) NF \n"
 			+ "on SA.application_uuid=NF.application_uuid and SA.tenant_id=NF.tenant_id \n"
-			+ " left join nulm_susv_renew_application_detail SN on SA.application_id= SN.susv_applicaton_id and SA.tenant_id=SN.tenant_id where SA.application_id=(case when :applicationId  <>'' then :applicationId  else SA.application_id end) and SA.created_by=(case when :createdBy  <>'' then :createdBy  else SA.created_by end) AND SA.tenant_id=:tenantId\n"
+			+ " where SA.application_id=(case when :applicationId  <>'' then :applicationId  else SA.application_id end) and SA.cov_no=(case when :covNo  <>'' then :covNo  else SA.cov_no end) and SA.created_by=(case when :createdBy  <>'' then :createdBy  else SA.created_by end) AND SA.tenant_id=:tenantId\n"
 			+ "AND SA.is_active='true'  AND SA.application_status  IN(:applicationStaus) and \n"
 			+ "TO_DATE(TO_CHAR(TO_TIMESTAMP(SA.created_time / 1000), 'YYYY-MM-DD'),'YYYY-MM-DD') >= CASE WHEN :fromDate <> ''THEN DATE(:fromDate) ELSE\n"
 			+ "TO_DATE(TO_CHAR(TO_TIMESTAMP(SA.created_time / 1000), 'YYYY-MM-DD'),'YYYY-MM-DD') END\n"
 			+ "AND  TO_DATE(TO_CHAR(TO_TIMESTAMP(SA.created_time / 1000), 'YYYY-MM-DD'),'YYYY-MM-DD') <= CASE WHEN :toDate <>'' THEN DATE(:toDate) ELSE\n"
-			+ "TO_DATE(TO_CHAR(TO_TIMESTAMP(SA.created_time / 1000), 'YYYY-MM-DD'),'YYYY-MM-DD') END  AND UPPER(SA.name_of_applicant) like concat('%',case when UPPER(:nameOfApplicant)<>'' then UPPER(:nameOfApplicant) else UPPER(SA.name_of_applicant) end,'%')";
+			+ "TO_DATE(TO_CHAR(TO_TIMESTAMP(SA.created_time / 1000), 'YYYY-MM-DD'),'YYYY-MM-DD') END  AND UPPER(SA.name_of_applicant) like concat('%',case when UPPER(:nameOfApplicant)<>'' then UPPER(:nameOfApplicant) else UPPER(SA.name_of_applicant) end,'%') )t ORDER BY t.created_time desc";
 
 	public static final String GET_SUSV_RENEW_QUERY = "SELECT SA.application_uuid, SA.application_id,SA.susv_applicaton_id, "
-			+ "SA.looking_for,SA.application_status,SA.relationship_with_vendor, SA.name_of_street_vendor,SA.cov_no, SA.residential_address,SA.change_of_location, SA.proposed_address,SA.name_of_proposed_new_street_vendor,SA.tenant_id,SA.is_active, SA.created_by,\n"
+			+ "SA.looking_for,SA.application_status,SA.relationship_with_vendor, SA.name_of_street_vendor,SN.cov_no, SA.residential_address,SA.change_of_location, SA.proposed_address,SA.name_of_proposed_new_street_vendor,SA.tenant_id,SA.is_active, SA.created_by,\n"
 			+ "SA.created_time, SA.last_modified_by, SA.last_modified_time,ND.document,NF.familymembers\n"
 			+ "FROM public.nulm_susv_renew_application_detail SA  left join (SELECT count(application_uuid) docs, application_uuid,max(tenant_id) tenant_id, array_to_json(array_agg(json_build_object('documentType',document_type,'filestoreId',filestore_id,'documnetUuid',document_uuid,'isActive',is_active, \n"
 			+ "'tenantId',tenant_id,'applicationUuid',application_uuid) ))as document FROM nulm_susv_renew_application_document GROUP BY application_uuid) ND on SA.application_uuid=ND.application_uuid and SA.tenant_id=ND.tenant_id \n"
 			+ "left join (SELECT count(application_uuid) fmember, application_uuid,max(tenant_id) tenant_id, array_to_json(array_agg(json_build_object('uuid',uuid,'name',name,'age',age,'relation',relation,'isActive',is_active, \n"
 			+ "'tenantId',tenant_id,'applicationUuid',application_uuid))) as familymembers FROM nulm_susv_renew_familiy_detail GROUP BY application_uuid) NF \n"
 			+ "on SA.application_uuid=NF.application_uuid and SA.tenant_id=NF.tenant_id \n"
-			+ "where SA.application_id=(case when :applicationId  <>'' then :applicationId  else SA.application_id end) and SA.created_by=(case when :createdBy  <>'' then :createdBy  else SA.created_by end) AND SA.tenant_id=:tenantId\n"
+			+ "left join nulm_susv_application_detail SN  on SN.application_id= SA.susv_applicaton_id and SA.tenant_id=SN.tenant_id where SA.application_id=(case when :applicationId  <>'' then :applicationId  else SA.application_id end) and SA.created_by=(case when :createdBy  <>'' then :createdBy  else SA.created_by end) AND SA.tenant_id=:tenantId\n"
 			+ "AND SA.is_active='true'  AND SA.application_status  IN(:applicationStaus) and \n"
 			+ "TO_DATE(TO_CHAR(TO_TIMESTAMP(SA.created_time / 1000), 'YYYY-MM-DD'),'YYYY-MM-DD') >= CASE WHEN :fromDate <> ''THEN DATE(:fromDate) ELSE\n"
 			+ "TO_DATE(TO_CHAR(TO_TIMESTAMP(SA.created_time / 1000), 'YYYY-MM-DD'),'YYYY-MM-DD') END\n"
 			+ "AND  TO_DATE(TO_CHAR(TO_TIMESTAMP(SA.created_time / 1000), 'YYYY-MM-DD'),'YYYY-MM-DD') <= CASE WHEN :toDate <>'' THEN DATE(:toDate) ELSE\n"
-			+ "TO_DATE(TO_CHAR(TO_TIMESTAMP(SA.created_time / 1000), 'YYYY-MM-DD'),'YYYY-MM-DD') END and SA.cov_no=(case when :covNo  <>'' then :covNo  else SA.cov_no end)  ORDER BY created_time desc";
+			+ "TO_DATE(TO_CHAR(TO_TIMESTAMP(SA.created_time / 1000), 'YYYY-MM-DD'),'YYYY-MM-DD') END and  SN.cov_no=(case when '10'  <>'' then '10'  else SN.cov_no end)  ORDER BY created_time desc";
 
 	public static final String GET_SHG_MEMBER_STATUS_QUERY = "SELECT application_uuid, shg_uuid, application_id, nulm_application_id,application_status, name, position_level, gender, dob, date_of_opening_account, \n"
 			+ "       adhar_no, mother_name, father_or_husband_name, address, phone_no,mobile_no, qualification, email_id, is_urban_poor, is_minority, \n"
@@ -200,5 +200,5 @@ public class NULMQueryBuilder {
 			+ "TO_DATE(TO_CHAR(TO_TIMESTAMP(created_time / 1000), 'YYYY-MM-DD'),'YYYY-MM-DD') END AND  TO_DATE(TO_CHAR(TO_TIMESTAMP(created_time / 1000), 'YYYY-MM-DD'),'YYYY-MM-DD') <= CASE WHEN :toDate<>'' THEN DATE(:toDate) ELSE \n"
 			+ " TO_DATE(TO_CHAR(TO_TIMESTAMP(created_time / 1000), 'YYYY-MM-DD'),'YYYY-MM-DD') END ";
 	public static final String GET_COV_NO_QUERY="select count(*) from nulm_susv_renew_application_detail where cov_no=? and tenant_id=? ";
-	public static final String GET_SUSV_RENEW_COUNT_QUERY="select count(*) from nulm_susv_renew_application_detail where susv_applicaton_id=? and tenant_id=? ";
+
 }
