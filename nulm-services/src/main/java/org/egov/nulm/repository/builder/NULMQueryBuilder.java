@@ -142,7 +142,7 @@ public class NULMQueryBuilder {
 
 	public static final String GET_SUSV_DOCUMENT_QUERY = "SELECT count(*)  FROM public.nulm_susv_application_document  WHERE application_uuid=? and tenant_id=? and filestore_id=? and document_type=? and is_active='true';";
 
-	public static final String GET_SUSV_QUERY = "SELECT DISTINCT ON( SA.application_id)  SA.application_id,SN.cov_no,SA.application_uuid, SA.application_id, SA.nulm_application_id, SA.application_status,SA.name_of_applicant, SA.gender, SA.age,SA.dob, SA.adhar_no, SA.mother_name, SA.father_or_husband_name,\n"
+	public static final String GET_SUSV_QUERY = "SELECT * FROM (SELECT DISTINCT ON( SA.application_id)  SA.application_id,SN.cov_no,SA.application_uuid, SA.application_id, SA.nulm_application_id, SA.application_status,SA.name_of_applicant, SA.gender, SA.age,SA.dob, SA.adhar_no, SA.mother_name, SA.father_or_husband_name,\n"
 			+ "SA.permanent_address, SA.present_address, SA.mobile_no, SA.is_disability,SA.category, SA.qualification, SA.blood_group, SA.category_of_vending, SA.proposed_location_of_vending,\n"
 			+ "SA.proposed_time_of_vending, SA.goverment_scheme, SA.name_of_nominee,SA.tenant_id, SA.remark,SA.is_undertaking,SA.date,SA.place,  SA.is_active, SA.created_by,\n"
 			+ "SA.created_time, SA.last_modified_by, SA.last_modified_time,ND.document,NF.familymembers\n"
@@ -157,7 +157,7 @@ public class NULMQueryBuilder {
 			+ "TO_DATE(TO_CHAR(TO_TIMESTAMP(SA.created_time / 1000), 'YYYY-MM-DD'),'YYYY-MM-DD') >= CASE WHEN :fromDate <> ''THEN DATE(:fromDate) ELSE\n"
 			+ "TO_DATE(TO_CHAR(TO_TIMESTAMP(SA.created_time / 1000), 'YYYY-MM-DD'),'YYYY-MM-DD') END\n"
 			+ "AND  TO_DATE(TO_CHAR(TO_TIMESTAMP(SA.created_time / 1000), 'YYYY-MM-DD'),'YYYY-MM-DD') <= CASE WHEN :toDate <>'' THEN DATE(:toDate) ELSE\n"
-			+ "TO_DATE(TO_CHAR(TO_TIMESTAMP(SA.created_time / 1000), 'YYYY-MM-DD'),'YYYY-MM-DD') END  AND UPPER(SA.name_of_applicant) like concat('%',case when UPPER(:nameOfApplicant)<>'' then UPPER(:nameOfApplicant) else UPPER(SA.name_of_applicant) end,'%')  ORDER BY created_time desc";
+			+ "TO_DATE(TO_CHAR(TO_TIMESTAMP(SA.created_time / 1000), 'YYYY-MM-DD'),'YYYY-MM-DD') END  AND UPPER(SA.name_of_applicant) like concat('%',case when UPPER(:nameOfApplicant)<>'' then UPPER(:nameOfApplicant) else UPPER(SA.name_of_applicant) end,'%') )t ORDER BY t.created_time desc";
 
 	public static final String GET_SUSV_RENEW_QUERY = "SELECT SA.application_uuid, SA.application_id,SA.susv_applicaton_id, "
 			+ "SA.looking_for,SA.application_status,SA.relationship_with_vendor, SA.name_of_street_vendor,SA.cov_no, SA.residential_address,SA.change_of_location, SA.proposed_address,SA.name_of_proposed_new_street_vendor,SA.tenant_id,SA.is_active, SA.created_by,\n"
