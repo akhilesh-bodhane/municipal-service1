@@ -144,6 +144,12 @@ public class WaterServiceImpl implements WaterService {
 		log.info("Update WaterConnection: {}", waterConnectionRequest.getWaterConnection());
 		waterConnectionValidator.validateWaterConnection(waterConnectionRequest, true);
 		mDMSValidator.validateMasterData(waterConnectionRequest);
+		
+		if(null==waterConnectionRequest.getWaterConnection().getWaterProperty().getUsageCategory() ||
+				waterConnectionRequest.getWaterConnection().getWaterProperty().getUsageCategory().isEmpty()) {
+			waterConnectionRequest.getWaterConnection().getWaterProperty().setUsageCategory("TEMPORARY_CONSTRUCTION");
+		}
+		
 		Property property = validateProperty.getOrValidateProperty(waterConnectionRequest);
 		validateProperty.validatePropertyCriteria(property);
 		boolean isStateUpdatable = true;

@@ -86,7 +86,7 @@ public class EnrichmentService {
 		
 		if(null==waterConnectionRequest.getWaterConnection().getWaterProperty().getUsageCategory() ||
 				waterConnectionRequest.getWaterConnection().getWaterProperty().getUsageCategory().isEmpty()) {
-			waterConnectionRequest.getWaterConnection().getWaterProperty().setUsageCategory("TEMPORARY_CONSTRUCTON");
+			waterConnectionRequest.getWaterConnection().getWaterProperty().setUsageCategory("TEMPORARY_CONSTRUCTION");
 		}
 		
 		if(WCConstants.APPLICATION_PROPERTY_TYPE_DOMESTIC.equalsIgnoreCase(
