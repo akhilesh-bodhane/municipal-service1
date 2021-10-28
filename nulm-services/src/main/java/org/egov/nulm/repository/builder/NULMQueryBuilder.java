@@ -199,6 +199,6 @@ public class NULMQueryBuilder {
 			+ "AND is_active='true'  AND TO_DATE(TO_CHAR(TO_TIMESTAMP(created_time / 1000), 'YYYY-MM-DD'),'YYYY-MM-DD') >= CASE WHEN :fromDate<>'' THEN DATE(:fromDate) ELSE\n"
 			+ "TO_DATE(TO_CHAR(TO_TIMESTAMP(created_time / 1000), 'YYYY-MM-DD'),'YYYY-MM-DD') END AND  TO_DATE(TO_CHAR(TO_TIMESTAMP(created_time / 1000), 'YYYY-MM-DD'),'YYYY-MM-DD') <= CASE WHEN :toDate<>'' THEN DATE(:toDate) ELSE \n"
 			+ " TO_DATE(TO_CHAR(TO_TIMESTAMP(created_time / 1000), 'YYYY-MM-DD'),'YYYY-MM-DD') END ";
-	public static final String GET_COV_NO_QUERY="select count(*) from nulm_susv_renew_application_detail where cov_no=? and tenant_id=? ";
+	public static final String GET_COV_NO_QUERY="select count(*) from nulm_susv_application_detail where cov_no=? and tenant_id=? ";
 
 }
