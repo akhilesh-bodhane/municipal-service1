@@ -13,6 +13,7 @@ import org.egov.nulm.model.NulmSusvRequest;
 import org.egov.nulm.model.SmidShgGroup;
 import org.egov.nulm.model.SuhApplication;
 import org.egov.nulm.model.SusvApplication;
+import org.egov.nulm.model.SusvRenewApplication;
 import org.egov.nulm.producer.Producer;
 import org.egov.nulm.repository.builder.NULMQueryBuilder;
 import org.egov.nulm.repository.rowmapper.SusvRowMapper;
@@ -46,6 +47,17 @@ public class SusvRepository {
 		this.producer = producer;
 		this.config = config;
 		this.susvrowMapper = susvrowMapper;
+	}
+	public void checkCovNo(SusvApplication request) {
+		Map<String, String> errorMap = new HashMap<>();
+		int i = 0;
+		i = jdbcTemplate.queryForObject(NULMQueryBuilder.GET_COV_NO_QUERY,
+				new Object[] {request.getCovNo(),request.getTenantId() }, Integer.class);
+
+		if (i > 0) {
+			errorMap.put(CommonConstants.INVALID_SUSV_REQUEST, CommonConstants.DIPLICATE_COV_NO_MESSAGE);
+			throw new CustomException(errorMap);
+		}
 	}
 
 	public void createSusvApplication(SusvApplication susvApplication) {
