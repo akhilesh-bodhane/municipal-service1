@@ -171,7 +171,7 @@ public class NULMQueryBuilder {
 			+ "TO_DATE(TO_CHAR(TO_TIMESTAMP(SA.created_time / 1000), 'YYYY-MM-DD'),'YYYY-MM-DD') >= CASE WHEN :fromDate <> ''THEN DATE(:fromDate) ELSE\n"
 			+ "TO_DATE(TO_CHAR(TO_TIMESTAMP(SA.created_time / 1000), 'YYYY-MM-DD'),'YYYY-MM-DD') END\n"
 			+ "AND  TO_DATE(TO_CHAR(TO_TIMESTAMP(SA.created_time / 1000), 'YYYY-MM-DD'),'YYYY-MM-DD') <= CASE WHEN :toDate <>'' THEN DATE(:toDate) ELSE\n"
-			+ "TO_DATE(TO_CHAR(TO_TIMESTAMP(SA.created_time / 1000), 'YYYY-MM-DD'),'YYYY-MM-DD') END and  SN.cov_no=(case when '10'  <>'' then '10'  else SN.cov_no end)  ORDER BY created_time desc";
+			+ "TO_DATE(TO_CHAR(TO_TIMESTAMP(SA.created_time / 1000), 'YYYY-MM-DD'),'YYYY-MM-DD') END and  coalesce(SN.cov_no, '') =(case when :covNo  <>'' then :covNo  else coalesce(SN.cov_no, '')  end) ORDER BY created_time desc";
 
 	public static final String GET_SHG_MEMBER_STATUS_QUERY = "SELECT application_uuid, shg_uuid, application_id, nulm_application_id,application_status, name, position_level, gender, dob, date_of_opening_account, \n"
 			+ "       adhar_no, mother_name, father_or_husband_name, address, phone_no,mobile_no, qualification, email_id, is_urban_poor, is_minority, \n"
