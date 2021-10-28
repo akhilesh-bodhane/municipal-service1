@@ -72,7 +72,7 @@ public class SusvRenewService {
 		try {
 			SusvRenewApplication susvRenewapplication = objectMapper.convertValue(request.getNulmSusvRenewRequest(),
 					SusvRenewApplication.class);
-			repository.checkCovNo(susvRenewapplication);
+			//repository.checkCovNo(susvRenewapplication);
 			String susvId = UUID.randomUUID().toString();
 			susvRenewapplication.setApplicationUuId(susvId);
 			susvRenewapplication.setIsActive(true);
