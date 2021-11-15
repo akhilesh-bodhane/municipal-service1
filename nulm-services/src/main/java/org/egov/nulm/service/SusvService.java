@@ -251,6 +251,11 @@ public class SusvService {
 		try {
 			SusvApplication susvApplication = objectMapper.convertValue(request.getNulmSusvRequest(),
 					SusvApplication.class);
+			if(susvApplication.getApplicationStatus().equals(SusvApplication.StatusEnum.CREATED))
+			{
+				repository.checkCovNo(susvApplication);
+			}
+			
 			susvApplication.setIsActive(true);
 			susvApplication.setAuditDetails(
 					auditDetailsUtil.getAuditDetails(request.getRequestInfo(), CommonConstants.ACTION_UPDATE));

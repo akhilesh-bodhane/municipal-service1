@@ -103,7 +103,10 @@ public class SusvApplication {
 
 	@JsonProperty("category")
 	private String category;
-
+	
+	@JsonProperty("covNo")
+	private String covNo;
+	
 	@JsonProperty("mobileNo")
 	private String mobileNo;
 

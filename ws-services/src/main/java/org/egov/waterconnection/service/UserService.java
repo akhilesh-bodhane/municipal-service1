@@ -24,6 +24,7 @@ import org.egov.waterconnection.model.WaterConnectionRequest;
 import org.egov.waterconnection.model.users.UserDetailResponse;
 import org.egov.waterconnection.model.users.UserSearchRequest;
 import org.egov.waterconnection.repository.ServiceRequestRepository;
+import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -31,6 +32,8 @@ import org.springframework.util.ObjectUtils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import lombok.extern.slf4j.Slf4j;
+@Slf4j
 @Service
 public class UserService {
 
@@ -227,7 +230,12 @@ public class UserService {
 	 */
 	private void addUserDefaultFields(String tenantId, Role role, ConnectionHolderInfo holderInfo) {
 		holderInfo.setActive(true);
-		holderInfo.setStatus(Status.ACTIVE);
+		
+		if(null==holderInfo.getStatus()) {
+			holderInfo.setStatus(Status.ACTIVE);
+		}
+		
+		
 		holderInfo.setTenantId(tenantId);
 		holderInfo.setRoles(Collections.singletonList(role));
 		holderInfo.setType("CITIZEN");

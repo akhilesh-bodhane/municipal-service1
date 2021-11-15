@@ -131,11 +131,20 @@ public class WaterConnectionValidator {
 	 * @param searchResult water connection search result
 	 */
 	private void setFieldsFromSearch(WaterConnectionRequest request, WaterConnection searchResult) {
-		if(null!=searchResult.getConnectionNo() && !searchResult.getConnectionNo().isEmpty()) {
-			request.getWaterConnection().setConnectionNo(searchResult.getConnectionNo());
-		}
 		
 		
+		if ((
+				(WCConstants.WS_NEWCONNECTION.equalsIgnoreCase(request.getWaterConnection().getActivityType()))||
+					
+				(WCConstants.WS_APPLY_FOR_TEMPORARY_CON_BILLING.equalsIgnoreCase(request.getWaterConnection().getActivityType())))){
+				return ;
+			
+		}else {
+			
+			if(null!=searchResult.getConnectionNo() && !searchResult.getConnectionNo().isEmpty()) {
+				request.getWaterConnection().setConnectionNo(searchResult.getConnectionNo());
+			}
+		}	
 		
 	}
 }

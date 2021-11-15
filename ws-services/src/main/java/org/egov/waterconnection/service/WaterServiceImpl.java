@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.tracer.model.CustomException;
@@ -16,6 +17,7 @@ import org.egov.waterconnection.model.Property;
 import org.egov.waterconnection.model.SMSRequest;
 import org.egov.waterconnection.model.SMSRequest.SMSRequestBuilder;
 import org.egov.waterconnection.model.SearchCriteria;
+import org.egov.waterconnection.model.WaterApplication;
 import org.egov.waterconnection.model.WaterConnection;
 import org.egov.waterconnection.model.WaterConnectionRequest;
 import org.egov.waterconnection.model.WaterNotication;
@@ -142,6 +144,12 @@ public class WaterServiceImpl implements WaterService {
 		log.info("Update WaterConnection: {}", waterConnectionRequest.getWaterConnection());
 		waterConnectionValidator.validateWaterConnection(waterConnectionRequest, true);
 		mDMSValidator.validateMasterData(waterConnectionRequest);
+		
+		if(null==waterConnectionRequest.getWaterConnection().getWaterProperty().getUsageCategory() ||
+				waterConnectionRequest.getWaterConnection().getWaterProperty().getUsageCategory().isEmpty()) {
+			waterConnectionRequest.getWaterConnection().getWaterProperty().setUsageCategory("TEMPORARY_CONSTRUCTION");
+		}
+		
 		Property property = validateProperty.getOrValidateProperty(waterConnectionRequest);
 		validateProperty.validatePropertyCriteria(property);
 		boolean isStateUpdatable = true;
@@ -232,9 +240,13 @@ public class WaterServiceImpl implements WaterService {
 	}
 	@Override
 	public List<WaterConnection> addConnectionMapping(WaterConnectionRequest waterConnectionRequest) {
+		//Added Application Data for changes in water connection holder changes 
 		AuditDetails auditDetails = wsUtil
 				.getAuditDetails(waterConnectionRequest.getRequestInfo().getUserInfo().getUuid(), true);
 		waterConnectionRequest.getWaterConnection().setAuditDetails(auditDetails);
+		WaterApplication waterApplication = new WaterApplication();
+		waterApplication.setId(UUID.randomUUID().toString());
+		waterConnectionRequest.getWaterConnection().setWaterApplication(waterApplication);
 		waterDao.addConnectionMapping(waterConnectionRequest);
 		
 		return  Arrays.asList(waterConnectionRequest.getWaterConnection());

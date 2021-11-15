@@ -6,17 +6,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.egov.common.contract.request.Role;
 import org.egov.nulm.common.CommonConstants;
 import org.egov.nulm.config.NULMConfiguration;
 import org.egov.nulm.model.NulmSusvRenewRequest;
-import org.egov.nulm.model.NulmSusvRequest;
-import org.egov.nulm.model.SusvApplication;
 import org.egov.nulm.model.SusvRenewApplication;
 import org.egov.nulm.producer.Producer;
 import org.egov.nulm.repository.builder.NULMQueryBuilder;
 import org.egov.nulm.repository.rowmapper.SusvRenewRowMapper;
-import org.egov.nulm.repository.rowmapper.SusvRowMapper;
 import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -47,6 +43,17 @@ public class SusvRenewRepository {
 		this.producer = producer;
 		this.config = config;
 		this.susvRenewRowMapper = susvRenewRowMapper;
+	}
+	public void checkCovNo(SusvRenewApplication suh) {
+		Map<String, String> errorMap = new HashMap<>();
+		int i = 0;
+		i = jdbcTemplate.queryForObject(NULMQueryBuilder.GET_COV_NO_QUERY,
+				new Object[] {suh.getCovNo(),suh.getTenantId() }, Integer.class);
+
+		if (i > 0) {
+			errorMap.put(CommonConstants.INVALID_SUSV_REQUEST, CommonConstants.DIPLICATE_COV_NO_MESSAGE);
+			throw new CustomException(errorMap);
+		}
 	}
 
 	public void createSusvRenewApplication(SusvRenewApplication susvRenewapplication) {

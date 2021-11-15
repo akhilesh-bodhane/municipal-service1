@@ -43,6 +43,9 @@ public class SusvRenewApplication {
 	@JsonProperty("nameOfStreetVendor")
 	private String nameOfStreetVendor;
 
+	@JsonProperty("relationshipWithVendor")
+	private String relationshipWithVendor;
+	
 	@JsonProperty("covNo")
 	private String covNo;
 
