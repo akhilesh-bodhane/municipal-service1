@@ -1,7 +1,5 @@
 package org.egov.integration.model;
 
-import java.util.List;
-
 import org.egov.common.contract.response.ResponseInfo;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -25,5 +23,5 @@ public class ResponseInfoFire {
 	private ResponseInfo responseInfo;
 
 	@JsonProperty("fireApplicationDetails")
-	private List<FireApplicationDetails> fireApplicationDetails;
+	private FireApplicationDetails fireApplicationDetails;
 }

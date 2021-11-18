@@ -1,7 +1,6 @@
 
 package org.egov.integration.service;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -72,7 +71,6 @@ public class FireService {
 	}	
 	
 	public ResponseEntity<ResponseInfoFire> getData(RequestInfoFire request) {
-		List<FireApplicationDetails> list = new ArrayList<>();
 		FireApplicationDetails fireApplicationDetails = new FireApplicationDetails();
 		try {
 			validateFireRequest(request.getFireDataRequest());
@@ -95,10 +93,9 @@ public class FireService {
 				fireApplicationDetails = repository.getApplicationCounts(request.getFireDataRequest().getFromDate(),
 						request.getFireDataRequest().getToDate(), request.getFireDataRequest().getTypeOfOccupancy());
 			}
-			list.add(fireApplicationDetails);
 			return new ResponseEntity<>(ResponseInfoFire.builder()
 					.responseInfo(ResponseInfo.builder().status(CommonConstants.SUCCESS).build())
-					.fireApplicationDetails(list).build(), HttpStatus.OK);
+					.fireApplicationDetails(fireApplicationDetails).build(), HttpStatus.OK);
 		} catch (Exception e) {
 			throw new CustomException(CommonConstants.FIR_NOC_EXCEPTION_CODE, e.getMessage());
 		}
