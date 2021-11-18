@@ -2,8 +2,6 @@ package org.egov.integration.web.controller;
 
 import javax.validation.Valid;
 
-import org.egov.integration.model.RequestInfoFire;
-import org.egov.integration.model.ResponseInfoFire;
 import org.egov.integration.model.ResponseInfoWrapper;
 import org.egov.integration.service.FireService;
 import org.json.simple.JSONObject;

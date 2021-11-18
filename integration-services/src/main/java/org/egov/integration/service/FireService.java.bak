@@ -2,20 +2,12 @@
 package org.egov.integration.service;
 
 import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 
 import org.egov.common.contract.response.ResponseInfo;
 import org.egov.integration.common.CommonConstants;
 import org.egov.integration.model.AuditDetails;
-import org.egov.integration.model.FireApplicationDetails;
-import org.egov.integration.model.FireDataRequest;
 import org.egov.integration.model.FireNoc;
-import org.egov.integration.model.FireNocDaoApplication;
-import org.egov.integration.model.RequestInfoFire;
-import org.egov.integration.model.ResponseInfoFire;
 import org.egov.integration.model.ResponseInfoWrapper;
 import org.egov.integration.repository.fireRepository;
 import org.egov.integration.util.AuditDetailsUtil;

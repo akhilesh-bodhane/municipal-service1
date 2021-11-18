@@ -1,5 +1,7 @@
 package org.egov.integration.model;
 
+import java.util.List;
+
 import org.json.simple.JSONObject;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -11,24 +13,18 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-@AllArgsConstructor
-@NoArgsConstructor
 @Getter
 @Setter
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @ToString
-public class FireNoc {
+public class FireNocApplicationDetail {
 
-	@JsonProperty("uuid")
-	private String uuid;
+	@JsonProperty("execution_data")
+	private List<FireNocExecutionData> executionData;
 
-	@JsonProperty("data")
-	private JSONObject data;
-
-	@JsonProperty("isActive")
-	private Boolean isActive;
-
-	@JsonProperty("auditDetails")
-	private AuditDetails auditDetails;
+	@JsonProperty("initiated_data")
+	private List<FireNocApplicationData> initiatedData;
 
 }

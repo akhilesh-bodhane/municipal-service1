@@ -11,24 +11,21 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-@AllArgsConstructor
-@NoArgsConstructor
 @Getter
 @Setter
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @ToString
-public class FireNoc {
+public class FireNocExecutionData {
 
-	@JsonProperty("uuid")
-	private String uuid;
+	@JsonProperty("task_details")
+	private FireNocTaskDetail taskDetails;
 
-	@JsonProperty("data")
-	private JSONObject data;
+	@JsonProperty("official_form_details")
+	private JSONObject officialFormDetails;
 
-	@JsonProperty("isActive")
-	private Boolean isActive;
-
-	@JsonProperty("auditDetails")
-	private AuditDetails auditDetails;
+	@JsonProperty("applicant_task_details")
+	private JSONObject applicantTaskDetails;
 
 }
