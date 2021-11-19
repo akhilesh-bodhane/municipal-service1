@@ -71,7 +71,6 @@ public class FireService {
 	}	
 	
 	public ResponseEntity<ResponseInfoFire> getData(RequestInfoFire request) {
-		List<FireApplicationDetails> list = new ArrayList<>();
 		FireApplicationDetails fireApplicationDetails = new FireApplicationDetails();
 		try {
 			validateFireRequest(request.getFireDataRequest());
@@ -88,20 +87,18 @@ public class FireService {
 					fireApplicationDetails.setApplicationStatus(applicationStatus.get(0).getApplicationStatus());
 				} else {
 					throw new CustomException(CommonConstants.FIR_NOC_EXCEPTION_CODE,
-							"Application Reference No does not exits.");
+							"Please enter a valid application number");
 				}
 			} else {
 				fireApplicationDetails = repository.getApplicationCounts(request.getFireDataRequest().getFromDate(),
 						request.getFireDataRequest().getToDate(), request.getFireDataRequest().getTypeOfOccupancy());
 			}
-			list.add(fireApplicationDetails);
 			return new ResponseEntity<>(ResponseInfoFire.builder()
 					.responseInfo(ResponseInfo.builder().status(CommonConstants.SUCCESS).build())
-					.fireApplicationDetails(list).build(), HttpStatus.OK);
+					.fireApplicationDetails(fireApplicationDetails).build(), HttpStatus.OK);
 		} catch (Exception e) {
 			throw new CustomException(CommonConstants.FIR_NOC_EXCEPTION_CODE, e.getMessage());
 		}
-
 	}
 
 	private void validateFireRequest(FireDataRequest fireDataRequest) {
@@ -110,17 +107,17 @@ public class FireService {
 				|| fireDataRequest.getApplicationReferenceNumber().isEmpty())
 				&& (fireDataRequest.getFromDate() == null || fireDataRequest.getFromDate().isEmpty())
 				&& (fireDataRequest.getToDate() == null || fireDataRequest.getToDate().isEmpty())) {
-			errors.put("InvaliData", "Application Reference number or From date and To date is must");
+			throw new CustomException(CommonConstants.FIR_NOC_EXCEPTION_CODE,
+					"Please enter a valid application number or From date and To date");
 		} else {
 			if (fireDataRequest.getApplicationReferenceNumber() == null
 					|| fireDataRequest.getApplicationReferenceNumber().isEmpty()) {
 				if ((fireDataRequest.getFromDate() == null || fireDataRequest.getFromDate().isEmpty())
 						|| (fireDataRequest.getToDate() == null || fireDataRequest.getToDate().isEmpty())) {
-					errors.put("InvalidData", "From date or To date is empty");
+					throw new CustomException(CommonConstants.FIR_NOC_EXCEPTION_CODE,
+							"Please enter a valid From date and To date");
 				}
 			}
 		}
-		if (!errors.isEmpty())
-			throw new CustomException(errors);
 	}
 }
