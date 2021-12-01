@@ -401,6 +401,11 @@ public class PGRRequestValidator {
 		ServiceResponse serviceResponse = getServiceRequests(serviceRequest, errorMap);
 		if (!errorMap.isEmpty())
 			return;
+		
+		String currentStatus = "";
+		if(serviceResponse.getServices()!=null && !serviceResponse.getServices().isEmpty())
+			currentStatus = serviceResponse.getServices().get(0).getStatus().toString();
+		
 		List<ActionHistory> historys = serviceResponse.getActionHistory();
 		Map<String, ActionHistory> historyMap = new HashMap<>();
 		historys.forEach(a -> historyMap.put(a.getActions().get(0).getBusinessKey(), a));
@@ -408,7 +413,9 @@ public class PGRRequestValidator {
 			Service service = serviceRequest.getServices().get(index);
 			ActionHistory history = historyMap.get(service.getServiceRequestId());
 			ActionInfo actionInfo = serviceRequest.getActionInfo().get(index);
-			String currentStatus = pgrUtils.getCurrentStatus(history);
+			//String currentStatus = pgrUtils.getCurrentStatus(history);
+			if(StringUtils.isEmpty(currentStatus))
+				currentStatus = pgrUtils.getCurrentStatus(history);	
 			List<String> validStatusList = actioncurrentStatusMap.get(actionInfo.getAction());
 			/**
 			 * if currenstatus isn't available in the validstatus list of that action, then the action is invalid.
