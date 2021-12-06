@@ -23,8 +23,10 @@ import org.egov.waterconnection.model.WaterConnectionRequest;
 import org.egov.waterconnection.model.WaterNotication;
 import org.egov.waterconnection.model.WaterNotificationRequest;
 import org.egov.waterconnection.model.workflow.BusinessService;
+import org.egov.waterconnection.producer.WaterConnectionProducer;
 import org.egov.waterconnection.repository.WaterDao;
 import org.egov.waterconnection.repository.WaterDaoImpl;
+import org.egov.waterconnection.util.NotificationUtil;
 import org.egov.waterconnection.util.WaterServicesUtil;
 import org.egov.waterconnection.validator.ActionValidator;
 import org.egov.waterconnection.validator.MDMSValidator;
@@ -89,8 +91,16 @@ public class WaterServiceImpl implements WaterService {
 	@Autowired
 	private WaterServicesUtil wsUtil;
 	
+	@Autowired
+	private WaterConnectionProducer wcProducer;
 	
+	@Autowired
+	private NotificationUtil notificationUtil;
 	
+	public static final String TEMPLATE_NAME_SITE_INSPECTOR="siteInspector";
+	public static final String TEMPLATE_NAME_CITIZEN_CASE1="citizen.case1";
+	public static final String TEMPLATE_NAME_CITIZEN_CASE2="citizen.case2";
+	public static final String TEMPLATE_NAME_CITIZEN_CASE3="citizen.case3";
 	
 	/**
 	 * 
@@ -254,13 +264,47 @@ public class WaterServiceImpl implements WaterService {
 	
 	@Override
 	public void sendSms(WaterNotificationRequest waterNotificationRequest) {
-		String template = config.getNotificationTemplate();
 		WaterNotication wn  = waterNotificationRequest.getWaterNotication();
-		template  = template.replace("<#var1>", wn.getApplication_no()).replace("<#var2>", wn.getConsumer_name()).replace("<#var3>",
-				wn.getHouse_no()).replace("<#var4>", wn.getSector_village()).replace("<#var5>", wn.getPhone_no()).replace("<#var6>", wn.getApplication_type())
-				.replace("<#var7>",wn.getApplication_status()).replace("<#var8>", wn.getAmount());
-		SMSRequest s = SMSRequest.builder().message(template).mobileNumber(wn.getPhone_no()).build();
-		System.out.println(template);
+//		String template = config.getNotificationTemplate();
+//		template  = template.replace("<#var1>", wn.getApplication_no()).replace("<#var2>", wn.getConsumer_name()).replace("<#var3>",
+//				wn.getHouse_no()).replace("<#var4>", wn.getSector_village()).replace("<#var5>", wn.getPhone_no()).replace("<#var6>", wn.getApplication_type())
+//				.replace("<#var7>",wn.getApplication_status()).replace("<#var8>", wn.getAmount());
+		String template=getTemplate(wn);
+		SMSRequest smsTemplate = SMSRequest.builder().message(template).mobileNumber(wn.getPhone_no()).build();
+		notificationUtil.sendSMS(Arrays.asList(smsTemplate));
+	}
+	
+	private String getTemplate(WaterNotication wn) {
+		String template = null;
 		
+		if(wn.getTemplateName()==null) {
+			template = config.getNotificationTemplate();
+			template  = template.replace("<#var1>", wn.getApplication_no()).replace("<#var2>", wn.getConsumer_name()).replace("<#var3>",
+					wn.getHouse_no()).replace("<#var4>", wn.getSector_village()).replace("<#var5>", wn.getPhone_no()).replace("<#var6>", wn.getApplication_type())
+					.replace("<#var7>",wn.getApplication_status()).replace("<#var8>", wn.getAmount());
+		}else {
+			switch (wn.getTemplateName()) {
+			case TEMPLATE_NAME_SITE_INSPECTOR:
+				template=config.getNotificationTemplateSiteInspector();
+				template  = template.replace("<#var1>", wn.getApplication_no()).replace("<#var2>", wn.getConsumer_name()).replace("<#var3>",
+						wn.getHouse_no()).replace("<#var4>", wn.getSector_village()).replace("<#var5>", wn.getPhone_no()).replace("<#var6>", wn.getApplication_type())
+						.replace("<#var7>",wn.getApplication_status()).replace("<#var8>", wn.getAmount());
+				break;
+			case TEMPLATE_NAME_CITIZEN_CASE1:
+				template=config.getNotificationTemplateCitizenCase1();
+				template=template.replace("<#var1>", wn.getApplication_no()).replaceAll("<#var2>", wn.getSubdivision());
+				break;
+			case TEMPLATE_NAME_CITIZEN_CASE2:
+				template=config.getNotificationTemplateCitizenCase2();
+				template=template.replace("<#var1>", wn.getAmount()).replace("<#var2>", wn.getApplication_no());
+				break;
+			case TEMPLATE_NAME_CITIZEN_CASE3:
+				template=config.getNotificationTemplateCitizenCase3();
+				template=template.replace("<#var1>", wn.getApplication_no());
+				break;
+			}
+		}
+		
+		return template;
 	}
 }

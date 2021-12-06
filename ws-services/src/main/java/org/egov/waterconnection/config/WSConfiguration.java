@@ -247,5 +247,19 @@ public class WSConfiguration {
 	@Value("${ws.sms.notification_template}")
 	private String notificationTemplate;
 	
+	@Value("${create.ws.connection.conversion.tariff.workflow}")
+	private String businessServiceConnectionCoversionTraiffValue;
+	
+	@Value("${ws.sms.notification_template.siteInspector}")
+	private String notificationTemplateSiteInspector;
+	
+	@Value("${ws.sms.notification_template.citizen.case1}")
+	private String notificationTemplateCitizenCase1;
+
+	@Value("${ws.sms.notification_template.citizen.case2}")
+	private String notificationTemplateCitizenCase2;
+	
+	@Value("${ws.sms.notification_template.citizen.case3}")
+	private String notificationTemplateCitizenCase3;
 	
 }

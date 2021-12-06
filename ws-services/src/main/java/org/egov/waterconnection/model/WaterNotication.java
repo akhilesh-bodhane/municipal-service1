@@ -43,9 +43,12 @@ public class WaterNotication {
 	@JsonProperty("application_status")
  	private String application_status;
 	
-	
 	@JsonProperty("amount")
  	private String amount;
 
-
+	@JsonProperty("templateName")
+	private String templateName;
+	
+	@JsonProperty("subdivision")
+	private String subdivision;
 }

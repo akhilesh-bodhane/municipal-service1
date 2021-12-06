@@ -175,6 +175,8 @@ public class WorkflowIntegrator {
 			return config.getBusinessServiceupdateMeterValue();
 		case WCConstants.WS_METER_TESTING_ACTIVITY:
 			return config.getWsMeterTesting();
+		case WCConstants.WS_CONNECTION_CONVERSION_TARIFF:
+			return config.getBusinessServiceConnectionCoversionTraiffValue();
 		}
 		return "";
 	}
