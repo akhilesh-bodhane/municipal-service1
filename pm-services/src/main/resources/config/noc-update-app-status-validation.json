@@ -156,7 +156,7 @@
 			}
 		}
 	},
-	"ROADCUTNOC": {
+		"ROADCUTNOC": {
 		"JE-REVIEWOFJE": {
 			"REVIEWSDE L2": {
 				"remarks": {
@@ -373,7 +373,7 @@
 				}
 			}
 		},
-		"SDE-VERIFY AFTER APPROVAL L2": {
+		"EE-VERIFY AFTER APPROVAL L2": {
 			"VERIFY AFTER APPROVAL L3": {
 				"remarks": {
 					"fieldName": "remarks",
@@ -511,7 +511,7 @@
 				}
 			}
 		},
-		"EE-VERIFY AFTER APPROVAL L1": {
+		"SE-VERIFY AFTER APPROVAL L1": {
 			"VERIFY AFTER APPROVAL L2": {
 				"remarks": {
 					"fieldName": "remarks",
@@ -1897,8 +1897,8 @@
 				}
 			}
 		},
-		"CE-PENDINGAPPROVAL": {
-			"APPROVED BY CE": {
+		"COMMISSIONER-PENDINGAPPROVAL": {
+			"APPROVED BY COMMISSIONER": {
 				"remarks": {
 					"fieldName": "remarks",
 					"mandatory": "true",
@@ -1910,7 +1910,7 @@
 					"validateRegularExp": "\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
 				}
 			},
-			"REASSIGNTOWD": {
+			"REASSIGNTOCE L2": {
 				"remarks": {
 					"fieldName": "remarks",
 					"mandatory": "true",
@@ -1932,6 +1932,92 @@
 					"fieldName": "remarks",
 					"mandatory": "true",
 					"validateRegularExp": "^[a-zA-Z0-9.',\n\r ]{1,128}$"
+				},
+				"uploadDocuments": {
+					"fieldName": "uploadDocuments",
+					"mandatory": "false",
+					"validateRegularExp": "\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+				}
+			}
+		},
+		"CE-APPROVED BY COMMISSIONER": {
+			"VERIFY AFTER APPROVAL L1": {
+				"remarks": {
+					"fieldName": "remarks",
+					"mandatory": "true",
+					"validateRegularExp": "^[a-zA-Z0-9.',\n\r ]{1,128}$"
+				},
+				"uploadDocuments": {
+					"fieldName": "uploadDocuments",
+					"mandatory": "false",
+					"validateRegularExp": "\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+				}
+			}		
+		},
+		"CE-REASSIGNTOCE L2": {
+			"PENDINGAPPROVAL": {
+				"remarks": {
+					"fieldName": "remarks",
+					"mandatory": "true",
+					"validateRegularExp": "^[a-zA-Z0-9.',\n\r ]{1,128}$"
+				},
+				"assignee": {
+					"fieldName": "remarks",
+					"mandatory": "false",
+					"validateRegularExp": "^[a-zA-Z0-9- ]{1,128}$"
+				},
+				"uploadDocuments": {
+					"fieldName": "uploadDocuments",
+					"mandatory": "false",
+					"validateRegularExp": "\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+				}
+			},
+			"REASSIGNTOWD":{
+				"remarks": {
+					"fieldName": "remarks",
+					"mandatory": "true",
+					"validateRegularExp": "^[a-zA-Z0-9.',\n\r ]{1,128}$"
+				},
+				"assignee": {
+					"fieldName": "remarks",
+					"mandatory": "false",
+					"validateRegularExp": "^[a-zA-Z0-9- ]{1,128}$"
+				},
+				"uploadDocuments": {
+					"fieldName": "uploadDocuments",
+					"mandatory": "false",
+					"validateRegularExp": "\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+				}
+			}
+		},
+		"CE-REVIEWOFCE L2": {
+			"PENDINGAPPROVAL": {
+				"remarks": {
+					"fieldName": "remarks",
+					"mandatory": "true",
+					"validateRegularExp": "^[a-zA-Z0-9.',\n\r ]{1,128}$"
+				},
+				"assignee": {
+					"fieldName": "remarks",
+					"mandatory": "false",
+					"validateRegularExp": "^[a-zA-Z0-9- ]{1,128}$"
+				},
+				"uploadDocuments": {
+					"fieldName": "uploadDocuments",
+					"mandatory": "false",
+					"validateRegularExp": "\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+				}
+			},
+			"REASSIGNTOWD":{
+				"remarks": {
+					"fieldName": "remarks",
+					"mandatory": "true",
+					"validateRegularExp": "^[a-zA-Z0-9.',\n\r ]{1,128}$"
+				},
+				"assignee": {
+					"fieldName": "remarks",
+					"mandatory": "false",
+					"validateRegularExp": "^[a-zA-Z0-9- ]{1,128}$"
 				},
 				"uploadDocuments": {
 					"fieldName": "uploadDocuments",
@@ -2093,6 +2179,25 @@
 			}
 			
 		},
+		"SDE-VERIFY AFTER APPROVAL L3": {
+			"VERIFY AFTER APPROVAL L4": {
+				"remarks": {
+					"fieldName": "remarks",
+					"mandatory": "true",
+					"validateRegularExp": "^[a-zA-Z0-9.',\n\r ]{1,128}$"
+				},
+				"assignee": {
+					"fieldName": "remarks",
+					"mandatory": "false",
+					"validateRegularExp": "^[a-zA-Z0-9- ]{1,128}$"
+				},
+				"uploadDocuments": {
+					"fieldName": "uploadDocuments",
+					"mandatory": "false",
+					"validateRegularExp": "\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+				}
+			}
+		},
 		"CITIZEN-REASSIGN": {
 			"RESENT": {
 				
@@ -2101,7 +2206,7 @@
 				
 			}
 		},
-		"CITIZEN-VERIFY AFTER APPROVAL L3": {
+		"CITIZEN-VERIFY AFTER APPROVAL L4": {
 			"PAID": {
 				"amount": {
 					"fieldName": "amount",
@@ -2116,7 +2221,6 @@
 			}
 		}
 	},
-	
 	"SELLMEATNOC": {
 		"SISM-PAID": {
 			"PENDINGAPPROVAL": {
