@@ -343,12 +343,4 @@ public class ServiceRequestData {
 	@JsonProperty("fileStoreId")
   	private String fileStoreId = null;
   	
-	@JsonProperty("is_range_forest_officer_report")
-	private Boolean is_range_forest_officer_report;
-	  
-	@JsonProperty("range_forest_officer_report_document")
-	private org.json.simple.JSONObject range_forest_officer_report_document;
-	
-	@JsonProperty("range_forest_officer_report_document_json")
-	private String range_forest_officer_report_document_json;
 }
