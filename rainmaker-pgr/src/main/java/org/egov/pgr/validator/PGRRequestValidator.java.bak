@@ -411,7 +411,7 @@ public class PGRRequestValidator {
 			ActionHistory history = historyMap.get(service.getServiceRequestId());
 			ActionInfo actionInfo = serviceRequest.getActionInfo().get(index);
 			//String currentStatus = pgrUtils.getCurrentStatus(history);
-			if (currentStatus != null && !currentStatus.isEmpty())
+			if(currentStatus!=null && !currentStatus.isEmpty())
 				currentStatus = pgrUtils.getCurrentStatus(history);	
 			List<String> validStatusList = actioncurrentStatusMap.get(actionInfo.getAction());
 			/**
