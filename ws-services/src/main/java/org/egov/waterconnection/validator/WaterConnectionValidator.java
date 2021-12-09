@@ -131,11 +131,11 @@ public class WaterConnectionValidator {
 	 * @param searchResult water connection search result
 	 */
 	private void setFieldsFromSearch(WaterConnectionRequest request, WaterConnection searchResult) {
-		
+		//WS_CONNECTION_CONVERSION_TARIFF
 		
 		if ((
 				(WCConstants.WS_NEWCONNECTION.equalsIgnoreCase(request.getWaterConnection().getActivityType()))||
-					
+				(WCConstants.WS_CONNECTION_CONVERSION_TARIFF.equalsIgnoreCase(request.getWaterConnection().getActivityType()))||
 				(WCConstants.WS_APPLY_FOR_TEMPORARY_CON_BILLING.equalsIgnoreCase(request.getWaterConnection().getActivityType())))){
 				return ;
 			
