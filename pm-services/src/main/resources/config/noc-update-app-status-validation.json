@@ -355,16 +355,11 @@
 			}
 		},
 		"SDE-APPROVED BY EE": {
-			"VERIFY AFTER APPROVAL L3": {
+			"VERIFY AFTER APPROVAL L4": {
 				"remarks": {
 					"fieldName": "remarks",
 					"mandatory": "true",
 					"validateRegularExp": "^[a-zA-Z0-9.',\n\r ]{1,128}$"
-				},
-				"assignee": {
-					"fieldName": "remarks",
-					"mandatory": "false",
-					"validateRegularExp": "^[a-zA-Z0-9- ]{1,128}$"
 				},
 				"uploadDocuments": {
 					"fieldName": "uploadDocuments",
