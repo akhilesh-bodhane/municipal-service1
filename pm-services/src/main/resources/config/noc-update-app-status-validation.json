@@ -493,16 +493,11 @@
 			}
 		},
 		"EE-APPROVED BY SE": {
-			"VERIFY AFTER APPROVAL L2": {
+			"VERIFY AFTER APPROVAL L3": {
 				"remarks": {
 					"fieldName": "remarks",
 					"mandatory": "true",
 					"validateRegularExp": "^[a-zA-Z0-9.',\n\r ]{1,128}$"
-				},
-				"assignee": {
-					"fieldName": "remarks",
-					"mandatory": "false",
-					"validateRegularExp": "^[a-zA-Z0-9- ]{1,128}$"
 				},
 				"uploadDocuments": {
 					"fieldName": "uploadDocuments",
@@ -2185,11 +2180,6 @@
 					"fieldName": "remarks",
 					"mandatory": "true",
 					"validateRegularExp": "^[a-zA-Z0-9.',\n\r ]{1,128}$"
-				},
-				"assignee": {
-					"fieldName": "remarks",
-					"mandatory": "false",
-					"validateRegularExp": "^[a-zA-Z0-9- ]{1,128}$"
 				},
 				"uploadDocuments": {
 					"fieldName": "uploadDocuments",
