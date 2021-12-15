@@ -1821,7 +1821,7 @@
 		},
 
 		"WD-REVIEWOFWD": {
-			"PENDINGAPPROVAL": {
+			"REVIEWOFCE L2": {
 				"remarks": {
 					"fieldName": "remarks",
 					"mandatory": "true",
@@ -1857,7 +1857,7 @@
 			}
 		},
 		"WD-REASSIGNTOWD": {
-			"PENDINGAPPROVAL": {
+			"REVIEWOFCE L2": {
 				"remarks": {
 					"fieldName": "remarks",
 					"mandatory": "true",
