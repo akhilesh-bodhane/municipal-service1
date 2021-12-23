@@ -134,7 +134,7 @@ public class TradeLicenseService {
         repository.save(tradeLicenseRequest);
         System.out.println("Line 11 : " + objectMapper.writeValueAsString(tradeLicenseRequest));
     	}catch (Exception e) {
-			e.printStackTrace();
+			// TODO: handle exception
 		}
 		return tradeLicenseRequest.getLicenses();
 	}

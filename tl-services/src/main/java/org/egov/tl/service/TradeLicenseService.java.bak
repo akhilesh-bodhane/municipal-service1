@@ -93,8 +93,7 @@ public class TradeLicenseService {
      * @return The list of created traddeLicense
      * @throws JsonProcessingException 
      */
-    public List<TradeLicense> create(TradeLicenseRequest tradeLicenseRequest,String businessServicefromPath){
-    	try {
+    public List<TradeLicense> create(TradeLicenseRequest tradeLicenseRequest,String businessServicefromPath) throws JsonProcessingException{
 	   ObjectMapper objectMapper = new ObjectMapper();
 	   System.out.println("Line 1 : " + objectMapper.writeValueAsString(tradeLicenseRequest));
        if(businessServicefromPath==null)
@@ -133,9 +132,6 @@ public class TradeLicenseService {
 	    System.out.println("Line 10 : " + objectMapper.writeValueAsString(tradeLicenseRequest));
         repository.save(tradeLicenseRequest);
         System.out.println("Line 11 : " + objectMapper.writeValueAsString(tradeLicenseRequest));
-    	}catch (Exception e) {
-			// TODO: handle exception
-		}
 		return tradeLicenseRequest.getLicenses();
 	}
 
