@@ -23,7 +23,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import static org.egov.tl.util.TLConstants.*;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service
 public class TradeLicenseService {
@@ -91,31 +90,22 @@ public class TradeLicenseService {
      * @return The list of created traddeLicense
      */
     public List<TradeLicense> create(TradeLicenseRequest tradeLicenseRequest,String businessServicefromPath){
-	   ObjectMapper objectMapper = new ObjectMapper();
-	   System.out.println("Line 1 : " + objectMapper.writeValueAsString(tradeLicenseRequest));
        if(businessServicefromPath==null)
             businessServicefromPath = businessService_TL;
        tlValidator.validateBusinessService(tradeLicenseRequest,businessServicefromPath);
-	   System.out.println("Line 2 : " + objectMapper.writeValueAsString(tradeLicenseRequest));
        Object mdmsData = util.mDMSCall(tradeLicenseRequest);
-	   System.out.println("Line 3 : " + objectMapper.writeValueAsString(tradeLicenseRequest));
        actionValidator.validateCreateRequest(tradeLicenseRequest);
-	   System.out.println("Line 4 : " + objectMapper.writeValueAsString(tradeLicenseRequest));
        enrichmentService.enrichTLCreateRequest(tradeLicenseRequest, mdmsData);
-	   System.out.println("Line 5 : " + objectMapper.writeValueAsString(tradeLicenseRequest));
        tlValidator.validateCreate(tradeLicenseRequest, mdmsData);
-	   System.out.println("Line 6 : " + objectMapper.writeValueAsString(tradeLicenseRequest));
        switch(businessServicefromPath)
        {
            case businessService_BPA:
                validateMobileNumberUniqueness(tradeLicenseRequest);
                break;
        }
-	   System.out.println("Line 7 : " + objectMapper.writeValueAsString(tradeLicenseRequest));
        userService.createUser(tradeLicenseRequest, false);
-	   System.out.println("Line 8 : " + objectMapper.writeValueAsString(tradeLicenseRequest));
        calculationService.addCalculation(tradeLicenseRequest);
-	   System.out.println("Line 9 : " + objectMapper.writeValueAsString(tradeLicenseRequest));
+
         /*
          * call workflow service if it's enable else uses internal workflow process
          */
@@ -126,10 +116,8 @@ public class TradeLicenseService {
                    wfIntegrator.callWorkFlow(tradeLicenseRequest);
                break;
        }
-	    System.out.println("Line 10 : " + objectMapper.writeValueAsString(tradeLicenseRequest));
         repository.save(tradeLicenseRequest);
-        System.out.println("Line 11 : " + objectMapper.writeValueAsString(tradeLicenseRequest));
-		return tradeLicenseRequest.getLicenses();
+        return tradeLicenseRequest.getLicenses();
 	}
 
     public void validateMobileNumberUniqueness(TradeLicenseRequest request) {
