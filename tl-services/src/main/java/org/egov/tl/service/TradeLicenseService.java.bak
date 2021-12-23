@@ -23,6 +23,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import static org.egov.tl.util.TLConstants.*;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service
@@ -89,8 +91,9 @@ public class TradeLicenseService {
      * creates the tradeLicense for the given request
      * @param tradeLicenseRequest The TradeLicense Create Request
      * @return The list of created traddeLicense
+     * @throws JsonProcessingException 
      */
-    public List<TradeLicense> create(TradeLicenseRequest tradeLicenseRequest,String businessServicefromPath){
+    public List<TradeLicense> create(TradeLicenseRequest tradeLicenseRequest,String businessServicefromPath) throws JsonProcessingException{
 	   ObjectMapper objectMapper = new ObjectMapper();
 	   System.out.println("Line 1 : " + objectMapper.writeValueAsString(tradeLicenseRequest));
        if(businessServicefromPath==null)
