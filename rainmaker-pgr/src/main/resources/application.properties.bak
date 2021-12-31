@@ -165,5 +165,3 @@ egov.default.sla.in.ms=1209600000
 egov.default.expiry.time.before.reopen.in.hours=120
 
 logging.level.org.egov.tracer=debug
-
-kafka.topics.save.swatchbharatservice=swatch-bharat-services-create
