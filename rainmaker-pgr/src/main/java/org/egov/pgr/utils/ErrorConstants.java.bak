@@ -105,10 +105,4 @@ public class ErrorConstants {
 	
 	public static final String AUTOROUTING_UPDATION_FAILED_CODE = "EG_PGR_AUTOROUTING_UPDATE_FAILED_CODE";
 	public static final String AUTOROUTING_UPDATION_FAILED_MSG = "Autorouting data updation failed.";
-	
-	public static final String INVALID_SWATCHBHARATUSERID_CODE = "EG_PGR_INVALID_SWATCHBHARATUSERID";
-	public static final String INVALID_SWATCHBHARATUSERID_MSG = "User UUID is blank or empty";
-	
-	public static final String INVALID_SWATCHBHARATFILEDID_CODE = "EG_PGR_INVALID_SWATCHBHARATFILEDID";
-	public static final String INVALID_SWATCHBHARATFILEDID_MSG = "File Id is blank or empty";
 }

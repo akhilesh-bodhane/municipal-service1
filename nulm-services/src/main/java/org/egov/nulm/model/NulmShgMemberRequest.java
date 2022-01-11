@@ -1,7 +1,5 @@
 package org.egov.nulm.model;
 
-import java.util.List;
-
 import javax.validation.Valid;
 
 import org.egov.common.contract.request.RequestInfo;
@@ -27,8 +25,8 @@ public class NulmShgMemberRequest {
 	private RequestInfo requestInfo;
 
 	@Valid
-	@JsonProperty("smidShgMemberApplication")
-	private List<SmidShgMemberApplication> smidShgMemberApplication;
+	@JsonProperty("NulmShgMemberRequest")
+	private SmidShgMemberApplication SmidShgMemberApplication;
 
 	@JsonProperty("AuditDetails")
 	AuditDetails auditDetails;

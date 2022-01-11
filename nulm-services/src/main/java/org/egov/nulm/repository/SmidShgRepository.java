@@ -175,9 +175,7 @@ public class SmidShgRepository {
 		producer.push(config.getSMIDSHGUpdateStatusTopic(), infoWrapper);
 	}
 	public void updateMemberStatus(SmidShgMemberApplication smidApplication) {
-		List<SmidShgMemberApplication> list = new ArrayList<>();
-		list.add(smidApplication);
-		NulmShgMemberRequest infoWrapper = NulmShgMemberRequest.builder().smidShgMemberApplication(list)
+		NulmShgMemberRequest infoWrapper = NulmShgMemberRequest.builder().SmidShgMemberApplication(smidApplication)
 				.build();
 		producer.push(config.getSmidShgMemberDeleteTopic(), infoWrapper);
 	}
@@ -198,9 +196,8 @@ public class SmidShgRepository {
 		int i = 0;
 		i = jdbcTemplate.queryForObject(NULMQueryBuilder.SHG_UUID_EXIST_QUERY,
 				new Object[] { shg.getShgUuid(), shg.getTenantId() }, Integer.class);
-        System.out.println("**************************************");
+
 		if (i == 0) {
-			System.out.println("**************************************");
 			errorMap.put(CommonConstants.INVALID_SHG_UUID, CommonConstants.INVALID_SHG_UUID_MESSAGE);
 			throw new CustomException(errorMap);
 		}

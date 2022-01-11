@@ -1,21 +1,11 @@
 
 package org.egov.nulm.service;
 
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
-
-
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
 import org.egov.common.contract.request.Role;
 import org.egov.common.contract.response.ResponseInfo;
 import org.egov.nulm.common.CommonConstants;
@@ -27,19 +17,14 @@ import org.egov.nulm.model.SmidShgMemberApplication;
 import org.egov.nulm.repository.SmidShgMemberRepository;
 import org.egov.nulm.util.AuditDetailsUtil;
 import org.egov.nulm.util.IdGenRepository;
-import org.egov.nulm.web.model.Files;
-//import org.egov.prscp.web.models.InviteGuest;
-//import org.egov.prscp.web.models.memberrequest;
 import org.egov.tracer.model.CustomException;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
-import org.egov.nulm.util.FileStoreUtils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -55,341 +40,35 @@ public class SmidShgMemberService {
 	private IdGenRepository idgenrepository;
 
 	private AuditDetailsUtil auditDetailsUtil;
-	
-	private FileStoreUtils fileStoreUtils;
 
 	@Autowired
 	public SmidShgMemberService(SmidShgMemberRepository repository, ObjectMapper objectMapper,
-			IdGenRepository idgenrepository, NULMConfiguration config, AuditDetailsUtil auditDetailsUtil,FileStoreUtils fileStoreUtils) {
+			IdGenRepository idgenrepository, NULMConfiguration config, AuditDetailsUtil auditDetailsUtil) {
 		this.objectMapper = objectMapper;
 		this.repository = repository;
 		this.idgenrepository = idgenrepository;
 		this.config = config;
 		this.auditDetailsUtil = auditDetailsUtil;
-		this.fileStoreUtils = fileStoreUtils;
 
 	}
-	
-	public ResponseEntity<ResponseInfoWrapper> uplaodExternalGuest(NulmShgMemberRequest memberrequest
-			) throws IOException {
+
+	public ResponseEntity<ResponseInfoWrapper> createMembers(NulmShgMemberRequest memberrequest) {
 		try {
-			
-
-
-		
-			SmidShgMemberApplication[] guests = objectMapper.convertValue(memberrequest.getSmidShgMemberApplication(), SmidShgMemberApplication[].class);
-			
-			SmidShgMemberApplication guest=guests[0];
-			System.out.println(guests);objectMapper.writeValueAsString(guests);
-		
-			
-
-Files uploadfileId = Files.builder().fileStoreId(guest.getExternalFileStoreId()).build();
-
-			List<Files> attachments = new ArrayList<>();
-			attachments.add(uploadfileId);
-			String fileUrls = null;
-			
-List<Files> attachmentsUrls = fileStoreUtils.getFiles(guest.getTenantId(), attachments);
-
-			
-			for (Files files : attachmentsUrls) {
-				fileUrls = files.getUrl();
-			}
-
-			if (fileUrls == null || fileUrls.isEmpty())
-				throw new CustomException(HttpStatus.INTERNAL_SERVER_ERROR.toString(), CommonConstants.ID_GENERATION);
-			
-			int lastIndexOf = fileUrls.lastIndexOf('\\')+1;
-			int lastIndexOf1 = fileUrls.indexOf(".xls")-1;
-			String filename=fileUrls.substring(lastIndexOf, lastIndexOf1).replaceAll(" ", "%20");
-			StringBuilder string = new StringBuilder(fileUrls);			
-			string.replace(lastIndexOf,lastIndexOf1 , filename);
-			UrlResource fileResource = new UrlResource(string.toString());
-			/*
-			CloseableHttpClient client = HttpClientBuilder.create().build();
-			HttpGet request = new HttpGet(fileUrls.replaceAll(" ", "%20"));
-			request.addHeader("accept", "application/vnd.ms-excel");
-			HttpResponse response = client.execute(request);
-			HttpEntity entity = response.getEntity();
-			int responseCode = response.getStatusLine().getStatusCode();
-			InputStream inputStream = entity.getContent();*/
-			
-			List<SmidShgMemberApplication> userList = new ArrayList<>();
-			HSSFWorkbook workbook = new HSSFWorkbook(fileResource.getInputStream());
-			HSSFSheet worksheet = workbook.getSheetAt(0);
-			Iterator<Row> rowIterator = worksheet.iterator();
-			rowIterator.next(); // skip the header row
-
-			
-
-			while (rowIterator.hasNext()) {
-				Row nextRow = rowIterator.next();
-				Iterator<Cell> cellIterator = nextRow.cellIterator();
-				SmidShgMemberApplication user = SmidShgMemberApplication.builder().build();
-
-				while (cellIterator.hasNext()) {
-					Cell nextCell = cellIterator.next();
-					int columnIndex = nextCell.getColumnIndex();
-					user.setApplicationId(guest.getShgUuid()+nextCell);
-					switch (columnIndex) {
-					case 0:
-						nextCell.setCellType(Cell.CELL_TYPE_STRING);
-						String name = nextCell.getStringCellValue();
-						user.setName(name);
-						break;
-					case 1:
-						nextCell.setCellType(Cell.CELL_TYPE_STRING);
-						String mobileno = nextCell.getStringCellValue();
-						if(mobileno ==null || mobileno.isEmpty())
-						{
-							mobileno = "";	
-						}
-						user.setMobileNo(mobileno);
-						break;
-					case 2:
-
-						nextCell.setCellType(Cell.CELL_TYPE_STRING);
-						 String Adharno = nextCell.getStringCellValue();
-						 if(Adharno ==null || Adharno.isEmpty())
-							{
-							 Adharno = "";	
-							}
-						
-						user.setAdharNo(Adharno);
-							
-						break;
-					case 3:
-						nextCell.setCellType(Cell.CELL_TYPE_STRING);
-						String address = nextCell.getStringCellValue();
-						if(address ==null || address.isEmpty())
-						{
-							address = "";	
-						}
-						user.setAddress(address);
-						break;
-					default:
-						break;
-					}
-
-				}
-
-				List<SmidShgMemberApplication> isExists = userList.stream()
-						.filter(obj -> (obj.getMobileNo().equals(user.getMobileNo())
-								&& obj.getAdharNo().equals(user.getAdharNo())))
-						.collect(Collectors.toList());
-
-				if (isExists.isEmpty()) {
-					if(user.getName()!=null && !user.getName().isEmpty())
-					{
-					String uuid = UUID.randomUUID().toString();
-			
-					user.setApplicationUuid(uuid);
-
-					user.setShgUuid(guest.getShgUuid());
-		
-					if(user.getMobileNo()==null || user.getMobileNo().isEmpty())
-					{
-						
-						user.setMobileNo("0");
-					}
-					
-					if(user.getAdharNo()==null || user.getAdharNo().isEmpty())
-					{
-						
-						user.setAdharNo(" ");
-					}
-					if(user.getAddress()==null || user.getAddress().isEmpty())
-					{
-						
-						user.setAddress(" ");
-					}
-					
-					userList.add(user);
-					
-					}
-				}
-			}
-			System.out.println(userList);
-		
-
-			if (!userList.isEmpty()) {
-				List<SmidShgMemberApplication> userListFinal = repository.saveGuest(userList, memberrequest);
-				return new ResponseEntity(ResponseInfoWrapper.builder()
-						.responseInfo(ResponseInfo.builder().status(CommonConstants.SUCCESS).build())
-						.responseBody(userListFinal).build(), HttpStatus.CREATED);
-			} else {
-				throw new CustomException(HttpStatus.INTERNAL_SERVER_ERROR.toString(), CommonConstants.ID_GENERATION);
-			}
-
-		} catch (Exception exception) {
-			throw new CustomException(HttpStatus.INTERNAL_SERVER_ERROR.toString(), CommonConstants.ID_GENERATION);
-		}
-	}
-	
-         public ResponseEntity<ResponseInfoWrapper> readExternalGuest(NulmShgMemberRequest memberrequest) {
-        	 try {
-     			
-     			SmidShgMemberApplication[] guests = objectMapper.convertValue(memberrequest.getSmidShgMemberApplication(), SmidShgMemberApplication[].class);
-     			
-     			SmidShgMemberApplication guest=guests[0];
-     			System.out.println(guests);objectMapper.writeValueAsString(guests);
-     		
-     			
-     Files uploadfileId = Files.builder().fileStoreId(guest.getExternalFileStoreId()).build();
-
-     			List<Files> attachments = new ArrayList<>();
-     			attachments.add(uploadfileId);
-     			String fileUrls = null;
-     			
-     List<Files> attachmentsUrls = fileStoreUtils.getFiles(guest.getTenantId(), attachments);
-
-     			for (Files files : attachmentsUrls) {
-     				fileUrls = files.getUrl();
-     			}
-
-     			if (fileUrls == null || fileUrls.isEmpty())
-     				throw new CustomException(HttpStatus.INTERNAL_SERVER_ERROR.toString(), CommonConstants.ID_GENERATION);
-     			
-     			int lastIndexOf = fileUrls.lastIndexOf('\\')+1;
-     			int lastIndexOf1 = fileUrls.indexOf(".xls")-1;
-     			String filename=fileUrls.substring(lastIndexOf, lastIndexOf1).replaceAll(" ", "%20");
-     			StringBuilder string = new StringBuilder(fileUrls);			
-     			string.replace(lastIndexOf,lastIndexOf1 , filename);
-     			UrlResource fileResource = new UrlResource(string.toString());
-     			/*
-     			CloseableHttpClient client = HttpClientBuilder.create().build();
-     			HttpGet request = new HttpGet(fileUrls.replaceAll(" ", "%20"));
-     			request.addHeader("accept", "application/vnd.ms-excel");
-     			HttpResponse response = client.execute(request);
-     			HttpEntity entity = response.getEntity();
-     			int responseCode = response.getStatusLine().getStatusCode();
-     			InputStream inputStream = entity.getContent();*/
-     			
-     			List<SmidShgMemberApplication> userList = new ArrayList<>();
-     			HSSFWorkbook workbook = new HSSFWorkbook(fileResource.getInputStream());
-     			HSSFSheet worksheet = workbook.getSheetAt(0);
-     			Iterator<Row> rowIterator = worksheet.iterator();
-     			rowIterator.next(); // skip the header row
-
-
-     			while (rowIterator.hasNext()) {
-     				Row nextRow = rowIterator.next();
-     				Iterator<Cell> cellIterator = nextRow.cellIterator();
-     				SmidShgMemberApplication user = SmidShgMemberApplication.builder().build();
-
-     				while (cellIterator.hasNext()) {
-     					Cell nextCell = cellIterator.next();
-     					int columnIndex = nextCell.getColumnIndex();
-
-     					switch (columnIndex) {
-     					case 0:
-     						nextCell.setCellType(Cell.CELL_TYPE_STRING);
-     						String name = nextCell.getStringCellValue();
-     						user.setName(name);
-     						break;
-     					case 1:
-     						nextCell.setCellType(Cell.CELL_TYPE_STRING);
-     						String mobileno = nextCell.getStringCellValue();
-     						if(mobileno ==null || mobileno.isEmpty())
-     						{
-     							mobileno = "";	
-     						}
-     						user.setMobileNo(mobileno);
-     						break;
-     					case 2:
-     						
-
-     						nextCell.setCellType(Cell.CELL_TYPE_STRING);
-     						 String Adharno = nextCell.getStringCellValue();
-     						 if(Adharno ==null || Adharno.isEmpty())
-     							{
-     							 Adharno = "";	
-     							}
-     						
-     						user.setAdharNo(Adharno);
-     							
-     						break;
-     					case 3:
-     						nextCell.setCellType(Cell.CELL_TYPE_STRING);
-     						String address = nextCell.getStringCellValue();
-     						if(address ==null || address.isEmpty())
-     						{
-     							address = "";	
-     						}
-     						user.setAddress(address);
-     						break;
-     					default:
-     						break;
-     					}
-
-     				}
-
-     				List<SmidShgMemberApplication> isExists = userList.stream()
-     						.filter(obj -> (obj.getMobileNo().equals(user.getMobileNo())
-     								&& obj.getAdharNo().equals(user.getAdharNo())))
-     						.collect(Collectors.toList());
-
-     				if (isExists.isEmpty()) {
-     					if(user.getName()!=null && !user.getName().isEmpty())
-     					{
-				
-     					if(user.getMobileNo()==null || user.getMobileNo().isEmpty())
-     					{
-     						
-     						user.setMobileNo("0");
-     					}
-     					
-     					if(user.getAdharNo()==null || user.getAdharNo().isEmpty())
-     					{
-     						
-     						user.setAdharNo(" ");
-     					}
-     					if(user.getAddress()==null || user.getAddress().isEmpty())
-     					{
-     						
-     						user.setAddress(" ");
-     					}
-     					
-     					userList.add(user);
-     					
-     					}
-     				}
-     			}
-     			System.out.println(userList);
-
-
-     			if (!userList.isEmpty()) {
-
-     				return new ResponseEntity(ResponseInfoWrapper.builder()
-     						.responseInfo(ResponseInfo.builder().status(CommonConstants.SUCCESS).build())
-     						.responseBody(userList).build(), HttpStatus.CREATED);
-     			} else {
-     				throw new CustomException(HttpStatus.INTERNAL_SERVER_ERROR.toString(), CommonConstants.ID_GENERATION);
-     			}
-
-     		} catch (Exception exception) {
-     			throw new CustomException(HttpStatus.INTERNAL_SERVER_ERROR.toString(), CommonConstants.ID_GENERATION);
-     		}
-	}
-         
-         public ResponseEntity<ResponseInfoWrapper> createMembers(NulmShgMemberRequest memberrequest) {
-     		try {
-     			SmidShgMemberApplication smidapplication = objectMapper.convertValue(memberrequest.getSmidShgMemberApplication(),
-     					SmidShgMemberApplication.class);
-     			   checkValidation(smidapplication);
-     			   repository.checkShgUuid(smidapplication);
-     				String smidid = UUID.randomUUID().toString();
-     				smidapplication.setApplicationUuid(smidid);
-     				smidapplication.setIsActive(true);
-     				smidapplication.setAuditDetails(auditDetailsUtil.getAuditDetails(memberrequest.getRequestInfo(), CommonConstants.ACTION_CREATE));
-     			   // idgen service call to genrate event id
-     				IdGenerationResponse id = idgenrepository.getId(memberrequest.getRequestInfo(), smidapplication.getTenantId(),
-     						config.getSmidapplicationNumberIdgenName(), config.getSmidapplicationNumberIdgenFormat(), 1);
-     				if (id.getIdResponses() != null && id.getIdResponses().get(0) != null)
-     					smidapplication.setApplicationId(id.getIdResponses().get(0).getId());
-     				else
-     					throw new CustomException(HttpStatus.INTERNAL_SERVER_ERROR.toString(), CommonConstants.ID_GENERATION);
+			SmidShgMemberApplication smidapplication = objectMapper.convertValue(memberrequest.getSmidShgMemberApplication(),
+					SmidShgMemberApplication.class);
+			   checkValidation(smidapplication);
+			   repository.checkShgUuid(smidapplication);
+				String smidid = UUID.randomUUID().toString();
+				smidapplication.setApplicationUuid(smidid);
+				smidapplication.setIsActive(true);
+				smidapplication.setAuditDetails(auditDetailsUtil.getAuditDetails(memberrequest.getRequestInfo(), CommonConstants.ACTION_CREATE));
+			   // idgen service call to genrate event id
+				IdGenerationResponse id = idgenrepository.getId(memberrequest.getRequestInfo(), smidapplication.getTenantId(),
+						config.getSmidapplicationNumberIdgenName(), config.getSmidapplicationNumberIdgenFormat(), 1);
+				if (id.getIdResponses() != null && id.getIdResponses().get(0) != null)
+					smidapplication.setApplicationId(id.getIdResponses().get(0).getId());
+				else
+					throw new CustomException(HttpStatus.INTERNAL_SERVER_ERROR.toString(), CommonConstants.ID_GENERATION);
 
      				repository.createMembers(smidapplication);
 
