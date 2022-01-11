@@ -391,70 +391,70 @@ List<Files> attachmentsUrls = fileStoreUtils.getFiles(guest.getTenantId(), attac
      				else
      					throw new CustomException(HttpStatus.INTERNAL_SERVER_ERROR.toString(), CommonConstants.ID_GENERATION);
 
-				repository.createMembers(smidapplication);
+     				repository.createMembers(smidapplication);
 
-				return new ResponseEntity<>(ResponseInfoWrapper.builder()
-						.responseInfo(ResponseInfo.builder().status(CommonConstants.SUCCESS).build())
-						.responseBody(smidapplication).build(), HttpStatus.CREATED);
+     				return new ResponseEntity<>(ResponseInfoWrapper.builder()
+     						.responseInfo(ResponseInfo.builder().status(CommonConstants.SUCCESS).build())
+     						.responseBody(smidapplication).build(), HttpStatus.CREATED);
 
-			} catch (Exception e) {
-				throw new CustomException(CommonConstants.SMID_SHG_MEMBER_APPLICATION_EXCEPTION_CODE, e.getMessage());
-			}
-	}
-	
-	public ResponseEntity<ResponseInfoWrapper> getMembers(NulmShgMemberRequest memberrequest) {
-		try {
+     			} catch (Exception e) {
+     				throw new CustomException(CommonConstants.SMID_SHG_MEMBER_APPLICATION_EXCEPTION_CODE, e.getMessage());
+     			}
+     	}
+     	
+     	public ResponseEntity<ResponseInfoWrapper> getMembers(NulmShgMemberRequest memberrequest) {
+     		try {
 
-			SmidShgMemberApplication shg = objectMapper.convertValue(memberrequest.getSmidShgMemberApplication(),
-					SmidShgMemberApplication.class);
-			List<Role> role=memberrequest.getRequestInfo().getUserInfo().getRoles();
-			List<SmidShgMemberApplication> groupresult = repository.getMembers(shg,role,memberrequest.getRequestInfo().getUserInfo().getId());
-			return new ResponseEntity<>(ResponseInfoWrapper.builder()
-					.responseInfo(ResponseInfo.builder().status(CommonConstants.SUCCESS).build())
-					.responseBody(groupresult).build(), HttpStatus.OK);
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new CustomException(CommonConstants.SMID_SHG_MEMBER_APPLICATION_EXCEPTION_CODE, e.getMessage());
-		}
-	}
-	public ResponseEntity<ResponseInfoWrapper> updateMembers(NulmShgMemberRequest memberrequest) {
-		try {
-			SmidShgMemberApplication smidapplication = objectMapper.convertValue(memberrequest.getSmidShgMemberApplication(),
-					SmidShgMemberApplication.class);
-			checkValidation(smidapplication);
-			String status = "";
-			repository.checkMemberUuid(smidapplication);
-			List<Role> role = memberrequest.getRequestInfo().getUserInfo().getRoles();
-			JSONArray groupresult = repository.getMemmberStatus(smidapplication);
-			JSONObject applicationData = (JSONObject) groupresult.get(0);
-			status = applicationData.get("application_status").toString();
-			for (Role roleobj : role) {
-				if ((roleobj.getCode()).equalsIgnoreCase(config.getRoleNgoUser())) {
-					
-					if (status.equalsIgnoreCase(SmidShgMemberApplication.StatusEnum.CREATED.toString())) {
-						smidapplication.setApplicationStatus(SmidShgMemberApplication.StatusEnum.CREATED);
-					}
-					if (status.equalsIgnoreCase(SmidShgMemberApplication.StatusEnum.APPROVED.toString())
-							|| status.equalsIgnoreCase(SmidShgMemberApplication.StatusEnum.REJECTED.toString())) {
-						smidapplication.setApplicationStatus(SmidShgMemberApplication.StatusEnum.UPDATED);
-					}
-				}
-				else {
-					smidapplication.setApplicationStatus(SmidShgMemberApplication.StatusEnum.fromValue(status));
-				}
-			}
-			smidapplication.setIsActive(true);
-			smidapplication.setAuditDetails(auditDetailsUtil.getAuditDetails(memberrequest.getRequestInfo(), CommonConstants.ACTION_UPDATE));
-		 	repository.updateMembers(smidapplication);
+     			SmidShgMemberApplication shg = objectMapper.convertValue(memberrequest.getSmidShgMemberApplication(),
+     					SmidShgMemberApplication.class);
+     			List<Role> role=memberrequest.getRequestInfo().getUserInfo().getRoles();
+     			List<SmidShgMemberApplication> groupresult = repository.getMembers(shg,role,memberrequest.getRequestInfo().getUserInfo().getId());
+     			return new ResponseEntity<>(ResponseInfoWrapper.builder()
+     					.responseInfo(ResponseInfo.builder().status(CommonConstants.SUCCESS).build())
+     					.responseBody(groupresult).build(), HttpStatus.OK);
+     		} catch (Exception e) {
+     			e.printStackTrace();
+     			throw new CustomException(CommonConstants.SMID_SHG_MEMBER_APPLICATION_EXCEPTION_CODE, e.getMessage());
+     		}
+     	}
+     	public ResponseEntity<ResponseInfoWrapper> updateMembers(NulmShgMemberRequest memberrequest) {
+     		try {
+     			SmidShgMemberApplication smidapplication = objectMapper.convertValue(memberrequest.getSmidShgMemberApplication(),
+     					SmidShgMemberApplication.class);
+     			checkValidation(smidapplication);
+     			String status = "";
+     			repository.checkMemberUuid(smidapplication);
+     			List<Role> role = memberrequest.getRequestInfo().getUserInfo().getRoles();
+     			JSONArray groupresult = repository.getMemmberStatus(smidapplication);
+     			JSONObject applicationData = (JSONObject) groupresult.get(0);
+     			status = applicationData.get("application_status").toString();
+     			for (Role roleobj : role) {
+     				if ((roleobj.getCode()).equalsIgnoreCase(config.getRoleNgoUser())) {
+     					
+     					if (status.equalsIgnoreCase(SmidShgMemberApplication.StatusEnum.CREATED.toString())) {
+     						smidapplication.setApplicationStatus(SmidShgMemberApplication.StatusEnum.CREATED);
+     					}
+     					if (status.equalsIgnoreCase(SmidShgMemberApplication.StatusEnum.APPROVED.toString())
+     							|| status.equalsIgnoreCase(SmidShgMemberApplication.StatusEnum.REJECTED.toString())) {
+     						smidapplication.setApplicationStatus(SmidShgMemberApplication.StatusEnum.UPDATED);
+     					}
+     				}
+     				else {
+     					smidapplication.setApplicationStatus(SmidShgMemberApplication.StatusEnum.fromValue(status));
+     				}
+     			}
+     			smidapplication.setIsActive(true);
+     			smidapplication.setAuditDetails(auditDetailsUtil.getAuditDetails(memberrequest.getRequestInfo(), CommonConstants.ACTION_UPDATE));
+     		 	repository.updateMembers(smidapplication);
 
-			return new ResponseEntity<>(ResponseInfoWrapper.builder()
-					.responseInfo(ResponseInfo.builder().status(CommonConstants.SUCCESS).build())
-					.responseBody(smidapplication).build(), HttpStatus.OK);
+     			return new ResponseEntity<>(ResponseInfoWrapper.builder()
+     					.responseInfo(ResponseInfo.builder().status(CommonConstants.SUCCESS).build())
+     					.responseBody(smidapplication).build(), HttpStatus.OK);
 
-		} catch (Exception e) {
-			throw new CustomException(CommonConstants.SMID_SHG_MEMBER_APPLICATION_EXCEPTION_CODE, e.getMessage());
-		}
-	}
+     		} catch (Exception e) {
+     			throw new CustomException(CommonConstants.SMID_SHG_MEMBER_APPLICATION_EXCEPTION_CODE, e.getMessage());
+     		}
+     	}
 
 	public ResponseEntity<ResponseInfoWrapper> deleteMembers(NulmShgMemberRequest memberrequest) {
 		try {
@@ -535,4 +535,6 @@ List<Files> attachmentsUrls = fileStoreUtils.getFiles(guest.getTenantId(), attac
 			throw new CustomException(CommonConstants.SMID_SHG_APPLICATION_EXCEPTION_CODE, e.getMessage());
 		}
 	}
+
+	
 }
