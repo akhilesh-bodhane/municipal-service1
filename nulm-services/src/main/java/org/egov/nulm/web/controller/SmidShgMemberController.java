@@ -1,15 +1,19 @@
 package org.egov.nulm.web.controller;
 
+import java.io.IOException;
+
 import javax.validation.Valid;
 
 import org.egov.nulm.model.NulmShgMemberRequest;
 import org.egov.nulm.model.NulmShgRequest;
 import org.egov.nulm.model.ResponseInfoWrapper;
 import org.egov.nulm.service.SmidShgMemberService;
+//import org.egov.prscp.web.models.RequestInfoWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -24,6 +28,18 @@ public class SmidShgMemberController {
 		this.service = service;
 	}
 	
+	@PostMapping(value = "/_upload")
+	public ResponseEntity<ResponseInfoWrapper> uplaodExternalUser(@Valid @RequestBody NulmShgMemberRequest memberrequest)
+			throws IOException {
+		return service.uplaodExternalGuest(memberrequest);
+	}
+	
+
+	@PostMapping(value = "/_read")
+	public ResponseEntity<ResponseInfoWrapper> readExternalUser(@Valid @RequestBody NulmShgMemberRequest memberrequest)
+			throws IOException {
+		return service.readExternalGuest(memberrequest);
+	}
 	@PostMapping(value = "/_create")
 	public ResponseEntity<ResponseInfoWrapper> createMembers(@Valid @RequestBody NulmShgMemberRequest memberrequest) {
 		return service.createMembers(memberrequest);
@@ -32,7 +48,7 @@ public class SmidShgMemberController {
 	public ResponseEntity<ResponseInfoWrapper> updateMembers(@Valid @RequestBody NulmShgMemberRequest memberrequest) {
 		return service.updateMembers(memberrequest);
 	}
-	
+
 	@PostMapping(value = "/_get")
 	public ResponseEntity<ResponseInfoWrapper> getMembers(@Valid @RequestBody NulmShgMemberRequest memberrequest) {
 		return service.getMembers(memberrequest);

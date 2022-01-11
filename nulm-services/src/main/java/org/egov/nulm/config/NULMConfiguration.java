@@ -44,7 +44,14 @@ public class NULMConfiguration {
 		converter.setObjectMapper(objectMapper);
 		return converter;
 	}
-
+  
+	// FileStore Service
+		@Value("${egov.filestore.host}")
+		private String filStoreHost;
+		
+		@Value("${egov.filestore.url}")
+		private String filStoreUrlEndPoint;
+		
 	// Idgen Config
 	@Value("${egov.idgen.host}")
 	private String idGenHost;
