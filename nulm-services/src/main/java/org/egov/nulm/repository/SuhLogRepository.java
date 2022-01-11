@@ -14,7 +14,7 @@ import org.egov.nulm.repository.builder.NULMQueryBuilder;
 import org.egov.nulm.repository.rowmapper.SuhLogRowMapper;
 import org.egov.nulm.repository.rowmapper.SuhRowMapper;
 import org.egov.tracer.model.CustomException;
-import org.omg.PortableInterceptor.USER_EXCEPTION;
+//import org.omg.PortableInterceptor.USER_EXCEPTION;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;

@@ -5,19 +5,20 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Stream;
 
 import org.egov.common.contract.request.Role;
 import org.egov.nulm.common.CommonConstants;
 import org.egov.nulm.config.NULMConfiguration;
 import org.egov.nulm.model.NulmShgMemberRequest;
-import org.egov.nulm.model.SmidShgGroup;
 import org.egov.nulm.model.SmidShgMemberApplication;
-import org.egov.nulm.model.SuhApplication;
 import org.egov.nulm.producer.Producer;
 import org.egov.nulm.repository.builder.NULMQueryBuilder;
 import org.egov.nulm.repository.rowmapper.ColumnsRowMapper;
-import org.egov.nulm.repository.rowmapper.SMIDRowMapper;
 import org.egov.nulm.repository.rowmapper.ShgMemberRowMapper;
+//import org.egov.prscp.repository.builder.PrQueryBuilder;
+//import org.egov.prscp.web.models.InviteGuest;
+//import org.egov.prscp.web.models.RequestInfoWrapper;
 import org.egov.tracer.model.CustomException;
 import org.json.simple.JSONArray;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,26 +53,71 @@ public class SmidShgMemberRepository {
 		this.shgMemberRowMapper = shgMemberRowMapper;
 		this.columnsRowMapper = columnsRowMapper;
 	}
+	
+public List<SmidShgMemberApplication> saveGuest(List<SmidShgMemberApplication> userList, NulmShgMemberRequest memberrequest) {
+
+//	public void saveGuest(List<SmidShgMemberApplication> userList, NulmShgMemberRequest memberrequest) {
+
+//		List<SmidShgMemberApplication> existingList = jdbcTemplate.query(PrQueryBuilder.GET_INVITATION_GUEST,
+//				new Object[] { tenantId, moduleCode, eventDetailUuid, userId }, invitationGuestRowMapper);
+//
+//		List<InviteGuest> existing = existingList.stream()
+//				.filter(exits -> inviteGuests.stream()
+//						.filter(nwList -> (exits.getGuestEmail().equalsIgnoreCase(nwList.getGuestEmail())
+//								&& exits.getGuestMobile().equalsIgnoreCase(nwList.getGuestMobile())
+//								&& exits.getGuestName().equalsIgnoreCase(nwList.getGuestName())
+//								&& exits.getEventGuestType().equalsIgnoreCase(nwList.getEventGuestType()))
+//								&& exits.getModuleCode().equalsIgnoreCase(nwList.getModuleCode()))
+//						.findFirst().isPresent())
+//				.collect(Collectors.toList());
+//
+//		existingList.stream().forEach(
+//				exits -> inviteGuests.removeIf(nwList -> (exits.getGuestEmail().equalsIgnoreCase(nwList.getGuestEmail())
+//						&& exits.getGuestMobile().equalsIgnoreCase(nwList.getGuestMobile())
+//						&& exits.getGuestName().equalsIgnoreCase(nwList.getGuestName())
+//						&& exits.getEventGuestType().equalsIgnoreCase(nwList.getEventGuestType())
+//						&& exits.getModuleCode().equalsIgnoreCase(nwList.getModuleCode()))));
+
+//		RequestInfoWrapper infoWrapper = RequestInfoWrapper.builder().requestBody(inviteGuests).build();
+//		producer.push(config.getInvitationSaveGuestTopic(), infoWrapper);
+		
+//		SmidShgMemberApplication smidApplication =null;
+//		NulmShgMemberRequest infoWrapper = NulmShgMemberRequest.builder().SmidShgMemberApplication(userList);
+	memberrequest.setSmidShgMemberApplication(userList);
+	producer.push(config.getSmidShgMemberSaveTopic(), memberrequest);
+
+////		inviteGuests.addAll(existing);
+	return userList;
+}
 
 	public void createMembers(SmidShgMemberApplication smidApplication) {
-		NulmShgMemberRequest infoWrapper = NulmShgMemberRequest.builder().SmidShgMemberApplication(smidApplication)
+		List<SmidShgMemberApplication> list = new ArrayList<>();
+		list.add(smidApplication);
+		
+		NulmShgMemberRequest infoWrapper = NulmShgMemberRequest.builder().smidShgMemberApplication(list).auditDetails(smidApplication.getAuditDetails())
 				.build();
 		producer.push(config.getSmidShgMemberSaveTopic(), infoWrapper);
 	}
 
 	public void updateMembers(SmidShgMemberApplication smidApplication) {
-		NulmShgMemberRequest infoWrapper = NulmShgMemberRequest.builder().SmidShgMemberApplication(smidApplication)
+		List<SmidShgMemberApplication> list = new ArrayList<>();
+		list.add(smidApplication);
+		NulmShgMemberRequest infoWrapper = NulmShgMemberRequest.builder().smidShgMemberApplication(list)
 				.build();
 		producer.push(config.getSmidShgMemberUpdateTopic(), infoWrapper);
 	}
 
 	public void deleteMembers(SmidShgMemberApplication smidApplication) {
-		NulmShgMemberRequest infoWrapper = NulmShgMemberRequest.builder().SmidShgMemberApplication(smidApplication)
+		List<SmidShgMemberApplication> list = new ArrayList<>();
+		list.add(smidApplication);
+		NulmShgMemberRequest infoWrapper = NulmShgMemberRequest.builder().smidShgMemberApplication(list)
 				.build();
 		producer.push(config.getSmidShgMemberDeleteTopic(), infoWrapper);
 	}
 	public void hardDeleteMembers(SmidShgMemberApplication smidApplication) {
-		NulmShgMemberRequest infoWrapper = NulmShgMemberRequest.builder().SmidShgMemberApplication(smidApplication)
+		List<SmidShgMemberApplication> list = new ArrayList<>();
+		list.add(smidApplication);
+		NulmShgMemberRequest infoWrapper = NulmShgMemberRequest.builder().smidShgMemberApplication(list)
 				.build();
 		producer.push(config.getSmidShgMemberHardDeleteTopic(), infoWrapper);
 	}
