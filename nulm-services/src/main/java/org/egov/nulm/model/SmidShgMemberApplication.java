@@ -31,6 +31,9 @@ public class SmidShgMemberApplication {
 	@JsonProperty("shgUuid")
 	private String shgUuid ;
 	
+//	@JsonProperty("shg_uuid")
+//	private String shg_uuid ;
+	
 	private String nulmApplicationId ;
 	
 	
@@ -71,8 +74,12 @@ public class SmidShgMemberApplication {
 	    }
 	  }
 	@NotNull
-	@JsonProperty("tenantId")
-	private String tenantId ;
+//	@JsonProperty("tenant_id")
+//	private String tenant_id ;
+	
+	
+		@JsonProperty("tenantId")
+	private String tenantId ; 
 		
 	@JsonProperty("name")
 	private String name ;

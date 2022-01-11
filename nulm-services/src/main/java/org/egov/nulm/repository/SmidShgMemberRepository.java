@@ -176,4 +176,11 @@ public class SmidShgMemberRepository {
 		}
 
 	}
+
+//	public List<SmidShgMemberApplication> saveGuest(List<SmidShgMemberApplication> userList) {
+//		// TODO Auto-generated method stub
+//		return null;
+//	}
+
+	
 }
