@@ -77,10 +77,6 @@ public class SmidShgMemberApplication {
 	@JsonProperty("name")
 	private String name ;
 	
-	@JsonProperty("application_uuid")
-	private String application_uuid ;
-	
-	
 	
 	@JsonProperty("positionLevel")
 	private String positionLevel ;
@@ -164,9 +160,6 @@ public class SmidShgMemberApplication {
 	
 	@JsonProperty("accountNo")
 	private String accountNo ;
-	
-	@JsonProperty("externalFileStoreId")
-	private String externalFileStoreId;
 	
 	@JsonProperty("bankName")
 	private String bankName;
