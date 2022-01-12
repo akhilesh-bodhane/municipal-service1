@@ -39,7 +39,7 @@ public class SwatchBharat {
 	private String username;
 	
 	@JsonProperty("workbookid")
-	private int workbookid;
+	private Long workbookid;
 
 	@JsonProperty("auditDetails")
 	private AuditDetails auditDetails;
