@@ -29,4 +29,10 @@ public class SwatchBharatSearch {
 
 	@JsonProperty("fileid")
 	private String fileid;
+	
+	@JsonProperty("username")
+	private String username;
+	
+	@JsonProperty("workbookid")
+	private int workbookid;
 }
