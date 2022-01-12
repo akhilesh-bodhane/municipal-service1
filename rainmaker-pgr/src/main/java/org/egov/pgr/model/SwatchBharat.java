@@ -34,6 +34,12 @@ public class SwatchBharat {
 
 	@JsonProperty("isvalidimage")
 	private Boolean isvalidimage = false;
+	
+	@JsonProperty("username")
+	private String username;
+	
+	@JsonProperty("workbookid")
+	private int workbookid;
 
 	@JsonProperty("auditDetails")
 	private AuditDetails auditDetails;
