@@ -60,10 +60,10 @@ public class SwatchBharatRepository {
 				queryBuilderWhere.append(" AND username = username");
 			}
 			if (swatchBharatRequest.getSwatchBharatSearch().getWorkbookid() > 0 ) {
-				queryBuilderWhere.append(" AND username = ")
+				queryBuilderWhere.append(" AND workbookid = ")
 						.append("'" + swatchBharatRequest.getSwatchBharatSearch().getWorkbookid() + "'");
 			} else {
-				queryBuilderWhere.append(" AND username = username");
+				queryBuilderWhere.append(" AND workbookid = workbookid");
 			}
 			
 		}
