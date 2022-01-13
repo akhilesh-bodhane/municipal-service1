@@ -52,6 +52,19 @@ public class SwatchBharatRepository {
 			} else {
 				queryBuilderWhere.append(" AND uuid = uuid");
 			}
+			if (swatchBharatRequest.getSwatchBharatSearch().getUsername() != null
+					&& !swatchBharatRequest.getSwatchBharatSearch().getUsername().isEmpty()) {
+				queryBuilderWhere.append(" AND username = ")
+						.append("'" + swatchBharatRequest.getSwatchBharatSearch().getUsername() + "'");
+			} else {
+				queryBuilderWhere.append(" AND username = username");
+			}
+			if (swatchBharatRequest.getSwatchBharatSearch().getWorkbookid() > 0 ) {
+				queryBuilderWhere.append(" AND username = ")
+						.append("'" + swatchBharatRequest.getSwatchBharatSearch().getWorkbookid() + "'");
+			} else {
+				queryBuilderWhere.append(" AND username = username");
+			}
 			
 		}
 
