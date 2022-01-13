@@ -52,6 +52,7 @@ public class SwatchBharatRepository {
 			} else {
 				queryBuilderWhere.append(" AND uuid = uuid");
 			}
+			
 		}
 
 		if (queryBuilderWhere.length() > 0)
