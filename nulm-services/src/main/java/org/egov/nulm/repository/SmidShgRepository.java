@@ -175,7 +175,9 @@ public class SmidShgRepository {
 		producer.push(config.getSMIDSHGUpdateStatusTopic(), infoWrapper);
 	}
 	public void updateMemberStatus(SmidShgMemberApplication smidApplication) {
-		NulmShgMemberRequest infoWrapper = NulmShgMemberRequest.builder().SmidShgMemberApplication(smidApplication)
+		List<SmidShgMemberApplication> list = new ArrayList<>();
+		list.add(smidApplication);
+		NulmShgMemberRequest infoWrapper = NulmShgMemberRequest.builder().smidShgMemberApplication(list)
 				.build();
 		producer.push(config.getSmidShgMemberDeleteTopic(), infoWrapper);
 	}
