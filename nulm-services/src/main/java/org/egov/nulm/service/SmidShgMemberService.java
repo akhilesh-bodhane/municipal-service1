@@ -80,7 +80,8 @@ public class SmidShgMemberService {
 			SmidShgMemberApplication[] guests = objectMapper.convertValue(memberrequest.getSmidShgMemberApplication(), SmidShgMemberApplication[].class);
 			
 			SmidShgMemberApplication guest=guests[0];
-			System.out.println(guests);objectMapper.writeValueAsString(guests);
+			System.out.println(guests);
+			objectMapper.writeValueAsString(guests);
 		
 			
 
@@ -219,11 +220,11 @@ List<Files> attachmentsUrls = fileStoreUtils.getFiles(guest.getTenantId(), attac
 						.responseInfo(ResponseInfo.builder().status(CommonConstants.SUCCESS).build())
 						.responseBody(userListFinal).build(), HttpStatus.CREATED);
 			} else {
-				throw new CustomException(HttpStatus.INTERNAL_SERVER_ERROR.toString(), CommonConstants.ID_GENERATION);
+				throw new CustomException(HttpStatus.INTERNAL_SERVER_ERROR.toString(), CommonConstants.ID_GENERATION_1);
 			}
 
 		} catch (Exception exception) {
-			throw new CustomException(HttpStatus.INTERNAL_SERVER_ERROR.toString(), CommonConstants.ID_GENERATION);
+			throw new CustomException(HttpStatus.INTERNAL_SERVER_ERROR.toString(), CommonConstants.ID_GENERATION_2);
 		}
 	}
 	
@@ -365,11 +366,11 @@ List<Files> attachmentsUrls = fileStoreUtils.getFiles(guest.getTenantId(), attac
      						.responseInfo(ResponseInfo.builder().status(CommonConstants.SUCCESS).build())
      						.responseBody(userList).build(), HttpStatus.CREATED);
      			} else {
-     				throw new CustomException(HttpStatus.INTERNAL_SERVER_ERROR.toString(), CommonConstants.ID_GENERATION);
+     				throw new CustomException(HttpStatus.INTERNAL_SERVER_ERROR.toString(), CommonConstants.ID_GENERATION_1);
      			}
 
      		} catch (Exception exception) {
-     			throw new CustomException(HttpStatus.INTERNAL_SERVER_ERROR.toString(), CommonConstants.ID_GENERATION);
+     			throw new CustomException(HttpStatus.INTERNAL_SERVER_ERROR.toString(), CommonConstants.ID_GENERATION_2);
      		}
 	}
          
