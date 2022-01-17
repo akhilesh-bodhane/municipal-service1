@@ -8,6 +8,8 @@ public class CommonConstants {
 
 
 	public static final String ID_GENERATION = "ID Generation Failed";
+	public static final String ID_GENERATION_1 = "ID Generation Failed2";
+	public static final String ID_GENERATION_2 = "ID Generation Failed3";
 	
 	public static final String ORGANIZATION_EXCEPTION_CODE="ORGANIZATION_EXCEPTION";
 	public static final String SUH_APPLICATION_EXCEPTION_CODE="SUH_APPLICATION_EXCEPTION";
