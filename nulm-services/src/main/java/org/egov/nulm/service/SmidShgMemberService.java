@@ -76,12 +76,12 @@ public class SmidShgMemberService {
 	public ResponseEntity<ResponseInfoWrapper> uplaodExternalGuest(NulmShgMemberRequest memberrequest
 			) throws IOException {
 		try {
-			log.info("inside method uplaodExternalGuest execution begins");
+			log.debug("inside method uplaodExternalGuest execution begins");
 
 
 		
 			SmidShgMemberApplication[] guests = objectMapper.convertValue(memberrequest.getSmidShgMemberApplication(), SmidShgMemberApplication[].class);
-			log.info(objectMapper.writeValueAsString(guests));
+			log.debug(objectMapper.writeValueAsString(guests));
 			SmidShgMemberApplication guest=guests[0];
 			
 		
@@ -92,7 +92,7 @@ Files uploadfileId = Files.builder().fileStoreId(guest.getExternalFileStoreId())
 			List<Files> attachments = new ArrayList<>();
 			attachments.add(uploadfileId);
 			String fileUrls = null;
-			log.info("calling getFiles method");
+			log.debug("calling getFiles method");
 List<Files> attachmentsUrls = fileStoreUtils.getFiles(guest.getTenantId(), attachments);
 
 			
@@ -124,7 +124,7 @@ List<Files> attachmentsUrls = fileStoreUtils.getFiles(guest.getTenantId(), attac
 			Iterator<Row> rowIterator = worksheet.iterator();
 			rowIterator.next(); // skip the header row
 
-			log.info("XLS SHEET STARTTO READ");
+			log.debug("XLS SHEET STARTTO READ");
 
 			while (rowIterator.hasNext()) {
 				Row nextRow = rowIterator.next();
@@ -214,11 +214,11 @@ List<Files> attachmentsUrls = fileStoreUtils.getFiles(guest.getTenantId(), attac
 				}
 			}
 			System.out.println(userList);
-			log.info("size of userList="+userList);
+			log.debug("size of userList="+userList);
 		
 
 			if (!userList.isEmpty()) {
-				log.info("size of userList="+userList.size());
+				log.debug("size of userList="+userList.size());
 				List<SmidShgMemberApplication> userListFinal = repository.saveGuest(userList, memberrequest);
 				return new ResponseEntity(ResponseInfoWrapper.builder()
 						.responseInfo(ResponseInfo.builder().status(CommonConstants.SUCCESS).build())
@@ -236,9 +236,9 @@ List<Files> attachmentsUrls = fileStoreUtils.getFiles(guest.getTenantId(), attac
 	
          public ResponseEntity<ResponseInfoWrapper> readExternalGuest(NulmShgMemberRequest memberrequest) {
         	 try {
-        		 log.info("inside method READExternalGuest execution begins");
+        		 log.debug("inside method READExternalGuest execution begins");
      			SmidShgMemberApplication[] guests = objectMapper.convertValue(memberrequest.getSmidShgMemberApplication(), SmidShgMemberApplication[].class);
-     			log.info(objectMapper.writeValueAsString(guests));
+     			log.debug(objectMapper.writeValueAsString(guests));
      			SmidShgMemberApplication guest=guests[0];
      			System.out.println(guests);
      			objectMapper.writeValueAsString(guests);
@@ -249,7 +249,7 @@ List<Files> attachmentsUrls = fileStoreUtils.getFiles(guest.getTenantId(), attac
      			List<Files> attachments = new ArrayList<>();
      			attachments.add(uploadfileId);
      			String fileUrls = null;
-     			log.info("calling getFiles method");
+     			log.debug("calling getFiles method");
      			
      List<Files> attachmentsUrls = fileStoreUtils.getFiles(guest.getTenantId(), attachments);
 
@@ -281,7 +281,7 @@ List<Files> attachmentsUrls = fileStoreUtils.getFiles(guest.getTenantId(), attac
      			Iterator<Row> rowIterator = worksheet.iterator();
      			rowIterator.next(); // skip the header row
 
-     			log.info("XLS SHEET STARTTO READ");
+     			log.debug("XLS SHEET STARTTO READ");
      			while (rowIterator.hasNext()) {
      				Row nextRow = rowIterator.next();
      				Iterator<Cell> cellIterator = nextRow.cellIterator();
@@ -333,7 +333,7 @@ List<Files> attachmentsUrls = fileStoreUtils.getFiles(guest.getTenantId(), attac
      					}
 
      				}
-     				log.info("XLS SHEET STARTTO READ"+user);
+     				log.debug("XLS SHEET STARTTO READ"+user);
      				List<SmidShgMemberApplication> isExists = userList.stream()
      						.filter(obj -> (obj.getMobileNo().equals(user.getMobileNo())
      								&& obj.getAdharNo().equals(user.getAdharNo())))
@@ -366,7 +366,7 @@ List<Files> attachmentsUrls = fileStoreUtils.getFiles(guest.getTenantId(), attac
      				}
      			}
      			System.out.println(userList);
-     			log.info("userList");
+     			log.debug("userList");
 
      			if (!userList.isEmpty()) {
 
