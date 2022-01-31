@@ -32,12 +32,15 @@ public class SwatchBharat {
 	@JsonProperty("fileid")
 	private String fileid;
 
+	@JsonProperty("filedata")
+	private String filedata;
+
 	@JsonProperty("isvalidimage")
 	private Boolean isvalidimage = false;
-	
+
 	@JsonProperty("username")
 	private String username;
-	
+
 	@JsonProperty("workbookid")
 	private Long workbookid = null;
 

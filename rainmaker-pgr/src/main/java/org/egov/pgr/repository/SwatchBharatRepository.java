@@ -25,7 +25,7 @@ public class SwatchBharatRepository {
 	public List<SwatchBharat> getDataFromDb(SwatchBharatRequest swatchBharatRequest) {
 		List<Object> preparedStmtList = new ArrayList<>();
 
-		String query = "SELECT uuid, useruuid, fileid, createdby, updatedby, isvalidimage, createddate, updateddate, username, workbookid \r\n"
+		String query = "SELECT uuid, useruuid, fileid, createdby, updatedby, isvalidimage, createddate, updateddate, username, workbookid, filedata \r\n"
 				+ "FROM public.sb_workbook_doc ";
 
 		StringBuilder queryBuilder = new StringBuilder(query);
