@@ -102,6 +102,7 @@ public class FireService {
 	}
 
 	private void validateFireRequest(FireDataRequest fireDataRequest) {
+		Map<String, String> errors = new HashMap<>();
 		if ((fireDataRequest.getApplicationReferenceNumber() == null
 				|| fireDataRequest.getApplicationReferenceNumber().isEmpty())
 				&& (fireDataRequest.getFromDate() == null || fireDataRequest.getFromDate().isEmpty())
