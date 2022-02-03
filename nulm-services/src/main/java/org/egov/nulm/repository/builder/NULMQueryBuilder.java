@@ -75,12 +75,12 @@ public class NULMQueryBuilder {
 			+ "array_to_json(array_agg(json_build_object('shgUuid',GP.shg_uuid,'shgId',GP.shg_id,'name',GP.name,'type',GP.type,'groupsNominatedBy',GP.groups_nominated_by,\n"
 			+ "'formedThrough',GP.formed_through,'status',GP.status,'address',GP.address,'contactNo',GP.contact_no,'dateOfFormation',\n"
 			+ "GP.date_of_formation,'accountNo',GP.account_no,'dateOfOpeningAccount',GP.date_of_opening_account,'bankName',GP.bank_name,'branchName',GP.branch_name,'mainActivity',GP.main_activity,'remark',GP.remark) ))as group \n"
-			+ "FROM public.nulm_smid_shg_member_details MB Inner  join nulm_smid_shg_detail GP on GP.shg_uuid=MB.shg_uuid AND GP.tenant_id=MB.tenant_id\n"
-			+ "WHERE application_id=(case when ?  <>'' then ?  else application_id end) and MB.created_by=(case when ?  <>'' then ?  else MB.created_by end)  \n"
-			+ " AND MB.tenant_id=? AND MB.application_status=(case when ?  <>'' then ?  else MB.application_status end) AND MB.is_active='true'\n"
-			+ "   AND TO_DATE(TO_CHAR(TO_TIMESTAMP(MB.created_time / 1000), 'YYYY-MM-DD'),'YYYY-MM-DD') >= CASE WHEN ?<>'' THEN DATE(?) ELSE\n"
-			+ "		TO_DATE(TO_CHAR(TO_TIMESTAMP(MB.created_time / 1000), 'YYYY-MM-DD'),'YYYY-MM-DD') END AND  TO_DATE(TO_CHAR(TO_TIMESTAMP(MB.created_time / 1000), 'YYYY-MM-DD'),'YYYY-MM-DD') <= CASE WHEN ?<>'' THEN DATE(?) ELSE \n"
-			+ "		TO_DATE(TO_CHAR(TO_TIMESTAMP(MB.created_time / 1000), 'YYYY-MM-DD'),'YYYY-MM-DD') END AND UPPER(GP.name) like concat('%',case when UPPER(?)<>'' then UPPER(?) else UPPER(GP.name) end,'%') and UPPER(MB.name) like concat('%',case when UPPER(?)<>'' then UPPER(?) else UPPER(MB.name) end,'%') AND GP.shg_id=(case when ?  <>'' then ?  else GP.shg_id end) GROUP BY MB.application_uuid ORDER BY created_time desc";
+			+ "FROM public.nulm_smid_shg_member_details MB INNER  join nulm_smid_shg_detail GP on GP.shg_uuid=MB.shg_uuid OR GP.tenant_id=MB.tenant_id\n"
+			+ "WHERE application_id=(case when ?  <>'' then ?  else application_id end) OR MB.created_by=(case when ?  <>'' then ?  else MB.created_by end)  \n"
+			+ " OR MB.tenant_id=? OR MB.application_status=(case when ?  <>'' then ?  else MB.application_status end) OR MB.is_active='true'\n"
+			+ "   OR TO_DATE(TO_CHAR(TO_TIMESTAMP(MB.created_time / 1000), 'YYYY-MM-DD'),'YYYY-MM-DD') >= CASE WHEN ?<>'' THEN DATE(?) ELSE\n"
+			+ "		TO_DATE(TO_CHAR(TO_TIMESTAMP(MB.created_time / 1000), 'YYYY-MM-DD'),'YYYY-MM-DD') END OR  TO_DATE(TO_CHAR(TO_TIMESTAMP(MB.created_time / 1000), 'YYYY-MM-DD'),'YYYY-MM-DD') <= CASE WHEN ?<>'' THEN DATE(?) ELSE \n"
+			+ "		TO_DATE(TO_CHAR(TO_TIMESTAMP(MB.created_time / 1000), 'YYYY-MM-DD'),'YYYY-MM-DD') END OR UPPER(GP.name) like concat('%',case when UPPER(?)<>'' then UPPER(?) else UPPER(GP.name) end,'%') OR UPPER(MB.name) like concat('%',case when UPPER(?)<>'' then UPPER(?) else UPPER(MB.name) end,'%') AND GP.shg_id=(case when ?  <>'' then ?  else GP.shg_id end) GROUP BY MB.application_uuid ORDER BY created_time desc";
 
 	public static final String GET_SHG_MEMBER_COUNT_QUERY = "select count(*) from nulm_smid_shg_member_details where shg_uuid=? and tenant_id=? and is_active='true' and position_level='MEMBER'";
 	public static final String GET_ORGANIZATION_MOBILE_NO_QUERY = "select count(*) from nulm_organization where tenant_id=? and is_active='true'and mobile_no=? ";

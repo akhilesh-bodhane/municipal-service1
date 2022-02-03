@@ -3,8 +3,10 @@ package org.egov.nulm.repository;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.egov.common.contract.request.Role;
@@ -160,40 +162,64 @@ public List<SmidShgMemberApplication> saveGuest(List<SmidShgMemberApplication> u
 
 	}
 
-	public List<SmidShgMemberApplication> getMembers(SmidShgMemberApplication memberrequest, List<Role> role,
+	public List<SmidShgMemberApplication> getMembers(SmidShgMemberApplication shg, List<Role> role,
 			Long userId) {
 		List<SmidShgMemberApplication> smid = new ArrayList<>();
 		try {
 			for (Role roleobj : role) {
 				if ((roleobj.getCode()).equalsIgnoreCase(config.getRoleEmployee())) {
-					return smid = jdbcTemplate.query(NULMQueryBuilder.GET_SHG_MEMBER_QUERY,
-							new Object[] { memberrequest.getApplicationId(), memberrequest.getApplicationId(), "",
-									"", memberrequest.getTenantId(),
-									memberrequest.getApplicationStatus() == null ? ""
-											: memberrequest.getApplicationStatus().toString(),
-									memberrequest.getApplicationStatus() == null ? ""
-											: memberrequest.getApplicationStatus().toString(),
-											memberrequest.getFromDate(), memberrequest.getFromDate(),
-											memberrequest.getToDate(), memberrequest.getToDate(),
-											memberrequest.getGroupName(),memberrequest.getGroupName(),
-											memberrequest.getName(),memberrequest.getName(),
-											memberrequest.getShgId(),memberrequest.getShgId()},
+					 smid = jdbcTemplate.query(NULMQueryBuilder.GET_SHG_MEMBER_QUERY,
+//							new Object[] { memberrequest.getApplicationId(), memberrequest.getApplicationId(), "",
+									new Object[] { shg.getApplicationId(), shg.getApplicationId(), "",
+//							new Object[] { shg[0].getShgUuid(), shg[0].getShgUuid(), "",
+									"", shg.getTenantId(),
+									
+									shg.getApplicationStatus() == null ? ""
+											: shg.getApplicationStatus().toString(),
+									shg.getApplicationStatus() == null ? ""
+											: shg.getApplicationStatus().toString(),
+											shg.getFromDate(), shg.getFromDate(),
+											shg.getToDate(), shg.getToDate(),
+											shg.getGroupName(),shg.getGroupName(),
+											shg.getName(),shg.getName(),
+											shg.getShgId(),shg.getShgId()
+											},
 							shgMemberRowMapper);
+						List<SmidShgMemberApplication> smidd = new ArrayList<>(); 
+				
+				for (SmidShgMemberApplication smidShgMemberApplication : smid) {
+					String shgUuid = smidShgMemberApplication.getShgUuid();
+					String shgId = smidShgMemberApplication.getShgId();
+					if (shgUuid.equals(shg.getShgUuid()) ) {
+						
+						smidd.add(smidShgMemberApplication);
+						
+					}
+					
+				}
+				for (SmidShgMemberApplication smidShgMemberApplication : smidd) {
+					System.out.println(smidShgMemberApplication.getName());
+				}
+
+							  
+					
+					return smidd;
 
 				}
 			}
 			return smid = jdbcTemplate.query(NULMQueryBuilder.GET_SHG_MEMBER_QUERY,
-					new Object[] { memberrequest.getApplicationId(), memberrequest.getApplicationId(),
-							userId.toString(), userId.toString(), memberrequest.getTenantId(),
-							memberrequest.getApplicationStatus() == null ? ""
-									: memberrequest.getApplicationStatus().toString(),
-							memberrequest.getApplicationStatus() == null ? ""
-									: memberrequest.getApplicationStatus().toString(),
-									memberrequest.getFromDate(), memberrequest.getFromDate(),
-									memberrequest.getToDate(), memberrequest.getToDate(),
-									memberrequest.getGroupName(),memberrequest.getGroupName(),
-									memberrequest.getName(),memberrequest.getName(),
-									memberrequest.getShgId(),memberrequest.getShgId()},
+//					new Object[] { memberrequest.getApplicationId(), memberrequest.getApplicationId(),
+					new Object[] { shg.getShgUuid(), shg.getShgUuid(),
+							userId.toString(), userId.toString(), shg.getTenantId(),
+							shg.getApplicationStatus() == null ? ""
+									: shg.getApplicationStatus().toString(),
+							shg.getApplicationStatus() == null ? ""
+									: shg.getApplicationStatus().toString(),
+									shg.getFromDate(), shg.getFromDate(),
+									shg.getToDate(), shg.getToDate(),
+									shg.getGroupName(),shg.getGroupName(),
+									shg.getName(),shg.getName(),
+									shg.getShgId(),shg.getShgId()},
 					shgMemberRowMapper);
 
 		} catch (Exception e) {
