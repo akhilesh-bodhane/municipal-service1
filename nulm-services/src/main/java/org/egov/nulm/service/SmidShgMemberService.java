@@ -415,10 +415,11 @@ List<Files> attachmentsUrls = fileStoreUtils.getFiles(guest.getTenantId(), attac
      	public ResponseEntity<ResponseInfoWrapper> getMembers(NulmShgMemberRequest memberrequest) {
      		try {
 
-     			SmidShgMemberApplication shg = objectMapper.convertValue(memberrequest.getSmidShgMemberApplication(),
-     					SmidShgMemberApplication.class);
+     			SmidShgMemberApplication[] shg = objectMapper.convertValue(memberrequest.getSmidShgMemberApplication(),
+     					SmidShgMemberApplication[].class);
+     			SmidShgMemberApplication shgg = shg[0];
      			List<Role> role=memberrequest.getRequestInfo().getUserInfo().getRoles();
-     			List<SmidShgMemberApplication> groupresult = repository.getMembers(shg,role,memberrequest.getRequestInfo().getUserInfo().getId());
+     			List<SmidShgMemberApplication> groupresult = repository.getMembers(shgg,role,memberrequest.getRequestInfo().getUserInfo().getId());
      			return new ResponseEntity<>(ResponseInfoWrapper.builder()
      					.responseInfo(ResponseInfo.builder().status(CommonConstants.SUCCESS).build())
      					.responseBody(groupresult).build(), HttpStatus.OK);
