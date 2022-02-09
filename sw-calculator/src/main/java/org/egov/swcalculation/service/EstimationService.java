@@ -112,7 +112,7 @@ public class EstimationService {
 				.estimateAmount(sewarageCharge.setScale(2, 2)).build());
 		
 		if (!(additionalCharges.compareTo(BigDecimal.ZERO) == 0))
-			estimates.add(TaxHeadEstimate.builder().taxHeadCode(SWCalculationConstant.SW_ADDITIONAL_CHARGE)
+			estimates.add(TaxHeadEstimate.builder().taxHeadCode(SWCalculationConstant.SW_OTHER_CHARGE)
 					.estimateAmount(additionalCharges.setScale(2, 2)).build());
 
 		// sewerage cess
@@ -232,7 +232,7 @@ public class EstimationService {
 				.estimateAmount(sewarageCharge.setScale(2, 2)).build());
 		
 		if (!(additionalCharges.compareTo(BigDecimal.ZERO) == 0))
-			estimates.add(TaxHeadEstimate.builder().taxHeadCode(SWCalculationConstant.SW_ADDITIONAL_CHARGE)
+			estimates.add(TaxHeadEstimate.builder().taxHeadCode(SWCalculationConstant.SW_OTHER_CHARGE)
 					.estimateAmount(additionalCharges.setScale(2, 2)).build());
 		return estimates;
 	}
@@ -388,7 +388,7 @@ public class EstimationService {
 					.estimateAmount(finalCharge.setScale(2, 2)).build());
 		
 		if (!(additionalCharges.compareTo(BigDecimal.ZERO) == 0))
-			estimates.add(TaxHeadEstimate.builder().taxHeadCode(SWCalculationConstant.SW_ADDITIONAL_CHARGE)
+			estimates.add(TaxHeadEstimate.builder().taxHeadCode(SWCalculationConstant.SW_OTHER_CHARGE)
 					.estimateAmount(additionalCharges.setScale(2, 2)).build());
 
 		// addAdhocPenalityAndRebate(estimates, criteria.getSewerageConnection());
