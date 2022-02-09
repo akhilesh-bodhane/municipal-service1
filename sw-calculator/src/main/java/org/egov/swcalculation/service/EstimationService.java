@@ -103,9 +103,17 @@ public class EstimationService {
 			Map<String, JSONArray> timeBasedExemeptionMasterMap, RequestInfoWrapper requestInfoWrapper) {
 
 		List<TaxHeadEstimate> estimates = new ArrayList<>();
+		BigDecimal additionalCharges = BigDecimal.ZERO;
+		
+		additionalCharges = new BigDecimal(
+				connection.getAdditionalCharges() == null ? 0.0 : connection.getAdditionalCharges());
 		// sewerage_charge
 		estimates.add(TaxHeadEstimate.builder().taxHeadCode(SWCalculationConstant.SW_CHARGE)
 				.estimateAmount(sewarageCharge.setScale(2, 2)).build());
+		
+		if (!(additionalCharges.compareTo(BigDecimal.ZERO) == 0))
+			estimates.add(TaxHeadEstimate.builder().taxHeadCode(SWCalculationConstant.SW_ADDITIONAL_CHARGE)
+					.estimateAmount(additionalCharges.setScale(2, 2)).build());
 
 		// sewerage cess
 		if (timeBasedExemeptionMasterMap.get(SWCalculationConstant.SW_SEWERAGE_CESS_MASTER) != null) {
@@ -218,9 +226,14 @@ public class EstimationService {
 			SewerageConnection sewerageConnection, Map<String, JSONArray> timeBasedExemeptionMasterMap,
 			RequestInfoWrapper requestInfoWrapper) {
 		List<TaxHeadEstimate> estimates = new ArrayList<>();
+		BigDecimal additionalCharges = BigDecimal.ZERO;
 		// sewerage_charge
 		estimates.add(TaxHeadEstimate.builder().taxHeadCode(SWCalculationConstant.SW_CHARGE)
 				.estimateAmount(sewarageCharge.setScale(2, 2)).build());
+		
+		if (!(additionalCharges.compareTo(BigDecimal.ZERO) == 0))
+			estimates.add(TaxHeadEstimate.builder().taxHeadCode(SWCalculationConstant.SW_ADDITIONAL_CHARGE)
+					.estimateAmount(additionalCharges.setScale(2, 2)).build());
 		return estimates;
 	}
 

@@ -81,6 +81,9 @@ public class SewerageConnection extends Connection {
 
 	@JsonProperty("totalAmountPaid")
 	private String totalAmountPaid;
+	
+	@JsonProperty("additionalCharges")
+	private Double additionalCharges = null;
 
 	public String getDiv() {
 		return div;
@@ -352,5 +355,13 @@ public class SewerageConnection extends Connection {
 
 	public void setTotalAmountPaid(String totalAmountPaid) {
 		this.totalAmountPaid = totalAmountPaid;
+	}
+	
+	public Double getAdditionalCharges() {
+		return additionalCharges;
+	}
+
+	public void setAdditionalCharges(Double additionalCharges) {
+		this.additionalCharges = additionalCharges;
 	}
 }

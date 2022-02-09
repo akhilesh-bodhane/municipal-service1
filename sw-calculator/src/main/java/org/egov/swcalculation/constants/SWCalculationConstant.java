@@ -302,6 +302,8 @@ public class SWCalculationConstant {
 	public static final String RESIDENTIAL_VILLAGE = "RESIDENTIAL.VILLAGE";
 
 	public static final String RESIDENTIAL_CHB = "RESIDENTIAL.CHBDWELLINGUNITS";
+	
+	public static final String SW_ADDITIONAL_CHARGE = "SW_ADDITIONAL_CHARGE";
 
 	
 	public static final List<String> LAND_AREA_CATEGORY = Collections
