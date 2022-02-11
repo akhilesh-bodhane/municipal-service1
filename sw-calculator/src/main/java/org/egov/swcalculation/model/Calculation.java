@@ -20,7 +20,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@JsonPropertyOrder({ "tenantId", "totalAmount", "charge", "taxAmount", "fee", "exemption", "rebate", "exemption", "penalty" })
+@JsonPropertyOrder({ "tenantId", "totalAmount", "charge", "taxAmount", "fee", "exemption", "rebate", "exemption", "penalty", "additionalCharges" })
 public class Calculation {
 
 	@JsonProperty("applicationNo")
