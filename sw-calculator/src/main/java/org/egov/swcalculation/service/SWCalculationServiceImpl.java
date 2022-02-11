@@ -122,6 +122,11 @@ public class SWCalculationServiceImpl implements SWCalculationService {
 		BigDecimal exemption = BigDecimal.ZERO;
 		BigDecimal rebate = BigDecimal.ZERO;
 		BigDecimal fee = BigDecimal.ZERO;
+		BigDecimal additionalCharges = BigDecimal.ZERO;
+		
+		if (!(additionalCharges.compareTo(BigDecimal.ZERO) == 0)) {
+			additionalCharges.add(BigDecimal.valueOf(sewerageConnection.getAdditionalCharges()));
+		}
 
 		for (TaxHeadEstimate estimate : estimates) {
 
@@ -168,7 +173,7 @@ public class SWCalculationServiceImpl implements SWCalculationService {
 				rebate = rebate.add(decimalEstimate.getEstimateAmount());
 		}
 
-		BigDecimal totalAmount = taxAmt.add(penalty).add(rebate).add(exemption).add(sewerageCharge).add(fee);
+		BigDecimal totalAmount = taxAmt.add(penalty).add(rebate).add(exemption).add(sewerageCharge).add(fee).add(additionalCharges);
 		return Calculation.builder().totalAmount(totalAmount).taxAmount(taxAmt).penalty(penalty).exemption(exemption)
 				.charge(sewerageCharge).fee(fee).sewerageConnection(sewerageConnection).rebate(rebate)
 				.tenantId(tenantId).taxHeadEstimates(estimates).billingSlabIds(billingSlabIds)
