@@ -103,9 +103,9 @@ public class EstimationService {
 			Map<String, JSONArray> timeBasedExemeptionMasterMap, RequestInfoWrapper requestInfoWrapper) {
 
 		List<TaxHeadEstimate> estimates = new ArrayList<>();
-		BigDecimal additionalCharges = BigDecimal.ZERO;
+		//BigDecimal additionalCharges = BigDecimal.ZERO;
 		
-		additionalCharges = new BigDecimal(
+		BigDecimal additionalCharges = new BigDecimal(
 				connection.getAdditionalCharges() == null ? 0.0 : connection.getAdditionalCharges());
 		// sewerage_charge
 		estimates.add(TaxHeadEstimate.builder().taxHeadCode(SWCalculationConstant.SW_CHARGE)
