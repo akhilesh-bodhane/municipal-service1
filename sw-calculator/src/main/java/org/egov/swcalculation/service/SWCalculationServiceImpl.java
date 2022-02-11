@@ -157,8 +157,13 @@ public class SWCalculationServiceImpl implements SWCalculationService {
 			}
 			
 		}
+		
+		System.out.println("Additional Charges : "+ sewerageConnection.getAdditionalCharges());
+		if (!(additionalCharges.compareTo(BigDecimal.ZERO) == 0)) {
+			additionalCharges = additionalCharges.add(BigDecimal.valueOf(sewerageConnection.getAdditionalCharges()));
+		}
 
-		TaxHeadEstimate decimalEstimate = payService.roundOfDecimals(taxAmt.add(penalty).add(fee).add(sewerageCharge),
+		TaxHeadEstimate decimalEstimate = payService.roundOfDecimals(taxAmt.add(penalty).add(fee).add(sewerageCharge).add(additionalCharges),
 				rebate.add(exemption), isConnectionFee);
 		if (null != decimalEstimate) {
 			decimalEstimate.setCategory(taxHeadCategoryMap.get(decimalEstimate.getTaxHeadCode()));
@@ -168,17 +173,12 @@ public class SWCalculationServiceImpl implements SWCalculationService {
 			else
 				rebate = rebate.add(decimalEstimate.getEstimateAmount());
 		}
-		
-		System.out.println("Additional Charges : "+ sewerageConnection.getAdditionalCharges());
-		if (!(additionalCharges.compareTo(BigDecimal.ZERO) == 0)) {
-			additionalCharges = additionalCharges.add(BigDecimal.valueOf(sewerageConnection.getAdditionalCharges()));
-		}
 
 
 		BigDecimal totalAmount = taxAmt.add(penalty).add(rebate).add(exemption).add(sewerageCharge).add(fee).add(additionalCharges);
 		System.out.println("Total Amount : "+ totalAmount);
 		return Calculation.builder().totalAmount(totalAmount).taxAmount(taxAmt).penalty(penalty).exemption(exemption)
-				.charge(sewerageCharge).fee(fee).sewerageConnection(sewerageConnection).rebate(rebate)
+				.charge(sewerageCharge).fee(fee).additionalCharges(additionalCharges).sewerageConnection(sewerageConnection).rebate(rebate)
 				.tenantId(tenantId).taxHeadEstimates(estimates).billingSlabIds(billingSlabIds)
 				.connectionNo(criteria.getConnectionNo()).applicationNO(criteria.getApplicationNo()).build();
 	}
