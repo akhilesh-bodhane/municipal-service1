@@ -107,13 +107,16 @@ public class EstimationService {
 		
 		BigDecimal additionalCharges = new BigDecimal(
 				connection.getAdditionalCharges() == null ? 0.0 : connection.getAdditionalCharges());
+	    System.out.println("Value of Additional Charges : " + connection.getAdditionalCharges());
 		// sewerage_charge
 		estimates.add(TaxHeadEstimate.builder().taxHeadCode(SWCalculationConstant.SW_CHARGE)
 				.estimateAmount(sewarageCharge.setScale(2, 2)).build());
 		
 		if (!(additionalCharges.compareTo(BigDecimal.ZERO) == 0))
+			System.out.println("Estimate Added : " + estimates);
 			estimates.add(TaxHeadEstimate.builder().taxHeadCode(SWCalculationConstant.SW_OTHER_CHARGE)
 					.estimateAmount(additionalCharges.setScale(2, 2)).build());
+			System.out.println("Estimate Added : " + estimates);
 
 		// sewerage cess
 		if (timeBasedExemeptionMasterMap.get(SWCalculationConstant.SW_SEWERAGE_CESS_MASTER) != null) {
