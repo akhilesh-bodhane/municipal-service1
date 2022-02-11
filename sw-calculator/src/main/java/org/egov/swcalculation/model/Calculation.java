@@ -46,6 +46,9 @@ public class Calculation {
 	
 	@JsonProperty("charge")
 	private BigDecimal charge;
+	
+	@JsonProperty("additionalCharges")
+	private BigDecimal additionalCharges;
 
 	List<TaxHeadEstimate> taxHeadEstimates;
 
