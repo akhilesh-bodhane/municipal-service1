@@ -172,7 +172,8 @@ public class SWCalculationServiceImpl implements SWCalculationService {
 		}
 
 		System.out.println("Outside Additional Charges : "+ sewerageConnection.getAdditionalCharges());
-		if (!(additionalCharges.compareTo(BigDecimal.ZERO) == 0)) {
+		
+		if (!(sewerageConnection.getAdditionalCharges() == 0) || !(sewerageConnection.getAdditionalCharges() == null)) {
 			additionalCharges = additionalCharges.add(BigDecimal.valueOf(sewerageConnection.getAdditionalCharges()));
 			System.out.println("Inside Additional Charges : "+ sewerageConnection.getAdditionalCharges());
 		}
