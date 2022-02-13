@@ -162,8 +162,6 @@ public class SWCalculationServiceImpl implements SWCalculationService {
 		TaxHeadEstimate decimalEstimate = payService.roundOfDecimals(taxAmt.add(penalty).add(fee).add(sewerageCharge),
 				rebate.add(exemption), isConnectionFee);
 		
-		System.out.println("Decimal Estimate : " + decimalEstimate);
-		
 		if (null != decimalEstimate) {
 			decimalEstimate.setCategory(taxHeadCategoryMap.get(decimalEstimate.getTaxHeadCode()));
 			estimates.add(decimalEstimate);
@@ -172,8 +170,6 @@ public class SWCalculationServiceImpl implements SWCalculationService {
 			else
 				rebate = rebate.add(decimalEstimate.getEstimateAmount());
 		}
-		
-		System.out.println("Decimal Estimate : " + decimalEstimate.getEstimateAmount());
 
 		System.out.println("Outside Additional Charges : "+ sewerageConnection.getAdditionalCharges());
 		if (!(additionalCharges.compareTo(BigDecimal.ZERO) == 0)) {
