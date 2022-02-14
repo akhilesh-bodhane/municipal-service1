@@ -390,6 +390,7 @@ public class EstimationService {
 			estimates.add(TaxHeadEstimate.builder().taxHeadCode(SWCalculationConstant.SW_ONE_TIME_FEE)
 					.estimateAmount(finalCharge.setScale(2, 2)).build());
 		
+		System.out.println("Additional Charges : " + criteria.getSewerageConnection().getAdditionalCharges());
 		if (!(additionalCharges.compareTo(BigDecimal.ZERO) == 0))
 			estimates.add(TaxHeadEstimate.builder().taxHeadCode(SWCalculationConstant.SW_OTHER_CHARGE)
 					.estimateAmount(additionalCharges.setScale(2, 2)).build());
