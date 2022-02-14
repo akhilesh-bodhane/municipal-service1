@@ -53,6 +53,8 @@ public class CalculationService {
 			CalculationReq calRequest = CalculationReq.builder().calculationCriteria(calculationCriterias)
 					.requestInfo(request.getRequestInfo()).isconnectionCalculation(false).build();
 			try {
+			    System.out.println("URI : " + uri);
+			    System.out.println("Call Request : " + calRequest);
 				Object response = serviceRequestRepository.fetchResult(uri, calRequest);
 				CalculationRes calResponse = mapper.convertValue(response, CalculationRes.class);
 				log.info(mapper.writeValueAsString(calResponse));
