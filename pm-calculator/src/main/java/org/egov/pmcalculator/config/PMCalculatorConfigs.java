@@ -71,4 +71,13 @@ public class PMCalculatorConfigs {
 
 	@Value("${egov.mdms.search.endpoint}")
 	private String mdmsSearchEndpoint;
+	
+	@Value("${egov.taxhead.baseroadcuttax.ut}")
+	private String baseRoadCutTaxHeadUT;
+
+	@Value("${egov.taxhead.baseroadcutfee.ut}")
+	private String baseRoadCutFeeHeadUT;
+
+	@Value("${egov.taxhead.baseroadcutfeebank.ut}")
+	private String baseRoadCutFeeBankHeadUT;
 }

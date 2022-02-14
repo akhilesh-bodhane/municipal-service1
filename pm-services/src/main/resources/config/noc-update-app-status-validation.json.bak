@@ -1942,6 +1942,11 @@
 					"mandatory": "true",
 					"validateRegularExp": "^[a-zA-Z0-9.',\n\r ]{1,128}$"
 				},
+				"assignee": {
+					"fieldName": "remarks",
+					"mandatory": "false",
+					"validateRegularExp": "^[a-zA-Z0-9- ]{1,128}$"
+				},
 				"uploadDocuments": {
 					"fieldName": "uploadDocuments",
 					"mandatory": "false",
