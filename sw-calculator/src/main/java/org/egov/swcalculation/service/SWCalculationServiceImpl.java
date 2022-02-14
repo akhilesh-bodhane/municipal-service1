@@ -122,7 +122,6 @@ public class SWCalculationServiceImpl implements SWCalculationService {
 		BigDecimal exemption = BigDecimal.ZERO;
 		BigDecimal rebate = BigDecimal.ZERO;
 		BigDecimal fee = BigDecimal.ZERO;
-		BigDecimal additionalCharges = BigDecimal.ZERO;
 
 		for (TaxHeadEstimate estimate : estimates) {
 
@@ -171,18 +170,22 @@ public class SWCalculationServiceImpl implements SWCalculationService {
 				rebate = rebate.add(decimalEstimate.getEstimateAmount());
 		}
 
-		System.out.println("Outside Additional Charges : "+ sewerageConnection.getAdditionalCharges());
-		
-		if (!(sewerageConnection.getAdditionalCharges() == 0) || !(sewerageConnection.getAdditionalCharges() == null)) {
-			additionalCharges = additionalCharges.add(BigDecimal.valueOf(sewerageConnection.getAdditionalCharges()));
-			System.out.println("Inside Additional Charges : "+ sewerageConnection.getAdditionalCharges());
-		}
+		/*
+		 * System.out.println("Outside Additional Charges : "+
+		 * sewerageConnection.getAdditionalCharges());
+		 * 
+		 * if (!(sewerageConnection.getAdditionalCharges() == 0) ||
+		 * !(sewerageConnection.getAdditionalCharges() == null)) { additionalCharges =
+		 * additionalCharges.add(BigDecimal.valueOf(sewerageConnection.
+		 * getAdditionalCharges())); System.out.println("Inside Additional Charges : "+
+		 * sewerageConnection.getAdditionalCharges()); }
+		 */
 
-		BigDecimal totalAmount = taxAmt.add(penalty).add(rebate).add(exemption).add(sewerageCharge).add(fee).add(additionalCharges);
+		BigDecimal totalAmount = taxAmt.add(penalty).add(rebate).add(exemption).add(sewerageCharge).add(fee);
 		
 		System.out.println("Total Amount : "+ totalAmount);
 		return Calculation.builder().totalAmount(totalAmount).taxAmount(taxAmt).penalty(penalty).exemption(exemption)
-				.charge(sewerageCharge).fee(fee).additionalCharges(additionalCharges).sewerageConnection(sewerageConnection).rebate(rebate)
+				.charge(sewerageCharge).fee(fee).sewerageConnection(sewerageConnection).rebate(rebate)
 				.tenantId(tenantId).taxHeadEstimates(estimates).billingSlabIds(billingSlabIds)
 				.connectionNo(criteria.getConnectionNo()).applicationNO(criteria.getApplicationNo()).build();
 	}
