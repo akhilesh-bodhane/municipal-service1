@@ -45,6 +45,7 @@ public class CalculationService {
 	public void calculateFeeAndGenerateDemand(SewerageConnectionRequest request, Property property) {
 		if(SWConstants.FORWARD_FOR_PAYMENT_ACTION.equalsIgnoreCase(request.getSewerageConnection().getProcessInstance().getAction())){
 			StringBuilder uri = sewerageServicesUtil.getCalculatorURL();
+			System.out.println("Outside Try URI : " + uri);
 			CalculationCriteria criteria = CalculationCriteria.builder()
 					.applicationNo(request.getSewerageConnection().getApplicationNo())
 					.sewerageConnection(request.getSewerageConnection())
@@ -52,9 +53,10 @@ public class CalculationService {
 			List<CalculationCriteria> calculationCriterias = Arrays.asList(criteria);
 			CalculationReq calRequest = CalculationReq.builder().calculationCriteria(calculationCriterias)
 					.requestInfo(request.getRequestInfo()).isconnectionCalculation(false).build();
+			System.out.println("Outside Try Call Request : " + calRequest);
 			try {
-			    System.out.println("URI : " + uri);
-			    System.out.println("Call Request : " + calRequest);
+			    System.out.println("Inside Try URI : " + uri);
+			    System.out.println("Inside Try Call Request : " + calRequest);
 				Object response = serviceRequestRepository.fetchResult(uri, calRequest);
 				CalculationRes calResponse = mapper.convertValue(response, CalculationRes.class);
 				log.info(mapper.writeValueAsString(calResponse));
