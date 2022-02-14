@@ -390,11 +390,12 @@ public class EstimationService {
 			estimates.add(TaxHeadEstimate.builder().taxHeadCode(SWCalculationConstant.SW_ONE_TIME_FEE)
 					.estimateAmount(finalCharge.setScale(2, 2)).build());
 		
-		System.out.println("Additional Charges : " + criteria.getSewerageConnection().getAdditionalCharges());
-		if (!(additionalCharges.compareTo(BigDecimal.ZERO) == 0))
+		System.out.println("Outside Additional Charges Tax Head : " + criteria.getSewerageConnection().getAdditionalCharges());
+		additionalCharges = additionalCharges.add(BigDecimal.valueOf(criteria.getSewerageConnection().getAdditionalCharges()));
+		if (!(additionalCharges.compareTo(BigDecimal.ZERO) == 0) || !(additionalCharges.equals(null)))
 			estimates.add(TaxHeadEstimate.builder().taxHeadCode(SWCalculationConstant.SW_OTHER_CHARGE)
 					.estimateAmount(additionalCharges.setScale(2, 2)).build());
-
+		System.out.println("Inside Additional Charges Tax Head : " + additionalCharges);
 		// addAdhocPenalityAndRebate(estimates, criteria.getSewerageConnection());
 		return estimates;
 	}
