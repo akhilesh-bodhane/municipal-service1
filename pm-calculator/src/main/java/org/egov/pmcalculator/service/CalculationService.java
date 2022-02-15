@@ -182,6 +182,22 @@ public class CalculationService {
 				taxHeadEstimates.add(taxHeadEstimate);
 			}*/
 			
+		}else if (calulationCriteria.getOpmsDetail().getApplicationType().equals("UTROADCUTNOC")) {
+			estimate.setTaxHeadCode(
+					config.getBaseRoadCutFeeHeadUT() + "_" + calulationCriteria.getOpmsDetail().getRoadCutDivision());
+			estimate.setEstimateAmount(new BigDecimal(calulationCriteria.getOpmsDetail().getAmountRoadCut()).setScale(0,
+					BigDecimal.ROUND_UP));
+/*
+			TaxHeadEstimate estimate2 = new TaxHeadEstimate();
+			estimate2.setCategory(Category.BANKPERFORMANCE);
+			estimate2.setTaxHeadCode(
+					config.getBaseRoadCutFeeBankHead() + "_" + calulationCriteria.getOpmsDetail().getRoadCutDivision());
+			estimate2.setEstimateAmount(new BigDecimal(calulationCriteria.getOpmsDetail().getBankPerformanceRoadCut())
+					.setScale(0, BigDecimal.ROUND_UP));
+			taxHeadEstimates.add(estimate2);
+*/
+			taxHeadEstimates.addAll(tax);
+
 		}
 		taxHeadEstimates.add(estimate);
 		estimatesAndSlabs.setEstimates(taxHeadEstimates);
@@ -212,7 +228,12 @@ public class CalculationService {
 		} else if (calulationCriteria.getOpmsDetail().getApplicationType().equals("PETNOC")) {
 			estimate.setTaxHeadCode(config.getBasePetTaxHead());
 			estimate.setEstimateAmount(totalTax);
-		}
+		} else if (calulationCriteria.getOpmsDetail().getApplicationType().equals("UTROADCUTNOC")) {
+			estimate.setTaxHeadCode(
+					config.getBaseRoadCutTaxHeadUT() + "_" + calulationCriteria.getOpmsDetail().getRoadCutDivision());
+			estimate.setEstimateAmount(new BigDecimal(calulationCriteria.getOpmsDetail().getGstRoadCut()).setScale(0,
+					BigDecimal.ROUND_UP));
+		} 
 		/* else if (calulationCriteria.getOpmsDetail().getApplicationType().equals("SELLMEATNOC")) {
 				estimate.setTaxHeadCode(config.getBaseSellMeatTaxHead());
 				estimate.setEstimateAmount(totalTax);
