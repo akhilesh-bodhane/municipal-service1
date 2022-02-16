@@ -79,6 +79,8 @@ public class SWCalculationConstant {
 
 	public static final String SW_WATER_CESS = "SW_SEWERAGE_CESS";
 
+	public static final String SEWERAGE_ADD_CHARGES = "SEWERAGE_ADD_CHARGES";
+	
 	public static final String SW_CHARGE = "SW_CHARGE";
 
 	/**
