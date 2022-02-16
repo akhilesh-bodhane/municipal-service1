@@ -13,7 +13,9 @@ public class SWCalculationConstant {
 
 	public static final String TAXHEADMASTER_MASTER_KEY = "SW_TAX";
 
-	public static final String FINANCIALYEAR_MASTER_KEY = "2019-20";
+	/* public static final String FINANCIALYEAR_MASTER_KEY = "2019-20"; */
+	
+	public static final String FINANCIALYEAR_MASTER_KEY = "2021-22";
 
 	public static final String FINANCIAL_YEAR_STARTING_DATE = "startingDate";
 
