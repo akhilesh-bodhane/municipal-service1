@@ -137,6 +137,10 @@
        "mobileNumber":{
          "mandatory":"true",
          "validateRegularExp":"(0/91)?[1-9][0-9]{9}"
+      },
+	  "classificationOfRoads":{
+         "mandatory":"true",
+         "validateRegularExp":"^[a-zA-Z0-9-,_ ]{1,200}"
       }
    },
    "SELLMEATNOC":{
@@ -384,7 +388,11 @@
          "mandatory":"true",
          "validateRegularExp":"^[a-zA-Z0-9-,_ ]{1,200}"
       },
-	  "withinThePremises":{
+	  "subDivision":{
+         "mandatory":"true",
+         "validateRegularExp":"^[a-zA-Z0-9-,_ ]{1,200}"
+      },
+	  "area":{
          "mandatory":"true",
          "validateRegularExp":"^[a-zA-Z0-9-,_ ]{1,200}"
       }
