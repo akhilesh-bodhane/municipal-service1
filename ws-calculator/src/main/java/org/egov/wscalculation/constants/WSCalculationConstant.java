@@ -335,11 +335,15 @@ public class WSCalculationConstant {
 	
 	public static final String WS_TEMPORARY_DISCONNECTION = "TEMPORARY_DISCONNECTION";
 	
+	public static final String WS_TEMPORARY_WSCONNECTION = "TEMPORARY_WSCONNECTION";
+	
 	public static final String WS_REACTIVATE = "REACTIVATE_CONNECTION";
 
 	public static final String WS_APPLY_FOR_TEMP_TEMP_CON = "APPLY_FOR_TEMPORARY_TEMPORARY_CONNECTION";
 
 	public static final String WS_APPLY_FOR_TEMP_REGULAR_CON = "APPLY_FOR_TEMPORARY_REGULAR_CONNECTION";
+	
+	public static final String WS_APPLY_FOR_TEMP_CON = "APPLY_FOR_TEMPORARY_CONNECTION"; 
 	
 	public static final String WS_CHANGE_OWNER_INFO = "UPDATE_CONNECTION_HOLDER_INFO";
 

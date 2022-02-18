@@ -105,15 +105,22 @@ public class EstimationService {
 		List<TaxHeadEstimate> estimates = new ArrayList<>();
 		BigDecimal additionalCharges = BigDecimal.ZERO;
 		
-		additionalCharges = new BigDecimal(
-				connection.getAdditionalCharges() == null ? 0.0 : connection.getAdditionalCharges());
+		/*
+		 * BigDecimal additionalCharges = new BigDecimal(
+		 * connection.getAdditionalCharges() == null ? 0.0 :
+		 * connection.getAdditionalCharges());
+		 */
+	    System.out.println("Value of Additional Charges : " + connection.getAdditionalCharges());
 		// sewerage_charge
 		estimates.add(TaxHeadEstimate.builder().taxHeadCode(SWCalculationConstant.SW_CHARGE)
 				.estimateAmount(sewarageCharge.setScale(2, 2)).build());
 		
-		if (!(additionalCharges.compareTo(BigDecimal.ZERO) == 0))
+		
+		additionalCharges = additionalCharges.add(BigDecimal.valueOf(connection.getAdditionalCharges()));
+		if (!(additionalCharges.compareTo(BigDecimal.ZERO) == 0) || !(additionalCharges.equals(null)))
 			estimates.add(TaxHeadEstimate.builder().taxHeadCode(SWCalculationConstant.SW_OTHER_CHARGE)
 					.estimateAmount(additionalCharges.setScale(2, 2)).build());
+		 
 
 		// sewerage cess
 		if (timeBasedExemeptionMasterMap.get(SWCalculationConstant.SW_SEWERAGE_CESS_MASTER) != null) {
@@ -231,9 +238,11 @@ public class EstimationService {
 		estimates.add(TaxHeadEstimate.builder().taxHeadCode(SWCalculationConstant.SW_CHARGE)
 				.estimateAmount(sewarageCharge.setScale(2, 2)).build());
 		
+		
 		if (!(additionalCharges.compareTo(BigDecimal.ZERO) == 0))
 			estimates.add(TaxHeadEstimate.builder().taxHeadCode(SWCalculationConstant.SW_OTHER_CHARGE)
 					.estimateAmount(additionalCharges.setScale(2, 2)).build());
+
 		return estimates;
 	}
 
@@ -387,7 +396,10 @@ public class EstimationService {
 			estimates.add(TaxHeadEstimate.builder().taxHeadCode(SWCalculationConstant.SW_ONE_TIME_FEE)
 					.estimateAmount(finalCharge.setScale(2, 2)).build());
 		
-		if (!(additionalCharges.compareTo(BigDecimal.ZERO) == 0))
+		
+		additionalCharges = additionalCharges
+				.add(BigDecimal.valueOf(criteria.getSewerageConnection().getAdditionalCharges()));
+		if (!(additionalCharges.compareTo(BigDecimal.ZERO) == 0) || !(additionalCharges.equals(null)))
 			estimates.add(TaxHeadEstimate.builder().taxHeadCode(SWCalculationConstant.SW_OTHER_CHARGE)
 					.estimateAmount(additionalCharges.setScale(2, 2)).build());
 

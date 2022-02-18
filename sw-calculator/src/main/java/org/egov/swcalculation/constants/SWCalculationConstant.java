@@ -13,7 +13,9 @@ public class SWCalculationConstant {
 
 	public static final String TAXHEADMASTER_MASTER_KEY = "SW_TAX";
 
-	public static final String FINANCIALYEAR_MASTER_KEY = "2019-20";
+	public static final String FINANCIALYEAR_MASTER_KEY = "2019-20"; 
+	
+	/* public static final String FINANCIALYEAR_MASTER_KEY = "2021-22"; */
 
 	public static final String FINANCIAL_YEAR_STARTING_DATE = "startingDate";
 
@@ -79,6 +81,8 @@ public class SWCalculationConstant {
 
 	public static final String SW_WATER_CESS = "SW_SEWERAGE_CESS";
 
+	public static final String SEWERAGE_ADD_CHARGES = "OTHER_CHARGES_PHD4";
+	
 	public static final String SW_CHARGE = "SW_CHARGE";
 
 	/**
@@ -254,7 +258,7 @@ public class SWCalculationConstant {
 
 	public static final String SW_SECURITY_CHARGE = "SW_SECURITY_CHARGE";
 
-	public static final String SW_OTHER_CHARGE = "SW_OTHER_CHARGE";
+	public static final String SW_OTHER_CHARGE = "OTHER_CHARGES_PHD4";
 
 	public static final String SW_TAX_AND_CESS = "SW_TAX_AND_CESS";
 

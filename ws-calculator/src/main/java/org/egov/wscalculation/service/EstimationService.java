@@ -390,7 +390,7 @@ public class EstimationService {
 			taxHeadEstimates = getTaxHeadForwaterActivity(criteria, masterData, requestInfo);
 		} else {
 			if (criteria.getWaterConnection().getWaterApplicationType()
-					.equalsIgnoreCase(WSCalculationConstant.WS_TEMP_CONNECTION_TYPE)|| activityType.equalsIgnoreCase(WSCalculationConstant.WS_APPLY_FOR_TEMP_REGULAR_CON)) {
+					.equalsIgnoreCase(WSCalculationConstant.WS_TEMP_CONNECTION_TYPE)|| activityType.equalsIgnoreCase(WSCalculationConstant.WS_APPLY_FOR_TEMP_REGULAR_CON) || activityType.equalsIgnoreCase(WSCalculationConstant.WS_APPLY_FOR_TEMP_CON)) {
 				taxHeadEstimates = getTaxHeadForFeeEstimationForTempAppCon(criteria, masterData, requestInfo);
 			} else {
 				taxHeadEstimates = getTaxHeadForRegularConnection(criteria, masterData, requestInfo);
@@ -614,6 +614,7 @@ public class EstimationService {
 			BigDecimal formFee = BigDecimal.ZERO;
 			BigDecimal additionalCharges = BigDecimal.ZERO;
 			BigDecimal constructionCharges = BigDecimal.ZERO;
+			
 			if (multiplier != null) {
 
 				formFee = new BigDecimal(multiplier);
@@ -642,7 +643,8 @@ public class EstimationService {
 			return estimates;
 
 		} else if (criteria.getWaterConnection().getWaterApplication().getActivityType()
-				.equalsIgnoreCase(WSCalculationConstant.WS_APPLY_FOR_TEMP_REGULAR_CON)) {
+				.equalsIgnoreCase(WSCalculationConstant.WS_APPLY_FOR_TEMP_REGULAR_CON) || criteria.getWaterConnection().getWaterApplication().getActivityType()
+				.equalsIgnoreCase(WSCalculationConstant.WS_APPLY_FOR_TEMP_CON)) {
 			List<TaxHeadEstimate> estimates = new ArrayList<>();
 			BigDecimal securityFee = BigDecimal.ZERO;
 
