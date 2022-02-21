@@ -195,6 +195,9 @@ public class NULMConfiguration {
 
 	@Value("${persister.save.smidshg.member.topic}")
 	private String SmidShgMemberSaveTopic;
+	
+	@Value("${persister.save.smidalf.member.topic}")
+	private String SmidAlfMemberSaveTopic;	
 
 	@Value("${persister.update.smidshg.member.topic}")
 	private String SmidShgMemberUpdateTopic;

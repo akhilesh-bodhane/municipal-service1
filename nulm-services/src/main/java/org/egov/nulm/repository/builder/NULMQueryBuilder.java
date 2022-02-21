@@ -48,6 +48,8 @@ public class NULMQueryBuilder {
 			+ " TO_DATE(TO_CHAR(TO_TIMESTAMP(created_time / 1000), 'YYYY-MM-DD'),'YYYY-MM-DD') END  AND UPPER(name) like concat('%',case when UPPER(?)<>'' then UPPER(?) else UPPER(name) end,'%') AND application_status<>?  ORDER BY created_time desc";
 
 	public static final String SHG_UUID_EXIST_QUERY = "select count(*) from nulm_smid_shg_detail where shg_uuid=? and tenant_id=? and is_active='true'";
+	public static final String ALF_UUID_EXIST_QUERY = "select count(*) from nulm_smid_alf_details  where uuid=? and tenant_id=? and is_active='true'";
+	
 	public static final String MEMBER_UUID_EXIST_QUERY = "select count(*) from nulm_smid_shg_member_details where application_uuid=? and tenant_id=? and is_active='true'";
 	public static final String GET_MEMBER_STATUS_QUERY = "select MB.application_status from nulm_smid_shg_member_details MB  where MB.tenant_id=:tenantId and MB.is_active='true' AND MB.application_uuid=:applicationUuid";
 	public static final String GET_SHG_STATUS_QUERY = "select GP.status from nulm_smid_shg_detail GP  where GP.tenant_id=:tenantId and GP.is_active='true' AND GP.shg_uuid=:shgUuid";
@@ -81,6 +83,21 @@ public class NULMQueryBuilder {
 			+ "   OR TO_DATE(TO_CHAR(TO_TIMESTAMP(MB.created_time / 1000), 'YYYY-MM-DD'),'YYYY-MM-DD') >= CASE WHEN ?<>'' THEN DATE(?) ELSE\n"
 			+ "		TO_DATE(TO_CHAR(TO_TIMESTAMP(MB.created_time / 1000), 'YYYY-MM-DD'),'YYYY-MM-DD') END OR  TO_DATE(TO_CHAR(TO_TIMESTAMP(MB.created_time / 1000), 'YYYY-MM-DD'),'YYYY-MM-DD') <= CASE WHEN ?<>'' THEN DATE(?) ELSE \n"
 			+ "		TO_DATE(TO_CHAR(TO_TIMESTAMP(MB.created_time / 1000), 'YYYY-MM-DD'),'YYYY-MM-DD') END OR UPPER(GP.name) like concat('%',case when UPPER(?)<>'' then UPPER(?) else UPPER(GP.name) end,'%') OR UPPER(MB.name) like concat('%',case when UPPER(?)<>'' then UPPER(?) else UPPER(MB.name) end,'%') AND GP.shg_id=(case when ?  <>'' then ?  else GP.shg_id end) GROUP BY MB.application_uuid ORDER BY created_time desc";
+	
+	public static final String GET_SHG_MEMBER_QUERYY = "SELECT MB.application_uuid, MB.alf_uuid, MB.application_id, MB.nulm_application_id,MB.application_status, MB.name, MB.position_level, MB.gender, MB.dob,\n"
+			+ "MB.date_of_opening_account ,MB.adhar_no, MB.mother_name, MB.father_or_husband_name, MB.address, MB.phone_no,MB.mobile_no, MB.qualification, MB.email_id, MB.is_urban_poor, MB.is_minority,\n"
+			+ "MB.is_pwd, MB.is_street_vendor, MB.is_homeless, MB.is_insurance, MB.bpl_no,MB.minority, MB.caste, MB.ward_no, MB.name_as_per_adhar, MB.adhar_acknowledgement_no,\n"
+			+ "MB.insurance_through, document_attachemnt, MB.account_no, MB.bank_name,MB.branch_name, MB.remark, MB.tenant_id, MB.is_active, MB.created_by, MB.created_time,\n"
+			+ "MB.last_modified_by, MB.last_modified_time ,\n"
+			+ "array_to_json(array_agg(json_build_object('uuid',GP.uuid,'id',GP.id,'name',GP.name,\n"
+			+ "'address',GP.address,'dateOfFormation',\n"
+			+ "GP.date_of_formation,'dateOfOpeningAccount',GP.date_of_opening_account,'bankName',GP.bank_name,'branchName',GP.branch_name) ))as group \n"
+			+ "FROM public.nulm_smid_alf_member_details MB INNER  join nulm_smid_alf_details GP on GP.uuid=MB.alf_uuid OR GP.tenant_id=MB.tenant_id\n"
+			+ "WHERE application_id=(case when ?  <>'' then ?  else application_id end) OR MB.created_by=(case when ?  <>'' then ?  else MB.created_by end)  \n"
+			+ " OR MB.tenant_id=? OR MB.application_status=(case when ?  <>'' then ?  else MB.application_status end) OR MB.is_active='true'\n"
+			+ "   OR TO_DATE(TO_CHAR(TO_TIMESTAMP(MB.created_time / 1000), 'YYYY-MM-DD'),'YYYY-MM-DD') >= CASE WHEN ?<>'' THEN DATE(?) ELSE\n"
+			+ "		TO_DATE(TO_CHAR(TO_TIMESTAMP(MB.created_time / 1000), 'YYYY-MM-DD'),'YYYY-MM-DD') END OR  TO_DATE(TO_CHAR(TO_TIMESTAMP(MB.created_time / 1000), 'YYYY-MM-DD'),'YYYY-MM-DD') <= CASE WHEN ?<>'' THEN DATE(?) ELSE \n"
+			+ "		TO_DATE(TO_CHAR(TO_TIMESTAMP(MB.created_time / 1000), 'YYYY-MM-DD'),'YYYY-MM-DD') END OR UPPER(GP.name) like concat('%',case when UPPER(?)<>'' then UPPER(?) else UPPER(GP.name) end,'%') OR UPPER(MB.name) like concat('%',case when UPPER(?)<>'' then UPPER(?) else UPPER(MB.name) end,'%') AND GP.id=(case when ?  <>'' then ?  else GP.id end) GROUP BY MB.application_uuid ORDER BY created_time desc";
 
 	public static final String GET_SHG_MEMBER_COUNT_QUERY = "select count(*) from nulm_smid_shg_member_details where shg_uuid=? and tenant_id=? and is_active='true' and position_level='MEMBER'";
 	public static final String GET_ORGANIZATION_MOBILE_NO_QUERY = "select count(*) from nulm_organization where tenant_id=? and is_active='true'and mobile_no=? ";
