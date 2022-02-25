@@ -9,7 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 public class NULMQueryBuilder {
 	public static final String GET_SEP_APPLICATION_QUERY = "SELECT  NA.application_uuid,  NA.remark, NA.application_id,  NA.nulm_application_id,  NA.application_status, \n"
 			+ "        NA.name,  NA.gender,  NA.age,  NA.dob,  NA.adhar_no,  NA.mother_name,  NA.father_or_husband_name, \n"
-			+ "        NA.occupation,  NA.address,  NA.contact,  NA.since_how_long_in_chandigarh,  NA.qualification, \n"
+			+ "        NA.occupation,  NA.address,  NA.contact,  NA.since_how_long_in_chandigarh,  NA.qualification, NA.reasonForRejection, \n"
 			+ "        NA.category,  NA.is_urban_poor,  NA.is_minority,  NA.is_handicapped,  NA.is_loan_from_bankinginstitute, \n"
 			+ "        NA.is_repayment_made,  NA.bpl_no,  NA.minority,  NA.type_of_business_to_be_started, \n"
 			+ "        NA.previous_experience,  NA.place_of_work,NA.no_of_family_members, NA.task_committee_approved_amount,NA.task_committee_remark,NA.task_committee_action_date,NA.task_committee_status,NA.committee_bank_name,NA.committee_branch_name,NA.application_forwarded_on_date\n"

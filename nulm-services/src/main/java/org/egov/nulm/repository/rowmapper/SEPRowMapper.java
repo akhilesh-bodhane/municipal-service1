@@ -94,6 +94,7 @@ public class SEPRowMapper implements ResultSetExtractor<List<SepApplication>> {
 					sepapp.setSanctionDate(rs.getString("sanction_date"));
 					sepapp.setSanctionRemarks(rs.getString("sanction_remarks"));
 					sepapp.setTypeOfBusinessToBeStarted(rs.getString("type_of_business_to_be_started"));
+					sepapp.setReasonForRejection(rs.getString("reasonForRejection"));
 					List<SepApplicationDocument> documentAttachment = null;
 					if (rs.getString("document") != null) {
 						documentAttachment = Arrays

@@ -147,6 +147,7 @@ public class SepService {
 					SepApplication.class);
 
 			checkValidation(sepapplication);
+			sepapplication.setReasonForRejection(sepapplication.getReasonForRejection());
 			sepapplication.setIsActive(true);
 			sepapplication.setAuditDetails(
 					auditDetailsUtil.getAuditDetails(seprequest.getRequestInfo(), CommonConstants.ACTION_UPDATE));

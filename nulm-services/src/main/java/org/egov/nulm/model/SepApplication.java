@@ -123,6 +123,9 @@ public class SepApplication {
 	@JsonProperty("qualification")
 	private String qualification ;	
 	
+	@JsonProperty("reasonForRejection")
+	private String reasonForRejection ;	
+	
 	
 	@JsonProperty("category")
 	private String category ;
