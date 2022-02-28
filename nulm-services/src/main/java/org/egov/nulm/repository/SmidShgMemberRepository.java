@@ -153,6 +153,7 @@ public List<SmidShgMemberApplication> saveGuest(List<SmidShgMemberApplication> u
 //		SmidShgMemberApplication smidApplication =null;
 //		NulmShgMemberRequest infoWrapper = NulmShgMemberRequest.builder().SmidShgMemberApplication(userList);
 	memberrequest.setSmidShgMemberApplication(userList);
+	producer.push(config.getSmidShgMemberHardDeleteTopic(),memberrequest);
 	producer.push(config.getSmidShgMemberSaveTopic(), memberrequest);
 
 ////		inviteGuests.addAll(existing);
