@@ -25,6 +25,8 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -34,6 +36,8 @@ public class SmidShgMemberRepository {
 	private JdbcTemplate jdbcTemplate;
 
 	private Producer producer;
+	
+	private final ObjectMapper objectMapper;
 
 	private NULMConfiguration config;
 
@@ -44,16 +48,82 @@ public class SmidShgMemberRepository {
 	public NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
 	@Autowired
-	public SmidShgMemberRepository(JdbcTemplate jdbcTemplate, Producer producer, NULMConfiguration config,
+	public SmidShgMemberRepository(JdbcTemplate jdbcTemplate, Producer producer, NULMConfiguration config,ObjectMapper objectMapper,
 			ShgMemberRowMapper shgMemberRowMapper, ColumnsRowMapper columnsRowMapper) {
 		this.jdbcTemplate = jdbcTemplate;
 		this.producer = producer;
 		this.config = config;
+		this.objectMapper = objectMapper;
 		this.shgMemberRowMapper = shgMemberRowMapper;
 		this.columnsRowMapper = columnsRowMapper;
 	}
 	
 public List<SmidShgMemberApplication> saveGuest(List<SmidShgMemberApplication> userList, NulmShgMemberRequest memberrequest) {
+	
+
+		SmidShgMemberApplication[] shgg = objectMapper.convertValue(memberrequest.getSmidShgMemberApplication(),
+				SmidShgMemberApplication[].class);
+		SmidShgMemberApplication shg = shgg[0];
+	List<SmidShgMemberApplication> smid = new ArrayList<>();
+	List<SmidShgMemberApplication> finallist = new ArrayList<>();
+	
+		
+			
+				 smid = jdbcTemplate.query(NULMQueryBuilder.GET_SHG_MEMBER_QUERY,
+//						new Object[] { memberrequest.getApplicationId(), memberrequest.getApplicationId(), "",
+								new Object[] { shg.getApplicationId(), shg.getApplicationId(), "",
+//						new Object[] { shg[0].getShgUuid(), shg[0].getShgUuid(), "",
+								"", shg.getTenantId(),
+								
+								shg.getApplicationStatus() == null ? ""
+										: shg.getApplicationStatus().toString(),
+								shg.getApplicationStatus() == null ? ""
+										: shg.getApplicationStatus().toString(),
+										shg.getFromDate(), shg.getFromDate(),
+										shg.getToDate(), shg.getToDate(),
+										shg.getGroupName(),shg.getGroupName(),
+										shg.getName(),shg.getName(),
+										shg.getShgId(),shg.getShgId()
+										},
+						shgMemberRowMapper);
+					List<SmidShgMemberApplication> smidd = new ArrayList<>(); 
+			
+			for (SmidShgMemberApplication smidShgMemberApplication : smid) {
+				String shgUuid = smidShgMemberApplication.getShgUuid();
+				String shgId = smidShgMemberApplication.getShgId();
+				if (shgUuid.equals(shg.getShgUuid()) ) {
+					
+					smidd.add(smidShgMemberApplication);
+					
+				}
+				
+			}
+			for (SmidShgMemberApplication smidShgMemberApplication : smidd) {
+				System.out.println(smidShgMemberApplication.getName());
+			}
+
+					System.out.println(smidd);	  
+				
+					
+					for (SmidShgMemberApplication smidShgMemberApplication : smidd) {
+//						for (SmidShgMemberApplication smidShgMemberApplication2 : userList)
+						for (int smidShgMemberApplication2 = 0; smidShgMemberApplication2 < userList.size(); smidShgMemberApplication2++) 
+						{
+							if((smidShgMemberApplication.getName().equalsIgnoreCase(userList.get(smidShgMemberApplication2).getName()))&&
+							(smidShgMemberApplication.getAdharNo() .equalsIgnoreCase(userList.get(smidShgMemberApplication2).getAdharNo()))&&
+							(smidShgMemberApplication.getMobileNo().equalsIgnoreCase(userList.get(smidShgMemberApplication2).getMobileNo()))&&
+							(smidShgMemberApplication.getAddress().equalsIgnoreCase(userList.get(smidShgMemberApplication2).getAddress()))) {
+								userList.remove(smidShgMemberApplication2);
+							}
+							else {
+//								finallist.add(smidShgMemberApplication2);	
+							}
+						}
+					}
+				
+					System.out.println(userList.size());
+					System.out.println(smidd.size());
+					
 
 //	public void saveGuest(List<SmidShgMemberApplication> userList, NulmShgMemberRequest memberrequest) {
 
