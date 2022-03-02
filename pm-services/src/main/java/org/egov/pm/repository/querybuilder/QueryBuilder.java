@@ -276,7 +276,7 @@ public class QueryBuilder {
 		return petsQuery.toString();
 	}
 
-	private static final String BASE_QUERY = "select noc_number \"applicationId\",applicant_name \"applicantName\",application_status \"applicationStatus\",sector \"sector\",EA.created_time \"createdTime\" from egpm_noc_application_detail ED inner join egpm_noc_application EA on ED.application_uuid=EA.application_uuid ";
+	private static final String BASE_QUERY = "select noc_number \"applicationId\",applicant_name \"applicantName\",application_status \"applicationStatus\",sector \"sector\",EA.created_time \"createdTime\", EA.application_type \"applicationType\" from egpm_noc_application_detail ED inner join egpm_noc_application EA on ED.application_uuid=EA.application_uuid ";
 
 	public static String getSearchQuery(RequestData criteria, List<Object> preparedStmtList) {
 		StringBuilder builder = new StringBuilder(BASE_QUERY);
