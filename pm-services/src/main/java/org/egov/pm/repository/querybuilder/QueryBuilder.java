@@ -282,7 +282,7 @@ public class QueryBuilder {
 		StringBuilder builder = new StringBuilder(BASE_QUERY);
 		JSONObject dataPayload = criteria.getDataPayload();
 		// service type
-		if (criteria.getApplicationType() != null) {
+		if (criteria.getApplicationType() != null) { 
 			addClauseIfRequired(preparedStmtList, builder);
 			builder.append(" EA.application_type=?");
 			preparedStmtList.add(criteria.getApplicationType());
