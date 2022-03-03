@@ -5412,5 +5412,1309 @@
 				}
 			}
 		}
-	}
+	},
+	"UTROADCUTNOC":{
+      "CITIZEN-DRAFT":{
+         "INITIATED":{
+            
+         }
+      },
+      "CITIZEN-REASSIGN":{
+         "RESENT":{
+            
+         }
+      },
+      "CITIZEN-PENDINGFORPAYMENT":{
+         "PAID":{
+            "amount":{
+               "fieldName":"amount",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            },
+            "gstAmount":{
+               "fieldName":"gstAmount",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            }
+         }
+      },
+      "UTJE-INITIATED":{
+         "REVIEWUTSDE":{
+            "remarks":{
+               "fieldName":"remarks",
+               "mandatory":"true",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "assignee":{
+               "fieldName":"remarks",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9- ]{1,128}$"
+            },
+            "uploadDocuments":{
+               "fieldName":"uploadDocuments",
+               "mandatory":"false",
+               "validateRegularExp":"\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+            }
+         },
+         "REASSIGN":{
+            "remarks":{
+               "fieldName":"remarks",
+               "mandatory":"true",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "assignee":{
+               "fieldName":"remarks",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9- ]{1,128}$"
+            },
+            "uploadDocuments":{
+               "fieldName":"uploadDocuments",
+               "mandatory":"false",
+               "validateRegularExp":"\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+            }
+         }
+      },
+      "UTSDE-REVIEWUTSDE":{
+         "REVIEWOFUTEE L1":{
+            "remarks":{
+               "fieldName":"remarks",
+               "mandatory":"true",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "assignee":{
+               "fieldName":"remarks",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9- ]{1,128}$"
+            },
+            "uploadDocuments":{
+               "fieldName":"uploadDocuments",
+               "mandatory":"false",
+               "validateRegularExp":"\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+            }
+         },
+         "REASSIGNTOUTJE":{
+            "remarks":{
+               "fieldName":"remarks",
+               "mandatory":"true",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "assignee":{
+               "fieldName":"remarks",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9- ]{1,128}$"
+            },
+            "uploadDocuments":{
+               "fieldName":"uploadDocuments",
+               "mandatory":"false",
+               "validateRegularExp":"\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+            }
+         }
+      },
+      "UTJE-REASSIGNTOUTJE":{
+         "REVIEWUTSDE":{
+            "remarks":{
+               "fieldName":"remarks",
+               "mandatory":"true",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "assignee":{
+               "fieldName":"remarks",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9- ]{1,128}$"
+            },
+            "uploadDocuments":{
+               "fieldName":"uploadDocuments",
+               "mandatory":"false",
+               "validateRegularExp":"\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+            }
+         },
+         "REASSIGN":{
+            "remarks":{
+               "fieldName":"remarks",
+               "mandatory":"true",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "assignee":{
+               "fieldName":"remarks",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9- ]{1,128}$"
+            },
+            "uploadDocuments":{
+               "fieldName":"uploadDocuments",
+               "mandatory":"false",
+               "validateRegularExp":"\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+            }
+         }
+      },
+      "UTEE-REVIEWOFUTEE L1":{
+         "VERIFYUTHDMEE L1":{
+            "remarks":{
+               "fieldName":"remarks",
+               "mandatory":"true",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "assignee":{
+               "fieldName":"remarks",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9- ]{1,128}$"
+            },
+            "uploadDocuments":{
+               "fieldName":"uploadDocuments",
+               "mandatory":"false",
+               "validateRegularExp":"\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+            }
+         },
+         "REASSIGNTOUTSDE":{
+            "remarks":{
+               "fieldName":"remarks",
+               "mandatory":"true",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "assignee":{
+               "fieldName":"remarks",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9- ]{1,128}$"
+            },
+            "uploadDocuments":{
+               "fieldName":"uploadDocuments",
+               "mandatory":"false",
+               "validateRegularExp":"\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+            }
+         }
+      },
+      "UTSDE-REASSIGNTOUTSDE":{
+         "REVIEWOFUTEE L1":{
+            "remarks":{
+               "fieldName":"remarks",
+               "mandatory":"true",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "assignee":{
+               "fieldName":"remarks",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9- ]{1,128}$"
+            },
+            "uploadDocuments":{
+               "fieldName":"uploadDocuments",
+               "mandatory":"false",
+               "validateRegularExp":"\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+            }
+         },
+         "REASSIGNTOUTJE":{
+            "remarks":{
+               "fieldName":"remarks",
+               "mandatory":"true",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "assignee":{
+               "fieldName":"remarks",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9- ]{1,128}$"
+            },
+            "uploadDocuments":{
+               "fieldName":"uploadDocuments",
+               "mandatory":"false",
+               "validateRegularExp":"\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+            }
+         }
+      },
+      "UTHDMEE-VERIFYUTHDMEE L1":{
+         "VERIFYUTDMEE":{
+            "remarks":{
+               "fieldName":"remarks",
+               "mandatory":"true",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "assignee":{
+               "fieldName":"remarks",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9- ]{1,128}$"
+            },
+            "uploadDocuments":{
+               "fieldName":"uploadDocuments",
+               "mandatory":"false",
+               "validateRegularExp":"\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+            }
+         }
+      },
+      "UTDMEE-VERIFYUTDMEE":{
+         "VERIFYUTHDMEE L2":{
+            "remarks":{
+               "fieldName":"remarks",
+               "mandatory":"true",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "assignee":{
+               "fieldName":"remarks",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9- ]{1,128}$"
+            },
+            "uploadDocuments":{
+               "fieldName":"uploadDocuments",
+               "mandatory":"false",
+               "validateRegularExp":"\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+            }
+         },
+         "EDITEDATUTDMEE":{
+            "remarks":{
+               "fieldName":"remarks",
+               "mandatory":"true",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "assignee":{
+               "fieldName":"remarks",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9- ]{1,128}$"
+            },
+            "uploadDocuments":{
+               "fieldName":"uploadDocuments",
+               "mandatory":"false",
+               "validateRegularExp":"\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+            },
+            "isAnyChangeInRoadCutEstimation":{
+               "fieldName":"isAnyChangeInRoadCutEstimation",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "amount":{
+               "fieldName":"amount",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            },
+            "gstAmount":{
+               "fieldName":"gstAmount",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            },
+            "performanceBankGuaranteeCharges":{
+               "fieldName":"performanceBankGuaranteeCharges",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            }
+         }
+      },
+      "UTDMEE-EDITEDATUTDMEE":{
+         "EDITEDATUTDMEE":{
+            "remarks":{
+               "fieldName":"remarks",
+               "mandatory":"true",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "assignee":{
+               "fieldName":"remarks",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9- ]{1,128}$"
+            },
+            "uploadDocuments":{
+               "fieldName":"uploadDocuments",
+               "mandatory":"false",
+               "validateRegularExp":"\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+            },
+            "isAnyChangeInRoadCutEstimation":{
+               "fieldName":"isAnyChangeInRoadCutEstimation",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "amount":{
+               "fieldName":"amount",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            },
+            "gstAmount":{
+               "fieldName":"gstAmount",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            },
+            "performanceBankGuaranteeCharges":{
+               "fieldName":"performanceBankGuaranteeCharges",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            }
+         },
+         "VERIFYUTHDMEE L2":{
+            "remarks":{
+               "fieldName":"remarks",
+               "mandatory":"true",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "assignee":{
+               "fieldName":"remarks",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9- ]{1,128}$"
+            },
+            "uploadDocuments":{
+               "fieldName":"uploadDocuments",
+               "mandatory":"false",
+               "validateRegularExp":"\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+            }
+         }
+      },
+      "HDMEE-VERIFYUTHDMEE L2":{
+         "REVIEWOFUTEE L2":{
+            "remarks":{
+               "fieldName":"remarks",
+               "mandatory":"true",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "assignee":{
+               "fieldName":"remarks",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9- ]{1,128}$"
+            },
+            "uploadDocuments":{
+               "fieldName":"uploadDocuments",
+               "mandatory":"false",
+               "validateRegularExp":"\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+            }
+         },
+         "REASSIGNTOUTDMEE":{
+            "remarks":{
+               "fieldName":"remarks",
+               "mandatory":"true",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "assignee":{
+               "fieldName":"remarks",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9- ]{1,128}$"
+            },
+            "uploadDocuments":{
+               "fieldName":"uploadDocuments",
+               "mandatory":"false",
+               "validateRegularExp":"\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+            }
+         }
+      },
+      "UTDMEE-REASSIGNTOUTDMEE":{
+         "VERIFYUTHDMEE L2":{
+            "remarks":{
+               "fieldName":"remarks",
+               "mandatory":"true",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "assignee":{
+               "fieldName":"remarks",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9- ]{1,128}$"
+            },
+            "uploadDocuments":{
+               "fieldName":"uploadDocuments",
+               "mandatory":"false",
+               "validateRegularExp":"\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+            }
+         },
+         "EDITEDATUTDMEE":{
+            "remarks":{
+               "fieldName":"remarks",
+               "mandatory":"true",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "assignee":{
+               "fieldName":"remarks",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9- ]{1,128}$"
+            },
+            "uploadDocuments":{
+               "fieldName":"uploadDocuments",
+               "mandatory":"false",
+               "validateRegularExp":"\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+            },
+            "isAnyChangeInRoadCutEstimation":{
+               "fieldName":"isAnyChangeInRoadCutEstimation",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "amount":{
+               "fieldName":"amount",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            },
+            "gstAmount":{
+               "fieldName":"gstAmount",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            },
+            "performanceBankGuaranteeCharges":{
+               "fieldName":"performanceBankGuaranteeCharges",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            }
+         }
+      },
+      "EE-REVIEWOFUTEE L2":{
+         "REVIEWOFUTSE L1":{
+            "remarks":{
+               "fieldName":"remarks",
+               "mandatory":"true",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "assignee":{
+               "fieldName":"remarks",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9- ]{1,128}$"
+            },
+            "uploadDocuments":{
+               "fieldName":"uploadDocuments",
+               "mandatory":"false",
+               "validateRegularExp":"\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+            }
+         },
+         "REASSIGNTOUTHDMEE":{
+            "remarks":{
+               "fieldName":"remarks",
+               "mandatory":"true",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "assignee":{
+               "fieldName":"remarks",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9- ]{1,128}$"
+            },
+            "uploadDocuments":{
+               "fieldName":"uploadDocuments",
+               "mandatory":"false",
+               "validateRegularExp":"\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+            }
+         }
+      },
+      "UTHDMEE-REASSIGNTOUTHDMEE":{
+         "VERIFYUTDMEE":{
+            "remarks":{
+               "fieldName":"remarks",
+               "mandatory":"true",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "assignee":{
+               "fieldName":"remarks",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9- ]{1,128}$"
+            },
+            "uploadDocuments":{
+               "fieldName":"uploadDocuments",
+               "mandatory":"false",
+               "validateRegularExp":"\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+            }
+         },
+         "REASSIGNTOUTDMEE":{
+            "remarks":{
+               "fieldName":"remarks",
+               "mandatory":"true",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "assignee":{
+               "fieldName":"remarks",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9- ]{1,128}$"
+            },
+            "uploadDocuments":{
+               "fieldName":"uploadDocuments",
+               "mandatory":"false",
+               "validateRegularExp":"\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+            }
+         }
+      },
+      "UTSE-REVIEWOFUTSE L1":{
+         "VERIFYUTCHDSE L1":{
+            "remarks":{
+               "fieldName":"remarks",
+               "mandatory":"true",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "assignee":{
+               "fieldName":"remarks",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9- ]{1,128}$"
+            },
+            "uploadDocuments":{
+               "fieldName":"uploadDocuments",
+               "mandatory":"false",
+               "validateRegularExp":"\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+            }
+         },
+         "REASSIGNTOUTEE L2":{
+            "remarks":{
+               "fieldName":"remarks",
+               "mandatory":"true",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "assignee":{
+               "fieldName":"remarks",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9- ]{1,128}$"
+            },
+            "uploadDocuments":{
+               "fieldName":"uploadDocuments",
+               "mandatory":"false",
+               "validateRegularExp":"\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+            }
+         }
+      },
+      "UTEE-REASSIGNTOUTEE L2":{
+         "REVIEWOFUTSE L1":{
+            "remarks":{
+               "fieldName":"remarks",
+               "mandatory":"true",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "assignee":{
+               "fieldName":"remarks",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9- ]{1,128}$"
+            },
+            "uploadDocuments":{
+               "fieldName":"uploadDocuments",
+               "mandatory":"false",
+               "validateRegularExp":"\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+            }
+         },
+         "REASSIGNTOUTHDMEE":{
+            "remarks":{
+               "fieldName":"remarks",
+               "mandatory":"true",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "assignee":{
+               "fieldName":"remarks",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9- ]{1,128}$"
+            },
+            "uploadDocuments":{
+               "fieldName":"uploadDocuments",
+               "mandatory":"false",
+               "validateRegularExp":"\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+            }
+         }
+      },
+      "UTCHDSE-VERIFYUTCHDSE L1":{
+         "VERIFYUTDMSE":{
+            "remarks":{
+               "fieldName":"remarks",
+               "mandatory":"true",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "assignee":{
+               "fieldName":"remarks",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9- ]{1,128}$"
+            },
+            "uploadDocuments":{
+               "fieldName":"uploadDocuments",
+               "mandatory":"false",
+               "validateRegularExp":"\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+            }
+         }
+      },
+      "UTDMSE-VERIFYUTDMSE":{
+         "VERIFYUTCHDSE L2":{
+            "remarks":{
+               "fieldName":"remarks",
+               "mandatory":"true",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "assignee":{
+               "fieldName":"remarks",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9- ]{1,128}$"
+            },
+            "uploadDocuments":{
+               "fieldName":"uploadDocuments",
+               "mandatory":"false",
+               "validateRegularExp":"\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+            }
+         },
+         "EDITEDATUTDMSE":{
+            "remarks":{
+               "fieldName":"remarks",
+               "mandatory":"true",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "assignee":{
+               "fieldName":"remarks",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9- ]{1,128}$"
+            },
+            "uploadDocuments":{
+               "fieldName":"uploadDocuments",
+               "mandatory":"false",
+               "validateRegularExp":"\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+            },
+            "isAnyChangeInRoadCutEstimation":{
+               "fieldName":"isAnyChangeInRoadCutEstimation",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "amount":{
+               "fieldName":"amount",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            },
+            "gstAmount":{
+               "fieldName":"gstAmount",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            },
+            "performanceBankGuaranteeCharges":{
+               "fieldName":"performanceBankGuaranteeCharges",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            }
+         }
+      },
+      "UTDMSE-EDITEDATUTDMSE":{
+         "EDITEDATUTDMSE":{
+            "remarks":{
+               "fieldName":"remarks",
+               "mandatory":"true",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "assignee":{
+               "fieldName":"remarks",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9- ]{1,128}$"
+            },
+            "uploadDocuments":{
+               "fieldName":"uploadDocuments",
+               "mandatory":"false",
+               "validateRegularExp":"\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+            },
+            "isAnyChangeInRoadCutEstimation":{
+               "fieldName":"isAnyChangeInRoadCutEstimation",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "amount":{
+               "fieldName":"amount",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            },
+            "gstAmount":{
+               "fieldName":"gstAmount",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            },
+            "performanceBankGuaranteeCharges":{
+               "fieldName":"performanceBankGuaranteeCharges",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            }
+         },
+         "VERIFYUTCHDSE L2":{
+            "remarks":{
+               "fieldName":"remarks",
+               "mandatory":"true",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "assignee":{
+               "fieldName":"remarks",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9- ]{1,128}$"
+            },
+            "uploadDocuments":{
+               "fieldName":"uploadDocuments",
+               "mandatory":"false",
+               "validateRegularExp":"\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+            }
+         }
+      },
+      "UTDMSE-REASSIGNTOUTDMSE":{
+         "VERIFYUTCHDSE L2":{
+            "remarks":{
+               "fieldName":"remarks",
+               "mandatory":"true",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "assignee":{
+               "fieldName":"remarks",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9- ]{1,128}$"
+            },
+            "uploadDocuments":{
+               "fieldName":"uploadDocuments",
+               "mandatory":"false",
+               "validateRegularExp":"\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+            }
+         },
+         "EDITEDATUTDMSE":{
+            "remarks":{
+               "fieldName":"remarks",
+               "mandatory":"true",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "assignee":{
+               "fieldName":"remarks",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9- ]{1,128}$"
+            },
+            "uploadDocuments":{
+               "fieldName":"uploadDocuments",
+               "mandatory":"false",
+               "validateRegularExp":"\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+            },
+            "isAnyChangeInRoadCutEstimation":{
+               "fieldName":"isAnyChangeInRoadCutEstimation",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "amount":{
+               "fieldName":"amount",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            },
+            "gstAmount":{
+               "fieldName":"gstAmount",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            },
+            "performanceBankGuaranteeCharges":{
+               "fieldName":"performanceBankGuaranteeCharges",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            }
+         }
+      },
+      "UTCHDSE-VERIFYUTCHDSE L2":{
+         "REVIEWOFUTSE L2":{
+            "remarks":{
+               "fieldName":"remarks",
+               "mandatory":"true",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "assignee":{
+               "fieldName":"remarks",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9- ]{1,128}$"
+            },
+            "uploadDocuments":{
+               "fieldName":"uploadDocuments",
+               "mandatory":"false",
+               "validateRegularExp":"\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+            }
+         },
+         "REASSIGNTOUTDMSE":{
+            "remarks":{
+               "fieldName":"remarks",
+               "mandatory":"true",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "assignee":{
+               "fieldName":"remarks",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9- ]{1,128}$"
+            },
+            "uploadDocuments":{
+               "fieldName":"uploadDocuments",
+               "mandatory":"false",
+               "validateRegularExp":"\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+            }
+         }
+      },
+      "UTSE-REVIEWOFUTSE L2":{
+         "REASSIGNTOUTCHDSE":{
+            "remarks":{
+               "fieldName":"remarks",
+               "mandatory":"true",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "assignee":{
+               "fieldName":"remarks",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9- ]{1,128}$"
+            },
+            "uploadDocuments":{
+               "fieldName":"uploadDocuments",
+               "mandatory":"false",
+               "validateRegularExp":"\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+            }
+         },
+         "REVIEWOFUTCE L1":{
+            "remarks":{
+               "fieldName":"remarks",
+               "mandatory":"true",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "assignee":{
+               "fieldName":"remarks",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9- ]{1,128}$"
+            },
+            "uploadDocuments":{
+               "fieldName":"uploadDocuments",
+               "mandatory":"false",
+               "validateRegularExp":"\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+            }
+         }
+      },
+      "UTCHDSE-REASSIGNTOUTCHDSE":{
+         "REVIEWOFUTSE L2":{
+            "remarks":{
+               "fieldName":"remarks",
+               "mandatory":"true",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "assignee":{
+               "fieldName":"remarks",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9- ]{1,128}$"
+            },
+            "uploadDocuments":{
+               "fieldName":"uploadDocuments",
+               "mandatory":"false",
+               "validateRegularExp":"\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+            }
+         },
+         "REASSIGNTOUTDMSE":{
+            "remarks":{
+               "fieldName":"remarks",
+               "mandatory":"true",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "assignee":{
+               "fieldName":"remarks",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9- ]{1,128}$"
+            },
+            "uploadDocuments":{
+               "fieldName":"uploadDocuments",
+               "mandatory":"false",
+               "validateRegularExp":"\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+            }
+         }
+      },
+      "UTCE-REVIEWOFUTCE L1":{
+         "VERIFYUTCHDCE L1":{
+            "remarks":{
+               "fieldName":"remarks",
+               "mandatory":"true",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "assignee":{
+               "fieldName":"remarks",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9- ]{1,128}$"
+            },
+            "uploadDocuments":{
+               "fieldName":"uploadDocuments",
+               "mandatory":"false",
+               "validateRegularExp":"\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+            }
+         },
+         "REASSIGNTOUTSE L2":{
+            "remarks":{
+               "fieldName":"remarks",
+               "mandatory":"true",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "assignee":{
+               "fieldName":"remarks",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9- ]{1,128}$"
+            },
+            "uploadDocuments":{
+               "fieldName":"uploadDocuments",
+               "mandatory":"false",
+               "validateRegularExp":"\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+            }
+         }
+      },
+      "UTSE-REASSIGNTOUTSE L2":{
+         "REASSIGNTOUTCHDSE":{
+            "remarks":{
+               "fieldName":"remarks",
+               "mandatory":"true",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "assignee":{
+               "fieldName":"remarks",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9- ]{1,128}$"
+            },
+            "uploadDocuments":{
+               "fieldName":"uploadDocuments",
+               "mandatory":"false",
+               "validateRegularExp":"\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+            }
+         },
+         "REVIEWOFUTCE L1":{
+            "remarks":{
+               "fieldName":"remarks",
+               "mandatory":"true",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "assignee":{
+               "fieldName":"remarks",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9- ]{1,128}$"
+            },
+            "uploadDocuments":{
+               "fieldName":"uploadDocuments",
+               "mandatory":"false",
+               "validateRegularExp":"\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+            }
+         }
+      },
+      "UTCHDCE-VERIFYUTCHDCE L1":{
+         "VERIFYUTDMCE":{
+            "remarks":{
+               "fieldName":"remarks",
+               "mandatory":"true",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "assignee":{
+               "fieldName":"remarks",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9- ]{1,128}$"
+            },
+            "uploadDocuments":{
+               "fieldName":"uploadDocuments",
+               "mandatory":"false",
+               "validateRegularExp":"\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+            }
+         }
+      },
+      "UTDMCE-VERIFYUTDMCE":{
+         "VERIFYUTCHDCE L2":{
+            "remarks":{
+               "fieldName":"remarks",
+               "mandatory":"true",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "assignee":{
+               "fieldName":"remarks",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9- ]{1,128}$"
+            },
+            "uploadDocuments":{
+               "fieldName":"uploadDocuments",
+               "mandatory":"false",
+               "validateRegularExp":"\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+            }
+         },
+         "EDITEDATUTDMCE":{
+            "remarks":{
+               "fieldName":"remarks",
+               "mandatory":"true",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "assignee":{
+               "fieldName":"remarks",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9- ]{1,128}$"
+            },
+            "uploadDocuments":{
+               "fieldName":"uploadDocuments",
+               "mandatory":"false",
+               "validateRegularExp":"\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+            },
+            "isAnyChangeInRoadCutEstimation":{
+               "fieldName":"isAnyChangeInRoadCutEstimation",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "amount":{
+               "fieldName":"amount",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            },
+            "gstAmount":{
+               "fieldName":"gstAmount",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            },
+            "performanceBankGuaranteeCharges":{
+               "fieldName":"performanceBankGuaranteeCharges",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            }
+         }
+      },
+      "UTCHDCE-REASSIGNTOUTCHDCE":{
+         "REVIEWOFUTWD":{
+            "remarks":{
+               "fieldName":"remarks",
+               "mandatory":"true",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "assignee":{
+               "fieldName":"remarks",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9- ]{1,128}$"
+            },
+            "uploadDocuments":{
+               "fieldName":"uploadDocuments",
+               "mandatory":"false",
+               "validateRegularExp":"\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+            }
+         },
+         "REASSIGNTOCHDCE":{
+            "remarks":{
+               "fieldName":"remarks",
+               "mandatory":"true",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "assignee":{
+               "fieldName":"remarks",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9- ]{1,128}$"
+            },
+            "uploadDocuments":{
+               "fieldName":"uploadDocuments",
+               "mandatory":"false",
+               "validateRegularExp":"\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+            }
+         }
+      },
+      "UTCHDCE-VERIFYUTCHDCE L2":{
+         "REVIEWOFUTWD":{
+            "remarks":{
+               "fieldName":"remarks",
+               "mandatory":"true",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "assignee":{
+               "fieldName":"remarks",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9- ]{1,128}$"
+            },
+            "uploadDocuments":{
+               "fieldName":"uploadDocuments",
+               "mandatory":"false",
+               "validateRegularExp":"\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+            }
+         },
+         "REASSIGNTOUTDMCE":{
+            "remarks":{
+               "fieldName":"remarks",
+               "mandatory":"true",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "assignee":{
+               "fieldName":"remarks",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9- ]{1,128}$"
+            },
+            "uploadDocuments":{
+               "fieldName":"uploadDocuments",
+               "mandatory":"false",
+               "validateRegularExp":"\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+            }
+         }
+      },
+      "UTWD-REVIEWOFUTWD":{
+         "REASSIGNTOUTCHDCE":{
+            "remarks":{
+               "fieldName":"remarks",
+               "mandatory":"true",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "assignee":{
+               "fieldName":"remarks",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9- ]{1,128}$"
+            },
+            "uploadDocuments":{
+               "fieldName":"uploadDocuments",
+               "mandatory":"false",
+               "validateRegularExp":"\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+            }
+         },
+         "PENDINGAPPROVAL":{
+            "remarks":{
+               "fieldName":"remarks",
+               "mandatory":"true",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "assignee":{
+               "fieldName":"remarks",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9- ]{1,128}$"
+            },
+            "uploadDocuments":{
+               "fieldName":"uploadDocuments",
+               "mandatory":"false",
+               "validateRegularExp":"\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+            }
+         }
+      },
+      "CHDCE-REASSIGNTOUTCHDCE":{
+         "REVIEWOFUTWD":{
+            "remarks":{
+               "fieldName":"remarks",
+               "mandatory":"true",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "assignee":{
+               "fieldName":"remarks",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9- ]{1,128}$"
+            },
+            "uploadDocuments":{
+               "fieldName":"uploadDocuments",
+               "mandatory":"false",
+               "validateRegularExp":"\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+            }
+         },
+         "REASSIGNTOUTDMCE":{
+            "remarks":{
+               "fieldName":"remarks",
+               "mandatory":"true",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "assignee":{
+               "fieldName":"remarks",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9- ]{1,128}$"
+            },
+            "uploadDocuments":{
+               "fieldName":"uploadDocuments",
+               "mandatory":"false",
+               "validateRegularExp":"\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+            }
+         }
+      },
+      "UTCE-PENDINGAPPROVAL":{
+         "APPROVED":{
+            "remarks":{
+               "fieldName":"remarks",
+               "mandatory":"true",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "uploadDocuments":{
+               "fieldName":"uploadDocuments",
+               "mandatory":"false",
+               "validateRegularExp":"\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+            }
+         },
+         "REASSIGNTOUTWD":{
+            "remarks":{
+               "fieldName":"remarks",
+               "mandatory":"true",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "assignee":{
+               "fieldName":"remarks",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9- ]{1,128}$"
+            },
+            "uploadDocuments":{
+               "fieldName":"uploadDocuments",
+               "mandatory":"false",
+               "validateRegularExp":"\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+            }
+         },
+         "REJECTED":{
+            "remarks":{
+               "fieldName":"remarks",
+               "mandatory":"true",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "uploadDocuments":{
+               "fieldName":"uploadDocuments",
+               "mandatory":"false",
+               "validateRegularExp":"\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+            }
+         }
+      },
+      "UTSE-APPROVED":{
+         "VERIFY AFTER APPROVAL L1":{
+            "remarks":{
+               "fieldName":"remarks",
+               "mandatory":"true",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "assignee":{
+               "fieldName":"remarks",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9- ]{1,128}$"
+            },
+            "uploadDocuments":{
+               "fieldName":"uploadDocuments",
+               "mandatory":"false",
+               "validateRegularExp":"\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+            }
+         }
+      },
+      "UTWD-REASSIGNTOUTWD":{
+         "REASSIGNTOUTCHDCE":{
+            "remarks":{
+               "fieldName":"remarks",
+               "mandatory":"true",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "assignee":{
+               "fieldName":"remarks",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9- ]{1,128}$"
+            },
+            "uploadDocuments":{
+               "fieldName":"uploadDocuments",
+               "mandatory":"false",
+               "validateRegularExp":"\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+            }
+         },
+         "PENDINGAPPROVAL":{
+            "remarks":{
+               "fieldName":"remarks",
+               "mandatory":"true",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "assignee":{
+               "fieldName":"remarks",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9- ]{1,128}$"
+            },
+            "uploadDocuments":{
+               "fieldName":"uploadDocuments",
+               "mandatory":"false",
+               "validateRegularExp":"\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+            }
+         }
+      },
+      "UTEE-VERIFY AFTER APPROVAL L1":{
+         "VERIFY AFTER APPROVAL L2":{
+            "remarks":{
+               "fieldName":"remarks",
+               "mandatory":"true",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "assignee":{
+               "fieldName":"remarks",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9- ]{1,128}$"
+            },
+            "uploadDocuments":{
+               "fieldName":"uploadDocuments",
+               "mandatory":"false",
+               "validateRegularExp":"\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+            }
+         }
+      },
+      "UTSDE-VERIFY AFTER APPROVAL L2":{
+         "PENDINGFORPAYMENT":{
+            "remarks":{
+               "fieldName":"remarks",
+               "mandatory":"true",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "assignee":{
+               "fieldName":"remarks",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9- ]{1,128}$"
+            },
+            "uploadDocuments":{
+               "fieldName":"uploadDocuments",
+               "mandatory":"false",
+               "validateRegularExp":"\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+            }
+         }
+      },
+      "UTEE-PAID":{
+         "COMPLETE":{
+            "remarks":{
+               "fieldName":"remarks",
+               "mandatory":"true",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            }
+         }
+      }
+   }
 }
