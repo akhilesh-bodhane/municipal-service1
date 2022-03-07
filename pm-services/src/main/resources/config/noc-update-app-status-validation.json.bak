@@ -4463,7 +4463,7 @@
             }
          }
       },
-      "CHDCE-REASSIGNTOUTCHDCE":{
+      "UTCHDCE-REASSIGNTOUTCHDCE":{
          "REVIEWOFUTWD":{
             "remarks":{
                "fieldName":"remarks",
