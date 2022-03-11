@@ -21,7 +21,7 @@ public class HCQueryBuilder {
 		
 	}
 
-	private static final String QUERY = "select service_request_id,service_type,owner_name,service_request_status,tenant_id,current_assignee,to_char(to_timestamp(cast(createdtime/1000 as bigint))::date ,'DD/MM/YYYY')as createdtime,lastmodifiedtime,servicerequestsubtype,locality,street_name,landmark from eg_hc_service_request hc ";
+	private static final String QUERY = "select service_request_id,service_type,owner_name,service_request_status,tenant_id,current_assignee,to_char(to_timestamp(cast(createdtime/1000 as bigint))::date ,'DD/MM/YYYY')as createdtime,lastmodifiedtime,servicerequestsubtype,locality,street_name,landmark, createdtime as createdDateTime from eg_hc_service_request hc ";
 
 	public static final String SELECT_SERVICE_DETAIL_FOR_CITIZEN = "SELECT service_request_uuid, owner_name, tenant_id, location, latitude, longitude, locality, street_name, landmark, contact_number, email_id, tree_count, service_request_document, service_request_status, service_request_id, service_type, description,current_assignee, createdby, to_char(to_timestamp(cast(createdtime/1000 as bigint))::date,'DD/MM/YYYY') as createdtimes,servicerequest_lang ,lastmodifiedby,to_char(to_timestamp(cast(lastmodifiedtime/1000 as bigint))::date,'DD/MM/YYYY') as lastmodifiedtime,servicerequestsubtype,sla,sla_modified_date,sla_days_elapsed,range_forest_officer_report_document, is_range_forest_officer_report from eg_hc_service_request WHERE service_request_id =? and createdby = ?";
 	
