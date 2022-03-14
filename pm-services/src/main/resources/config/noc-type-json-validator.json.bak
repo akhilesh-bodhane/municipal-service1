@@ -387,6 +387,22 @@
 	  "constructionCircle":{
          "mandatory":"true",
          "validateRegularExp":"^[a-zA-Z0-9-,_ ]{1,200}"
+      },
+	  "subDivision":{
+         "mandatory":"true",
+         "validateRegularExp":"^[a-zA-Z0-9-,_ ]{1,200}"
+      },
+      "area":{
+         "mandatory":"true",
+         "validateRegularExp":"^[a-zA-Z0-9-,_ ]{1,200}"
+      }, 
+      "methodOfRoadCut":{
+         "mandatory":"true",
+         "validateRegularExp":"^[a-zA-Z0-9-,_ ]{1,200}"
+      },
+      "widthOfRoad":{
+         "mandatory":"true",
+         "validateRegularExp":"^(?=.*[0-9])[0-9]*[.,]?[0-9]{1,2}$"
       }
    }
 }

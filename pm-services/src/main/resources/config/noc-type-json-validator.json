@@ -395,7 +395,7 @@
       "area":{
          "mandatory":"true",
          "validateRegularExp":"^[a-zA-Z0-9-,_ ]{1,200}"
-      }, 
+      },
       "methodOfRoadCut":{
          "mandatory":"true",
          "validateRegularExp":"^[a-zA-Z0-9-,_ ]{1,200}"
