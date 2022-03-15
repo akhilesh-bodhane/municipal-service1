@@ -829,21 +829,6 @@ public class NocRepository {
 				producer.push(notificationTopic, dataApp);
 				log.info("NocRepository.callWorkflow :: Notification Data Sent to Topic for id:{}",
 						nocApplication.getNocNumber());
-						
-				// Added for UT Roadcut Notification
-				if (dataApp.getNocApplication().get(0).getApplicationType().equals("UTROADCUTNOC")
-						&& dataApp.getNocApplication().get(0).getApplicationStatus().equals("APPROVED")) {
-
-					dataApp.getNocApplication().get(0).setAssignee("");
-					log.info(
-							"NocRepository.callWork flow :: UTROADCUTNOC Received Workflow Response Successful for id:{}",
-							nocApplication.getNocNumber());
-
-					producer.push(notificationTopic, dataApp);
-
-					log.info("NocRepository.callWorkflow :: UTROADCUTNOC Notification Data Sent to Topic for id:{}",
-							nocApplication.getNocNumber());
-				}
 
 				return ResponseData.builder().responseInfo(ResponseInfo.builder().msgId(workflowResponse.getMsgId())
 						.status(CommonConstants.SUCCESS).build()).applicationId(applicationId).build();
