@@ -4488,6 +4488,62 @@
             }
          }
       },
+	  "UTDMCE-REASSIGNTOUTDMCE":{
+         "VERIFYUTCHDCE L2":{
+            "remarks":{
+               "fieldName":"remarks",
+               "mandatory":"true",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "assignee":{
+               "fieldName":"remarks",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9- ]{1,128}$"
+            },
+            "uploadDocuments":{
+               "fieldName":"uploadDocuments",
+               "mandatory":"false",
+               "validateRegularExp":"\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+            }
+         },
+         "EDITEDATUTDMCE":{
+            "remarks":{
+               "fieldName":"remarks",
+               "mandatory":"true",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "assignee":{
+               "fieldName":"remarks",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9- ]{1,128}$"
+            },
+            "uploadDocuments":{
+               "fieldName":"uploadDocuments",
+               "mandatory":"false",
+               "validateRegularExp":"\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+            },
+            "isAnyChangeInRoadCutEstimation":{
+               "fieldName":"isAnyChangeInRoadCutEstimation",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "amount":{
+               "fieldName":"amount",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            },
+            "gstAmount":{
+               "fieldName":"gstAmount",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            },
+            "performanceBankGuaranteeCharges":{
+               "fieldName":"performanceBankGuaranteeCharges",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            }
+         }
+      },
       "UTDMCE-EDITEDATUTDMCE":{
          "VERIFYUTCHDCE L2":{
             "remarks":{
