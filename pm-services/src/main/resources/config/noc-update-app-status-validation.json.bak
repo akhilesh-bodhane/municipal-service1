@@ -4506,7 +4506,7 @@
                "validateRegularExp":"\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
             }
          },
-         "REASSIGNTOCHDCE":{
+         "REASSIGNTOUTDMCE":{
             "remarks":{
                "fieldName":"remarks",
                "mandatory":"true",
