@@ -33,7 +33,7 @@
          "validateRegularExp":"^[a-zA-Z-_ ]{1,100}$"
       },
       "color":{
-         "mandatory":"true",
+         "mandatory":"false",
          "validateRegularExp":"^[a-zA-Z-_ ]{1,35}$"
       },
       "identificationMark":{
