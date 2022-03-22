@@ -73,7 +73,7 @@ public class NULMQueryBuilder {
 			+ "MB.date_of_opening_account ,MB.adhar_no, MB.mother_name, MB.father_or_husband_name, MB.address, MB.phone_no,MB.mobile_no, MB.qualification, MB.email_id, MB.is_urban_poor, MB.is_minority,\n"
 			+ "MB.is_pwd, MB.is_street_vendor, MB.is_homeless, MB.is_insurance, MB.bpl_no,MB.minority, MB.caste, MB.ward_no, MB.name_as_per_adhar, MB.adhar_acknowledgement_no,\n"
 			+ "MB.insurance_through, document_attachemnt, MB.account_no, MB.bank_name,MB.branch_name, MB.remark, MB.tenant_id, MB.is_active, MB.created_by, MB.created_time,\n"
-			+ "MB.last_modified_by, MB.last_modified_time ,\n"
+			+ "MB.last_modified_by, MB.last_modified_time ,MB.filestore_id ,\n"
 			+ "array_to_json(array_agg(json_build_object('shgUuid',GP.shg_uuid,'shgId',GP.shg_id,'name',GP.name,'type',GP.type,'groupsNominatedBy',GP.groups_nominated_by,\n"
 			+ "'formedThrough',GP.formed_through,'status',GP.status,'address',GP.address,'contactNo',GP.contact_no,'dateOfFormation',\n"
 			+ "GP.date_of_formation,'accountNo',GP.account_no,'dateOfOpeningAccount',GP.date_of_opening_account,'bankName',GP.bank_name,'branchName',GP.branch_name,'mainActivity',GP.main_activity,'remark',GP.remark) ))as group \n"

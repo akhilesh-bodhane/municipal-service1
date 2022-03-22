@@ -57,7 +57,7 @@ public class ShgMemberRowMapper implements ResultSetExtractor<List<SmidShgMember
 							.isMinority(rs.getBoolean("is_minority")).isPwd(rs.getBoolean("is_pwd"))
 							.isStreetVendor(rs.getBoolean("is_street_vendor"))
 							.isUrbanPoor(rs.getBoolean("is_urban_poor")).minority(rs.getString("minority"))
-							.mobileNo(rs.getString("mobile_no")).motherName(rs.getString("mother_name"))
+							.mobileNo(rs.getString("mobile_no")).motherName(rs.getString("mother_name")).externalFileStoreId(rs.getString("filestore_id"))
 							.name(rs.getString("name")).nameAsPerAdhar(rs.getString("name_as_per_adhar"))
 							.nulmApplicationId(rs.getString("nulm_application_id")).phoneNo(rs.getString("phone_no"))
 							.positionLevel(rs.getString("position_level")).qualification(rs.getString("qualification"))
