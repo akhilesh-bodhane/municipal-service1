@@ -135,6 +135,7 @@ List<Files> attachmentsUrls = fileStoreUtils.getFiles(guest.getTenantId(), attac
 					Cell nextCell = cellIterator.next();
 					int columnIndex = nextCell.getColumnIndex();
 					user.setApplicationId(guest.getShgUuid()+nextCell);
+					user.setExternalFileStoreId(guest.getExternalFileStoreId());
 					switch (columnIndex) {
 					case 0:
 						nextCell.setCellType(Cell.CELL_TYPE_STRING);
