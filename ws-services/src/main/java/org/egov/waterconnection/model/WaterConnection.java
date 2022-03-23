@@ -88,6 +88,9 @@ public class WaterConnection extends Connection {
 	
 	@JsonProperty("activityType")
 	private String activityType = null;
+	
+	@JsonProperty("paymentMODE")
+	private String paymentMODE = null;
 
 	@JsonProperty("contractValue")
 	private String contractValue = null;
@@ -149,6 +152,14 @@ public class WaterConnection extends Connection {
 
 	public void setBillGroup(String billGroup) {
 		this.billGroup = billGroup;
+	}
+	
+	public String getPaymentMODE() {
+		return paymentMODE;
+	}
+
+	public void setPaymentMODE(String paymentMODE) {
+		this.paymentMODE = paymentMODE;
 	}
 
 	public WaterConnection waterSource(String waterSource) {

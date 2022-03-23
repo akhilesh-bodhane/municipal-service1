@@ -59,7 +59,7 @@ public class WsQueryBuilder {
 			/* + " conn.*, wc.*, document.*, plumber.*, application.*, property.*, " */
 			+ " wc.connectionCategory, wc.connectionType, wc.waterSource, wc.meterCount, wc.meterRentCode, wc.mfrCode, wc.meterDigits, wc.meterUnit, wc.sanctionedCapacity,"
 			+ " wc.meterId, wc.meterInstallationDate, wc.pipeSize, wc.noOfTaps, wc.proposedPipeSize, wc.proposedTaps, wc.connection_id as connection_Id, wc.connectionExecutionDate, wc.initialmeterreading,wc.lastmeterreading, wc.appCreatedDate,wc.proposed_meterid, wc.proposed_meterinstallationdate,wc.proposed_initialmeterreading,wc.proposed_lastmeterreading,wc.proposed_metercount,wc.proposed_meterrentcode,wc.proposed_mfrcode,wc.proposed_meterdigits,  wc.proposed_sanctionedcapacity,wc.proposed_meterunit,"
-			+ " wc.detailsprovidedby, wc.estimationfileStoreId , wc.sanctionfileStoreId , wc.estimationLetterDate, "
+			+ " wc.detailsprovidedby, wc.estimationfileStoreId , wc.sanctionfileStoreId , wc.estimationLetterDate, py.paymentmode,"
 			+ " conn.id as conn_id, conn.tenantid, conn.applicationNo, conn.applicationStatus, conn.status, conn.connectionNo, conn.oldConnectionNo, conn.property_id, conn.roadcuttingarea,"
 			+ " conn.aadharNo, conn.ferruleSize, conn.action, conn.adhocpenalty, conn.adhocrebate, conn.adhocpenaltyreason, conn.applicationType, conn.dateEffectiveFrom,"
 			+ " conn.adhocpenaltycomment, conn.adhocrebatereason, conn.adhocrebatecomment, conn.cccode, conn.div, conn.subdiv, conn.ledger_no,conn.ledgergroup, conn.createdBy as ws_createdBy, conn.lastModifiedBy as ws_lastModifiedBy,"
@@ -73,9 +73,15 @@ public class WsQueryBuilder {
 			+ " application.createdBy as app_createdBy, application.lastModifiedBy as app_lastModifiedBy, application.createdTime as app_createdTime, application.lastModifiedTime as app_lastModifiedTime, "
 			+ " property.id as waterpropertyid, property.usagecategory, property.usagesubcategory,pta.doorno as propertyplotno,pta.locality as propertysectorno "
 			+ " FROM eg_ws_connection conn "
+			+  LEFT_OUTER_JOIN_STRING 
+			+ "egcl_bill bl  on  conn.applicationno = bl.consumercode"
+			+  LEFT_OUTER_JOIN_STRING
+			+ "egcl_paymentdetail pyd on pyd.billid = bl.id"
+			+  LEFT_OUTER_JOIN_STRING
+			+ "egcl_payment py on py.id= pyd.paymentid"			
 			+  INNER_JOIN_STRING 
 			+ "eg_ws_service wc ON wc.connection_id = conn.id"
-					+  INNER_JOIN_STRING 
+			+  INNER_JOIN_STRING 
 			+ "eg_pt_address pta ON conn.property_id = pta.propertyid"
 			+  INNER_JOIN_STRING
 			+ "eg_ws_application application ON application.wsid = conn.id"
