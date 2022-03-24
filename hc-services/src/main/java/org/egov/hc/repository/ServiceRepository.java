@@ -93,7 +93,7 @@ public class ServiceRepository {
    				JSONArray actualResult = null;
    				if (requestData.getRequestInfo().getUserInfo().getType().equals("CITIZEN")) {
    					 actualResult = (JSONArray) jdbcTemplate.query(queryBuilder.SELECT_SERVICE_DETAIL_FOR_CITIZEN,
-   	   						new Object[] { requestData.getService_request_id() ,requestData.getAuditDetails().getCreatedBy()  }, rowMapper);
+   	   						new Object[] { requestData.getService_request_id() ,requestData.getAuditDetails().getCreatedBy(), requestData.getIsUT() }, rowMapper);
 		
 				}
    				else 
