@@ -22,35 +22,35 @@ public class RequestData {
 
 	@JsonProperty("houseNoAndStreetName")
 	public String houseNoAndStreetName;
-	
-	@Size(max=257)
+
+	@Size(max = 257)
 	@JsonProperty("latitude")
 	private String latitude;
-	
-	@Size(max=257)
+
+	@Size(max = 257)
 	@JsonProperty("longitude")
 	private String longitude;
-	
-	@Size(max=257)
+
+	@Size(max = 257)
 	@JsonProperty("locality")
 	private String locality;
-	
-	@Size(max=256)
+
+	@Size(max = 256)
 	@JsonProperty("mohalla")
 	private String mohalla;
-	
-	@Size(max=259)
+
+	@Size(max = 259)
 	@JsonProperty("landmark")
 	private String landmark;
-	
-	@Size(max=257)
+
+	@Size(max = 257)
 	@JsonProperty("address")
 	private String address;
-	
-	@Size(max=255)
+
+	@Size(max = 255)
 	@JsonProperty("ownerName")
 	private String ownerName = null;
-	
+
 	@JsonProperty("RequestInfo")
 	private RequestInfo requestInfo;
 
@@ -65,45 +65,46 @@ public class RequestData {
 
 	@JsonProperty("service_request_id")
 	private String service_request_id;
-	
+
 	@JsonProperty("fromDate")
 	private Long fromDate = null;
 
 	@JsonProperty("toDate")
 	private Long toDate = null;
-	
+
 	@JsonProperty("ownerContactNumber")
 	private String ownerContactNumber;
 
 	@JsonProperty("streetName")
 	private String streetName;
 
-	
 	@JsonProperty("actions")
 	private String actions;
-	
-	@Size(max=128)
+
+	@Size(max = 128)
 	@JsonProperty("serviceRequestSubtype")
 	private String serviceRequestSubtype;
-	
-	@Size(max=255)
+
+	@Size(max = 255)
 	@JsonProperty("email")
 	private String email = null;
-	
+
 	@JsonProperty("treeCount")
 	private Long treeCount;
-	
-	
+
+	@JsonProperty("isUT")
+	private Boolean isUT;
+
 	@JsonProperty("dataPayload")
 	private JSONObject dataPayload;
 
 	@JsonProperty("auditDetails")
 	private AuditDetails auditDetails;
-	
-	 @JsonProperty("offset")
-	    private Integer offset;
 
-	    @JsonProperty("limit")
-	    private Integer limit;
+	@JsonProperty("offset")
+	private Integer offset;
+
+	@JsonProperty("limit")
+	private Integer limit;
 
 }
