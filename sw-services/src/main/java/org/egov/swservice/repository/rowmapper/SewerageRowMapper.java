@@ -67,6 +67,7 @@ public class SewerageRowMapper implements ResultSetExtractor<List<SewerageConnec
 				sewarageConnection.setSanctionedCapacity(rs.getString("sanctionedCapacity"));
 				sewarageConnection.setFerruleSize(rs.getString("ferruleSize"));
 				sewarageConnection.setAadharNo(rs.getString("aadharNo"));
+				sewarageConnection.setPaymentmode(rs.getString("paymentmode"));
 				sewarageConnection.setTotalAmountPaid(rs.getString("total_amount_paid"));
 				// get property id and get property object
 				HashMap<String, Object> addtionalDetails = new HashMap<>();
