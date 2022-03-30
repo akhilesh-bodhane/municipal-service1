@@ -27,6 +27,9 @@ public class SewerageConnection extends Connection {
 
 	@JsonProperty("noOfToilets")
 	private Integer noOfToilets = null;
+	
+	@JsonProperty("paymentmode")
+	private String paymentmode = null;	
 
 	@JsonProperty("div")
 	private String div = null;
@@ -147,6 +150,14 @@ public class SewerageConnection extends Connection {
 
 	public void setMeterDigits(String meterDigits) {
 		this.meterDigits = meterDigits;
+	}
+	
+	public String getPaymentmode() {
+		return paymentmode;
+	}
+
+	public void setPaymentmode(String paymentmode) {
+		this.paymentmode = paymentmode;
 	}
 
 	public String getMeterUnit() {
