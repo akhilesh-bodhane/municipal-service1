@@ -142,12 +142,12 @@ public class ServiceRequestService {
 		log.info("Service layer for createss");
 
 		// UT - Service type should be same as business service name in WF
-		String serviceType = "";
-		if (request.getServices() != null && !request.getServices().isEmpty()) {
-			serviceType = request.getServices().get(0).getServiceType();
-			if (request.getServices().get(0).getIsUT())
-				request.getServices().get(0).setServiceType("UT-" + serviceType);
-		}
+//		String serviceType = "";
+//		if (request.getServices() != null && !request.getServices().isEmpty()) {
+//			serviceType = request.getServices().get(0).getServiceType();
+//			if (request.getServices().get(0).getIsUT())
+//				request.getServices().get(0).setServiceType("UT-" + serviceType);
+//		}
 
 		// generate Service request id using IdGen
 
@@ -179,8 +179,8 @@ public class ServiceRequestService {
 		}
 
 		// UT - Service type should be same as business service name in WF - reset
-		if (request.getServices().get(0).getIsUT())
-			request.getServices().get(0).setServiceType(serviceType);
+//		if (request.getServices().get(0).getIsUT())
+//			request.getServices().get(0).setServiceType(serviceType);
 
 		return getServiceResponse(request);
 
@@ -193,15 +193,18 @@ public class ServiceRequestService {
 		List<ServiceRequestData> services = request.getServices();
 		if (!services.isEmpty()) {
 			String applicationNumberFormat = "";
+			String applicationNumberFormatName = "";
 			if (services.get(0).getIsUT()) {
 				applicationNumberFormat = hcConfiguration.getApplicationNumberIdgenFormatUt();
+				applicationNumberFormatName = hcConfiguration.getApplicationNumberIdgenNameUt();
 			} else {
 				applicationNumberFormat = hcConfiguration.getApplicationNumberIdgenFormatMcc();
+				applicationNumberFormatName = hcConfiguration.getApplicationNumberIdgenNameMcc();
 			}
 
 			IdGenerationResponse id = idgenrepository.getId(request.getRequestInfo(),
-					request.getServices().get(0).getTenantId(), hcConfiguration.getApplicationNumberIdgenName(),
-					applicationNumberFormat, 1);
+					request.getServices().get(0).getTenantId(), applicationNumberFormatName, applicationNumberFormat,
+					1);
 			if (id.getIdResponses() != null && id.getIdResponses().get(0) != null) {
 				service_request_id = id.getIdResponses().get(0).getId();
 			} else
@@ -319,7 +322,7 @@ public class ServiceRequestService {
 			// UT - Service type should be same as business service name in WF - reset
 			if (request.getServices().get(0).getIsUT())
 				request.getServices().get(0).setServiceType(serviceType);
-			
+
 			return getServiceResponse(request);
 		} catch (Exception e) {
 			throw new CustomException(HCConstants.UPDATE_REQUEST_EXCEPTION_CODE, e.getMessage());
@@ -1211,12 +1214,12 @@ public class ServiceRequestService {
 			throws JSONException, InterruptedException {
 
 		// UT - Service type should be same as business service name in WF
-		String serviceType = "";
-		if (serviceRequest.getServices() != null && !serviceRequest.getServices().isEmpty()) {
-			serviceType = serviceRequest.getServices().get(0).getServiceType();
-			if (serviceRequest.getServices().get(0).getIsUT())
-				serviceRequest.getServices().get(0).setServiceType("UT-" + serviceType);
-		}
+//		String serviceType = "";
+//		if (serviceRequest.getServices() != null && !serviceRequest.getServices().isEmpty()) {
+//			serviceType = serviceRequest.getServices().get(0).getServiceType();
+//			if (serviceRequest.getServices().get(0).getIsUT())
+//				serviceRequest.getServices().get(0).setServiceType("UT-" + serviceType);
+//		}
 
 		ResponseEntity<ServiceRequest> responseBody = null;
 		String service_request_id_new = null;
@@ -1267,8 +1270,13 @@ public class ServiceRequestService {
 
 		// checking service request type
 
+//		if (serviceRequest.getServices().get(0).getIsUT() == serviceRequestGet.getIsUT()) {
+//
+//		}
+
 		log.info("Checking service requet type");
-		if (serviceRequestServiceType.equals(requestdataServiceType)) {
+		if (serviceRequestServiceType.equals(requestdataServiceType)
+				&& serviceRequest.getServices().get(0).getIsUT() == serviceRequestGet.getIsUT()) {
 
 			responseBody = updateServiceRequest(serviceRequest, service_request_id, requestHeader, role, status,
 					service_request_uuid, servicetype);
@@ -1303,8 +1311,8 @@ public class ServiceRequestService {
 		serviceRequest.getServices().get(0).setService_request_id(service_request_id_new);
 
 		// UT - Service type should be same as business service name in WF - reset
-		if (serviceRequest.getServices().get(0).getIsUT())
-			serviceRequest.getServices().get(0).setServiceType(serviceType);
+//		if (serviceRequest.getServices().get(0).getIsUT())
+//			serviceRequest.getServices().get(0).setServiceType(serviceType);
 
 		return getServiceResponse(responseBody);
 	}
