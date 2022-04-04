@@ -308,20 +308,20 @@ public class ServiceRequestService {
 		try {
 
 			// UT - Service type should be same as business service name in WF
-			String serviceType = "";
-			if (request.getServices() != null && !request.getServices().isEmpty()) {
-				serviceType = request.getServices().get(0).getServiceType();
-				if (request.getServices().get(0).getIsUT())
-					request.getServices().get(0).setServiceType("UT-" + serviceType);
-			}
+//			String serviceType = "";
+//			if (request.getServices() != null && !request.getServices().isEmpty()) {
+//				serviceType = request.getServices().get(0).getServiceType();
+//				if (request.getServices().get(0).getIsUT())
+//					request.getServices().get(0).setServiceType("UT-" + serviceType);
+//			}
 
 			enrichServiceRequestForUpdate(request, requestHeader);
 			if (null == request.getActionInfo())
 				request.setActionInfo(new ArrayList<ActionInfo>());
 
 			// UT - Service type should be same as business service name in WF - reset
-			if (request.getServices().get(0).getIsUT())
-				request.getServices().get(0).setServiceType(serviceType);
+//			if (request.getServices().get(0).getIsUT())
+//				request.getServices().get(0).setServiceType(serviceType);
 
 			return getServiceResponse(request);
 		} catch (Exception e) {
