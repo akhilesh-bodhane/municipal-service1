@@ -592,8 +592,10 @@ public class ServiceRequestService {
 				// Update service request form
 
 				ServiceRequestData updateRequest = new ServiceRequestData();
+				List<String> documentlist = new ArrayList<>();
 
-				List<String> documentlist = new ArrayList<>(serviceRequest.getMediaList());
+				if (serviceRequest.getMediaList() != null)
+					documentlist = new ArrayList<>(serviceRequest.getMediaList());
 
 				for (int fileCnt = 0; fileCnt < request.getServices().get(0).getWfDocuments().size(); fileCnt++) {
 					documentlist.add(request.getServices().get(0).getWfDocuments().get(fileCnt).getFileStoreId());
