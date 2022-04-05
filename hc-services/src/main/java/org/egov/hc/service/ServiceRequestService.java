@@ -542,7 +542,7 @@ public class ServiceRequestService {
 				String list = request.getServices().get(servReqCount).getAssignee().get(0).toString();
 
 				String roleSplit[] = list.split("#");
-				employeeUuid = roleSplit[1];
+				employeeUuid = roleSplit[0];
 
 				List<String> assigneeListSplited = new ArrayList<>();
 				assigneeListSplited.add(roleSplit[0]);
