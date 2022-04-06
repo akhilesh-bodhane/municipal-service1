@@ -271,6 +271,10 @@ public class ServiceRequestService {
 			String tenantId = (String) serviceRequest.get("tenant_id");
 			serviceRequestData.setTenantId(tenantId);
 
+			Boolean isut = Boolean
+					.parseBoolean(serviceRequest.get("isut") != null ? serviceRequest.get("isut").toString() : "false");
+			serviceRequestData.setIsUT(isut);
+
 			org.json.JSONObject objDocument = new org.json.JSONObject(
 					serviceRequest.get("service_request_document").toString());
 
@@ -1233,7 +1237,8 @@ public class ServiceRequestService {
 
 		// making request data
 
-		ServiceRequestData serviceRequestGet = getData(service_request_id);
+		ServiceRequestData serviceRequestGet = getData(service_request_id,
+				serviceRequest.getServices().get(0).getIsUT());
 		String role = null;
 		String status = null;
 		String service_request_uuid = null;
@@ -1289,7 +1294,13 @@ public class ServiceRequestService {
 
 			serviceRequest.getServices().get(0).setServiceType(requestdataServiceType);
 
-			service_request_id_new = generateServiceRequestId(service_request_id);
+			if (serviceRequest.getServices().get(0).getIsUT() != serviceRequestGet.getIsUT()) {
+				service_request_id_new = generateServiceRequestId(serviceRequest);
+			} else {
+				service_request_id_new = generateServiceRequestId(service_request_id);
+			}
+
+//			service_request_id_new = generateServiceRequestId(service_request_id);
 
 			// add entry in service request table with service_request_id =
 			// service_request_id_old_1
@@ -1432,10 +1443,11 @@ public class ServiceRequestService {
 		return role + "#" + status + "#" + service_request_uuid;
 	}
 
-	private ServiceRequestData getData(String service_request_id) {
+	private ServiceRequestData getData(String service_request_id, Boolean isUt) {
 		ServiceRequestData serviceRequestGet = null;
 		RequestData requestdata = new RequestData();
 		requestdata.setService_request_id(service_request_id);
+		requestdata.setIsUT(isUt);
 
 		// get service_request data for this id
 
