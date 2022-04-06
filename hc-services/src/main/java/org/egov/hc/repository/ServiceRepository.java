@@ -94,7 +94,7 @@ public class ServiceRepository {
 
 				} else {
 					actualResult = (JSONArray) jdbcTemplate.query(queryBuilder.SELECT_SERVICE_DETAIL,
-							new Object[] { requestData.getService_request_id(), requestData.getIsUT() }, rowMapper);
+							new Object[] { requestData.getService_request_id() }, rowMapper);
 					log.info("Get service getails ");
 				}
 				JSONArray jsonArray = new JSONArray();
