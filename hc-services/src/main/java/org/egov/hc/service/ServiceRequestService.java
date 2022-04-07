@@ -1792,8 +1792,8 @@ public class ServiceRequestService {
 			}
 
 			// If MCC to UT or vice-versa then don;t clone the WF as it is, should be create
-			// new Intitiated application
-			if (serviceRequestGetData.getServices().get(0).getIsUT() != serviceRequestGet.getIsUT())
+			// new Initiated application
+			if (serviceRequestGetData.getServices().get(0).getIsUT() == serviceRequestGet.getIsUT())
 				saveBulkProcessInstance(ProcessInstanceList);
 
 			serviceRequestGetData = setActionInfo(serviceRequestGetData, serviceRequestData);
