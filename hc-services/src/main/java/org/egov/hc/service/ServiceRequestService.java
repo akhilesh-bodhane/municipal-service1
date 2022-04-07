@@ -1318,8 +1318,8 @@ public class ServiceRequestService {
 				serviceRequest.setRequestInfo(employeeInfo);
 				updateProcesinstancedata(serviceRequest, service_request_id, service_request_id_new,
 						serviceRequestServiceType, serviceRequestGet);
-				serviceRequest.getServices().get(0).setService_request_id(service_request_id_new);
-				responseBody.getBody().getServices().get(0).setService_request_id(service_request_id_new);
+			//	serviceRequest.getServices().get(0).setService_request_id(service_request_id_new);
+//				responseBody.getBody().getServices().get(0).setService_request_id(service_request_id_new);
 			}
 			log.info("updated service request");
 		}
