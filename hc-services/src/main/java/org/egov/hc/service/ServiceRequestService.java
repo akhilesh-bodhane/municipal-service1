@@ -1295,33 +1295,34 @@ public class ServiceRequestService {
 			serviceRequest.getServices().get(0).setServiceType(requestdataServiceType);
 
 			if (serviceRequest.getServices().get(0).getIsUT() != serviceRequestGet.getIsUT()) {
-				service_request_id_new = generateServiceRequestId(serviceRequest);
+//				service_request_id_new = generateServiceRequestId(serviceRequest);
+				ServiceResponse create = create(serviceRequest, requestHeader);
+				service_request_id_new = create.getServices().get(0).getService_request_id();
+				updateProcesinstancedata(serviceRequest, service_request_id, service_request_id_new,
+						serviceRequestServiceType, serviceRequestGet);
+
+				return create;
 			} else {
+				// add entry in service request table with service_request_id =
+				// service_request_id_old_1
 				service_request_id_new = generateServiceRequestId(service_request_id);
+
+				employeeInfo.setUserInfo(serviceRequest.getRequestInfo().getUserInfo());
+
+				ServiceRequest serviceRequestdata = getUserInfo(serviceRequest);
+
+				serviceRequestdata.getServices().get(0).setService_request_id_old(service_request_id);
+				responseBody = serviceRequestEdit(serviceRequestdata, service_request_id_new, role, status,
+						service_request_id, service_request_id_new, requestType);
+
+				serviceRequest.setRequestInfo(employeeInfo);
+				updateProcesinstancedata(serviceRequest, service_request_id, service_request_id_new,
+						serviceRequestServiceType, serviceRequestGet);
+				serviceRequest.getServices().get(0).setService_request_id(service_request_id_new);
+				responseBody.getBody().getServices().get(0).setService_request_id(service_request_id_new);
 			}
-
-//			service_request_id_new = generateServiceRequestId(service_request_id);
-
-			// add entry in service request table with service_request_id =
-			// service_request_id_old_1
-
-			employeeInfo.setUserInfo(serviceRequest.getRequestInfo().getUserInfo());
-
-			ServiceRequest serviceRequestdata = getUserInfo(serviceRequest);
-
-			serviceRequestdata.getServices().get(0).setService_request_id_old(service_request_id);
-			responseBody = serviceRequestEdit(serviceRequestdata, service_request_id_new, role, status,
-					service_request_id, service_request_id_new, requestType);
-
-			serviceRequest.setRequestInfo(employeeInfo);
-
-			updateProcesinstancedata(serviceRequest, service_request_id, service_request_id_new,
-					serviceRequestServiceType);
-
 			log.info("updated service request");
-			serviceRequest.getServices().get(0).setService_request_id(service_request_id_new);
 		}
-		serviceRequest.getServices().get(0).setService_request_id(service_request_id_new);
 
 		// UT - Service type should be same as business service name in WF - reset
 //		if (serviceRequest.getServices().get(0).getIsUT())
@@ -1391,11 +1392,12 @@ public class ServiceRequestService {
 	}
 
 	private void updateProcesinstancedata(ServiceRequest serviceRequest, String service_request_id,
-			String service_request_id_new, String serviceRequestServiceType) throws JSONException {
+			String service_request_id_new, String serviceRequestServiceType, ServiceRequestData serviceRequestGet)
+			throws JSONException {
 
 		// geting data from processinstance with service_request_id
 		ServiceRequest procesinstancedata = getProcesinstanceData(serviceRequest, service_request_id_new,
-				service_request_id, serviceRequestServiceType);
+				service_request_id, serviceRequestServiceType, serviceRequestGet);
 
 		// service request id (old) this service request status update(mark as Rejected)
 		updateStatus(procesinstancedata, service_request_id_new, service_request_id);
@@ -1659,7 +1661,7 @@ public class ServiceRequestService {
 	}
 
 	private ServiceRequest getProcesinstanceData(ServiceRequest serviceRequestGetData, String service_request_id_new,
-			String service_request_id, String serviceRequestServiceType) {
+			String service_request_id, String serviceRequestServiceType, ServiceRequestData serviceRequestGet) {
 
 		User employeeData = employeeStoredData(serviceRequestGetData);
 
@@ -1672,7 +1674,8 @@ public class ServiceRequestService {
 
 			log.info("get data from procesinstance :" + procesinstanceData);
 			serviceRequestGetData = procesinstanceBulkData(procesinstanceData, bussinessServiceData,
-					serviceRequestGetData, service_request_id, service_request_id_new, bussinessServiceDataOld);
+					serviceRequestGetData, service_request_id, service_request_id_new, bussinessServiceDataOld,
+					serviceRequestGet);
 
 		} catch (HttpClientErrorException e) {
 			log.info("Handled exception");
@@ -1718,7 +1721,7 @@ public class ServiceRequestService {
 
 	private ServiceRequest procesinstanceBulkData(String procesinstanceData, String bussinessServiceData,
 			ServiceRequest serviceRequestGetData, String service_request_id, String service_request_id_new,
-			String bussinessServiceDataOld) {
+			String bussinessServiceDataOld, ServiceRequestData serviceRequestGet) {
 
 		String businessService = null;
 		String nextStateAndSla = null;
@@ -1788,7 +1791,10 @@ public class ServiceRequestService {
 
 			}
 
-			saveBulkProcessInstance(ProcessInstanceList);
+			// If MCC to UT or vice-versa then don;t clone the WF as it is, should be create
+			// new Intitiated application
+			if (serviceRequestGetData.getServices().get(0).getIsUT() != serviceRequestGet.getIsUT())
+				saveBulkProcessInstance(ProcessInstanceList);
 
 			serviceRequestGetData = setActionInfo(serviceRequestGetData, serviceRequestData);
 
