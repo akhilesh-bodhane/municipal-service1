@@ -47,7 +47,7 @@ public class ServiceController {
 	 */ 
 	@RequestMapping(value = "/_create", method = RequestMethod.POST)
 	public ResponseEntity<?> create(@RequestBody ServiceRequest serviceRequest,
-			@RequestHeader("User-Agent") String request) throws JSONException, InterruptedException {
+			@RequestHeader("User-Agent") String request) throws JSONException, InterruptedException, CloneNotSupportedException {
 			
 			ServiceResponse response = null;
 			String responseValidate = "";

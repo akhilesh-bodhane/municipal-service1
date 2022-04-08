@@ -1217,7 +1217,7 @@ public class ServiceRequestService {
 	}
 
 	public ServiceResponse updateServiceRequest(ServiceRequest serviceRequest, String requestHeader)
-			throws JSONException, InterruptedException {
+			throws JSONException, InterruptedException, CloneNotSupportedException {
 
 		// UT - Service type should be same as business service name in WF
 //		String serviceType = "";
@@ -1293,14 +1293,16 @@ public class ServiceRequestService {
 		} else {
 
 			serviceRequest.getServices().get(0).setServiceType(requestdataServiceType);
+			ServiceRequest serviceRequestdata = getUserInfo(serviceRequest);
 
 			if (serviceRequest.getServices().get(0).getIsUT() != serviceRequestGet.getIsUT()) {
 //				service_request_id_new = generateServiceRequestId(serviceRequest);
-				ServiceResponse create = create(serviceRequest, requestHeader);
+				ServiceRequest clone = serviceRequest.clone();
+				clone.getRequestInfo().setUserInfo(serviceRequestdata.getRequestInfo().getUserInfo());
+				ServiceResponse create = create(clone, requestHeader);
 				service_request_id_new = create.getServices().get(0).getService_request_id();
 				updateProcesinstancedata(serviceRequest, service_request_id, service_request_id_new,
 						serviceRequestServiceType, serviceRequestGet);
-
 				return create;
 			} else {
 				// add entry in service request table with service_request_id =
@@ -1309,18 +1311,18 @@ public class ServiceRequestService {
 
 				employeeInfo.setUserInfo(serviceRequest.getRequestInfo().getUserInfo());
 
-				ServiceRequest serviceRequestdata = getUserInfo(serviceRequest);
-
 				serviceRequestdata.getServices().get(0).setService_request_id_old(service_request_id);
 				responseBody = serviceRequestEdit(serviceRequestdata, service_request_id_new, role, status,
 						service_request_id, service_request_id_new, requestType);
 
 				serviceRequest.setRequestInfo(employeeInfo);
+
 				updateProcesinstancedata(serviceRequest, service_request_id, service_request_id_new,
 						serviceRequestServiceType, serviceRequestGet);
-			//	serviceRequest.getServices().get(0).setService_request_id(service_request_id_new);
+				// serviceRequest.getServices().get(0).setService_request_id(service_request_id_new);
 //				responseBody.getBody().getServices().get(0).setService_request_id(service_request_id_new);
 			}
+
 			log.info("updated service request");
 		}
 
@@ -1786,15 +1788,23 @@ public class ServiceRequestService {
 				process = setProcessInstanceData(wfUser, nextStateAndSla, wfAddDocument, request, serviceRequestGetData,
 						businessService, service_request_id_new, bussinessServiceDataOld, jsonObject, asigneeUser);
 
+				// If MCC to UT or vice-versa then don;t clone the WF as it is, should be create
+				// new Initiated application
+//				if (serviceRequestGetData.getServices().get(0).getIsUT() != serviceRequestGet.getIsUT()
+//						&& process.getAction().equalsIgnoreCase("INITIATE")) {
+//					processInstances.add(process);
+//					break;
+//				} else {
+//					processInstances.add(process);
+//				}
+//				
 				processInstances.add(process);
 				ProcessInstanceList.addAll(processInstances);
 
 			}
 
-			// If MCC to UT or vice-versa then don;t clone the WF as it is, should be create
-			// new Initiated application
 			if (serviceRequestGetData.getServices().get(0).getIsUT() == serviceRequestGet.getIsUT())
-				saveBulkProcessInstance(ProcessInstanceList);
+			saveBulkProcessInstance(ProcessInstanceList);
 
 			serviceRequestGetData = setActionInfo(serviceRequestGetData, serviceRequestData);
 
