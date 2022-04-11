@@ -68,6 +68,7 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 
@@ -119,7 +120,7 @@ public class ServiceRequestService {
 
 	@Autowired
 	private ObjectMapper objectMapper;
-	
+
 	@Autowired
 	public ServiceRequestService(HCConfiguration config, HCConfiguration hcConfiguration,
 			WorkflowIntegrator wfIntegrator, ObjectMapper objectMapper, IdGenRepository idgenrepository,
@@ -1267,7 +1268,8 @@ public class ServiceRequestService {
 
 		serviceRequest.getAuditDetails().setCreatedBy(serviceRequestGet.getCreatedBy());
 
-		//deviceDetailSave(requestHeader, serviceRequest, service_request_id, serviceRequestGet);
+		// deviceDetailSave(requestHeader, serviceRequest, service_request_id,
+		// serviceRequestGet);
 
 		String servicetype = serviceRequestGet.getServiceType();
 		String requestType = serviceRequest.getServices().get(0).getServiceType();
@@ -1288,7 +1290,7 @@ public class ServiceRequestService {
 		if (serviceRequestServiceType.equals(requestdataServiceType)
 				&& serviceRequest.getServices().get(0).getIsUT() == serviceRequestGet.getIsUT()) {
 			System.out.println("Update HC - Type:true==true and isUT : true==true");
-			
+
 			responseBody = updateServiceRequest(serviceRequest, service_request_id, requestHeader, role, status,
 					service_request_uuid, servicetype);
 
@@ -1297,7 +1299,7 @@ public class ServiceRequestService {
 		} else {
 
 			serviceRequest.getServices().get(0).setServiceType(requestdataServiceType);
-			RequestInfo requestInfo = serviceRequest.getRequestInfo(); 
+			RequestInfo requestInfo = serviceRequest.getRequestInfo();
 			ServiceRequest serviceRequestdata = getUserInfo(serviceRequest);
 
 			if (serviceRequest.getServices().get(0).getIsUT() != serviceRequestGet.getIsUT()) {
@@ -1307,7 +1309,8 @@ public class ServiceRequestService {
 				clone.getRequestInfo().setUserInfo(serviceRequestdata.getRequestInfo().getUserInfo());
 				ServiceResponse create = create(clone, requestHeader);
 				service_request_id_new = create.getServices().get(0).getService_request_id();
-				serviceRequest.setRequestInfo(requestInfo);;
+				serviceRequest.setRequestInfo(requestInfo);
+				;
 				updateProcesinstancedata(serviceRequest, service_request_id, service_request_id_new,
 						serviceRequestServiceType, serviceRequestGet);
 				return create;
@@ -1405,15 +1408,39 @@ public class ServiceRequestService {
 			String service_request_id_new, String serviceRequestServiceType, ServiceRequestData serviceRequestGet)
 			throws JSONException {
 
+		try {
+			System.out.println("HC WF : 1 : " + objectMapper.writeValueAsString(serviceRequest));
+		} catch (JsonProcessingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} 
+		
 		// geting data from processinstance with service_request_id
 		ServiceRequest procesinstancedata = getProcesinstanceData(serviceRequest, service_request_id_new,
 				service_request_id, serviceRequestServiceType, serviceRequestGet);
 
+		try {
+			System.out.println("HC WF : 10 : " + objectMapper.writeValueAsString(serviceRequest));
+		} catch (JsonProcessingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} 
+		
 		// service request id (old) this service request status update(mark as Rejected)
 		updateStatus(procesinstancedata, service_request_id_new, service_request_id);
-
+		try {
+			System.out.println("HC WF : 11 : " + objectMapper.writeValueAsString(serviceRequest));
+		} catch (JsonProcessingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} 
 		updateServiceRequestStatus(procesinstancedata, service_request_id, serviceRequestServiceType);
-
+		try {
+			System.out.println("HC WF : 12 : " + objectMapper.writeValueAsString(serviceRequest));
+		} catch (JsonProcessingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} 
 	}
 
 	private String generateServiceRequestId(String service_request_id) {
@@ -1663,7 +1690,12 @@ public class ServiceRequestService {
 		updateRequest.setTenantId(serviceRequest.getServices().get(0).getTenantId());
 		updateRequest.setService_request_uuid(serviceRequest.getServices().get(0).getService_request_uuid());
 		RequestInfoWrapper infowraperforupdate = RequestInfoWrapper.builder().requestBody(updateRequest).build();
-
+		try {
+			System.out.println("HC WF : 13 : " + objectMapper.writeValueAsString(serviceRequest));
+		} catch (JsonProcessingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} 
 		log.info("Update service request : " + infowraperforupdate);
 		hCProducer.push(hcConfiguration.getUpdateStatusTopic(), infowraperforupdate);
 
@@ -1673,8 +1705,21 @@ public class ServiceRequestService {
 	private ServiceRequest getProcesinstanceData(ServiceRequest serviceRequestGetData, String service_request_id_new,
 			String service_request_id, String serviceRequestServiceType, ServiceRequestData serviceRequestGet) {
 
+		try {
+			System.out.println("HC WF : 2 : " + objectMapper.writeValueAsString(serviceRequestGetData));
+		} catch (JsonProcessingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} 
+		
 		User employeeData = employeeStoredData(serviceRequestGetData);
 
+		try {
+			System.out.println("HC WF : 3 : " + objectMapper.writeValueAsString(serviceRequestGetData));
+		} catch (JsonProcessingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} 
 		try {
 			String procesinstanceData = getProcesinstanceDataFromprocesinstance(service_request_id,
 					serviceRequestGetData);
@@ -1682,10 +1727,23 @@ public class ServiceRequestService {
 			String bussinessServiceDataOld = getbussinessServiceDataOldServiceType(serviceRequestGetData,
 					serviceRequestServiceType);
 
+			try {
+				System.out.println("HC WF : 4 : " + objectMapper.writeValueAsString(serviceRequestGetData));
+			} catch (JsonProcessingException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} 
 			log.info("get data from procesinstance :" + procesinstanceData);
 			serviceRequestGetData = procesinstanceBulkData(procesinstanceData, bussinessServiceData,
 					serviceRequestGetData, service_request_id, service_request_id_new, bussinessServiceDataOld,
 					serviceRequestGet);
+			
+			try {
+				System.out.println("HC WF : 5 : " + objectMapper.writeValueAsString(serviceRequestGetData));
+			} catch (JsonProcessingException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} 
 
 		} catch (HttpClientErrorException e) {
 			log.info("Handled exception");
@@ -1732,7 +1790,12 @@ public class ServiceRequestService {
 	private ServiceRequest procesinstanceBulkData(String procesinstanceData, String bussinessServiceData,
 			ServiceRequest serviceRequestGetData, String service_request_id, String service_request_id_new,
 			String bussinessServiceDataOld, ServiceRequestData serviceRequestGet) {
-
+		try {
+			System.out.println("HC WF : 6 : " + objectMapper.writeValueAsString(serviceRequestGetData));
+		} catch (JsonProcessingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} 
 		String businessService = null;
 		String nextStateAndSla = null;
 		ArrayList<ProcessInstance> ProcessInstanceList = new ArrayList<>();
@@ -1811,11 +1874,29 @@ public class ServiceRequestService {
 
 			}
 
+			try {
+				System.out.println("HC WF : 7 : " + objectMapper.writeValueAsString(serviceRequestGetData));
+			} catch (JsonProcessingException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} 
 			if (serviceRequestGetData.getServices().get(0).getIsUT() == serviceRequestGet.getIsUT())
-			saveBulkProcessInstance(ProcessInstanceList);
+				saveBulkProcessInstance(ProcessInstanceList);
 
+			try {
+				System.out.println("HC WF : 8 : " + objectMapper.writeValueAsString(serviceRequestGetData));
+			} catch (JsonProcessingException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} 
 			serviceRequestGetData = setActionInfo(serviceRequestGetData, serviceRequestData);
 
+			try {
+				System.out.println("HC WF : 9 : " + objectMapper.writeValueAsString(serviceRequestGetData));
+			} catch (JsonProcessingException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} 
 		} catch (Exception ex) {
 
 			System.out.println("  DATA PARSING EXCEPTION " + ex);
