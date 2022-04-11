@@ -118,6 +118,9 @@ public class ServiceRequestService {
 	private RestTemplate rest;
 
 	@Autowired
+	private ObjectMapper objectMapper;
+	
+	@Autowired
 	public ServiceRequestService(HCConfiguration config, HCConfiguration hcConfiguration,
 			WorkflowIntegrator wfIntegrator, ObjectMapper objectMapper, IdGenRepository idgenrepository,
 			ServiceRepository serviceRepository, HCNotificationConsumer notificationConsumer, HCConstants hcConstants) {
@@ -126,7 +129,7 @@ public class ServiceRequestService {
 		this.idgenrepository = idgenrepository;
 		this.notificationConsumer = notificationConsumer;
 		this.wfIntegrator = wfIntegrator;
-
+		this.objectMapper = objectMapper;
 	}
 
 	/***
@@ -1264,7 +1267,7 @@ public class ServiceRequestService {
 
 		serviceRequest.getAuditDetails().setCreatedBy(serviceRequestGet.getCreatedBy());
 
-		deviceDetailSave(requestHeader, serviceRequest, service_request_id, serviceRequestGet);
+		//deviceDetailSave(requestHeader, serviceRequest, service_request_id, serviceRequestGet);
 
 		String servicetype = serviceRequestGet.getServiceType();
 		String requestType = serviceRequest.getServices().get(0).getServiceType();
@@ -1284,7 +1287,8 @@ public class ServiceRequestService {
 		log.info("Checking service requet type");
 		if (serviceRequestServiceType.equals(requestdataServiceType)
 				&& serviceRequest.getServices().get(0).getIsUT() == serviceRequestGet.getIsUT()) {
-
+			System.out.println("Update HC - Type:true==true and isUT : true==true");
+			
 			responseBody = updateServiceRequest(serviceRequest, service_request_id, requestHeader, role, status,
 					service_request_uuid, servicetype);
 
@@ -1293,18 +1297,22 @@ public class ServiceRequestService {
 		} else {
 
 			serviceRequest.getServices().get(0).setServiceType(requestdataServiceType);
+			RequestInfo requestInfo = serviceRequest.getRequestInfo(); 
 			ServiceRequest serviceRequestdata = getUserInfo(serviceRequest);
 
 			if (serviceRequest.getServices().get(0).getIsUT() != serviceRequestGet.getIsUT()) {
+				System.out.println("Update HC - Type:true!=true and isUT : true!=true");
 //				service_request_id_new = generateServiceRequestId(serviceRequest);
 				ServiceRequest clone = serviceRequest.clone();
 				clone.getRequestInfo().setUserInfo(serviceRequestdata.getRequestInfo().getUserInfo());
 				ServiceResponse create = create(clone, requestHeader);
 				service_request_id_new = create.getServices().get(0).getService_request_id();
+				serviceRequest.setRequestInfo(requestInfo);;
 				updateProcesinstancedata(serviceRequest, service_request_id, service_request_id_new,
 						serviceRequestServiceType, serviceRequestGet);
 				return create;
 			} else {
+				System.out.println("Update HC - Type:true!=true and isUT : true==true");
 				// add entry in service request table with service_request_id =
 				// service_request_id_old_1
 				service_request_id_new = generateServiceRequestId(service_request_id);
