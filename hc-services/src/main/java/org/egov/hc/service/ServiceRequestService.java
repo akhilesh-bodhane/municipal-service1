@@ -1310,7 +1310,6 @@ public class ServiceRequestService {
 				ServiceResponse create = create(clone, requestHeader);
 				service_request_id_new = create.getServices().get(0).getService_request_id();
 				serviceRequest.setRequestInfo(requestInfo);
-				;
 				updateProcesinstancedata(serviceRequest, service_request_id, service_request_id_new,
 						serviceRequestServiceType, serviceRequestGet);
 				return create;
@@ -1326,7 +1325,7 @@ public class ServiceRequestService {
 				responseBody = serviceRequestEdit(serviceRequestdata, service_request_id_new, role, status,
 						service_request_id, service_request_id_new, requestType);
 
-				serviceRequest.setRequestInfo(employeeInfo);
+				serviceRequest.setRequestInfo(requestInfo);
 
 				updateProcesinstancedata(serviceRequest, service_request_id, service_request_id_new,
 						serviceRequestServiceType, serviceRequestGet);
