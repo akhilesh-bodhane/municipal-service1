@@ -4488,7 +4488,7 @@
             }
          }
       },
-	  "UTDMCE-VERIFYUTDMCE":{
+	  "UTDMCE-REASSIGNTOUTDMCE":{
          "VERIFYUTCHDCE L2":{
             "remarks":{
                "fieldName":"remarks",
