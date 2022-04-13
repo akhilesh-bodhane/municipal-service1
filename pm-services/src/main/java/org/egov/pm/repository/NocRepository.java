@@ -139,8 +139,7 @@ public class NocRepository {
 	 * Updates the noc application and pushed data to kafka It will update the main
 	 * noc and noc details data
 	 * 
-	 * @param RequestData
-	 *            with datapayload,applicationType,applicationId,tenantId
+	 * @param RequestData with datapayload,applicationType,applicationId,tenantId
 	 */
 	public void updateNOC(RequestData requestData, String applicationId) {
 		RequestInfo requestInfo = requestData.getRequestInfo();
@@ -205,8 +204,7 @@ public class NocRepository {
 	/**
 	 * Getting remarks data for requested applicationId
 	 * 
-	 * @param required
-	 *            tenantId and applicationId
+	 * @param required tenantId and applicationId
 	 */
 	public JSONArray getRemarksForNoc(String tenantId, String appId) {
 		return jdbcTemplate.query(QueryBuilder.GET_NOC_REMARKS_QUERY, new Object[] { tenantId, appId },
@@ -216,8 +214,7 @@ public class NocRepository {
 	/**
 	 * Getting data for Templates
 	 * 
-	 * @param required
-	 *            tenantId and applicationType and status
+	 * @param required tenantId and applicationType and status
 	 */
 	public Map<String, EmailTemplateModel> findTemplate(String status, String tenantId, String applicationType) {
 
@@ -231,8 +228,7 @@ public class NocRepository {
 	/**
 	 * Getting application list data
 	 * 
-	 * @param required
-	 *            applicationType,RequestInfo and tenantId
+	 * @param required applicationType,RequestInfo and tenantId
 	 */
 	public JSONArray getNoc(RequestData requestInfo) {
 		List<Role> roles = requestInfo.getRequestInfo().getUserInfo().getRoles();
@@ -274,8 +270,7 @@ public class NocRepository {
 	/**
 	 * Getting certificate data for requested applicationId
 	 * 
-	 * @param required
-	 *            applicationType,RequestInfo and tenantId,requestDocumentType
+	 * @param required applicationType,RequestInfo and tenantId,requestDocumentType
 	 */
 	public JSONArray getCertificateData(RequestData requestInfo) {
 		try {
@@ -313,8 +308,7 @@ public class NocRepository {
 	/**
 	 * Getting data for application based on applicationId
 	 * 
-	 * @param required
-	 *            RequestInfo,applicationId
+	 * @param required RequestInfo,applicationId
 	 */
 	public JSONArray viewNoc(RequestData requestInfo) {
 		try {
@@ -365,14 +359,14 @@ public class NocRepository {
 	/**
 	 * Generating Id and calling to save noc
 	 * 
-	 * @param required
-	 *            RequestData and status
+	 * @param required RequestData and status
 	 */
 
 	public String saveValidateStatus(RequestData requestData, String status)
 			throws JsonParseException, JsonMappingException, ParseException, IOException {
 		String nocId = null;
-		String applicationId = commonService.generateApplicationId(requestData.getDataPayload().get(CommonConstants.IDNAME).toString(),requestData.getTenantId());
+		String applicationId = commonService.generateApplicationId(
+				requestData.getDataPayload().get(CommonConstants.IDNAME).toString(), requestData.getTenantId());
 		if (applicationId != null) {
 			requestData.setApplicationId(applicationId);
 			nocId = saveNoc(requestData, status, applicationId);
@@ -386,8 +380,7 @@ public class NocRepository {
 	 * Adding new record for NOC using kafka Setting data to Noc Application,details
 	 * and remarks for NOC
 	 * 
-	 * @param required
-	 *            Requestdata,applicationId and status
+	 * @param required Requestdata,applicationId and status
 	 */
 	// add
 	@SuppressWarnings("deprecation")
@@ -459,8 +452,7 @@ public class NocRepository {
 	/**
 	 * Validating application Id for requested Id
 	 * 
-	 * @param required
-	 *            applicationId
+	 * @param required applicationId
 	 */
 	public int validateApplicationId(String applicationId) {
 		List<Object> preparedStatementValues = new ArrayList<>();
@@ -478,8 +470,7 @@ public class NocRepository {
 	/**
 	 * Getting user of requested applicationId
 	 * 
-	 * @param required
-	 *            applicationId
+	 * @param required applicationId
 	 */
 
 	public List<Map<String, Object>> getUserByNocNumber(String applicationId) {
@@ -501,8 +492,7 @@ public class NocRepository {
 	/**
 	 * Workflow Integration Method
 	 * 
-	 * @param required
-	 *            applicationId,requestData and status
+	 * @param required applicationId,requestData and status
 	 */
 	public ResponseInfo workflowIntegration(String applicationId, RequestData requestData, String status)
 			throws IOException {
@@ -545,7 +535,8 @@ public class NocRepository {
 		}
 
 		processInstances.setDocuments(workflowDocumentList);
-		if(requestData.getDataPayload().get("assignee") != null && !requestData.getDataPayload().get(CommonConstants.ASSIGNEE).toString().equals("")) {
+		if (requestData.getDataPayload().get("assignee") != null
+				&& !requestData.getDataPayload().get(CommonConstants.ASSIGNEE).toString().equals("")) {
 			User user = new User();
 			user.setUuid(requestData.getDataPayload().get("assignee").toString());
 			processInstances.setAssignee(user);
@@ -569,8 +560,7 @@ public class NocRepository {
 	/**
 	 * Saving Noc Details data
 	 * 
-	 * @param required
-	 *            applicationId,RequestInfo and RequestData
+	 * @param required applicationId,RequestInfo and RequestData
 	 */
 	public NOCApplicationDetail saveNOCDetails(RequestData requestData, String applicationId, String nocId) {
 
@@ -605,8 +595,7 @@ public class NocRepository {
 	 * Updating status for application This method updates th status in main noc and
 	 * noc details and remarks data
 	 * 
-	 * @param required
-	 *            applicationType,RequestInfo,tenantId and workflowresponse
+	 * @param required applicationType,RequestInfo,tenantId and workflowresponse
 	 */
 	public ResponseData updateAppStatus(RequestData requestData)
 			throws ParseException, JsonParseException, JsonMappingException, IOException {
@@ -706,11 +695,24 @@ public class NocRepository {
 					: null);
 			apps.setGstAmount(
 					apps.getGstAmount() != null ? apps.getGstAmount().setScale(0, BigDecimal.ROUND_UP) : null);
-			if (dataPayLoad.get(CommonConstants.GSTAMOUNT) != null && dataPayLoad.get(CommonConstants.AMOUNT) != null) {
-				totalamount = apps.getGstAmount().add(apps.getAmount());
-				apps.setTotalamount(totalamount.setScale(0, BigDecimal.ROUND_UP));
+
+			if (requestData.getApplicationType().equalsIgnoreCase("UTROADCUTNOC")) {
+				if (dataPayLoad.get(CommonConstants.GSTAMOUNT) != null
+						&& dataPayLoad.get(CommonConstants.AMOUNT) != null
+						&& dataPayLoad.get(CommonConstants.PERFORMANCEBANKGUARANTEECHARGES) != null) {
+					totalamount = apps.getGstAmount().add(apps.getAmount()).add(apps.getPerformanceBankGuarantee());
+					apps.setTotalamount(totalamount.setScale(0, BigDecimal.ROUND_UP));
+				} else {
+					apps.setTotalamount(totalamount != null ? totalamount.setScale(0, BigDecimal.ROUND_UP) : null);
+				}
 			} else {
-				apps.setTotalamount(totalamount != null ? totalamount.setScale(0, BigDecimal.ROUND_UP) : null);
+				if (dataPayLoad.get(CommonConstants.GSTAMOUNT) != null
+						&& dataPayLoad.get(CommonConstants.AMOUNT) != null) {
+					totalamount = apps.getGstAmount().add(apps.getAmount());
+					apps.setTotalamount(totalamount.setScale(0, BigDecimal.ROUND_UP));
+				} else {
+					apps.setTotalamount(totalamount != null ? totalamount.setScale(0, BigDecimal.ROUND_UP) : null);
+				}
 			}
 
 			if (dataPayLoad.get(CommonConstants.BADGENUMBER) != null) {
@@ -731,7 +733,7 @@ public class NocRepository {
 					object.put("NOCApplicationDetail", details);
 					producer.push(updateNOCApplicationDetailsTopic, object);
 				}
-			}else if (dataPayLoad.get(CommonConstants.ISANYCHANGEINESTIMATION) != null) {
+			} else if (dataPayLoad.get(CommonConstants.ISANYCHANGEINESTIMATION) != null) {
 				NOCApplicationDetail applicationDetailModel = jdbcTemplate.queryForObject(
 						QueryBuilder.SELECT_APPLICATION_DETAIL_QUERY, new Object[] { requestData.getApplicationId() },
 						BeanPropertyRowMapper.newInstance(NOCApplicationDetail.class));
@@ -748,7 +750,8 @@ public class NocRepository {
 					object.put("NOCApplicationDetail", details);
 					producer.push(updateNOCApplicationDetailsTopic, object);
 				}
-			}else if (dataPayLoad.get(CommonConstants.ASSIGNEE) != null && !dataPayLoad.get(CommonConstants.ASSIGNEE).toString().equals("")) {
+			} else if (dataPayLoad.get(CommonConstants.ASSIGNEE) != null
+					&& !dataPayLoad.get(CommonConstants.ASSIGNEE).toString().equals("")) {
 				NOCApplicationDetail applicationDetailModel = jdbcTemplate.queryForObject(
 						QueryBuilder.SELECT_APPLICATION_DETAIL_QUERY, new Object[] { requestData.getApplicationId() },
 						BeanPropertyRowMapper.newInstance(NOCApplicationDetail.class));
@@ -756,8 +759,7 @@ public class NocRepository {
 					ObjectMapper objectMapper = new ObjectMapper();
 					JSONObject applicationDetailData = objectMapper
 							.readValue(applicationDetailModel.getApplicationDetail(), JSONObject.class);
-					applicationDetailData.put(CommonConstants.ASSIGNEE,
-							dataPayLoad.get(CommonConstants.ASSIGNEE));
+					applicationDetailData.put(CommonConstants.ASSIGNEE, dataPayLoad.get(CommonConstants.ASSIGNEE));
 					NOCApplicationDetail details = new NOCApplicationDetail();
 					details.setApplicationDetail(applicationDetailData.toJSONString());
 					details.setApplicationUuid(getAppIdUuid(requestData.getApplicationId()));
@@ -801,7 +803,7 @@ public class NocRepository {
 					producer.push(updateNOCApplicationDetailsTopic, object);
 				}
 			}
-		
+
 			List<NOCApplication> applists = Arrays.asList(apps);
 			NOCRequestData dataApp = new NOCRequestData();
 			dataApp.setRequestInfo(requestInfo);
@@ -829,7 +831,7 @@ public class NocRepository {
 				producer.push(notificationTopic, dataApp);
 				log.info("NocRepository.callWorkflow :: Notification Data Sent to Topic for id:{}",
 						nocApplication.getNocNumber());
-						
+
 				// Added for UT Roadcut Notification
 				if (dataApp.getNocApplication().get(0).getApplicationType().equals("UTROADCUTNOC")
 						&& dataApp.getNocApplication().get(0).getApplicationStatus().equals("APPROVED")) {
@@ -916,8 +918,7 @@ public class NocRepository {
 	/**
 	 * Getting application uuid
 	 * 
-	 * @param required
-	 *            applicationId
+	 * @param required applicationId
 	 */
 	public String getAppIdUuid(String applicationId) {
 		String appId = "";
@@ -933,8 +934,7 @@ public class NocRepository {
 	/**
 	 * Getting remark data
 	 * 
-	 * @param required
-	 *            applicationId
+	 * @param required applicationId
 	 */
 	public Integer findRemarks(String appId) {
 		return jdbcTemplate.query(QueryBuilder.SELECT_REMARKS_QUERY, new Object[] { appId }, counterRowMapper);
@@ -943,8 +943,7 @@ public class NocRepository {
 	/**
 	 * Getting pricebook data
 	 * 
-	 * @param required
-	 *            from date,categoryid,subcategory id,applicationType
+	 * @param required from date,categoryid,subcategory id,applicationType
 	 */
 	public Integer getpricebook(RequestData requestData, int flag) throws java.text.ParseException {
 		Integer i = null;
@@ -968,9 +967,8 @@ public class NocRepository {
 	/**
 	 * Updating pricebook data
 	 * 
-	 * @param required
-	 *            applicationType,RequestInfo, tenantId and category id and
-	 *            subcategory id
+	 * @param required applicationType,RequestInfo, tenantId and category id and
+	 *                 subcategory id
 	 */
 	public NocResponse updatepricebookdate(RequestData requestData) {
 		ResponseInfo res = new ResponseInfo();
@@ -1078,8 +1076,7 @@ public class NocRepository {
 	/**
 	 * Getting pricebook data
 	 * 
-	 * @param required
-	 *            tenantId,applicationType
+	 * @param required tenantId,applicationType
 	 */
 	public List<NOCPriceBook> viewPriceBook(RequestData requestdata) {
 
@@ -1093,8 +1090,7 @@ public class NocRepository {
 	/**
 	 * Getting pricebook data for requested pricebook id
 	 * 
-	 * @param required
-	 *            pricebook id
+	 * @param required pricebook id
 	 */
 	public List<NOCPriceBook> viewPriceBookById(RequestData requestdata) {
 		JSONObject dataPayLoad = requestdata.getDataPayload();
@@ -1111,9 +1107,9 @@ public class NocRepository {
 	/**
 	 * Updating pricebook data
 	 * 
-	 * @param required
-	 *            RequestInfo,datapayload and tenantId datapayload includes
-	 *            categoryid,sub category id,annual,perday,per month,fixed price
+	 * @param required RequestInfo,datapayload and tenantId datapayload includes
+	 *                 categoryid,sub category id,annual,perday,per month,fixed
+	 *                 price
 	 */
 	public NocResponse updatepricebook(RequestData requestData) {
 		ResponseInfo res = new ResponseInfo();
@@ -1161,8 +1157,7 @@ public class NocRepository {
 	/**
 	 * Generating Report Data
 	 * 
-	 * @param required
-	 *            list of ReportModel
+	 * @param required list of ReportModel
 	 */
 	public void generateReport(List<ReportModel> listOfResult) {
 		String proccessingInsertSql = QueryBuilder.INSERT_NOC_AVERAGE_TIME_QUERY;
