@@ -186,7 +186,15 @@ public class CalculationService {
 			estimate.setTaxHeadCode(
 					config.getBaseRoadCutFeeHeadUT() + "_" + calulationCriteria.getOpmsDetail().getRoadCutDivision());
 			estimate.setEstimateAmount(new BigDecimal(calulationCriteria.getOpmsDetail().getAmountRoadCut()).setScale(0,
-					BigDecimal.ROUND_UP));			
+					BigDecimal.ROUND_UP));		
+			
+			TaxHeadEstimate estimate2 = new TaxHeadEstimate();
+			estimate2.setCategory(Category.BANKPERFORMANCE);
+			estimate2.setTaxHeadCode(
+					config.getBaseRoadCutFeeBankHeadUT() + "_" + calulationCriteria.getOpmsDetail().getRoadCutDivision());
+			estimate2.setEstimateAmount(new BigDecimal(calulationCriteria.getOpmsDetail().getBankPerformanceRoadCut()).setScale(0,
+					BigDecimal.ROUND_UP));
+			taxHeadEstimates.add(estimate2);
 /*
 			TaxHeadEstimate estimate2 = new TaxHeadEstimate();
 			estimate2.setCategory(Category.BANKPERFORMANCE);
