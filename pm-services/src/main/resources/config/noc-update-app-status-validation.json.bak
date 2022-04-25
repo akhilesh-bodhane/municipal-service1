@@ -632,6 +632,42 @@
             }
          }
       },
+	  "EE-REASSIGNTOEE":{
+         "VERIFYHDMEE L1":{
+            "remarks":{
+               "fieldName":"remarks",
+               "mandatory":"true",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "assignee":{
+               "fieldName":"remarks",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9- ]{1,128}$"
+            },
+            "uploadDocuments":{
+               "fieldName":"uploadDocuments",
+               "mandatory":"false",
+               "validateRegularExp":"\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+            }
+         },
+         "REASSIGNTOSDE L2":{
+            "remarks":{
+               "fieldName":"remarks",
+               "mandatory":"true",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "assignee":{
+               "fieldName":"remarks",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9- ]{1,128}$"
+            },
+            "uploadDocuments":{
+               "fieldName":"uploadDocuments",
+               "mandatory":"false",
+               "validateRegularExp":"\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+            }
+         }
+      },
       "HDMEE-VERIFYHDMEE L1":{
          "VERIFYDMEE":{
             "remarks":{
@@ -1159,6 +1195,42 @@
             }
          }
       },
+      "SE-REASSIGNTOSE":{
+         "VERIFYCHDSE L1":{
+            "remarks":{
+               "fieldName":"remarks",
+               "mandatory":"true",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "assignee":{
+               "fieldName":"remarks",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9- ]{1,128}$"
+            },
+            "uploadDocuments":{
+               "fieldName":"uploadDocuments",
+               "mandatory":"false",
+               "validateRegularExp":"\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+            }
+         },
+         "REASSIGNTOEE L3":{
+            "remarks":{
+               "fieldName":"remarks",
+               "mandatory":"true",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "assignee":{
+               "fieldName":"remarks",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9- ]{1,128}$"
+            },
+            "uploadDocuments":{
+               "fieldName":"uploadDocuments",
+               "mandatory":"false",
+               "validateRegularExp":"\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+            }
+         }
+      },
       "CHDSE-VERIFYCHDSE L1":{
          "VERIFYDMSE":{
             "remarks":{
@@ -1405,6 +1477,23 @@
             }
          },
          "REVIEWOFCE L1":{
+            "remarks":{
+               "fieldName":"remarks",
+               "mandatory":"true",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "assignee":{
+               "fieldName":"remarks",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9- ]{1,128}$"
+            },
+            "uploadDocuments":{
+               "fieldName":"uploadDocuments",
+               "mandatory":"false",
+               "validateRegularExp":"\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+            }
+         },
+         "REASSIGNTOEE":{
             "remarks":{
                "fieldName":"remarks",
                "mandatory":"true",
@@ -1980,6 +2069,23 @@
                "mandatory":"false",
                "validateRegularExp":"\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
             }
+         },
+		 "REASSIGNTOSE":{
+            "remarks":{
+               "fieldName":"remarks",
+               "mandatory":"true",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "assignee":{
+               "fieldName":"remarks",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9- ]{1,128}$"
+            },
+            "uploadDocuments":{
+               "fieldName":"uploadDocuments",
+               "mandatory":"false",
+               "validateRegularExp":"\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+            }
          }
       },
       "CE-REVIEWOFCE L2":{
@@ -2001,6 +2107,23 @@
             }
          },
          "REASSIGNTOWD":{
+            "remarks":{
+               "fieldName":"remarks",
+               "mandatory":"true",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "assignee":{
+               "fieldName":"remarks",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9- ]{1,128}$"
+            },
+            "uploadDocuments":{
+               "fieldName":"uploadDocuments",
+               "mandatory":"false",
+               "validateRegularExp":"\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+            }
+         },
+		 "REASSIGNTOSE":{
             "remarks":{
                "fieldName":"remarks",
                "mandatory":"true",
@@ -3548,26 +3671,6 @@
                "fieldName":"uploadDocuments",
                "mandatory":"false",
                "validateRegularExp":"\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
-            },
-            "isAnyChangeInRoadCutEstimation":{
-               "fieldName":"isAnyChangeInRoadCutEstimation",
-               "mandatory":"false",
-               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
-            },
-            "amount":{
-               "fieldName":"amount",
-               "mandatory":"true",
-               "validateRegularExp":"^[0-9. ]+$"
-            },
-            "gstAmount":{
-               "fieldName":"gstAmount",
-               "mandatory":"true",
-               "validateRegularExp":"^[0-9. ]+$"
-            },
-            "performanceBankGuaranteeCharges":{
-               "fieldName":"performanceBankGuaranteeCharges",
-               "mandatory":"true",
-               "validateRegularExp":"^[0-9. ]+$"
             }
          }
       },
