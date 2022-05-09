@@ -260,4 +260,15 @@ public class NULMConfiguration {
 	private String SMIDALFUpdateTopic;
 	
 	
+	@Value("${ws.sms.notification_template}")
+	private String notificationTemplate;
+	
+	@Value("${notification.sms.enabled}")
+	private Boolean isSMSEnabled;
+	
+	// SMS
+	@Value("${kafka.topics.notification.sms}")
+	private String smsNotifTopic;
+	
+	
 }

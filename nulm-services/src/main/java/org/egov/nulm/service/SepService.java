@@ -108,11 +108,12 @@ public class SepService {
 				errorMap.put(CommonConstants.APPLICATION_MINORITY_NULL_CODE,
 						CommonConstants.APPLICATION_MINORITY_NULL_CODE_MESSAGE);
 			}
-			if (sepapplication.getIsUrbanPoor() == true
-					&& (sepapplication.getBplNo() == null || sepapplication.getBplNo() == "")) {
-				errorMap.put(CommonConstants.APPLICATION_BPLNO_NULL_CODE,
-						CommonConstants.APPLICATION_BPLNO_NULL_CODE_MESSAGE);
-			}
+			/*
+			 * if (sepapplication.getIsUrbanPoor() == true && (sepapplication.getBplNo() ==
+			 * null || sepapplication.getBplNo() == "")) {
+			 * errorMap.put(CommonConstants.APPLICATION_BPLNO_NULL_CODE,
+			 * CommonConstants.APPLICATION_BPLNO_NULL_CODE_MESSAGE); }
+			 */
 		} else {
 			errorMap.put(CommonConstants.MISSING_OR_INVALID_SEP_APPLICATION_OBJECT,
 					CommonConstants.MISSING_OR_INVALID_SEP_APPLICATION_MESSAGE);
