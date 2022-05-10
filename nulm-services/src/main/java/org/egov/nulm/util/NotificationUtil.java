@@ -98,6 +98,8 @@ public class NotificationUtil {
 	 * @param smsRequestList The list of SMSRequest to be sent
 	 */
 	public void sendSMS(List<SMSRequest> smsRequestList) {
+		System.out.println("sendSMS METHOD"+smsRequestList.toString());
+		System.out.println("Config SMS Enabled"+config.getIsSMSEnabled());
 		if (config.getIsSMSEnabled()) {
 			System.out.println("SMS IS ENABLED"+config.getIsSMSEnabled());
 			if (CollectionUtils.isEmpty(smsRequestList)) {
