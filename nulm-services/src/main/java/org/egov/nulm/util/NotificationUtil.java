@@ -99,11 +99,15 @@ public class NotificationUtil {
 	 */
 	public void sendSMS(List<SMSRequest> smsRequestList) {
 		if (config.getIsSMSEnabled()) {
+			System.out.println("SMS IS ENABLED"+config.getIsSMSEnabled());
 			if (CollectionUtils.isEmpty(smsRequestList)) {
+				System.out.println("smsRequestList EMPTY:"+smsRequestList);
 				log.info("Messages from localization couldn't be fetched!");
 				return;
 			}
 			for (SMSRequest smsRequest : smsRequestList) {
+				System.out.println("smsRequest::"+smsRequest);
+				System.out.println("MobileNumber: " + smsRequest.getMobileNumber() + " Messages: " + smsRequest.getMessage());
 				producer.push(config.getSmsNotifTopic(), smsRequest);
 				log.info("MobileNumber: " + smsRequest.getMobileNumber() + " Messages: " + smsRequest.getMessage());
 			}
