@@ -100,7 +100,10 @@ public class NotificationUtil {
 	public void sendSMS(List<SMSRequest> smsRequestList) {
 		System.out.println("sendSMS METHOD"+smsRequestList.toString());
 		System.out.println("Config SMS Enabled"+config.getIsSMSEnabled());
-		if (config.getIsSMSEnabled()) {
+		
+		boolean smsEnabled=true;
+		System.out.println("smsEnabled ::"+smsEnabled);
+		if (smsEnabled) {
 			System.out.println("SMS IS ENABLED"+config.getIsSMSEnabled());
 			if (CollectionUtils.isEmpty(smsRequestList)) {
 				System.out.println("smsRequestList EMPTY:"+smsRequestList);
