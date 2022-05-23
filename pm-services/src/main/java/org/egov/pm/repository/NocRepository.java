@@ -541,6 +541,8 @@ public class NocRepository {
 			user.setUuid(requestData.getDataPayload().get("assignee").toString());
 			processInstances.setAssignee(user);
 		}
+		if (requestData.getAdditionalDetails() != null && !requestData.getAdditionalDetails().isEmpty())
+			processInstances.setAdditionalDetails(requestData.getAdditionalDetails());
 
 		List<ProcessInstance> processList = Arrays.asList(processInstances);
 		workflowRequest.setProcessInstances(processList);
