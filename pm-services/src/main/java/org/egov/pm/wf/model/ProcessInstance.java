@@ -9,6 +9,7 @@ import javax.validation.constraints.Size;
 
 import org.egov.common.contract.request.User;
 import org.egov.pm.model.AuditDetail;
+import org.json.simple.JSONObject;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -96,6 +97,8 @@ public class ProcessInstance   {
         @JsonProperty("auditDetails")
         private AuditDetail auditDetails = null;
 
+    	@JsonProperty("additionalDetails")
+        private JSONObject additionalDetails = null;
 
         public ProcessInstance addDocumentsItem(Document documentsItem) {
             if (this.documents == null) {

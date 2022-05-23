@@ -3481,7 +3481,7 @@
          }
       }
    },
-    "UTROADCUTNOC":{
+  "UTROADCUTNOC":{
       "CITIZEN-DRAFT":{
          "INITIATED":{
             
@@ -3506,7 +3506,7 @@
             }
          }
       },
-      "UTJE-INITIATED":{
+      "UTROADCUT_JE_1-INITIATED":{
          "REVIEWUTSDE":{
             "remarks":{
                "fieldName":"remarks",
@@ -3523,7 +3523,7 @@
                "mandatory":"false",
                "validateRegularExp":"\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
             },
-			"isAnyChangeInRoadCutEstimation":{
+            "isAnyChangeInRoadCutEstimation":{
                "fieldName":"isAnyChangeInRoadCutEstimation",
                "mandatory":"false",
                "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
@@ -3561,7 +3561,7 @@
                "validateRegularExp":"\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
             }
          },
-		 "EDITEDATUTJE":{
+         "EDITEDATUTJE":{
             "remarks":{
                "fieldName":"remarks",
                "mandatory":"true",
@@ -3599,7 +3599,937 @@
             }
          }
       },
-      "UTJE-EDITEDATUTJE":{
+      "UTROADCUT_JE_2-INITIATED":{
+         "REVIEWUTSDE":{
+            "remarks":{
+               "fieldName":"remarks",
+               "mandatory":"true",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "assignee":{
+               "fieldName":"remarks",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9- ]{1,128}$"
+            },
+            "uploadDocuments":{
+               "fieldName":"uploadDocuments",
+               "mandatory":"false",
+               "validateRegularExp":"\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+            },
+            "isAnyChangeInRoadCutEstimation":{
+               "fieldName":"isAnyChangeInRoadCutEstimation",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "amount":{
+               "fieldName":"amount",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            },
+            "gstAmount":{
+               "fieldName":"gstAmount",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            },
+            "performanceBankGuaranteeCharges":{
+               "fieldName":"performanceBankGuaranteeCharges",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            }
+         },
+         "REASSIGN":{
+            "remarks":{
+               "fieldName":"remarks",
+               "mandatory":"true",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "assignee":{
+               "fieldName":"remarks",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9- ]{1,128}$"
+            },
+            "uploadDocuments":{
+               "fieldName":"uploadDocuments",
+               "mandatory":"false",
+               "validateRegularExp":"\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+            }
+         },
+         "EDITEDATUTJE":{
+            "remarks":{
+               "fieldName":"remarks",
+               "mandatory":"true",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "assignee":{
+               "fieldName":"remarks",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9- ]{1,128}$"
+            },
+            "uploadDocuments":{
+               "fieldName":"uploadDocuments",
+               "mandatory":"false",
+               "validateRegularExp":"\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+            },
+            "isAnyChangeInRoadCutEstimation":{
+               "fieldName":"isAnyChangeInRoadCutEstimation",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "amount":{
+               "fieldName":"amount",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            },
+            "gstAmount":{
+               "fieldName":"gstAmount",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            },
+            "performanceBankGuaranteeCharges":{
+               "fieldName":"performanceBankGuaranteeCharges",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            }
+         }
+      },
+      "UTROADCUT_JE_3-INITIATED":{
+         "REVIEWUTSDE":{
+            "remarks":{
+               "fieldName":"remarks",
+               "mandatory":"true",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "assignee":{
+               "fieldName":"remarks",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9- ]{1,128}$"
+            },
+            "uploadDocuments":{
+               "fieldName":"uploadDocuments",
+               "mandatory":"false",
+               "validateRegularExp":"\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+            },
+            "isAnyChangeInRoadCutEstimation":{
+               "fieldName":"isAnyChangeInRoadCutEstimation",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "amount":{
+               "fieldName":"amount",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            },
+            "gstAmount":{
+               "fieldName":"gstAmount",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            },
+            "performanceBankGuaranteeCharges":{
+               "fieldName":"performanceBankGuaranteeCharges",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            }
+         },
+         "REASSIGN":{
+            "remarks":{
+               "fieldName":"remarks",
+               "mandatory":"true",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "assignee":{
+               "fieldName":"remarks",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9- ]{1,128}$"
+            },
+            "uploadDocuments":{
+               "fieldName":"uploadDocuments",
+               "mandatory":"false",
+               "validateRegularExp":"\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+            }
+         },
+         "EDITEDATUTJE":{
+            "remarks":{
+               "fieldName":"remarks",
+               "mandatory":"true",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "assignee":{
+               "fieldName":"remarks",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9- ]{1,128}$"
+            },
+            "uploadDocuments":{
+               "fieldName":"uploadDocuments",
+               "mandatory":"false",
+               "validateRegularExp":"\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+            },
+            "isAnyChangeInRoadCutEstimation":{
+               "fieldName":"isAnyChangeInRoadCutEstimation",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "amount":{
+               "fieldName":"amount",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            },
+            "gstAmount":{
+               "fieldName":"gstAmount",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            },
+            "performanceBankGuaranteeCharges":{
+               "fieldName":"performanceBankGuaranteeCharges",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            }
+         }
+      },
+      "UTROADCUT_JE_4-INITIATED":{
+         "REVIEWUTSDE":{
+            "remarks":{
+               "fieldName":"remarks",
+               "mandatory":"true",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "assignee":{
+               "fieldName":"remarks",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9- ]{1,128}$"
+            },
+            "uploadDocuments":{
+               "fieldName":"uploadDocuments",
+               "mandatory":"false",
+               "validateRegularExp":"\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+            },
+            "isAnyChangeInRoadCutEstimation":{
+               "fieldName":"isAnyChangeInRoadCutEstimation",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "amount":{
+               "fieldName":"amount",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            },
+            "gstAmount":{
+               "fieldName":"gstAmount",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            },
+            "performanceBankGuaranteeCharges":{
+               "fieldName":"performanceBankGuaranteeCharges",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            }
+         },
+         "REASSIGN":{
+            "remarks":{
+               "fieldName":"remarks",
+               "mandatory":"true",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "assignee":{
+               "fieldName":"remarks",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9- ]{1,128}$"
+            },
+            "uploadDocuments":{
+               "fieldName":"uploadDocuments",
+               "mandatory":"false",
+               "validateRegularExp":"\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+            }
+         },
+         "EDITEDATUTJE":{
+            "remarks":{
+               "fieldName":"remarks",
+               "mandatory":"true",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "assignee":{
+               "fieldName":"remarks",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9- ]{1,128}$"
+            },
+            "uploadDocuments":{
+               "fieldName":"uploadDocuments",
+               "mandatory":"false",
+               "validateRegularExp":"\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+            },
+            "isAnyChangeInRoadCutEstimation":{
+               "fieldName":"isAnyChangeInRoadCutEstimation",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "amount":{
+               "fieldName":"amount",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            },
+            "gstAmount":{
+               "fieldName":"gstAmount",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            },
+            "performanceBankGuaranteeCharges":{
+               "fieldName":"performanceBankGuaranteeCharges",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            }
+         }
+      },
+      "UTROADCUT_JE_5-INITIATED":{
+         "REVIEWUTSDE":{
+            "remarks":{
+               "fieldName":"remarks",
+               "mandatory":"true",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "assignee":{
+               "fieldName":"remarks",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9- ]{1,128}$"
+            },
+            "uploadDocuments":{
+               "fieldName":"uploadDocuments",
+               "mandatory":"false",
+               "validateRegularExp":"\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+            },
+            "isAnyChangeInRoadCutEstimation":{
+               "fieldName":"isAnyChangeInRoadCutEstimation",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "amount":{
+               "fieldName":"amount",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            },
+            "gstAmount":{
+               "fieldName":"gstAmount",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            },
+            "performanceBankGuaranteeCharges":{
+               "fieldName":"performanceBankGuaranteeCharges",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            }
+         },
+         "REASSIGN":{
+            "remarks":{
+               "fieldName":"remarks",
+               "mandatory":"true",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "assignee":{
+               "fieldName":"remarks",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9- ]{1,128}$"
+            },
+            "uploadDocuments":{
+               "fieldName":"uploadDocuments",
+               "mandatory":"false",
+               "validateRegularExp":"\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+            }
+         },
+         "EDITEDATUTJE":{
+            "remarks":{
+               "fieldName":"remarks",
+               "mandatory":"true",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "assignee":{
+               "fieldName":"remarks",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9- ]{1,128}$"
+            },
+            "uploadDocuments":{
+               "fieldName":"uploadDocuments",
+               "mandatory":"false",
+               "validateRegularExp":"\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+            },
+            "isAnyChangeInRoadCutEstimation":{
+               "fieldName":"isAnyChangeInRoadCutEstimation",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "amount":{
+               "fieldName":"amount",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            },
+            "gstAmount":{
+               "fieldName":"gstAmount",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            },
+            "performanceBankGuaranteeCharges":{
+               "fieldName":"performanceBankGuaranteeCharges",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            }
+         }
+      },
+      "UTROADCUT_JE_6-INITIATED":{
+         "REVIEWUTSDE":{
+            "remarks":{
+               "fieldName":"remarks",
+               "mandatory":"true",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "assignee":{
+               "fieldName":"remarks",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9- ]{1,128}$"
+            },
+            "uploadDocuments":{
+               "fieldName":"uploadDocuments",
+               "mandatory":"false",
+               "validateRegularExp":"\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+            },
+            "isAnyChangeInRoadCutEstimation":{
+               "fieldName":"isAnyChangeInRoadCutEstimation",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "amount":{
+               "fieldName":"amount",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            },
+            "gstAmount":{
+               "fieldName":"gstAmount",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            },
+            "performanceBankGuaranteeCharges":{
+               "fieldName":"performanceBankGuaranteeCharges",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            }
+         },
+         "REASSIGN":{
+            "remarks":{
+               "fieldName":"remarks",
+               "mandatory":"true",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "assignee":{
+               "fieldName":"remarks",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9- ]{1,128}$"
+            },
+            "uploadDocuments":{
+               "fieldName":"uploadDocuments",
+               "mandatory":"false",
+               "validateRegularExp":"\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+            }
+         },
+         "EDITEDATUTJE":{
+            "remarks":{
+               "fieldName":"remarks",
+               "mandatory":"true",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "assignee":{
+               "fieldName":"remarks",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9- ]{1,128}$"
+            },
+            "uploadDocuments":{
+               "fieldName":"uploadDocuments",
+               "mandatory":"false",
+               "validateRegularExp":"\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+            },
+            "isAnyChangeInRoadCutEstimation":{
+               "fieldName":"isAnyChangeInRoadCutEstimation",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "amount":{
+               "fieldName":"amount",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            },
+            "gstAmount":{
+               "fieldName":"gstAmount",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            },
+            "performanceBankGuaranteeCharges":{
+               "fieldName":"performanceBankGuaranteeCharges",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            }
+         }
+      },
+      "UTROADCUT_JE_7-INITIATED":{
+         "REVIEWUTSDE":{
+            "remarks":{
+               "fieldName":"remarks",
+               "mandatory":"true",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "assignee":{
+               "fieldName":"remarks",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9- ]{1,128}$"
+            },
+            "uploadDocuments":{
+               "fieldName":"uploadDocuments",
+               "mandatory":"false",
+               "validateRegularExp":"\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+            },
+            "isAnyChangeInRoadCutEstimation":{
+               "fieldName":"isAnyChangeInRoadCutEstimation",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "amount":{
+               "fieldName":"amount",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            },
+            "gstAmount":{
+               "fieldName":"gstAmount",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            },
+            "performanceBankGuaranteeCharges":{
+               "fieldName":"performanceBankGuaranteeCharges",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            }
+         },
+         "REASSIGN":{
+            "remarks":{
+               "fieldName":"remarks",
+               "mandatory":"true",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "assignee":{
+               "fieldName":"remarks",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9- ]{1,128}$"
+            },
+            "uploadDocuments":{
+               "fieldName":"uploadDocuments",
+               "mandatory":"false",
+               "validateRegularExp":"\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+            }
+         },
+         "EDITEDATUTJE":{
+            "remarks":{
+               "fieldName":"remarks",
+               "mandatory":"true",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "assignee":{
+               "fieldName":"remarks",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9- ]{1,128}$"
+            },
+            "uploadDocuments":{
+               "fieldName":"uploadDocuments",
+               "mandatory":"false",
+               "validateRegularExp":"\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+            },
+            "isAnyChangeInRoadCutEstimation":{
+               "fieldName":"isAnyChangeInRoadCutEstimation",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "amount":{
+               "fieldName":"amount",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            },
+            "gstAmount":{
+               "fieldName":"gstAmount",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            },
+            "performanceBankGuaranteeCharges":{
+               "fieldName":"performanceBankGuaranteeCharges",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            }
+         }
+      },
+      "UTROADCUT_JE_8-INITIATED":{
+         "REVIEWUTSDE":{
+            "remarks":{
+               "fieldName":"remarks",
+               "mandatory":"true",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "assignee":{
+               "fieldName":"remarks",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9- ]{1,128}$"
+            },
+            "uploadDocuments":{
+               "fieldName":"uploadDocuments",
+               "mandatory":"false",
+               "validateRegularExp":"\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+            },
+            "isAnyChangeInRoadCutEstimation":{
+               "fieldName":"isAnyChangeInRoadCutEstimation",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "amount":{
+               "fieldName":"amount",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            },
+            "gstAmount":{
+               "fieldName":"gstAmount",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            },
+            "performanceBankGuaranteeCharges":{
+               "fieldName":"performanceBankGuaranteeCharges",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            }
+         },
+         "REASSIGN":{
+            "remarks":{
+               "fieldName":"remarks",
+               "mandatory":"true",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "assignee":{
+               "fieldName":"remarks",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9- ]{1,128}$"
+            },
+            "uploadDocuments":{
+               "fieldName":"uploadDocuments",
+               "mandatory":"false",
+               "validateRegularExp":"\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+            }
+         },
+         "EDITEDATUTJE":{
+            "remarks":{
+               "fieldName":"remarks",
+               "mandatory":"true",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "assignee":{
+               "fieldName":"remarks",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9- ]{1,128}$"
+            },
+            "uploadDocuments":{
+               "fieldName":"uploadDocuments",
+               "mandatory":"false",
+               "validateRegularExp":"\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+            },
+            "isAnyChangeInRoadCutEstimation":{
+               "fieldName":"isAnyChangeInRoadCutEstimation",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "amount":{
+               "fieldName":"amount",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            },
+            "gstAmount":{
+               "fieldName":"gstAmount",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            },
+            "performanceBankGuaranteeCharges":{
+               "fieldName":"performanceBankGuaranteeCharges",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            }
+         }
+      },
+      "UTROADCUT_JE_9-INITIATED":{
+         "REVIEWUTSDE":{
+            "remarks":{
+               "fieldName":"remarks",
+               "mandatory":"true",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "assignee":{
+               "fieldName":"remarks",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9- ]{1,128}$"
+            },
+            "uploadDocuments":{
+               "fieldName":"uploadDocuments",
+               "mandatory":"false",
+               "validateRegularExp":"\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+            },
+            "isAnyChangeInRoadCutEstimation":{
+               "fieldName":"isAnyChangeInRoadCutEstimation",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "amount":{
+               "fieldName":"amount",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            },
+            "gstAmount":{
+               "fieldName":"gstAmount",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            },
+            "performanceBankGuaranteeCharges":{
+               "fieldName":"performanceBankGuaranteeCharges",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            }
+         },
+         "REASSIGN":{
+            "remarks":{
+               "fieldName":"remarks",
+               "mandatory":"true",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "assignee":{
+               "fieldName":"remarks",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9- ]{1,128}$"
+            },
+            "uploadDocuments":{
+               "fieldName":"uploadDocuments",
+               "mandatory":"false",
+               "validateRegularExp":"\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+            }
+         },
+         "EDITEDATUTJE":{
+            "remarks":{
+               "fieldName":"remarks",
+               "mandatory":"true",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "assignee":{
+               "fieldName":"remarks",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9- ]{1,128}$"
+            },
+            "uploadDocuments":{
+               "fieldName":"uploadDocuments",
+               "mandatory":"false",
+               "validateRegularExp":"\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+            },
+            "isAnyChangeInRoadCutEstimation":{
+               "fieldName":"isAnyChangeInRoadCutEstimation",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "amount":{
+               "fieldName":"amount",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            },
+            "gstAmount":{
+               "fieldName":"gstAmount",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            },
+            "performanceBankGuaranteeCharges":{
+               "fieldName":"performanceBankGuaranteeCharges",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            }
+         }
+      },
+      "UTROADCUT_JE_10-INITIATED":{
+         "REVIEWUTSDE":{
+            "remarks":{
+               "fieldName":"remarks",
+               "mandatory":"true",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "assignee":{
+               "fieldName":"remarks",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9- ]{1,128}$"
+            },
+            "uploadDocuments":{
+               "fieldName":"uploadDocuments",
+               "mandatory":"false",
+               "validateRegularExp":"\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+            },
+            "isAnyChangeInRoadCutEstimation":{
+               "fieldName":"isAnyChangeInRoadCutEstimation",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "amount":{
+               "fieldName":"amount",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            },
+            "gstAmount":{
+               "fieldName":"gstAmount",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            },
+            "performanceBankGuaranteeCharges":{
+               "fieldName":"performanceBankGuaranteeCharges",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            }
+         },
+         "REASSIGN":{
+            "remarks":{
+               "fieldName":"remarks",
+               "mandatory":"true",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "assignee":{
+               "fieldName":"remarks",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9- ]{1,128}$"
+            },
+            "uploadDocuments":{
+               "fieldName":"uploadDocuments",
+               "mandatory":"false",
+               "validateRegularExp":"\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+            }
+         },
+         "EDITEDATUTJE":{
+            "remarks":{
+               "fieldName":"remarks",
+               "mandatory":"true",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "assignee":{
+               "fieldName":"remarks",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9- ]{1,128}$"
+            },
+            "uploadDocuments":{
+               "fieldName":"uploadDocuments",
+               "mandatory":"false",
+               "validateRegularExp":"\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+            },
+            "isAnyChangeInRoadCutEstimation":{
+               "fieldName":"isAnyChangeInRoadCutEstimation",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "amount":{
+               "fieldName":"amount",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            },
+            "gstAmount":{
+               "fieldName":"gstAmount",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            },
+            "performanceBankGuaranteeCharges":{
+               "fieldName":"performanceBankGuaranteeCharges",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            }
+         }
+      },
+      "UTROADCUT_JE_11-INITIATED":{
+         "REVIEWUTSDE":{
+            "remarks":{
+               "fieldName":"remarks",
+               "mandatory":"true",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "assignee":{
+               "fieldName":"remarks",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9- ]{1,128}$"
+            },
+            "uploadDocuments":{
+               "fieldName":"uploadDocuments",
+               "mandatory":"false",
+               "validateRegularExp":"\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+            },
+            "isAnyChangeInRoadCutEstimation":{
+               "fieldName":"isAnyChangeInRoadCutEstimation",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "amount":{
+               "fieldName":"amount",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            },
+            "gstAmount":{
+               "fieldName":"gstAmount",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            },
+            "performanceBankGuaranteeCharges":{
+               "fieldName":"performanceBankGuaranteeCharges",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            }
+         },
+         "REASSIGN":{
+            "remarks":{
+               "fieldName":"remarks",
+               "mandatory":"true",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "assignee":{
+               "fieldName":"remarks",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9- ]{1,128}$"
+            },
+            "uploadDocuments":{
+               "fieldName":"uploadDocuments",
+               "mandatory":"false",
+               "validateRegularExp":"\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+            }
+         },
+         "EDITEDATUTJE":{
+            "remarks":{
+               "fieldName":"remarks",
+               "mandatory":"true",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "assignee":{
+               "fieldName":"remarks",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9- ]{1,128}$"
+            },
+            "uploadDocuments":{
+               "fieldName":"uploadDocuments",
+               "mandatory":"false",
+               "validateRegularExp":"\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+            },
+            "isAnyChangeInRoadCutEstimation":{
+               "fieldName":"isAnyChangeInRoadCutEstimation",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "amount":{
+               "fieldName":"amount",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            },
+            "gstAmount":{
+               "fieldName":"gstAmount",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            },
+            "performanceBankGuaranteeCharges":{
+               "fieldName":"performanceBankGuaranteeCharges",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            }
+         }
+      },
+      "UTROADCUT_JE_1-EDITEDATUTJE":{
          "EDITEDATUTJE":{
             "remarks":{
                "fieldName":"remarks",
@@ -3655,8 +4585,8 @@
             }
          }
       },
-      "UTSDE-REVIEWUTSDE":{
-         "REVIEWOFUTEE L1":{
+      "UTROADCUT_JE_2-EDITEDATUTJE":{
+         "EDITEDATUTJE":{
             "remarks":{
                "fieldName":"remarks",
                "mandatory":"true",
@@ -3671,9 +4601,29 @@
                "fieldName":"uploadDocuments",
                "mandatory":"false",
                "validateRegularExp":"\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+            },
+            "isAnyChangeInRoadCutEstimation":{
+               "fieldName":"isAnyChangeInRoadCutEstimation",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "amount":{
+               "fieldName":"amount",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            },
+            "gstAmount":{
+               "fieldName":"gstAmount",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            },
+            "performanceBankGuaranteeCharges":{
+               "fieldName":"performanceBankGuaranteeCharges",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
             }
          },
-         "REASSIGNTOUTJE":{
+         "REVIEWUTSDE":{
             "remarks":{
                "fieldName":"remarks",
                "mandatory":"true",
@@ -3691,7 +4641,511 @@
             }
          }
       },
-      "UTJE-REASSIGNTOUTJE":{
+      "UTROADCUT_JE_3-EDITEDATUTJE":{
+         "EDITEDATUTJE":{
+            "remarks":{
+               "fieldName":"remarks",
+               "mandatory":"true",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "assignee":{
+               "fieldName":"remarks",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9- ]{1,128}$"
+            },
+            "uploadDocuments":{
+               "fieldName":"uploadDocuments",
+               "mandatory":"false",
+               "validateRegularExp":"\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+            },
+            "isAnyChangeInRoadCutEstimation":{
+               "fieldName":"isAnyChangeInRoadCutEstimation",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "amount":{
+               "fieldName":"amount",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            },
+            "gstAmount":{
+               "fieldName":"gstAmount",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            },
+            "performanceBankGuaranteeCharges":{
+               "fieldName":"performanceBankGuaranteeCharges",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            }
+         },
+         "REVIEWUTSDE":{
+            "remarks":{
+               "fieldName":"remarks",
+               "mandatory":"true",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "assignee":{
+               "fieldName":"remarks",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9- ]{1,128}$"
+            },
+            "uploadDocuments":{
+               "fieldName":"uploadDocuments",
+               "mandatory":"false",
+               "validateRegularExp":"\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+            }
+         }
+      },
+      "UTROADCUT_JE_4-EDITEDATUTJE":{
+         "EDITEDATUTJE":{
+            "remarks":{
+               "fieldName":"remarks",
+               "mandatory":"true",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "assignee":{
+               "fieldName":"remarks",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9- ]{1,128}$"
+            },
+            "uploadDocuments":{
+               "fieldName":"uploadDocuments",
+               "mandatory":"false",
+               "validateRegularExp":"\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+            },
+            "isAnyChangeInRoadCutEstimation":{
+               "fieldName":"isAnyChangeInRoadCutEstimation",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "amount":{
+               "fieldName":"amount",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            },
+            "gstAmount":{
+               "fieldName":"gstAmount",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            },
+            "performanceBankGuaranteeCharges":{
+               "fieldName":"performanceBankGuaranteeCharges",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            }
+         },
+         "REVIEWUTSDE":{
+            "remarks":{
+               "fieldName":"remarks",
+               "mandatory":"true",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "assignee":{
+               "fieldName":"remarks",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9- ]{1,128}$"
+            },
+            "uploadDocuments":{
+               "fieldName":"uploadDocuments",
+               "mandatory":"false",
+               "validateRegularExp":"\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+            }
+         }
+      },
+      "UTROADCUT_JE_5-EDITEDATUTJE":{
+         "EDITEDATUTJE":{
+            "remarks":{
+               "fieldName":"remarks",
+               "mandatory":"true",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "assignee":{
+               "fieldName":"remarks",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9- ]{1,128}$"
+            },
+            "uploadDocuments":{
+               "fieldName":"uploadDocuments",
+               "mandatory":"false",
+               "validateRegularExp":"\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+            },
+            "isAnyChangeInRoadCutEstimation":{
+               "fieldName":"isAnyChangeInRoadCutEstimation",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "amount":{
+               "fieldName":"amount",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            },
+            "gstAmount":{
+               "fieldName":"gstAmount",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            },
+            "performanceBankGuaranteeCharges":{
+               "fieldName":"performanceBankGuaranteeCharges",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            }
+         },
+         "REVIEWUTSDE":{
+            "remarks":{
+               "fieldName":"remarks",
+               "mandatory":"true",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "assignee":{
+               "fieldName":"remarks",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9- ]{1,128}$"
+            },
+            "uploadDocuments":{
+               "fieldName":"uploadDocuments",
+               "mandatory":"false",
+               "validateRegularExp":"\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+            }
+         }
+      },
+      "UTROADCUT_JE_6-EDITEDATUTJE":{
+         "EDITEDATUTJE":{
+            "remarks":{
+               "fieldName":"remarks",
+               "mandatory":"true",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "assignee":{
+               "fieldName":"remarks",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9- ]{1,128}$"
+            },
+            "uploadDocuments":{
+               "fieldName":"uploadDocuments",
+               "mandatory":"false",
+               "validateRegularExp":"\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+            },
+            "isAnyChangeInRoadCutEstimation":{
+               "fieldName":"isAnyChangeInRoadCutEstimation",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "amount":{
+               "fieldName":"amount",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            },
+            "gstAmount":{
+               "fieldName":"gstAmount",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            },
+            "performanceBankGuaranteeCharges":{
+               "fieldName":"performanceBankGuaranteeCharges",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            }
+         },
+         "REVIEWUTSDE":{
+            "remarks":{
+               "fieldName":"remarks",
+               "mandatory":"true",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "assignee":{
+               "fieldName":"remarks",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9- ]{1,128}$"
+            },
+            "uploadDocuments":{
+               "fieldName":"uploadDocuments",
+               "mandatory":"false",
+               "validateRegularExp":"\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+            }
+         }
+      },
+      "UTROADCUT_JE_7-EDITEDATUTJE":{
+         "EDITEDATUTJE":{
+            "remarks":{
+               "fieldName":"remarks",
+               "mandatory":"true",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "assignee":{
+               "fieldName":"remarks",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9- ]{1,128}$"
+            },
+            "uploadDocuments":{
+               "fieldName":"uploadDocuments",
+               "mandatory":"false",
+               "validateRegularExp":"\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+            },
+            "isAnyChangeInRoadCutEstimation":{
+               "fieldName":"isAnyChangeInRoadCutEstimation",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "amount":{
+               "fieldName":"amount",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            },
+            "gstAmount":{
+               "fieldName":"gstAmount",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            },
+            "performanceBankGuaranteeCharges":{
+               "fieldName":"performanceBankGuaranteeCharges",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            }
+         },
+         "REVIEWUTSDE":{
+            "remarks":{
+               "fieldName":"remarks",
+               "mandatory":"true",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "assignee":{
+               "fieldName":"remarks",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9- ]{1,128}$"
+            },
+            "uploadDocuments":{
+               "fieldName":"uploadDocuments",
+               "mandatory":"false",
+               "validateRegularExp":"\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+            }
+         }
+      },
+      "UTROADCUT_JE_8-EDITEDATUTJE":{
+         "EDITEDATUTJE":{
+            "remarks":{
+               "fieldName":"remarks",
+               "mandatory":"true",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "assignee":{
+               "fieldName":"remarks",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9- ]{1,128}$"
+            },
+            "uploadDocuments":{
+               "fieldName":"uploadDocuments",
+               "mandatory":"false",
+               "validateRegularExp":"\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+            },
+            "isAnyChangeInRoadCutEstimation":{
+               "fieldName":"isAnyChangeInRoadCutEstimation",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "amount":{
+               "fieldName":"amount",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            },
+            "gstAmount":{
+               "fieldName":"gstAmount",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            },
+            "performanceBankGuaranteeCharges":{
+               "fieldName":"performanceBankGuaranteeCharges",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            }
+         },
+         "REVIEWUTSDE":{
+            "remarks":{
+               "fieldName":"remarks",
+               "mandatory":"true",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "assignee":{
+               "fieldName":"remarks",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9- ]{1,128}$"
+            },
+            "uploadDocuments":{
+               "fieldName":"uploadDocuments",
+               "mandatory":"false",
+               "validateRegularExp":"\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+            }
+         }
+      },
+      "UTROADCUT_JE_9-EDITEDATUTJE":{
+         "EDITEDATUTJE":{
+            "remarks":{
+               "fieldName":"remarks",
+               "mandatory":"true",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "assignee":{
+               "fieldName":"remarks",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9- ]{1,128}$"
+            },
+            "uploadDocuments":{
+               "fieldName":"uploadDocuments",
+               "mandatory":"false",
+               "validateRegularExp":"\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+            },
+            "isAnyChangeInRoadCutEstimation":{
+               "fieldName":"isAnyChangeInRoadCutEstimation",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "amount":{
+               "fieldName":"amount",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            },
+            "gstAmount":{
+               "fieldName":"gstAmount",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            },
+            "performanceBankGuaranteeCharges":{
+               "fieldName":"performanceBankGuaranteeCharges",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            }
+         },
+         "REVIEWUTSDE":{
+            "remarks":{
+               "fieldName":"remarks",
+               "mandatory":"true",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "assignee":{
+               "fieldName":"remarks",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9- ]{1,128}$"
+            },
+            "uploadDocuments":{
+               "fieldName":"uploadDocuments",
+               "mandatory":"false",
+               "validateRegularExp":"\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+            }
+         }
+      },
+      "UTROADCUT_JE_10-EDITEDATUTJE":{
+         "EDITEDATUTJE":{
+            "remarks":{
+               "fieldName":"remarks",
+               "mandatory":"true",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "assignee":{
+               "fieldName":"remarks",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9- ]{1,128}$"
+            },
+            "uploadDocuments":{
+               "fieldName":"uploadDocuments",
+               "mandatory":"false",
+               "validateRegularExp":"\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+            },
+            "isAnyChangeInRoadCutEstimation":{
+               "fieldName":"isAnyChangeInRoadCutEstimation",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "amount":{
+               "fieldName":"amount",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            },
+            "gstAmount":{
+               "fieldName":"gstAmount",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            },
+            "performanceBankGuaranteeCharges":{
+               "fieldName":"performanceBankGuaranteeCharges",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            }
+         },
+         "REVIEWUTSDE":{
+            "remarks":{
+               "fieldName":"remarks",
+               "mandatory":"true",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "assignee":{
+               "fieldName":"remarks",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9- ]{1,128}$"
+            },
+            "uploadDocuments":{
+               "fieldName":"uploadDocuments",
+               "mandatory":"false",
+               "validateRegularExp":"\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+            }
+         }
+      },
+      "UTROADCUT_JE_11-EDITEDATUTJE":{
+         "EDITEDATUTJE":{
+            "remarks":{
+               "fieldName":"remarks",
+               "mandatory":"true",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "assignee":{
+               "fieldName":"remarks",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9- ]{1,128}$"
+            },
+            "uploadDocuments":{
+               "fieldName":"uploadDocuments",
+               "mandatory":"false",
+               "validateRegularExp":"\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+            },
+            "isAnyChangeInRoadCutEstimation":{
+               "fieldName":"isAnyChangeInRoadCutEstimation",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "amount":{
+               "fieldName":"amount",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            },
+            "gstAmount":{
+               "fieldName":"gstAmount",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            },
+            "performanceBankGuaranteeCharges":{
+               "fieldName":"performanceBankGuaranteeCharges",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            }
+         },
+         "REVIEWUTSDE":{
+            "remarks":{
+               "fieldName":"remarks",
+               "mandatory":"true",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "assignee":{
+               "fieldName":"remarks",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9- ]{1,128}$"
+            },
+            "uploadDocuments":{
+               "fieldName":"uploadDocuments",
+               "mandatory":"false",
+               "validateRegularExp":"\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+            }
+         }
+      },
+      "UTROADCUT_JE_1-RESENT":{
          "REVIEWUTSDE":{
             "remarks":{
                "fieldName":"remarks",
@@ -3730,6 +5184,1625 @@
             }
          },
          "REASSIGN":{
+            "remarks":{
+               "fieldName":"remarks",
+               "mandatory":"true",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "assignee":{
+               "fieldName":"remarks",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9- ]{1,128}$"
+            },
+            "uploadDocuments":{
+               "fieldName":"uploadDocuments",
+               "mandatory":"false",
+               "validateRegularExp":"\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+            }
+         },
+         "EDITEDATUTJE":{
+            "remarks":{
+               "fieldName":"remarks",
+               "mandatory":"true",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "assignee":{
+               "fieldName":"remarks",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9- ]{1,128}$"
+            },
+            "uploadDocuments":{
+               "fieldName":"uploadDocuments",
+               "mandatory":"false",
+               "validateRegularExp":"\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+            },
+            "isAnyChangeInRoadCutEstimation":{
+               "fieldName":"isAnyChangeInRoadCutEstimation",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "amount":{
+               "fieldName":"amount",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            },
+            "gstAmount":{
+               "fieldName":"gstAmount",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            },
+            "performanceBankGuaranteeCharges":{
+               "fieldName":"performanceBankGuaranteeCharges",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            }
+         }
+      },
+      "UTROADCUT_JE_2-RESENT":{
+         "REVIEWUTSDE":{
+            "remarks":{
+               "fieldName":"remarks",
+               "mandatory":"true",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "assignee":{
+               "fieldName":"remarks",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9- ]{1,128}$"
+            },
+            "uploadDocuments":{
+               "fieldName":"uploadDocuments",
+               "mandatory":"false",
+               "validateRegularExp":"\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+            },
+            "isAnyChangeInRoadCutEstimation":{
+               "fieldName":"isAnyChangeInRoadCutEstimation",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "amount":{
+               "fieldName":"amount",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            },
+            "gstAmount":{
+               "fieldName":"gstAmount",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            },
+            "performanceBankGuaranteeCharges":{
+               "fieldName":"performanceBankGuaranteeCharges",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            }
+         },
+         "REASSIGN":{
+            "remarks":{
+               "fieldName":"remarks",
+               "mandatory":"true",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "assignee":{
+               "fieldName":"remarks",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9- ]{1,128}$"
+            },
+            "uploadDocuments":{
+               "fieldName":"uploadDocuments",
+               "mandatory":"false",
+               "validateRegularExp":"\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+            }
+         },
+         "EDITEDATUTJE":{
+            "remarks":{
+               "fieldName":"remarks",
+               "mandatory":"true",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "assignee":{
+               "fieldName":"remarks",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9- ]{1,128}$"
+            },
+            "uploadDocuments":{
+               "fieldName":"uploadDocuments",
+               "mandatory":"false",
+               "validateRegularExp":"\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+            },
+            "isAnyChangeInRoadCutEstimation":{
+               "fieldName":"isAnyChangeInRoadCutEstimation",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "amount":{
+               "fieldName":"amount",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            },
+            "gstAmount":{
+               "fieldName":"gstAmount",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            },
+            "performanceBankGuaranteeCharges":{
+               "fieldName":"performanceBankGuaranteeCharges",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            }
+         }
+      },
+      "UTROADCUT_JE_3-RESENT":{
+         "REVIEWUTSDE":{
+            "remarks":{
+               "fieldName":"remarks",
+               "mandatory":"true",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "assignee":{
+               "fieldName":"remarks",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9- ]{1,128}$"
+            },
+            "uploadDocuments":{
+               "fieldName":"uploadDocuments",
+               "mandatory":"false",
+               "validateRegularExp":"\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+            },
+            "isAnyChangeInRoadCutEstimation":{
+               "fieldName":"isAnyChangeInRoadCutEstimation",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "amount":{
+               "fieldName":"amount",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            },
+            "gstAmount":{
+               "fieldName":"gstAmount",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            },
+            "performanceBankGuaranteeCharges":{
+               "fieldName":"performanceBankGuaranteeCharges",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            }
+         },
+         "REASSIGN":{
+            "remarks":{
+               "fieldName":"remarks",
+               "mandatory":"true",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "assignee":{
+               "fieldName":"remarks",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9- ]{1,128}$"
+            },
+            "uploadDocuments":{
+               "fieldName":"uploadDocuments",
+               "mandatory":"false",
+               "validateRegularExp":"\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+            }
+         },
+         "EDITEDATUTJE":{
+            "remarks":{
+               "fieldName":"remarks",
+               "mandatory":"true",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "assignee":{
+               "fieldName":"remarks",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9- ]{1,128}$"
+            },
+            "uploadDocuments":{
+               "fieldName":"uploadDocuments",
+               "mandatory":"false",
+               "validateRegularExp":"\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+            },
+            "isAnyChangeInRoadCutEstimation":{
+               "fieldName":"isAnyChangeInRoadCutEstimation",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "amount":{
+               "fieldName":"amount",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            },
+            "gstAmount":{
+               "fieldName":"gstAmount",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            },
+            "performanceBankGuaranteeCharges":{
+               "fieldName":"performanceBankGuaranteeCharges",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            }
+         }
+      },
+      "UTROADCUT_JE_4-RESENT":{
+         "REVIEWUTSDE":{
+            "remarks":{
+               "fieldName":"remarks",
+               "mandatory":"true",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "assignee":{
+               "fieldName":"remarks",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9- ]{1,128}$"
+            },
+            "uploadDocuments":{
+               "fieldName":"uploadDocuments",
+               "mandatory":"false",
+               "validateRegularExp":"\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+            },
+            "isAnyChangeInRoadCutEstimation":{
+               "fieldName":"isAnyChangeInRoadCutEstimation",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "amount":{
+               "fieldName":"amount",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            },
+            "gstAmount":{
+               "fieldName":"gstAmount",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            },
+            "performanceBankGuaranteeCharges":{
+               "fieldName":"performanceBankGuaranteeCharges",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            }
+         },
+         "REASSIGN":{
+            "remarks":{
+               "fieldName":"remarks",
+               "mandatory":"true",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "assignee":{
+               "fieldName":"remarks",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9- ]{1,128}$"
+            },
+            "uploadDocuments":{
+               "fieldName":"uploadDocuments",
+               "mandatory":"false",
+               "validateRegularExp":"\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+            }
+         },
+         "EDITEDATUTJE":{
+            "remarks":{
+               "fieldName":"remarks",
+               "mandatory":"true",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "assignee":{
+               "fieldName":"remarks",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9- ]{1,128}$"
+            },
+            "uploadDocuments":{
+               "fieldName":"uploadDocuments",
+               "mandatory":"false",
+               "validateRegularExp":"\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+            },
+            "isAnyChangeInRoadCutEstimation":{
+               "fieldName":"isAnyChangeInRoadCutEstimation",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "amount":{
+               "fieldName":"amount",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            },
+            "gstAmount":{
+               "fieldName":"gstAmount",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            },
+            "performanceBankGuaranteeCharges":{
+               "fieldName":"performanceBankGuaranteeCharges",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            }
+         }
+      },
+      "UTROADCUT_JE_5-RESENT":{
+         "REVIEWUTSDE":{
+            "remarks":{
+               "fieldName":"remarks",
+               "mandatory":"true",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "assignee":{
+               "fieldName":"remarks",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9- ]{1,128}$"
+            },
+            "uploadDocuments":{
+               "fieldName":"uploadDocuments",
+               "mandatory":"false",
+               "validateRegularExp":"\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+            },
+            "isAnyChangeInRoadCutEstimation":{
+               "fieldName":"isAnyChangeInRoadCutEstimation",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "amount":{
+               "fieldName":"amount",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            },
+            "gstAmount":{
+               "fieldName":"gstAmount",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            },
+            "performanceBankGuaranteeCharges":{
+               "fieldName":"performanceBankGuaranteeCharges",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            }
+         },
+         "REASSIGN":{
+            "remarks":{
+               "fieldName":"remarks",
+               "mandatory":"true",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "assignee":{
+               "fieldName":"remarks",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9- ]{1,128}$"
+            },
+            "uploadDocuments":{
+               "fieldName":"uploadDocuments",
+               "mandatory":"false",
+               "validateRegularExp":"\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+            }
+         },
+         "EDITEDATUTJE":{
+            "remarks":{
+               "fieldName":"remarks",
+               "mandatory":"true",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "assignee":{
+               "fieldName":"remarks",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9- ]{1,128}$"
+            },
+            "uploadDocuments":{
+               "fieldName":"uploadDocuments",
+               "mandatory":"false",
+               "validateRegularExp":"\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+            },
+            "isAnyChangeInRoadCutEstimation":{
+               "fieldName":"isAnyChangeInRoadCutEstimation",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "amount":{
+               "fieldName":"amount",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            },
+            "gstAmount":{
+               "fieldName":"gstAmount",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            },
+            "performanceBankGuaranteeCharges":{
+               "fieldName":"performanceBankGuaranteeCharges",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            }
+         }
+      },
+      "UTROADCUT_JE_6-RESENT":{
+         "REVIEWUTSDE":{
+            "remarks":{
+               "fieldName":"remarks",
+               "mandatory":"true",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "assignee":{
+               "fieldName":"remarks",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9- ]{1,128}$"
+            },
+            "uploadDocuments":{
+               "fieldName":"uploadDocuments",
+               "mandatory":"false",
+               "validateRegularExp":"\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+            },
+            "isAnyChangeInRoadCutEstimation":{
+               "fieldName":"isAnyChangeInRoadCutEstimation",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "amount":{
+               "fieldName":"amount",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            },
+            "gstAmount":{
+               "fieldName":"gstAmount",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            },
+            "performanceBankGuaranteeCharges":{
+               "fieldName":"performanceBankGuaranteeCharges",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            }
+         },
+         "REASSIGN":{
+            "remarks":{
+               "fieldName":"remarks",
+               "mandatory":"true",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "assignee":{
+               "fieldName":"remarks",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9- ]{1,128}$"
+            },
+            "uploadDocuments":{
+               "fieldName":"uploadDocuments",
+               "mandatory":"false",
+               "validateRegularExp":"\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+            }
+         },
+         "EDITEDATUTJE":{
+            "remarks":{
+               "fieldName":"remarks",
+               "mandatory":"true",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "assignee":{
+               "fieldName":"remarks",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9- ]{1,128}$"
+            },
+            "uploadDocuments":{
+               "fieldName":"uploadDocuments",
+               "mandatory":"false",
+               "validateRegularExp":"\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+            },
+            "isAnyChangeInRoadCutEstimation":{
+               "fieldName":"isAnyChangeInRoadCutEstimation",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "amount":{
+               "fieldName":"amount",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            },
+            "gstAmount":{
+               "fieldName":"gstAmount",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            },
+            "performanceBankGuaranteeCharges":{
+               "fieldName":"performanceBankGuaranteeCharges",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            }
+         }
+      },
+      "UTROADCUT_JE_7-RESENT":{
+         "REVIEWUTSDE":{
+            "remarks":{
+               "fieldName":"remarks",
+               "mandatory":"true",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "assignee":{
+               "fieldName":"remarks",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9- ]{1,128}$"
+            },
+            "uploadDocuments":{
+               "fieldName":"uploadDocuments",
+               "mandatory":"false",
+               "validateRegularExp":"\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+            },
+            "isAnyChangeInRoadCutEstimation":{
+               "fieldName":"isAnyChangeInRoadCutEstimation",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "amount":{
+               "fieldName":"amount",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            },
+            "gstAmount":{
+               "fieldName":"gstAmount",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            },
+            "performanceBankGuaranteeCharges":{
+               "fieldName":"performanceBankGuaranteeCharges",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            }
+         },
+         "REASSIGN":{
+            "remarks":{
+               "fieldName":"remarks",
+               "mandatory":"true",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "assignee":{
+               "fieldName":"remarks",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9- ]{1,128}$"
+            },
+            "uploadDocuments":{
+               "fieldName":"uploadDocuments",
+               "mandatory":"false",
+               "validateRegularExp":"\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+            }
+         },
+         "EDITEDATUTJE":{
+            "remarks":{
+               "fieldName":"remarks",
+               "mandatory":"true",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "assignee":{
+               "fieldName":"remarks",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9- ]{1,128}$"
+            },
+            "uploadDocuments":{
+               "fieldName":"uploadDocuments",
+               "mandatory":"false",
+               "validateRegularExp":"\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+            },
+            "isAnyChangeInRoadCutEstimation":{
+               "fieldName":"isAnyChangeInRoadCutEstimation",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "amount":{
+               "fieldName":"amount",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            },
+            "gstAmount":{
+               "fieldName":"gstAmount",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            },
+            "performanceBankGuaranteeCharges":{
+               "fieldName":"performanceBankGuaranteeCharges",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            }
+         }
+      },
+      "UTROADCUT_JE_8-RESENT":{
+         "REVIEWUTSDE":{
+            "remarks":{
+               "fieldName":"remarks",
+               "mandatory":"true",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "assignee":{
+               "fieldName":"remarks",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9- ]{1,128}$"
+            },
+            "uploadDocuments":{
+               "fieldName":"uploadDocuments",
+               "mandatory":"false",
+               "validateRegularExp":"\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+            },
+            "isAnyChangeInRoadCutEstimation":{
+               "fieldName":"isAnyChangeInRoadCutEstimation",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "amount":{
+               "fieldName":"amount",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            },
+            "gstAmount":{
+               "fieldName":"gstAmount",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            },
+            "performanceBankGuaranteeCharges":{
+               "fieldName":"performanceBankGuaranteeCharges",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            }
+         },
+         "REASSIGN":{
+            "remarks":{
+               "fieldName":"remarks",
+               "mandatory":"true",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "assignee":{
+               "fieldName":"remarks",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9- ]{1,128}$"
+            },
+            "uploadDocuments":{
+               "fieldName":"uploadDocuments",
+               "mandatory":"false",
+               "validateRegularExp":"\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+            }
+         },
+         "EDITEDATUTJE":{
+            "remarks":{
+               "fieldName":"remarks",
+               "mandatory":"true",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "assignee":{
+               "fieldName":"remarks",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9- ]{1,128}$"
+            },
+            "uploadDocuments":{
+               "fieldName":"uploadDocuments",
+               "mandatory":"false",
+               "validateRegularExp":"\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+            },
+            "isAnyChangeInRoadCutEstimation":{
+               "fieldName":"isAnyChangeInRoadCutEstimation",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "amount":{
+               "fieldName":"amount",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            },
+            "gstAmount":{
+               "fieldName":"gstAmount",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            },
+            "performanceBankGuaranteeCharges":{
+               "fieldName":"performanceBankGuaranteeCharges",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            }
+         }
+      },
+      "UTROADCUT_JE_9-RESENT":{
+         "REVIEWUTSDE":{
+            "remarks":{
+               "fieldName":"remarks",
+               "mandatory":"true",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "assignee":{
+               "fieldName":"remarks",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9- ]{1,128}$"
+            },
+            "uploadDocuments":{
+               "fieldName":"uploadDocuments",
+               "mandatory":"false",
+               "validateRegularExp":"\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+            },
+            "isAnyChangeInRoadCutEstimation":{
+               "fieldName":"isAnyChangeInRoadCutEstimation",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "amount":{
+               "fieldName":"amount",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            },
+            "gstAmount":{
+               "fieldName":"gstAmount",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            },
+            "performanceBankGuaranteeCharges":{
+               "fieldName":"performanceBankGuaranteeCharges",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            }
+         },
+         "REASSIGN":{
+            "remarks":{
+               "fieldName":"remarks",
+               "mandatory":"true",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "assignee":{
+               "fieldName":"remarks",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9- ]{1,128}$"
+            },
+            "uploadDocuments":{
+               "fieldName":"uploadDocuments",
+               "mandatory":"false",
+               "validateRegularExp":"\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+            }
+         },
+         "EDITEDATUTJE":{
+            "remarks":{
+               "fieldName":"remarks",
+               "mandatory":"true",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "assignee":{
+               "fieldName":"remarks",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9- ]{1,128}$"
+            },
+            "uploadDocuments":{
+               "fieldName":"uploadDocuments",
+               "mandatory":"false",
+               "validateRegularExp":"\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+            },
+            "isAnyChangeInRoadCutEstimation":{
+               "fieldName":"isAnyChangeInRoadCutEstimation",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "amount":{
+               "fieldName":"amount",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            },
+            "gstAmount":{
+               "fieldName":"gstAmount",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            },
+            "performanceBankGuaranteeCharges":{
+               "fieldName":"performanceBankGuaranteeCharges",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            }
+         }
+      },
+      "UTROADCUT_JE_10-RESENT":{
+         "REVIEWUTSDE":{
+            "remarks":{
+               "fieldName":"remarks",
+               "mandatory":"true",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "assignee":{
+               "fieldName":"remarks",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9- ]{1,128}$"
+            },
+            "uploadDocuments":{
+               "fieldName":"uploadDocuments",
+               "mandatory":"false",
+               "validateRegularExp":"\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+            },
+            "isAnyChangeInRoadCutEstimation":{
+               "fieldName":"isAnyChangeInRoadCutEstimation",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "amount":{
+               "fieldName":"amount",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            },
+            "gstAmount":{
+               "fieldName":"gstAmount",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            },
+            "performanceBankGuaranteeCharges":{
+               "fieldName":"performanceBankGuaranteeCharges",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            }
+         },
+         "REASSIGN":{
+            "remarks":{
+               "fieldName":"remarks",
+               "mandatory":"true",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "assignee":{
+               "fieldName":"remarks",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9- ]{1,128}$"
+            },
+            "uploadDocuments":{
+               "fieldName":"uploadDocuments",
+               "mandatory":"false",
+               "validateRegularExp":"\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+            }
+         },
+         "EDITEDATUTJE":{
+            "remarks":{
+               "fieldName":"remarks",
+               "mandatory":"true",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "assignee":{
+               "fieldName":"remarks",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9- ]{1,128}$"
+            },
+            "uploadDocuments":{
+               "fieldName":"uploadDocuments",
+               "mandatory":"false",
+               "validateRegularExp":"\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+            },
+            "isAnyChangeInRoadCutEstimation":{
+               "fieldName":"isAnyChangeInRoadCutEstimation",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "amount":{
+               "fieldName":"amount",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            },
+            "gstAmount":{
+               "fieldName":"gstAmount",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            },
+            "performanceBankGuaranteeCharges":{
+               "fieldName":"performanceBankGuaranteeCharges",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            }
+         }
+      },
+      "UTROADCUT_JE_11-RESENT":{
+         "REVIEWUTSDE":{
+            "remarks":{
+               "fieldName":"remarks",
+               "mandatory":"true",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "assignee":{
+               "fieldName":"remarks",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9- ]{1,128}$"
+            },
+            "uploadDocuments":{
+               "fieldName":"uploadDocuments",
+               "mandatory":"false",
+               "validateRegularExp":"\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+            },
+            "isAnyChangeInRoadCutEstimation":{
+               "fieldName":"isAnyChangeInRoadCutEstimation",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "amount":{
+               "fieldName":"amount",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            },
+            "gstAmount":{
+               "fieldName":"gstAmount",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            },
+            "performanceBankGuaranteeCharges":{
+               "fieldName":"performanceBankGuaranteeCharges",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            }
+         },
+         "REASSIGN":{
+            "remarks":{
+               "fieldName":"remarks",
+               "mandatory":"true",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "assignee":{
+               "fieldName":"remarks",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9- ]{1,128}$"
+            },
+            "uploadDocuments":{
+               "fieldName":"uploadDocuments",
+               "mandatory":"false",
+               "validateRegularExp":"\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+            }
+         },
+         "EDITEDATUTJE":{
+            "remarks":{
+               "fieldName":"remarks",
+               "mandatory":"true",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "assignee":{
+               "fieldName":"remarks",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9- ]{1,128}$"
+            },
+            "uploadDocuments":{
+               "fieldName":"uploadDocuments",
+               "mandatory":"false",
+               "validateRegularExp":"\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+            },
+            "isAnyChangeInRoadCutEstimation":{
+               "fieldName":"isAnyChangeInRoadCutEstimation",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "amount":{
+               "fieldName":"amount",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            },
+            "gstAmount":{
+               "fieldName":"gstAmount",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            },
+            "performanceBankGuaranteeCharges":{
+               "fieldName":"performanceBankGuaranteeCharges",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            }
+         }
+      },
+      "UTROADCUT_JE_1-REASSIGNTOUTJE":{
+         "REVIEWUTSDE":{
+            "remarks":{
+               "fieldName":"remarks",
+               "mandatory":"true",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "assignee":{
+               "fieldName":"remarks",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9- ]{1,128}$"
+            },
+            "uploadDocuments":{
+               "fieldName":"uploadDocuments",
+               "mandatory":"false",
+               "validateRegularExp":"\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+            },
+            "isAnyChangeInRoadCutEstimation":{
+               "fieldName":"isAnyChangeInRoadCutEstimation",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "amount":{
+               "fieldName":"amount",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            },
+            "gstAmount":{
+               "fieldName":"gstAmount",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            },
+            "performanceBankGuaranteeCharges":{
+               "fieldName":"performanceBankGuaranteeCharges",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            }
+         },
+         "REASSIGN":{
+            "remarks":{
+               "fieldName":"remarks",
+               "mandatory":"true",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "assignee":{
+               "fieldName":"remarks",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9- ]{1,128}$"
+            },
+            "uploadDocuments":{
+               "fieldName":"uploadDocuments",
+               "mandatory":"false",
+               "validateRegularExp":"\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+            }
+         }
+      },
+      "UTROADCUT_JE_2-REASSIGNTOUTJE":{
+         "REVIEWUTSDE":{
+            "remarks":{
+               "fieldName":"remarks",
+               "mandatory":"true",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "assignee":{
+               "fieldName":"remarks",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9- ]{1,128}$"
+            },
+            "uploadDocuments":{
+               "fieldName":"uploadDocuments",
+               "mandatory":"false",
+               "validateRegularExp":"\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+            },
+            "isAnyChangeInRoadCutEstimation":{
+               "fieldName":"isAnyChangeInRoadCutEstimation",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "amount":{
+               "fieldName":"amount",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            },
+            "gstAmount":{
+               "fieldName":"gstAmount",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            },
+            "performanceBankGuaranteeCharges":{
+               "fieldName":"performanceBankGuaranteeCharges",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            }
+         },
+         "REASSIGN":{
+            "remarks":{
+               "fieldName":"remarks",
+               "mandatory":"true",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "assignee":{
+               "fieldName":"remarks",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9- ]{1,128}$"
+            },
+            "uploadDocuments":{
+               "fieldName":"uploadDocuments",
+               "mandatory":"false",
+               "validateRegularExp":"\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+            }
+         }
+      },
+      "UTROADCUT_JE_3-REASSIGNTOUTJE":{
+         "REVIEWUTSDE":{
+            "remarks":{
+               "fieldName":"remarks",
+               "mandatory":"true",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "assignee":{
+               "fieldName":"remarks",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9- ]{1,128}$"
+            },
+            "uploadDocuments":{
+               "fieldName":"uploadDocuments",
+               "mandatory":"false",
+               "validateRegularExp":"\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+            },
+            "isAnyChangeInRoadCutEstimation":{
+               "fieldName":"isAnyChangeInRoadCutEstimation",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "amount":{
+               "fieldName":"amount",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            },
+            "gstAmount":{
+               "fieldName":"gstAmount",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            },
+            "performanceBankGuaranteeCharges":{
+               "fieldName":"performanceBankGuaranteeCharges",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            }
+         },
+         "REASSIGN":{
+            "remarks":{
+               "fieldName":"remarks",
+               "mandatory":"true",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "assignee":{
+               "fieldName":"remarks",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9- ]{1,128}$"
+            },
+            "uploadDocuments":{
+               "fieldName":"uploadDocuments",
+               "mandatory":"false",
+               "validateRegularExp":"\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+            }
+         }
+      },
+      "UTROADCUT_JE_4-REASSIGNTOUTJE":{
+         "REVIEWUTSDE":{
+            "remarks":{
+               "fieldName":"remarks",
+               "mandatory":"true",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "assignee":{
+               "fieldName":"remarks",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9- ]{1,128}$"
+            },
+            "uploadDocuments":{
+               "fieldName":"uploadDocuments",
+               "mandatory":"false",
+               "validateRegularExp":"\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+            },
+            "isAnyChangeInRoadCutEstimation":{
+               "fieldName":"isAnyChangeInRoadCutEstimation",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "amount":{
+               "fieldName":"amount",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            },
+            "gstAmount":{
+               "fieldName":"gstAmount",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            },
+            "performanceBankGuaranteeCharges":{
+               "fieldName":"performanceBankGuaranteeCharges",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            }
+         },
+         "REASSIGN":{
+            "remarks":{
+               "fieldName":"remarks",
+               "mandatory":"true",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "assignee":{
+               "fieldName":"remarks",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9- ]{1,128}$"
+            },
+            "uploadDocuments":{
+               "fieldName":"uploadDocuments",
+               "mandatory":"false",
+               "validateRegularExp":"\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+            }
+         }
+      },
+      "UTROADCUT_JE_5-REASSIGNTOUTJE":{
+         "REVIEWUTSDE":{
+            "remarks":{
+               "fieldName":"remarks",
+               "mandatory":"true",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "assignee":{
+               "fieldName":"remarks",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9- ]{1,128}$"
+            },
+            "uploadDocuments":{
+               "fieldName":"uploadDocuments",
+               "mandatory":"false",
+               "validateRegularExp":"\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+            },
+            "isAnyChangeInRoadCutEstimation":{
+               "fieldName":"isAnyChangeInRoadCutEstimation",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "amount":{
+               "fieldName":"amount",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            },
+            "gstAmount":{
+               "fieldName":"gstAmount",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            },
+            "performanceBankGuaranteeCharges":{
+               "fieldName":"performanceBankGuaranteeCharges",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            }
+         },
+         "REASSIGN":{
+            "remarks":{
+               "fieldName":"remarks",
+               "mandatory":"true",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "assignee":{
+               "fieldName":"remarks",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9- ]{1,128}$"
+            },
+            "uploadDocuments":{
+               "fieldName":"uploadDocuments",
+               "mandatory":"false",
+               "validateRegularExp":"\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+            }
+         }
+      },
+      "UTROADCUT_JE_6-REASSIGNTOUTJE":{
+         "REVIEWUTSDE":{
+            "remarks":{
+               "fieldName":"remarks",
+               "mandatory":"true",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "assignee":{
+               "fieldName":"remarks",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9- ]{1,128}$"
+            },
+            "uploadDocuments":{
+               "fieldName":"uploadDocuments",
+               "mandatory":"false",
+               "validateRegularExp":"\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+            },
+            "isAnyChangeInRoadCutEstimation":{
+               "fieldName":"isAnyChangeInRoadCutEstimation",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "amount":{
+               "fieldName":"amount",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            },
+            "gstAmount":{
+               "fieldName":"gstAmount",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            },
+            "performanceBankGuaranteeCharges":{
+               "fieldName":"performanceBankGuaranteeCharges",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            }
+         },
+         "REASSIGN":{
+            "remarks":{
+               "fieldName":"remarks",
+               "mandatory":"true",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "assignee":{
+               "fieldName":"remarks",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9- ]{1,128}$"
+            },
+            "uploadDocuments":{
+               "fieldName":"uploadDocuments",
+               "mandatory":"false",
+               "validateRegularExp":"\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+            }
+         }
+      },
+      "UTROADCUT_JE_7-REASSIGNTOUTJE":{
+         "REVIEWUTSDE":{
+            "remarks":{
+               "fieldName":"remarks",
+               "mandatory":"true",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "assignee":{
+               "fieldName":"remarks",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9- ]{1,128}$"
+            },
+            "uploadDocuments":{
+               "fieldName":"uploadDocuments",
+               "mandatory":"false",
+               "validateRegularExp":"\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+            },
+            "isAnyChangeInRoadCutEstimation":{
+               "fieldName":"isAnyChangeInRoadCutEstimation",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "amount":{
+               "fieldName":"amount",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            },
+            "gstAmount":{
+               "fieldName":"gstAmount",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            },
+            "performanceBankGuaranteeCharges":{
+               "fieldName":"performanceBankGuaranteeCharges",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            }
+         },
+         "REASSIGN":{
+            "remarks":{
+               "fieldName":"remarks",
+               "mandatory":"true",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "assignee":{
+               "fieldName":"remarks",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9- ]{1,128}$"
+            },
+            "uploadDocuments":{
+               "fieldName":"uploadDocuments",
+               "mandatory":"false",
+               "validateRegularExp":"\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+            }
+         }
+      },
+      "UTROADCUT_JE_8-REASSIGNTOUTJE":{
+         "REVIEWUTSDE":{
+            "remarks":{
+               "fieldName":"remarks",
+               "mandatory":"true",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "assignee":{
+               "fieldName":"remarks",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9- ]{1,128}$"
+            },
+            "uploadDocuments":{
+               "fieldName":"uploadDocuments",
+               "mandatory":"false",
+               "validateRegularExp":"\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+            },
+            "isAnyChangeInRoadCutEstimation":{
+               "fieldName":"isAnyChangeInRoadCutEstimation",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "amount":{
+               "fieldName":"amount",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            },
+            "gstAmount":{
+               "fieldName":"gstAmount",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            },
+            "performanceBankGuaranteeCharges":{
+               "fieldName":"performanceBankGuaranteeCharges",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            }
+         },
+         "REASSIGN":{
+            "remarks":{
+               "fieldName":"remarks",
+               "mandatory":"true",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "assignee":{
+               "fieldName":"remarks",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9- ]{1,128}$"
+            },
+            "uploadDocuments":{
+               "fieldName":"uploadDocuments",
+               "mandatory":"false",
+               "validateRegularExp":"\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+            }
+         }
+      },
+      "UTROADCUT_JE_9-REASSIGNTOUTJE":{
+         "REVIEWUTSDE":{
+            "remarks":{
+               "fieldName":"remarks",
+               "mandatory":"true",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "assignee":{
+               "fieldName":"remarks",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9- ]{1,128}$"
+            },
+            "uploadDocuments":{
+               "fieldName":"uploadDocuments",
+               "mandatory":"false",
+               "validateRegularExp":"\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+            },
+            "isAnyChangeInRoadCutEstimation":{
+               "fieldName":"isAnyChangeInRoadCutEstimation",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "amount":{
+               "fieldName":"amount",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            },
+            "gstAmount":{
+               "fieldName":"gstAmount",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            },
+            "performanceBankGuaranteeCharges":{
+               "fieldName":"performanceBankGuaranteeCharges",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            }
+         },
+         "REASSIGN":{
+            "remarks":{
+               "fieldName":"remarks",
+               "mandatory":"true",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "assignee":{
+               "fieldName":"remarks",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9- ]{1,128}$"
+            },
+            "uploadDocuments":{
+               "fieldName":"uploadDocuments",
+               "mandatory":"false",
+               "validateRegularExp":"\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+            }
+         }
+      },
+      "UTROADCUT_JE_10-REASSIGNTOUTJE":{
+         "REVIEWUTSDE":{
+            "remarks":{
+               "fieldName":"remarks",
+               "mandatory":"true",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "assignee":{
+               "fieldName":"remarks",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9- ]{1,128}$"
+            },
+            "uploadDocuments":{
+               "fieldName":"uploadDocuments",
+               "mandatory":"false",
+               "validateRegularExp":"\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+            },
+            "isAnyChangeInRoadCutEstimation":{
+               "fieldName":"isAnyChangeInRoadCutEstimation",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "amount":{
+               "fieldName":"amount",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            },
+            "gstAmount":{
+               "fieldName":"gstAmount",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            },
+            "performanceBankGuaranteeCharges":{
+               "fieldName":"performanceBankGuaranteeCharges",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            }
+         },
+         "REASSIGN":{
+            "remarks":{
+               "fieldName":"remarks",
+               "mandatory":"true",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "assignee":{
+               "fieldName":"remarks",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9- ]{1,128}$"
+            },
+            "uploadDocuments":{
+               "fieldName":"uploadDocuments",
+               "mandatory":"false",
+               "validateRegularExp":"\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+            }
+         }
+      },
+      "UTROADCUT_JE_11-REASSIGNTOUTJE":{
+         "REVIEWUTSDE":{
+            "remarks":{
+               "fieldName":"remarks",
+               "mandatory":"true",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "assignee":{
+               "fieldName":"remarks",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9- ]{1,128}$"
+            },
+            "uploadDocuments":{
+               "fieldName":"uploadDocuments",
+               "mandatory":"false",
+               "validateRegularExp":"\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+            },
+            "isAnyChangeInRoadCutEstimation":{
+               "fieldName":"isAnyChangeInRoadCutEstimation",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "amount":{
+               "fieldName":"amount",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            },
+            "gstAmount":{
+               "fieldName":"gstAmount",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            },
+            "performanceBankGuaranteeCharges":{
+               "fieldName":"performanceBankGuaranteeCharges",
+               "mandatory":"true",
+               "validateRegularExp":"^[0-9. ]+$"
+            }
+         },
+         "REASSIGN":{
+            "remarks":{
+               "fieldName":"remarks",
+               "mandatory":"true",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "assignee":{
+               "fieldName":"remarks",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9- ]{1,128}$"
+            },
+            "uploadDocuments":{
+               "fieldName":"uploadDocuments",
+               "mandatory":"false",
+               "validateRegularExp":"\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+            }
+         }
+      },
+      "UTSDE-REVIEWUTSDE":{
+         "REVIEWOFUTEE L1":{
+            "remarks":{
+               "fieldName":"remarks",
+               "mandatory":"true",
+               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
+            },
+            "assignee":{
+               "fieldName":"remarks",
+               "mandatory":"false",
+               "validateRegularExp":"^[a-zA-Z0-9- ]{1,128}$"
+            },
+            "uploadDocuments":{
+               "fieldName":"uploadDocuments",
+               "mandatory":"false",
+               "validateRegularExp":"\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+            }
+         },
+         "REASSIGNTOUTJE":{
             "remarks":{
                "fieldName":"remarks",
                "mandatory":"true",
@@ -4628,7 +7701,7 @@
             }
          }
       },
-	  "UTDMCE-REASSIGNTOUTDMCE":{
+      "UTDMCE-REASSIGNTOUTDMCE":{
          "VERIFYUTCHDCE L2":{
             "remarks":{
                "fieldName":"remarks",
@@ -4990,99 +8063,6 @@
                "fieldName":"remarks",
                "mandatory":"true",
                "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
-            }
-         }
-      },
-	  "UTJE-RESENT":{
-         "REVIEWUTSDE":{
-            "remarks":{
-               "fieldName":"remarks",
-               "mandatory":"true",
-               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
-            },
-            "assignee":{
-               "fieldName":"remarks",
-               "mandatory":"false",
-               "validateRegularExp":"^[a-zA-Z0-9- ]{1,128}$"
-            },
-            "uploadDocuments":{
-               "fieldName":"uploadDocuments",
-               "mandatory":"false",
-               "validateRegularExp":"\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
-            },
-			"isAnyChangeInRoadCutEstimation":{
-               "fieldName":"isAnyChangeInRoadCutEstimation",
-               "mandatory":"false",
-               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
-            },
-            "amount":{
-               "fieldName":"amount",
-               "mandatory":"true",
-               "validateRegularExp":"^[0-9. ]+$"
-            },
-            "gstAmount":{
-               "fieldName":"gstAmount",
-               "mandatory":"true",
-               "validateRegularExp":"^[0-9. ]+$"
-            },
-            "performanceBankGuaranteeCharges":{
-               "fieldName":"performanceBankGuaranteeCharges",
-               "mandatory":"true",
-               "validateRegularExp":"^[0-9. ]+$"
-            }
-         },
-         "REASSIGN":{
-            "remarks":{
-               "fieldName":"remarks",
-               "mandatory":"true",
-               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
-            },
-            "assignee":{
-               "fieldName":"remarks",
-               "mandatory":"false",
-               "validateRegularExp":"^[a-zA-Z0-9- ]{1,128}$"
-            },
-            "uploadDocuments":{
-               "fieldName":"uploadDocuments",
-               "mandatory":"false",
-               "validateRegularExp":"\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
-            }
-         },
-		 "EDITEDATUTJE":{
-            "remarks":{
-               "fieldName":"remarks",
-               "mandatory":"true",
-               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
-            },
-            "assignee":{
-               "fieldName":"remarks",
-               "mandatory":"false",
-               "validateRegularExp":"^[a-zA-Z0-9- ]{1,128}$"
-            },
-            "uploadDocuments":{
-               "fieldName":"uploadDocuments",
-               "mandatory":"false",
-               "validateRegularExp":"\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
-            },
-            "isAnyChangeInRoadCutEstimation":{
-               "fieldName":"isAnyChangeInRoadCutEstimation",
-               "mandatory":"false",
-               "validateRegularExp":"^[a-zA-Z0-9.',\n\r ]{1,128}$"
-            },
-            "amount":{
-               "fieldName":"amount",
-               "mandatory":"true",
-               "validateRegularExp":"^[0-9. ]+$"
-            },
-            "gstAmount":{
-               "fieldName":"gstAmount",
-               "mandatory":"true",
-               "validateRegularExp":"^[0-9. ]+$"
-            },
-            "performanceBankGuaranteeCharges":{
-               "fieldName":"performanceBankGuaranteeCharges",
-               "mandatory":"true",
-               "validateRegularExp":"^[0-9. ]+$"
             }
          }
       }
