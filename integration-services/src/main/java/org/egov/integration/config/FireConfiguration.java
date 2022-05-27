@@ -54,5 +54,13 @@ public class FireConfiguration {
 	@Value("${persister.save.exefiredetails.topic}")
 	private String fireExecutionDataSaveTopic;
 
-	
+	@Value("${persister.save.fireapplicationdetails.topic}")
+	private String fireApplicationsDataSaveTopic;
+
+	@Value("${persister.save.fireapplicationtask.topic}")
+	private String fireAppTasksDataSaveTopic;
+
+	@Value("${notification.firenoc.application.process.topic}")
+	private String fireApplicaitonProcessTopic;
+
 }

@@ -59,6 +59,7 @@ public class CalculatorController {
 		if(servicename==null)
 			servicename = businessService_TL;
 		List<Calculation> calculations = null;
+		System.out.println("########Service Name : " + servicename);
 		switch(servicename)
 		{
 			case businessService_TL:

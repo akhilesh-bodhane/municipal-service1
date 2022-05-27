@@ -1,5 +1,7 @@
 package org.egov.integration.model;
 
+import java.util.List;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
@@ -20,4 +22,10 @@ public class FireRequest {
 	@JsonProperty("fireNocRequest")
 	private FireNoc fireNocRequest;
 	
+	@JsonProperty("fireNocApplicationRequest")
+	private List<FireNocDaoApplication> fireNocApplicationRequest;
+
+	@JsonProperty("fireNocApplicationTasksRequest")
+	private List<FireNocDaoApplicationTasks> fireNocApplicationTasksRequest;
+
 }

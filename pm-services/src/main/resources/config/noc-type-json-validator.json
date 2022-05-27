@@ -33,7 +33,7 @@
          "validateRegularExp":"^[a-zA-Z-_ ]{1,100}$"
       },
       "color":{
-         "mandatory":"true",
+         "mandatory":"false",
          "validateRegularExp":"^[a-zA-Z-_ ]{1,35}$"
       },
       "identificationMark":{
@@ -137,6 +137,30 @@
        "mobileNumber":{
          "mandatory":"true",
          "validateRegularExp":"(0/91)?[1-9][0-9]{9}"
+      },
+	  "classificationOfRoads":{
+         "mandatory":"false",
+         "validateRegularExp":"^[a-zA-Z0-9-,_ ]{1,200}"
+      },
+	  "constructionCircle":{
+         "mandatory":"false",
+         "validateRegularExp":"^[a-zA-Z0-9-,_ ]{1,200}"
+      },
+	  "subDivision":{
+         "mandatory":"false",
+         "validateRegularExp":"^[a-zA-Z0-9-,_ ]{1,200}"
+      },
+      "area":{
+         "mandatory":"false",
+         "validateRegularExp":"^[a-zA-Z0-9-,_ ]{1,200}"
+      },
+      "methodOfRoadCut":{
+         "mandatory":"false",
+         "validateRegularExp":"^[a-zA-Z0-9-,_ ]{1,200}"
+      },
+      "widthOfRoad":{
+         "mandatory":"false",
+         "validateRegularExp":"^(?=.*[0-9])[0-9]*[.,]?[0-9]{1,2}$"
       }
    },
    "SELLMEATNOC":{
@@ -313,6 +337,92 @@
       "remarks":{
          "mandatory":"false",
          "validateRegularExp":""
+      }
+   },
+   "UTROADCUTNOC":{
+      "typeOfApplicant":{
+         "mandatory":"false",
+         "validateRegularExp":"[a-zA-Z-_ ]++$"
+      },
+      "purposeOfRoadCutting":{
+         "mandatory":"true",
+         "validateRegularExp":"[a-zA-Z-_ ]++$"
+      },
+      "applicantName":{
+         "mandatory":"true",
+         "validateRegularExp":"^[a-zA-Z ]{1,50}$"
+      },
+      "idName":{
+         "mandatory":"true",
+         "validateRegularExp":"^[a-zA-Z1-9. ]{1,50}$"
+      },
+      "gstin":{
+         "mandatory":"false",
+         "validateRegularExp":"^([0]{1}[1-9]{1}|[1-2]{1}[0-9]{1}|[3]{1}[0-7]{1})([a-zA-Z]{5}[0-9]{4}[a-zA-Z]{1}[1-9a-zA-Z]{1}[zZ]{1}[0-9a-zA-Z]{1})+$"
+      },
+      "division":{
+         "mandatory":"true",
+         "validateRegularExp":"^[a-zA-Z0-9-\/,()_'&.\" ]{1,25}$"
+      },
+      "ward":{
+         "mandatory":"false",
+         "validateRegularExp":"^[a-zA-Z0-9-\/,()_'&.\" ]{1,25}$"
+      },
+      "sector":{
+         "mandatory":"true",
+         "validateRegularExp":"^[a-zA-Z0-9-\/,()_'&.\" ]*$"
+      },
+      "requestedLocation":{
+         "mandatory":"false",
+         "validateRegularExp":"^[a-zA-Z0-9!@#$&()\\-`.+,/\" ]{1,100}$"
+      },
+      "landmark":{
+         "mandatory":"true",
+         "validateRegularExp":"^[a-zA-Z0-9-\/,()_'&.\" ]{1,100}$"
+      },
+     "length":{
+         "mandatory":"true",
+         "validateRegularExp":"^(?=.*[0-9])[0-9]*[.,]?[0-9]{1,2}$"
+      },
+      "uploadDocuments":{
+         "mandatory":"true",
+         "validateRegularExp":"\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
+      },
+      "remarks":{
+         "mandatory":"false",
+         "validateRegularExp":""
+      },
+     "roadCutType":{
+         "mandatory":"true",
+         "validateRegularExp":"^[a-zA-Z0-9-,_ ]{1,200}"
+      },
+       "mobileNumber":{
+         "mandatory":"true",
+         "validateRegularExp":"(0/91)?[1-9][0-9]{9}"
+      },
+	  "classificationOfRoads":{
+         "mandatory":"true",
+         "validateRegularExp":"^[a-zA-Z0-9-,_ ]{1,200}"
+      },
+	  "constructionCircle":{
+         "mandatory":"true",
+         "validateRegularExp":"^[a-zA-Z0-9-,_ ]{1,200}"
+      },
+	  "subDivision":{
+         "mandatory":"true",
+         "validateRegularExp":"^[a-zA-Z0-9-,_ ]{1,200}"
+      },
+      "area":{
+         "mandatory":"true",
+         "validateRegularExp":"^[a-zA-Z0-9-,_ ]{1,200}"
+      },
+      "methodOfRoadCut":{
+         "mandatory":"true",
+         "validateRegularExp":"^[a-zA-Z0-9-,_ ]{1,200}"
+      },
+      "widthOfRoad":{
+         "mandatory":"true",
+         "validateRegularExp":"^(?=.*[0-9])[0-9]*[.,]?[0-9]{1,2}$"
       }
    }
 }

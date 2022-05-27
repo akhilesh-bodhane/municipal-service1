@@ -2,12 +2,20 @@
 package org.egov.integration.service;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import org.egov.common.contract.response.ResponseInfo;
 import org.egov.integration.common.CommonConstants;
 import org.egov.integration.model.AuditDetails;
+import org.egov.integration.model.FireApplicationDetails;
+import org.egov.integration.model.FireDataRequest;
 import org.egov.integration.model.FireNoc;
+import org.egov.integration.model.FireNocDaoApplication;
+import org.egov.integration.model.RequestInfoFire;
+import org.egov.integration.model.ResponseInfoFire;
 import org.egov.integration.model.ResponseInfoWrapper;
 import org.egov.integration.repository.fireRepository;
 import org.egov.integration.util.AuditDetailsUtil;
@@ -62,5 +70,53 @@ public class FireService {
 		
 	}	
 	
-	
+	public ResponseEntity<ResponseInfoFire> getData(RequestInfoFire request) {
+		FireApplicationDetails fireApplicationDetails = new FireApplicationDetails();
+		try {
+			validateFireRequest(request.getFireDataRequest());
+			if (request.getFireDataRequest().getApplicationReferenceNumber() != null
+					&& !request.getFireDataRequest().getApplicationReferenceNumber().isEmpty()) {
+
+				List<FireNocDaoApplication> applicationStatus = repository.getApplicationStatus(
+						request.getFireDataRequest().getFromDate(), request.getFireDataRequest().getToDate(),
+						request.getFireDataRequest().getTypeOfOccupancy(),
+						request.getFireDataRequest().getApplicationReferenceNumber());
+				if (applicationStatus != null && !applicationStatus.isEmpty()) {
+					fireApplicationDetails
+							.setApplicationReferenceNumber(applicationStatus.get(0).getApplicationRefNo());
+					fireApplicationDetails.setApplicationStatus(applicationStatus.get(0).getApplicationStatus());
+				} else {
+					throw new CustomException(CommonConstants.FIR_NOC_EXCEPTION_CODE,
+							"Please enter a valid application number");
+				}
+			} else {
+				fireApplicationDetails = repository.getApplicationCounts(request.getFireDataRequest().getFromDate(),
+						request.getFireDataRequest().getToDate(), request.getFireDataRequest().getTypeOfOccupancy());
+			}
+			return new ResponseEntity<>(ResponseInfoFire.builder()
+					.responseInfo(ResponseInfo.builder().status(CommonConstants.SUCCESS).build())
+					.fireApplicationDetails(fireApplicationDetails).build(), HttpStatus.OK);
+		} catch (Exception e) {
+			throw new CustomException(CommonConstants.FIR_NOC_EXCEPTION_CODE, e.getMessage());
+		}
+	}
+
+	private void validateFireRequest(FireDataRequest fireDataRequest) {
+		if ((fireDataRequest.getApplicationReferenceNumber() == null
+				|| fireDataRequest.getApplicationReferenceNumber().isEmpty())
+				&& (fireDataRequest.getFromDate() == null || fireDataRequest.getFromDate().isEmpty())
+				&& (fireDataRequest.getToDate() == null || fireDataRequest.getToDate().isEmpty())) {
+			throw new CustomException(CommonConstants.FIR_NOC_EXCEPTION_CODE,
+					"Please enter a valid application number or From date and To date");
+		} else {
+			if (fireDataRequest.getApplicationReferenceNumber() == null
+					|| fireDataRequest.getApplicationReferenceNumber().isEmpty()) {
+				if ((fireDataRequest.getFromDate() == null || fireDataRequest.getFromDate().isEmpty())
+						|| (fireDataRequest.getToDate() == null || fireDataRequest.getToDate().isEmpty())) {
+					throw new CustomException(CommonConstants.FIR_NOC_EXCEPTION_CODE,
+							"Please enter a valid From date and To date");
+				}
+			}
+		}
+	}
 }

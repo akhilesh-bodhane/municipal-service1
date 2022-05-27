@@ -127,13 +127,18 @@ public class HCConfiguration {
 	    @Value("${egov.idgen.path}")
 	    private String idGenPath;
 	
-	    @Value("${egov.idgen.hc.serviceRequestNum.name}")
-	    private String applicationNumberIdgenName;
+	    @Value("${egov.idgen.hc.serviceRequestNum.name.mcc}")
+	    private String applicationNumberIdgenNameMcc;
 	    
-	    @Value("${egov.idgen.hc.serviceRequestNum.format}")
-	    private String applicationNumberIdgenFormat;
+	    @Value("${egov.idgen.hc.serviceRequestNum.format.mcc}")
+	    private String applicationNumberIdgenFormatMcc;
 
-	   
+	    @Value("${egov.idgen.hc.serviceRequestNum.name.ut}")
+	    private String applicationNumberIdgenNameUt;
+	    
+	    @Value("${egov.idgen.hc.serviceRequestNum.format.ut}")
+	    private String applicationNumberIdgenFormatUt;
+	    
 	// Notifications 
 
 		@Value("${notification.allowed.on.status}")

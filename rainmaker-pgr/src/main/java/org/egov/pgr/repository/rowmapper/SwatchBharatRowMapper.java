@@ -43,6 +43,11 @@ public class SwatchBharatRowMapper implements ResultSetExtractor<List<SwatchBhar
 				currentSwatchBharat = SwatchBharat.builder().useruuid(rs.getObject("useruuid").toString())
 						.fileid(rs.getObject("fileid").toString()).uuid(rs.getObject("uuid").toString())
 						.isvalidimage(Boolean.parseBoolean(rs.getObject("isvalidimage").toString()))
+						.username(rs.getObject("username") != null ? rs.getObject("username").toString() : "")
+						.workbookid(rs.getObject("workbookid") != null
+								? Long.parseLong(rs.getObject("workbookid").toString())
+								: 0)
+						.filedata(rs.getObject("filedata") != null ? rs.getObject("filedata").toString() : "")
 						.auditDetails(auditDetails).build();
 				swatchBharatMap.put(id, currentSwatchBharat);
 			}

@@ -25,7 +25,7 @@ public class SwatchBharatRepository {
 	public List<SwatchBharat> getDataFromDb(SwatchBharatRequest swatchBharatRequest) {
 		List<Object> preparedStmtList = new ArrayList<>();
 
-		String query = "SELECT uuid, useruuid, fileid, createdby, updatedby, isvalidimage, createddate, updateddate \r\n"
+		String query = "SELECT uuid, useruuid, fileid, createdby, updatedby, isvalidimage, createddate, updateddate, username, workbookid, filedata \r\n"
 				+ "FROM public.sb_workbook_doc ";
 
 		StringBuilder queryBuilder = new StringBuilder(query);
@@ -52,6 +52,20 @@ public class SwatchBharatRepository {
 			} else {
 				queryBuilderWhere.append(" AND uuid = uuid");
 			}
+			if (swatchBharatRequest.getSwatchBharatSearch().getUsername() != null
+					&& !swatchBharatRequest.getSwatchBharatSearch().getUsername().isEmpty()) {
+				queryBuilderWhere.append(" AND username = ")
+						.append("'" + swatchBharatRequest.getSwatchBharatSearch().getUsername() + "'");
+			} else {
+				queryBuilderWhere.append(" AND username = username");
+			}
+			if (swatchBharatRequest.getSwatchBharatSearch().getWorkbookid() > 0 ) {
+				queryBuilderWhere.append(" AND workbookid = ")
+						.append("'" + swatchBharatRequest.getSwatchBharatSearch().getWorkbookid() + "'");
+			} else {
+				queryBuilderWhere.append(" AND workbookid = workbookid");
+			}
+			
 		}
 
 		if (queryBuilderWhere.length() > 0)

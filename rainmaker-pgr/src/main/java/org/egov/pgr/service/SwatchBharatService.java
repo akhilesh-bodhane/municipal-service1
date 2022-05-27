@@ -116,7 +116,9 @@ public class SwatchBharatService {
 					.useruuid(reportUtils.splitCamelCase(tuple.get("useruuid").toString()))
 					.fileid(reportUtils.splitCamelCase(tuple.get("fileid").toString()))
 					.uuid(reportUtils.splitCamelCase(tuple.get("uuid").toString()))
-					.isvalidimage(Boolean.parseBoolean(tuple.get("isvalidimage").toString())).auditDetails(auditDetails)
+					.isvalidimage(Boolean.parseBoolean(tuple.get("isvalidimage").toString()))
+					.username(reportUtils.splitCamelCase(tuple.get("username").toString()))
+					.workbookid(Long.parseLong(reportUtils.splitCamelCase(tuple.get("workbookid").toString()))).auditDetails(auditDetails)
 					.build();
 
 			sList.add(s);

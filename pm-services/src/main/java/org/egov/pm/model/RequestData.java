@@ -3,7 +3,9 @@ package org.egov.pm.model;
 import org.egov.common.contract.request.RequestInfo;
 import org.json.simple.JSONObject;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -44,5 +46,8 @@ public class RequestData {
 
 	@JsonProperty("currentState")
 	private String currentState;
+	
+	@JsonProperty("additionalDetails")
+    private JSONObject additionalDetails;
 
 }

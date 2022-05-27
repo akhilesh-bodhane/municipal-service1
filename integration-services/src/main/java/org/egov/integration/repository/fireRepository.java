@@ -1,19 +1,21 @@
 package org.egov.integration.repository;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.egov.integration.config.FireConfiguration;
-import org.egov.integration.config.PtConfiguration;
+import org.egov.integration.model.FireApplicationDetails;
 import org.egov.integration.model.FireNoc;
+import org.egov.integration.model.FireNocDaoApplication;
+import org.egov.integration.model.FireNocDaoApplicationTasks;
 import org.egov.integration.model.FireRequest;
-import org.egov.integration.model.PtMapping;
-import org.egov.integration.model.PtMappingRequest;
-import org.egov.integration.model.PtMappingRequestInfoWrapper;
 import org.egov.integration.producer.Producer;
-import org.egov.integration.repository.builder.PtMappingQueryBuilder;
-import org.egov.integration.repository.rowmapper.PtMappingRowMapper;
-import org.json.simple.JSONObject;
+import org.egov.integration.repository.builder.FireNocApplicationQueryBuilder;
+import org.egov.integration.repository.rowmapper.FireNocApplicationDetailRowMapper;
+import org.egov.integration.repository.rowmapper.FireNocApplicationDumpRowMapper;
+import org.egov.integration.repository.rowmapper.FireNocApplicationStatusCountDetails;
+import org.egov.integration.repository.rowmapper.FireNocApplicationTaskDetailRowMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -26,7 +28,22 @@ public class fireRepository {
 
 	@Autowired
 	private FireConfiguration config;
+	
+	@Autowired
+	private FireNocApplicationDetailRowMapper applicationDetailRowMapper;
 
+	@Autowired
+	private FireNocApplicationTaskDetailRowMapper applicationTaskDetailRowMapper;
+
+	@Autowired
+	private FireNocApplicationDumpRowMapper applicationDumpRowMapper;
+
+	@Autowired
+	private FireNocApplicationStatusCountDetails applicationStatusCountDetails;
+
+	@Autowired
+	public NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+	
 	public void saveFireData(FireNoc fire) {
 	
 		FireRequest infoWrapper = FireRequest.builder().fireNocRequest(fire).build();
@@ -47,4 +64,56 @@ public class fireRepository {
 
 	}
 
+	public List<FireNoc> getFireExecutionDetailsData(String uuid) {
+		Map<String, Object> paramValues = new HashMap<>();
+		paramValues.put("appUuid", uuid);
+		return namedParameterJdbcTemplate.query(FireNocApplicationQueryBuilder.GET_APPLICATION_DUMP_MAPPING_QUERY,
+				paramValues, applicationDumpRowMapper);
+	}
+
+	public List<FireNocDaoApplicationTasks> getApplicationTaskDataByTaskId(String taskId) {
+		Map<String, Object> paramValues = new HashMap<>();
+		paramValues.put("taskId", taskId);
+		return namedParameterJdbcTemplate.query(FireNocApplicationQueryBuilder.GET_APPLICATION_TASK_MAPPING_QUERY,
+				paramValues, applicationTaskDetailRowMapper);
+	}
+
+	public List<FireNocDaoApplication> getApplicationDataByApplicationId(String applicationId) {
+		Map<String, Object> paramValues = new HashMap<>();
+		paramValues.put("applicationId", applicationId);
+		return namedParameterJdbcTemplate.query(FireNocApplicationQueryBuilder.GET_APPLICATION_MAPPING_QUERY,
+				paramValues, applicationDetailRowMapper);
+	}
+
+	public FireApplicationDetails getApplicationCounts(String fromDate, String toDate, String typeOfOccupancyUse) {
+		Map<String, Object> paramValues = new HashMap<>();
+		paramValues.put("fromDate", fromDate);
+		paramValues.put("toDate", toDate);
+		paramValues.put("typeOfOccupancyUse", typeOfOccupancyUse);
+		return namedParameterJdbcTemplate.query(
+				FireNocApplicationQueryBuilder.GET_APPLICATION_COUNT_STATUS_MAPPING_QUERY, paramValues,
+				applicationStatusCountDetails);
+	}
+
+	public List<FireNocDaoApplication> getApplicationStatus(String fromDate, String toDate, String typeOfOccupancyUse,
+			String applicationRefNo) {
+		Map<String, Object> paramValues = new HashMap<>();
+		paramValues.put("fromDate", fromDate);
+		paramValues.put("toDate", toDate);
+		paramValues.put("typeOfOccupancyUse", typeOfOccupancyUse);
+		paramValues.put("applicationRefNo", applicationRefNo);
+		return namedParameterJdbcTemplate.query(
+				FireNocApplicationQueryBuilder.GET_APPLICATION_WISE_STATUS_MAPPING_QUERY, paramValues,
+				applicationDetailRowMapper);
+	}
+
+	public void saveApplicationDetail(List<FireNocDaoApplication> data) {
+		FireRequest infoWrapper = FireRequest.builder().fireNocApplicationRequest(data).build();
+		producer.push(config.getFireApplicationsDataSaveTopic(), infoWrapper);
+	}
+
+	public void saveApplicationTaskDetail(List<FireNocDaoApplicationTasks> data) {
+		FireRequest infoWrapper = FireRequest.builder().fireNocApplicationTasksRequest(data).build();
+		producer.push(config.getFireAppTasksDataSaveTopic(), infoWrapper);
+	}
 }

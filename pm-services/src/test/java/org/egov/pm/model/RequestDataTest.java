@@ -74,7 +74,7 @@ public class RequestDataTest {
 
 	@Test
 	public void testRequestDataRequestInfoStringStringStringStringStringJSONObjectAuditDetail() {
-		RequestData requestData2 = new RequestData(null, "NOCTYPE", "", "", "", "", null, null, null);
+		RequestData requestData2 = new RequestData(null, "NOCTYPE", "", "", "", "", null, null, null, null);
 		Assert.assertEquals("NOCTYPE", requestData2.getApplicationType());
 	}
 

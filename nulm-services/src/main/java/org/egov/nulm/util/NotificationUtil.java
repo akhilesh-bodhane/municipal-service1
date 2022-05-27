@@ -1,0 +1,181 @@
+package org.egov.nulm.util;
+
+import java.util.List;
+
+import org.egov.nulm.config.NULMConfiguration;
+import org.egov.nulm.model.SMSRequest;
+import org.egov.nulm.producer.Producer;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
+
+import lombok.extern.slf4j.Slf4j;
+
+@Component
+@Slf4j
+public class NotificationUtil {
+	
+	@Autowired
+	private NULMConfiguration config;
+	/*
+	 * @Autowired private ServiceRequestRepository serviceRequestRepository;
+	 */
+	
+	/*
+	 * @Autowired private WaterConnectionProducer producer;
+	 */
+	
+	@Autowired
+	private Producer producer;
+	
+	
+	/**
+	 * Returns the uri for the localization call
+	 * 
+	 * @param tenantId
+	 *            TenantId demand Notification Obj
+	 * @return The uri for localization search call
+	 */
+	/*
+	 * public StringBuilder getUri(String tenantId, RequestInfo requestInfo) {
+	 * 
+	 * if (config.getIsLocalizationStateLevel()) tenantId =
+	 * tenantId.split("\\.")[0];
+	 * 
+	 * String locale = WCConstants.NOTIFICATION_LOCALE; if
+	 * (!StringUtils.isEmpty(requestInfo.getMsgId()) &&
+	 * requestInfo.getMsgId().split("|").length >= 2) locale =
+	 * requestInfo.getMsgId().split("\\|")[1]; StringBuilder uri = new
+	 * StringBuilder(); uri.append(config.getLocalizationHost()).append(config.
+	 * getLocalizationContextPath())
+	 * .append(config.getLocalizationSearchEndpoint()).append("?").append("locale=")
+	 * .append(locale)
+	 * .append("&tenantId=").append(tenantId).append("&module=").append(WCConstants.
+	 * MODULE);
+	 * 
+	 * return uri; }
+	 */
+	
+	/**
+	 * Fetches messages from localization service
+	 * 
+	 * @param tenantId
+	 *            tenantId of the tradeLicense
+	 * @param requestInfo
+	 *            The requestInfo of the request
+	 * @return Localization messages for the module
+	 */
+	/*
+	 * public String getLocalizationMessages(String tenantId, RequestInfo
+	 * requestInfo) {
+	 * 
+	 * @SuppressWarnings("rawtypes") LinkedHashMap responseMap = (LinkedHashMap)
+	 * serviceRequestRepository.fetchResult(getUri(tenantId, requestInfo),
+	 * requestInfo); return new JSONObject(responseMap).toString(); }
+	 */
+	
+	/**
+	 * Extracts message for the specific code
+	 * 
+	 * @param notificationCode The code for which message is required
+	 * @param localizationMessage The localization messages
+	 * @return message for the specific code
+	 */
+	/*
+	 * public String getMessageTemplate(String notificationCode, String
+	 * localizationMessage) { String path =
+	 * "$..messages[?(@.code==\"{}\")].message"; path = path.replace("{}",
+	 * notificationCode); String message = null; try { ArrayList<String> messageObj
+	 * = (ArrayList<String>) JsonPath.parse(localizationMessage).read(path);
+	 * if(messageObj != null && messageObj.size() > 0) { message =
+	 * messageObj.get(0); } } catch (Exception e) {
+	 * log.warn("Fetching from localization failed", e); } return message; }
+	 */
+	
+	
+	/**
+	 * Send the SMSRequest on the SMSNotification kafka topic
+	 * @param smsRequestList The list of SMSRequest to be sent
+	 */
+	public void sendSMS(List<SMSRequest> smsRequestList) {
+		System.out.println("sendSMS METHOD"+smsRequestList.toString());
+		System.out.println("Config SMS Enabled"+config.getIsSMSEnabled());
+		
+		boolean smsEnabled=true;
+		System.out.println("smsEnabled ::"+smsEnabled);
+		if (smsEnabled) {
+			System.out.println("SMS IS ENABLED"+config.getIsSMSEnabled());
+			if (CollectionUtils.isEmpty(smsRequestList)) {
+				System.out.println("smsRequestList EMPTY:"+smsRequestList);
+				log.info("Messages from localization couldn't be fetched!");
+				return;
+			}
+			for (SMSRequest smsRequest : smsRequestList) {
+				System.out.println("smsRequest::"+smsRequest);
+				System.out.println("MobileNumber: " + smsRequest.getMobileNumber() + " Messages: " + smsRequest.getMessage());
+				producer.push(config.getSmsNotifTopic(), smsRequest);
+				log.info("MobileNumber: " + smsRequest.getMobileNumber() + " Messages: " + smsRequest.getMessage());
+			}
+		}
+	}
+	
+	/**
+	 * 
+	 * @param applicationStatus
+	 * @param localizationMessage
+	 * @return message template
+	 */
+	/*
+	 * public String getCustomizedMsgForSMS(String action, String applicationStatus,
+	 * String localizationMessage, int reqType) { StringBuilder builder = new
+	 * StringBuilder(); if(reqType == WCConstants.UPDATE_APPLICATION){
+	 * builder.append("WS_").append(action.toUpperCase()).append("_").append(
+	 * applicationStatus.toUpperCase()).append("_SMS_MESSAGE"); } if(reqType ==
+	 * WCConstants.MODIFY_CONNECTION){
+	 * builder.append("WS_MODIFY_").append(action.toUpperCase()).append("_").append(
+	 * applicationStatus.toUpperCase()).append("_SMS_MESSAGE"); } return
+	 * getMessageTemplate(builder.toString(), localizationMessage); }
+	 */
+
+	/**
+	 * 
+	 * @param applicationStatus
+	 * @param localizationMessage
+	 * @return In app message template
+	 */
+	/*
+	 * public String getCustomizedMsgForInApp(String action, String
+	 * applicationStatus, String localizationMessage, int reqType) { StringBuilder
+	 * builder = new StringBuilder(); if (reqType == WCConstants.UPDATE_APPLICATION)
+	 * { builder.append("WS_").append(action.toUpperCase()).append("_").append(
+	 * applicationStatus.toUpperCase()).append("_APP_MESSAGE"); } if (reqType ==
+	 * WCConstants.MODIFY_CONNECTION) {
+	 * builder.append("WS_MODIFY_").append(action.toUpperCase()).append("_").append(
+	 * applicationStatus.toUpperCase()).append("_APP_MESSAGE"); } return
+	 * getMessageTemplate(builder.toString(), localizationMessage); }
+	 */
+	
+	/**
+	 * 
+	 * @param code
+	 * @param localizationMessage
+	 * @return In app message template
+	 */
+	/*
+	 * public String getCustomizedMsg(String code, String localizationMessage) {
+	 * String messageString = getMessageTemplate(code, localizationMessage); return
+	 * messageString; }
+	 */
+	
+	/**
+	 * Pushes the event request to Kafka Queue.
+	 * 
+	 * @param request
+	 */
+	/*
+	 * public void sendEventNotification(EventRequest request) {
+	 * producer.push(config.getSaveUserEventsTopic(), request); }
+	 */
+	
+
+}

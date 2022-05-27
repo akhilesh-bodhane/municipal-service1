@@ -2,6 +2,8 @@ package org.egov.integration.web.controller;
 
 import javax.validation.Valid;
 
+import org.egov.integration.model.RequestInfoFire;
+import org.egov.integration.model.ResponseInfoFire;
 import org.egov.integration.model.ResponseInfoWrapper;
 import org.egov.integration.service.FireService;
 import org.json.simple.JSONObject;
@@ -33,4 +35,8 @@ public class FireController {
 		return service.postData(request);		
 	}
 	
+	@PostMapping(value = "/_get")
+	public ResponseEntity<ResponseInfoFire> getData(@Valid @RequestBody RequestInfoFire request) {
+		return service.getData(request);
+	}
 }

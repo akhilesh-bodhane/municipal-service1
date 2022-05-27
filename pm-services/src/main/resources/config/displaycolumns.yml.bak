@@ -1,0 +1,172 @@
+ColumnMaps:
+ tenantId: [ch.chandigarh]
+ columnConfig:
+   - applicationType: PETNOC
+     roles: [SI]
+     colunmNames: select EA.noc_number "applicationId",EA.applicant_name "applicantName",EA.application_status "applicationStatus" from egpm_noc_application_detail ED inner join egpm_noc_application EA on ED.application_uuid=EA.application_uuid WHERE EA.application_type='PETNOC' AND EA.application_status in ('PAID','REASSIGNTOSI','RESENT') AND ED.is_active=TRUE AND EA.is_active=TRUE  ORDER BY EA.created_time desc
+
+   - applicationType: PETNOC
+     roles: [MOH]
+     colunmNames: select EA.noc_number "applicationId",EA.applicant_name "applicantName",EA.application_status "applicationStatus" from egpm_noc_application_detail ED inner join egpm_noc_application EA on ED.application_uuid=EA.application_uuid WHERE EA.application_type='PETNOC' AND EA.application_status in ('FORWARD') AND ED.is_active=TRUE AND EA.is_active=TRUE  ORDER BY EA.created_time desc
+ 
+   - applicationType: PETNOC
+     roles: [CITIZEN]
+     colunmNames: select EA.noc_number "applicationId",EA.tenant_id "tenantId",replace(cast(ED.application_detail -> 'nameOfPetDog' as VARCHAR),'"','') as "nameOfPetDog",replace(cast(ED.application_detail -> 'color' as VARCHAR),'"','') as "color",replace(cast(ED.application_detail -> 'breed' as VARCHAR),'"','') as "breed",EA.application_status "applicationStatus" from egpm_noc_application_detail ED inner join egpm_noc_application EA on ED.application_uuid=EA.application_uuid WHERE EA.application_type='PETNOC' AND EA.created_by=[:createdBy:] AND EA.is_active=TRUE AND ED.is_active=TRUE ORDER BY EA.created_time desc
+   
+   - applicationType: SELLMEATNOC
+     roles: [SI]
+     colunmNames: select EA.noc_number "applicationId",EA.applicant_name "applicantName",EA.application_status "applicationStatus" from egpm_noc_application_detail ED inner join egpm_noc_application EA on ED.application_uuid=EA.application_uuid WHERE EA.application_type='SELLMEATNOC' AND EA.application_status in ('INITIATED','REASSIGNTOSI','RESENT') AND ED.is_active=TRUE AND EA.is_active=TRUE  ORDER BY EA.created_time desc
+
+   - applicationType: SELLMEATNOC
+     roles: [SUPERINTENDENT]
+     colunmNames: select EA.noc_number "applicationId",EA.applicant_name "applicantName",EA.application_status "applicationStatus" from egpm_noc_application_detail ED inner join egpm_noc_application EA on ED.application_uuid=EA.application_uuid WHERE EA.application_type='SELLMEATNOC' AND EA.application_status in ('REVIEWOFSUPERINTENDENT','REASSIGNTOSUPERINTENDENT') AND ED.is_active=TRUE AND EA.is_active=TRUE  ORDER BY EA.created_time desc
+     
+   - applicationType: SELLMEATNOC
+     roles: [MOH]
+     colunmNames: select EA.noc_number "applicationId",EA.applicant_name "applicantName",EA.application_status "applicationStatus" from egpm_noc_application_detail ED inner join egpm_noc_application EA on ED.application_uuid=EA.application_uuid WHERE EA.application_type='SELLMEATNOC' AND EA.application_status in ('PENDINGAPPROVAL') AND ED.is_active=TRUE AND EA.is_active=TRUE ORDER BY EA.created_time desc
+     
+   - applicationType: SELLMEATNOC
+     roles: [CITIZEN]
+     colunmNames: select EA.noc_number "applicationId",EA.tenant_id "tenantId", EA.house_Number "houseNo",replace(cast(ED.application_detail -> 'nocSought' as VARCHAR),'"','') as "nocSought",EA.house_Number "houseNo",replace(cast(ED.application_detail -> 'division' as VARCHAR),'"','') as "division",EA.application_status "applicationStatus" from egpm_noc_application_detail ED inner join egpm_noc_application EA on ED.application_uuid=EA.application_uuid WHERE EA.application_type='SELLMEATNOC' AND EA.created_by=[:createdBy:] AND EA.is_active=TRUE AND ED.is_active=TRUE ORDER BY EA.created_time desc
+
+   - applicationType: ROADCUTNOC
+     roles: [JE]
+     colunmNames: select EA.noc_number "applicationId",EA.applicant_name "applicantName",EA.application_status "applicationStatus" from egpm_noc_application_detail ED inner join egpm_noc_application EA on ED.application_uuid=EA.application_uuid WHERE EA.application_type='ROADCUTNOC' AND EA.application_status in ('INITIATED','INITIATED_TELECOM','REASSIGNTOJE','RESENT') AND ED.is_active=TRUE AND EA.is_active=TRUE  ORDER BY EA.created_time desc
+
+   - applicationType: ROADCUTNOC
+     roles: [SDO]
+     colunmNames: select EA.noc_number "applicationId",EA.applicant_name "applicantName",EA.application_status "applicationStatus" from egpm_noc_application_detail ED inner join egpm_noc_application EA on ED.application_uuid=EA.application_uuid WHERE EA.application_type='ROADCUTNOC' AND EA.application_status in ('REASSIGNTOSDO','REVIEWSDO') AND ED.is_active=TRUE AND EA.is_active=TRUE ORDER BY EA.created_time desc
+
+   - applicationType: ROADCUTNOC
+     roles: [EE]
+     colunmNames: select EA.noc_number "applicationId",EA.applicant_name "applicantName",EA.application_status "applicationStatus" from egpm_noc_application_detail ED inner join egpm_noc_application EA on ED.application_uuid=EA.application_uuid WHERE EA.application_type='ROADCUTNOC' AND EA.application_status in ('REVIEWOFEE','REASSIGNTOEE','REVIEWAPPROVEEE','REASSIGNAPPROVEEE') AND ED.is_active=TRUE AND EA.is_active=TRUE ORDER BY EA.created_time desc
+
+   - applicationType: ROADCUTNOC
+     roles: [SE]
+     colunmNames: select EA.noc_number "applicationId",EA.applicant_name "applicantName",EA.application_status "applicationStatus" from egpm_noc_application_detail ED inner join egpm_noc_application EA on ED.application_uuid=EA.application_uuid WHERE EA.application_type='ROADCUTNOC' AND EA.application_status in ('REASSIGNTOSE','REVIEWOFSE','REVIEWAPPROVESE','REASSIGNAPPROVESE') AND ED.is_active=TRUE AND EA.is_active=TRUE ORDER BY EA.created_time desc
+     
+   - applicationType: ROADCUTNOC
+     roles: [CE]
+     colunmNames: select EA.noc_number "applicationId",EA.applicant_name "applicantName",EA.application_status "applicationStatus" from egpm_noc_application_detail ED inner join egpm_noc_application EA on ED.application_uuid=EA.application_uuid WHERE EA.application_type='ROADCUTNOC' AND EA.application_status in ('PENDINGAPPROVAL','REVIEWAPPROVECE','REASSIGNAPPROVECE','REVIEWOFCE') AND ED.is_active=TRUE AND EA.is_active=TRUE ORDER BY EA.created_time desc
+
+   - applicationType: ROADCUTNOC
+     roles: [DOEE]
+     colunmNames: select EA.noc_number "applicationId",EA.applicant_name "applicantName",EA.application_status "applicationStatus" from egpm_noc_application_detail ED inner join egpm_noc_application EA on ED.application_uuid=EA.application_uuid WHERE EA.application_type='ROADCUTNOC' AND EA.application_status in ('VERIFYDOEE','REASSIGNDOEE') AND ED.is_active=TRUE AND EA.is_active=TRUE ORDER BY EA.created_time desc
+
+   - applicationType: ROADCUTNOC
+     roles: [DOSE]
+     colunmNames: select EA.noc_number "applicationId",EA.applicant_name "applicantName",EA.application_status "applicationStatus" from egpm_noc_application_detail ED inner join egpm_noc_application EA on ED.application_uuid=EA.application_uuid WHERE EA.application_type='ROADCUTNOC' AND EA.application_status in ('VERIFYDOSE','REASSIGNDOSE') AND ED.is_active=TRUE AND EA.is_active=TRUE ORDER BY EA.created_time desc
+
+   - applicationType: ROADCUTNOC
+     roles: [DOCE]
+     colunmNames: select EA.noc_number "applicationId",EA.applicant_name "applicantName",EA.application_status "applicationStatus" from egpm_noc_application_detail ED inner join egpm_noc_application EA on ED.application_uuid=EA.application_uuid WHERE EA.application_type='ROADCUTNOC' AND EA.application_status in ('VERIFYDOCE','REASSIGNDOCE') AND ED.is_active=TRUE AND EA.is_active=TRUE ORDER BY EA.created_time desc
+
+   - applicationType: ROADCUTNOC
+     roles: [WD]
+     colunmNames: select EA.noc_number "applicationId",EA.applicant_name "applicantName",EA.application_status "applicationStatus" from egpm_noc_application_detail ED inner join egpm_noc_application EA on ED.application_uuid=EA.application_uuid WHERE EA.application_type='ROADCUTNOC' AND EA.application_status in ('REVIEWOFWD') AND ED.is_active=TRUE AND EA.is_active=TRUE ORDER BY EA.created_time desc
+     
+   - applicationType: ROADCUTNOC
+     roles: [CITIZEN]
+     colunmNames: select EA.noc_number "applicationId",EA.tenant_id "tenantId",EA.sector AS "division",EA.applicant_name "applicantName",replace(cast(ED.application_detail -> 'typeOfApplicant' as VARCHAR),'"','') as "typeOfApplicant",replace(cast(ED.application_detail -> 'purposeOfRoadCutting' as VARCHAR),'"','') as "purposeOfRoadCutting",EA.application_status "applicationStatus", EA.created_time "createdTime", EA.application_type "applicationType" from egpm_noc_application_detail ED inner join egpm_noc_application EA on ED.application_uuid=EA.application_uuid WHERE EA.application_type='ROADCUTNOC' AND EA.created_by=[:createdBy:] AND EA.is_active=TRUE AND ED.is_active=TRUE ORDER BY EA.created_time desc
+   
+   - applicationType: ADVERTISEMENTNOC
+     roles: [JEX]
+     colunmNames: select EA.noc_number "applicationId",EA.applicant_name "applicantName",EA.application_status "applicationStatus",CASE WHEN coalesce(ER.application_uuid,'')<>'' THEN 1 ELSE 0 END AS "Withdraw" from egpm_noc_application_detail ED inner join egpm_noc_application EA on ED.application_uuid=EA.application_uuid left join (select application_uuid from egpm_noc_application_remark where application_status='WITHDRAWAFTERAPRROVAL') ER on ER.application_uuid=EA.application_uuid WHERE EA.application_type='ADVERTISEMENTNOC' AND EA.application_status in ('PAID','WITHDRAWAFTERAPRROVAL','RESENT','REASSIGNTOJEX','INITIATEDEXC') AND ED.is_active=TRUE AND EA.is_active=TRUE ORDER BY EA.created_time desc
+     
+   - applicationType: ADVERTISEMENTNOC
+     roles: [SUPERINTENDENT]
+     colunmNames: select EA.noc_number "applicationId",EA.applicant_name "applicantName",EA.application_status "applicationStatus",CASE WHEN coalesce(ER.application_uuid,'')<>'' THEN 1 ELSE 0 END AS "Withdraw" from egpm_noc_application_detail ED inner join egpm_noc_application EA on ED.application_uuid=EA.application_uuid left join (select application_uuid from egpm_noc_application_remark where application_status='WITHDRAWAFTERAPRROVAL') ER on ER.application_uuid=EA.application_uuid WHERE EA.application_type='ADVERTISEMENTNOC' AND EA.application_status in ('REVIEWOFSUPERINTENDENT','REASSIGNTOSUPERINTENDENT','REVIEWOFSPAFTERWITHDRAW') AND ED.is_active=TRUE AND EA.is_active=TRUE ORDER BY EA.created_time desc
+
+   - applicationType: ADVERTISEMENTNOC
+     roles: [OSD]
+     colunmNames: select EA.noc_number "applicationId",EA.applicant_name "applicantName",EA.application_status "applicationStatus",CASE WHEN coalesce(ER.application_uuid,'')<>'' THEN 1 ELSE 0 END AS "Withdraw" from egpm_noc_application_detail ED inner join egpm_noc_application EA on ED.application_uuid=EA.application_uuid left join (select application_uuid from egpm_noc_application_remark where application_status='WITHDRAWAFTERAPRROVAL') ER on ER.application_uuid=EA.application_uuid WHERE EA.application_type='ADVERTISEMENTNOC' AND EA.application_status in ('REVIEWOFOSD','FORWARDTOOSD','REASSIGNTOOSD') AND ED.is_active=TRUE AND EA.is_active=TRUE ORDER BY EA.created_time desc
+
+   - applicationType: ADVERTISEMENTNOC
+     roles: [JC]
+     colunmNames: select EA.noc_number "applicationId",EA.applicant_name "applicantName",EA.application_status "applicationStatus",CASE WHEN coalesce(ER.application_uuid,'')<>'' THEN 1 ELSE 0 END AS "Withdraw" from egpm_noc_application_detail ED inner join egpm_noc_application EA on ED.application_uuid=EA.application_uuid left join (select application_uuid from egpm_noc_application_remark where application_status='WITHDRAWAFTERAPRROVAL') ER on ER.application_uuid=EA.application_uuid WHERE EA.application_type='ADVERTISEMENTNOC' AND EA.application_status in ('REVIEWOFJC','REVIEWOFJCFORWITHDRAW','REASSIGNTOJC') AND ED.is_active=TRUE AND EA.is_active=TRUE ORDER BY EA.created_time desc
+
+   - applicationType: ADVERTISEMENTNOC
+     roles: [ADDITIONAL_COMMISSIONER]
+     colunmNames: select EA.noc_number "applicationId",EA.applicant_name "applicantName",EA.application_status "applicationStatus",CASE WHEN coalesce(ER.application_uuid,'')<>'' THEN 1 ELSE 0 END AS "Withdraw" from egpm_noc_application_detail ED inner join egpm_noc_application EA on ED.application_uuid=EA.application_uuid left join (select application_uuid from egpm_noc_application_remark where application_status='WITHDRAWAFTERAPRROVAL') ER on ER.application_uuid=EA.application_uuid WHERE EA.application_type='ADVERTISEMENTNOC' AND EA.application_status in ('REVIEWOFAC','REVIEWOFACFORWITHDRAW','REASSIGNTOAC') AND ED.is_active=TRUE AND EA.is_active=TRUE ORDER BY EA.created_time desc
+
+   - applicationType: ADVERTISEMENTNOC
+     roles: [SC]
+     colunmNames: select EA.noc_number "applicationId",EA.applicant_name "applicantName",EA.application_status "applicationStatus",CASE WHEN coalesce(ER.application_uuid,'')<>'' THEN 1 ELSE 0 END AS "Withdraw" from egpm_noc_application_detail ED inner join egpm_noc_application EA on ED.application_uuid=EA.application_uuid left join (select application_uuid from egpm_noc_application_remark where application_status='WITHDRAWAFTERAPRROVAL') ER on ER.application_uuid=EA.application_uuid WHERE EA.application_type='ADVERTISEMENTNOC' AND EA.application_status in ('REVIEWOFSC','REVIEWOFSCFORWITHDRAW','REASSIGNTOSC') AND ED.is_active=TRUE AND EA.is_active=TRUE ORDER BY EA.created_time desc
+
+   - applicationType: ADVERTISEMENTNOC
+     roles: [SEC]
+     colunmNames: select EA.noc_number "applicationId",EA.applicant_name "applicantName",EA.application_status "applicationStatus",CASE WHEN coalesce(ER.application_uuid,'')<>'' THEN 1 ELSE 0 END AS "Withdraw" from egpm_noc_application_detail ED inner join egpm_noc_application EA on ED.application_uuid=EA.application_uuid left join (select application_uuid from egpm_noc_application_remark where application_status='WITHDRAWAFTERAPRROVAL') ER on ER.application_uuid=EA.application_uuid WHERE EA.application_type='ADVERTISEMENTNOC' AND EA.application_status in ('REVIEWOFSEC','REVIEWOFSECFORWITHDRAW','REASSIGNTOSEC') AND ED.is_active=TRUE AND EA.is_active=TRUE ORDER BY EA.created_time desc
+
+   - applicationType: ADVERTISEMENTNOC
+     roles: [COMMISSIONER]
+     colunmNames: select EA.noc_number "applicationId",EA.applicant_name "applicantName",EA.application_status "applicationStatus",CASE WHEN coalesce(ER.application_uuid,'')<>'' THEN 1 ELSE 0 END AS "Withdraw" from egpm_noc_application_detail ED inner join egpm_noc_application EA on ED.application_uuid=EA.application_uuid left join (select application_uuid from egpm_noc_application_remark where application_status='WITHDRAWAFTERAPRROVAL') ER on ER.application_uuid=EA.application_uuid WHERE EA.application_type='ADVERTISEMENTNOC' AND EA.application_status in ('PENDINGAPPROVAL','PENDINGAPPROVALFORWITHDRAW') AND ED.is_active=TRUE AND EA.is_active=TRUE ORDER BY EA.created_time desc
+
+   - applicationType: ADVERTISEMENTNOC
+     roles: [CA]
+     colunmNames: select EA.noc_number "applicationId",EA.applicant_name "applicantName",EA.application_status "applicationStatus",CASE WHEN coalesce(ER.application_uuid,'')<>'' THEN 1 ELSE 0 END AS "Withdraw" from egpm_noc_application_detail ED inner join egpm_noc_application EA on ED.application_uuid=EA.application_uuid left join (select application_uuid from egpm_noc_application_remark where application_status='WITHDRAWAFTERAPRROVAL') ER on ER.application_uuid=EA.application_uuid WHERE EA.application_type='ADVERTISEMENTNOC' AND EA.application_status in ('PENDINGAPPROVAL','PENDINGAPPROVALFORWITHDRAW') AND ED.is_active=TRUE AND EA.is_active=TRUE ORDER BY EA.created_time desc
+
+   - applicationType: ADVERTISEMENTNOC
+     roles: [CITIZEN]
+     colunmNames: select EA.noc_number "applicationId",EA.tenant_id "tenantId",EA.applicant_name "applicantName",replace(cast(ED.application_detail -> 'typeOfApplicant' as VARCHAR),'"','') as "typeOfApplicant",replace(cast(ED.application_detail -> 'typeOfAdvertisement' as VARCHAR),'"','') as "typeOfAdvertisement",replace(cast(ED.application_detail -> 'subTypeOfAdvertisement' as VARCHAR),'"','') as "subTypeOfAdvertisement",replace(cast(ED.application_detail -> 'duration' as VARCHAR),'"','') as "duration",EA.application_status "applicationStatus" from egpm_noc_application_detail ED inner join egpm_noc_application EA on ED.application_uuid=EA.application_uuid WHERE EA.application_type='ADVERTISEMENTNOC' AND EA.created_by=[:createdBy:] AND EA.is_active=TRUE AND ED.is_active=TRUE ORDER BY EA.created_time desc
+
+     
+   - applicationType: UTROADCUTNOC
+     roles: [JE]
+     colunmNames: select EA.noc_number "applicationId",EA.applicant_name "applicantName",EA.application_status "applicationStatus" from egpm_noc_application_detail ED inner join egpm_noc_application EA on ED.application_uuid=EA.application_uuid WHERE EA.application_type='UTROADCUTNOC' AND EA.application_status in ('INITIATED','INITIATED_TELECOM','REASSIGNTOJE','RESENT') AND ED.is_active=TRUE AND EA.is_active=TRUE  ORDER BY EA.created_time desc
+
+   - applicationType: UTROADCUTNOC
+     roles: [SDO]
+     colunmNames: select EA.noc_number "applicationId",EA.applicant_name "applicantName",EA.application_status "applicationStatus" from egpm_noc_application_detail ED inner join egpm_noc_application EA on ED.application_uuid=EA.application_uuid WHERE EA.application_type='UTROADCUTNOC' AND EA.application_status in ('REASSIGNTOSDO','REVIEWSDO') AND ED.is_active=TRUE AND EA.is_active=TRUE ORDER BY EA.created_time desc
+
+   - applicationType: UTROADCUTNOC
+     roles: [EE]
+     colunmNames: select EA.noc_number "applicationId",EA.applicant_name "applicantName",EA.application_status "applicationStatus" from egpm_noc_application_detail ED inner join egpm_noc_application EA on ED.application_uuid=EA.application_uuid WHERE EA.application_type='UTROADCUTNOC' AND EA.application_status in ('REVIEWOFEE','REASSIGNTOEE','REVIEWAPPROVEEE','REASSIGNAPPROVEEE') AND ED.is_active=TRUE AND EA.is_active=TRUE ORDER BY EA.created_time desc
+
+   - applicationType: UTROADCUTNOC
+     roles: [SE]
+     colunmNames: select EA.noc_number "applicationId",EA.applicant_name "applicantName",EA.application_status "applicationStatus" from egpm_noc_application_detail ED inner join egpm_noc_application EA on ED.application_uuid=EA.application_uuid WHERE EA.application_type='UTROADCUTNOC' AND EA.application_status in ('REASSIGNTOSE','REVIEWOFSE','REVIEWAPPROVESE','REASSIGNAPPROVESE') AND ED.is_active=TRUE AND EA.is_active=TRUE ORDER BY EA.created_time desc
+     
+   - applicationType: UTROADCUTNOC
+     roles: [CE]
+     colunmNames: select EA.noc_number "applicationId",EA.applicant_name "applicantName",EA.application_status "applicationStatus" from egpm_noc_application_detail ED inner join egpm_noc_application EA on ED.application_uuid=EA.application_uuid WHERE EA.application_type='UTROADCUTNOC' AND EA.application_status in ('PENDINGAPPROVAL','REVIEWAPPROVECE','REASSIGNAPPROVECE','REVIEWOFCE') AND ED.is_active=TRUE AND EA.is_active=TRUE ORDER BY EA.created_time desc
+
+   - applicationType: UTROADCUTNOC
+     roles: [DOEE]
+     colunmNames: select EA.noc_number "applicationId",EA.applicant_name "applicantName",EA.application_status "applicationStatus" from egpm_noc_application_detail ED inner join egpm_noc_application EA on ED.application_uuid=EA.application_uuid WHERE EA.application_type='UTROADCUTNOC' AND EA.application_status in ('VERIFYDOEE','REASSIGNDOEE') AND ED.is_active=TRUE AND EA.is_active=TRUE ORDER BY EA.created_time desc
+
+   - applicationType: UTROADCUTNOC
+     roles: [DOSE]
+     colunmNames: select EA.noc_number "applicationId",EA.applicant_name "applicantName",EA.application_status "applicationStatus" from egpm_noc_application_detail ED inner join egpm_noc_application EA on ED.application_uuid=EA.application_uuid WHERE EA.application_type='UTROADCUTNOC' AND EA.application_status in ('VERIFYDOSE','REASSIGNDOSE') AND ED.is_active=TRUE AND EA.is_active=TRUE ORDER BY EA.created_time desc
+
+   - applicationType: UTROADCUTNOC
+     roles: [DOCE]
+     colunmNames: select EA.noc_number "applicationId",EA.applicant_name "applicantName",EA.application_status "applicationStatus" from egpm_noc_application_detail ED inner join egpm_noc_application EA on ED.application_uuid=EA.application_uuid WHERE EA.application_type='UTROADCUTNOC' AND EA.application_status in ('VERIFYDOCE','REASSIGNDOCE') AND ED.is_active=TRUE AND EA.is_active=TRUE ORDER BY EA.created_time desc
+
+   - applicationType: UTROADCUTNOC
+     roles: [WD]
+     colunmNames: select EA.noc_number "applicationId",EA.applicant_name "applicantName",EA.application_status "applicationStatus" from egpm_noc_application_detail ED inner join egpm_noc_application EA on ED.application_uuid=EA.application_uuid WHERE EA.application_type='UTROADCUTNOC' AND EA.application_status in ('REVIEWOFWD') AND ED.is_active=TRUE AND EA.is_active=TRUE ORDER BY EA.created_time desc
+     
+   - applicationType: UTROADCUTNOC
+     roles: [CITIZEN]
+     colunmNames: select EA.noc_number "applicationId",EA.tenant_id "tenantId",EA.sector AS "division",EA.applicant_name "applicantName",replace(cast(ED.application_detail -> 'typeOfApplicant' as VARCHAR),'"','') as "typeOfApplicant",replace(cast(ED.application_detail -> 'purposeOfRoadCutting' as VARCHAR),'"','') as "purposeOfRoadCutting",EA.application_status "applicationStatus", EA.created_time "createdTime", EA.application_type "applicationType" from egpm_noc_application_detail ED inner join egpm_noc_application EA on ED.application_uuid=EA.application_uuid WHERE EA.application_type='UTROADCUTNOC' AND EA.created_by=[:createdBy:] AND EA.is_active=TRUE AND ED.is_active=TRUE ORDER BY EA.created_time desc
+     
+ documentConfig:
+   - applicationType: PETNOC
+     certificateDataQuery: SELECT ab.applicant_name AS "applicantName", ab.house_number AS "applicantHousenumber", ab.sector AS "applicantSector", ab.noc_number AS "applicationId", To_char(ab.applied_date::DATE, 'DD-MM-YYYY') AS "applicationDate", To_char(To_timestamp(cdd.created_time / 1000), 'DD-MM-YYYY') AS "approveDate",(select replace(cast(ED.application_detail -> 'badgeNumber' as VARCHAR),'"','') as "badgeNumber" from public.egpm_noc_application_detail ED where ED.application_uuid=ab.application_uuid AND ED.tenant_id=ab.tenant_id and ED.is_active='true') FROM public.egpm_noc_application ab INNER join public.egpm_noc_application_remark cdd ON ab.application_uuid = cdd.application_uuid WHERE ab.noc_number = ? AND ab.tenant_id = ? AND ab.application_type = 'PETNOC' AND cdd.application_status = 'APPROVED'
+     receiptDataQuery: SELECT main.applicant_name AS "applicantName", main.noc_number AS "applicationId",main.house_number AS "applicantHousenumber", main.sector AS "applicantSector", To_char(main.applied_date::DATE, 'DD-MM-YYYY') AS "applicationDate", main.total_amount AS "Amount", fx_numtowords(main.total_amount) AS "amountinword", To_char(To_timestamp(remark.created_time / 1000), 'DD-MM-YYYY') AS "dateofpayment" FROM egpm_noc_application main INNER JOIN public.egpm_noc_application_remark remark ON main.application_uuid = remark.application_uuid WHERE main.noc_number = ? AND main.tenant_id = ? AND main.is_active = 'true' AND main.application_type = 'PETNOC' AND remark.application_status = 'PAID'
+
+   - applicationType: SELLMEATNOC
+     certificateDataQuery: SELECT main.noc_number AS "applicationId", main.applicant_name AS "applicantName",main.house_number AS "applicantNameHouseNumber", main.sector AS "applicantSector",To_char(main.applied_date::DATE, 'DD-MM-YYYY') AS "applicationDate", Concat(dt.application_detail ->> 'shopNumber', ', ', dt.application_detail ->> 'ward', ', ',dt.application_detail ->> 'division') as "shopaddress", TO_CHAR(TO_TIMESTAMP(cdd.created_time / 1000), 'DD-MM-YYYY') as "approveDate",dt.application_detail ->> 'nocSought' as "licenseType" FROM egpm_noc_application main INNER JOIN public.egpm_noc_application_detail dt ON main.application_uuid = dt.application_uuid INNER join public.egpm_noc_application_remark cdd ON main.application_uuid = cdd.application_uuid WHERE main.noc_number = ? AND main.tenant_id = ? AND main.is_active = 'true' AND main.application_type = 'SELLMEATNOC' AND cdd.application_status = 'APPROVED'
+     receiptDataQuery: SELECT main.applicant_name AS "applicantName", main.noc_number AS "applicationId",main.house_number AS "applicantHousenumber", main.sector AS "applicantSector", To_char(main.applied_date::DATE, 'DD-MM-YYYY') AS "applicationDate", main.total_amount AS "Amount", fx_numtowords(main.total_amount) AS "amountinword", To_char(To_timestamp(remark.created_time / 1000), 'DD-MM-YYYY') AS "dateofpayment" FROM egpm_noc_application main INNER JOIN public.egpm_noc_application_remark remark ON main.application_uuid = remark.application_uuid WHERE main.noc_number = ? AND main.tenant_id = ? AND main.is_active = 'true' AND main.application_type = 'SELLMEATNOC' AND remark.application_status = 'PAID'
+
+   - applicationType: ROADCUTNOC
+     certificateDataQuery: SELECT main.applicant_name AS "applicantName",main.noc_number AS "applicationId",Concat(dt.application_detail ->> 'landmark', ', ', dt.application_detail ->> 'ward', ', ',dt.application_detail ->> 'division')AS "applicantNameAddress",  main.sector AS "applicantSector", To_char(main.applied_date::DATE, 'DD-MM-YYYY') AS "applicationDate", Concat( dt.application_detail ->> 'requestedLocation') as "roadCutAddress", dt.application_detail ->> 'purposeOfRoadCutting' AS "purposeOfRoadCutting", TO_CHAR(TO_TIMESTAMP(cdd.created_time / 1000), 'DD-MM-YYYY') as "approveDate", main.amount AS "EstimatedAmount", main.performance_bank_guarantee AS "bgAmount", (SELECT To_char(To_timestamp(created_time / 1000), 'DD-MM-YYYY') FROM egpm_noc_application_remark WHERE application_status = 'PAID' AND application_uuid = main.application_uuid) AS "date" FROM egpm_noc_application main INNER JOIN public.egpm_noc_application_detail dt ON main.application_uuid = dt.application_uuid INNER join public.egpm_noc_application_remark cdd ON main.application_uuid = cdd.application_uuid WHERE main.noc_number = ? AND main.tenant_id = ? AND main.is_active = 'true' AND dt.is_active = 'true' AND main.application_type = 'ROADCUTNOC' AND cdd.application_status = 'APPROVED'
+     receiptDataQuery: SELECT main.applicant_name AS "applicantName", Concat(dt.application_detail ->> 'landmark', ', ', dt.application_detail ->> 'ward', ', ', dt.application_detail ->> 'division') AS "applicantNameAddress" , main.sector AS "applicantSector", main.noc_number AS "applicationId", main.amount AS "charges", main.gst_amount AS "gstamount", main.total_amount AS "totalAmount", fx_numtowords(main.total_amount) AS "amountinword", main.performance_bank_guarantee AS "bgAmount", fx_numtowords(main.performance_bank_guarantee) AS "bgAmountinword", To_char(To_timestamp(remark.created_time / 1000), 'DD-MM-YYYY') AS "dateofpayment" FROM egpm_noc_application main INNER JOIN public.egpm_noc_application_detail dt ON main.application_uuid = dt.application_uuid INNER JOIN public.egpm_noc_application_remark remark ON main.application_uuid = remark.application_uuid AND main.is_active = true WHERE main.noc_number = ? AND main.tenant_id = ? AND main.is_active = 'true' AND dt.is_active = 'true' AND main.application_type = 'ROADCUTNOC' AND remark.application_status = 'PAID'
+
+   - applicationType: ADVERTISEMENTNOC
+     certificateDataQuery: SELECT main.noc_number AS "applicationId", main.applicant_name AS "applicantName", Concat(dt.application_detail ->> 'applicantAddress', ', ',dt.application_detail ->> 'applicantLandmark', ', ',dt.application_detail ->> 'applicantWard', ', ', dt.application_detail ->> 'applicantDivision') AS "applicantNameAddress",main.sector AS "applicantSector", dt.application_detail ->> 'applicantVillageSuSector' as "applicantsubsector",To_char(main.applied_date::DATE, 'DD-MM-YYYY') AS "applicationDate", dt.application_detail ->> 'locationOfAdvertisement' AS "advertisementSiteDetails",dt.application_detail ->>'locationOfAdvertisement' as "locationOfAdvertisement", Replace(Cast(dt.application_detail ->> 'fromDateToDisplay' AS VARCHAR), '"', '') AS "advertisementFromDate",Replace(Cast(dt.application_detail ->> 'toDateToDisplay' AS VARCHAR), '"', '' ) AS "advertisementToDate",TO_CHAR(TO_TIMESTAMP(cdd.created_time / 1000), 'DD-MM-YYYY') as "approvedDate", main.total_amount AS "systemPayment",(SELECT To_char(To_timestamp(created_time / 1000), 'DD-MM-YYYY') FROM egpm_noc_application_remark WHERE application_status = 'PAID' AND application_uuid = main.application_uuid) AS "paymentReceivedDate" FROM egpm_noc_application main INNER JOIN public.egpm_noc_application_detail dt ON main.application_uuid = dt.application_uuid INNER join public.egpm_noc_application_remark cdd ON main.application_uuid = cdd.application_uuid WHERE main.noc_number = ? AND main.tenant_id = ? AND main.is_active = 'true' AND dt.is_active = 'true' AND main.application_type = 'ADVERTISEMENTNOC' AND cdd.application_status = 'APPROVED'
+     receiptDataQuery: SELECT main.noc_number AS "applicationId", main.applicant_name AS "applicantName", Concat(dt.application_detail ->> 'applicantAddress', ', ',dt.application_detail ->> 'applicantLandmark', ', ',dt.application_detail ->> 'applicantWard', ', ', dt.application_detail ->> 'applicantDivision', ', ',  dt.application_detail ->> 'applicantVillageSuSector') AS "applicantNameAddress", main.sector as "applicantSector", dt.application_detail ->> 'gstin' AS "GSTIN", main.amount AS "AdvertismentCharges", main.gst_amount AS "gstamount", main.total_amount AS "totalAmount", fx_numtowords(main.total_amount) AS "amountinword", To_char(To_timestamp(cdd.created_time / 1000), 'DD-MM-YYYY') AS "dateofpayment" FROM egpm_noc_application main INNER JOIN public.egpm_noc_application_detail dt ON main.application_uuid = dt.application_uuid INNER join public.egpm_noc_application_remark cdd ON main.application_uuid = cdd.application_uuid WHERE main.noc_number = ? AND main.tenant_id = ? AND main.is_active = 'true' AND main.application_type = 'ADVERTISEMENTNOC' AND cdd.application_status = 'PAID'
+     
+   - applicationType: UTROADCUTNOC
+     certificateDataQuery: SELECT main.applicant_name AS "applicantName",main.noc_number AS "applicationId",Concat(dt.application_detail ->> 'landmark', ', ', dt.application_detail ->> 'ward', ', ',dt.application_detail ->> 'division')AS "applicantNameAddress",  main.sector AS "applicantSector", To_char(main.applied_date::DATE, 'DD-MM-YYYY') AS "applicationDate", Concat( dt.application_detail ->> 'requestedLocation') as "roadCutAddress", dt.application_detail ->> 'purposeOfRoadCutting' AS "purposeOfRoadCutting", TO_CHAR(TO_TIMESTAMP(cdd.created_time / 1000), 'DD-MM-YYYY') as "approveDate", main.amount AS "EstimatedAmount", main.performance_bank_guarantee AS "bgAmount", (SELECT To_char(To_timestamp(created_time / 1000), 'DD-MM-YYYY') FROM egpm_noc_application_remark WHERE application_status = 'PAID' AND application_uuid = main.application_uuid) AS "date" FROM egpm_noc_application main INNER JOIN public.egpm_noc_application_detail dt ON main.application_uuid = dt.application_uuid INNER join public.egpm_noc_application_remark cdd ON main.application_uuid = cdd.application_uuid WHERE main.noc_number = ? AND main.tenant_id = ? AND main.is_active = 'true' AND dt.is_active = 'true' AND main.application_type = 'UTROADCUTNOC' AND cdd.application_status = 'APPROVED'
+     receiptDataQuery: SELECT main.applicant_name AS "applicantName", Concat(dt.application_detail ->> 'landmark', ', ', dt.application_detail ->> 'ward', ', ', dt.application_detail ->> 'division') AS "applicantNameAddress" , main.sector AS "applicantSector", main.noc_number AS "applicationId", main.amount AS "charges", main.gst_amount AS "gstamount", main.total_amount AS "totalAmount", fx_numtowords(main.total_amount) AS "amountinword", main.performance_bank_guarantee AS "bgAmount", fx_numtowords(main.performance_bank_guarantee) AS "bgAmountinword", To_char(To_timestamp(remark.created_time / 1000), 'DD-MM-YYYY') AS "dateofpayment" FROM egpm_noc_application main INNER JOIN public.egpm_noc_application_detail dt ON main.application_uuid = dt.application_uuid INNER JOIN public.egpm_noc_application_remark remark ON main.application_uuid = remark.application_uuid AND main.is_active = true WHERE main.noc_number = ? AND main.tenant_id = ? AND main.is_active = 'true' AND dt.is_active = 'true' AND main.application_type = 'UTROADCUTNOC' AND remark.application_status = 'PAID'
