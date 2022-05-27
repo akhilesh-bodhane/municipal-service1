@@ -272,6 +272,12 @@ public class WSCalculationConstant {
 
 	public static final String SCRUTINY_FEE_CONST = "scrutinyFee";
 	
+	public static final String METER_FIT_FEE_CONST = "meterfitting";
+	
+	public static final String METER_TEST_FEE_CONST = "metertesting";
+	
+	public static final String SECRUTY_FEE_CONST = "securityFee";
+	
 	public static final String METER_COST_CONST = "meterCost";
 	
 	public static final String OTHER_CHARGE_CONST = "other";
@@ -334,6 +340,8 @@ public class WSCalculationConstant {
 	public static final String WS_PERMANENT_DISCONNECTION = "PERMANENT_DISCONNECTION";
 	
 	public static final String WS_TEMPORARY_DISCONNECTION = "TEMPORARY_DISCONNECTION";
+	
+	public static final String WS_TEMPORARY_DISCONNECTION2 = "TEMPORARY_DISCONNECTION2";
 	
 	public static final String WS_REACTIVATE = "REACTIVATE_CONNECTION";
 
