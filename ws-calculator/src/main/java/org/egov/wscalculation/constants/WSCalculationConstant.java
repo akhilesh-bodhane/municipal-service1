@@ -345,7 +345,6 @@ public class WSCalculationConstant {
 	
 	public static final String WS_TEMPORARY_WSCONNECTION = "TEMPORARY_WSCONNECTION";
 
-	
 	public static final String WS_REACTIVATE = "REACTIVATE_CONNECTION";
 
 	public static final String WS_APPLY_FOR_TEMP_TEMP_CON = "APPLY_FOR_TEMPORARY_TEMPORARY_CONNECTION";
