@@ -128,4 +128,21 @@ public class ServiceController {
 		return new ResponseEntity<>(serviceReqResponse, HttpStatus.OK);
 	}
 
+	/**
+	 * Controller endpoint to fetch service requests
+	 * 
+	 * @param requestInfoWrapper
+	 * @param serviceReqSearchCriteria
+	 * @return ResponseEntity<?>
+	 * @author vishal
+	 */
+	@PostMapping("/db/_search")
+	@ResponseBody
+	private ResponseEntity<?> searchDB(@RequestBody @Valid RequestInfoWrapper requestInfoWrapper,
+			@ModelAttribute @Valid ServiceReqSearchCriteria serviceReqSearchCriteria) {
+		pgrRequestValidator.validateSearch(serviceReqSearchCriteria, requestInfoWrapper.getRequestInfo());
+		Object serviceReqResponse = service.getServiceRequestDetailsDB(requestInfoWrapper.getRequestInfo(),
+				serviceReqSearchCriteria);
+		return new ResponseEntity<>(serviceReqResponse, HttpStatus.OK);
+	}
 }
