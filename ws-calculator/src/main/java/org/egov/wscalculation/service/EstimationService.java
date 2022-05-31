@@ -387,15 +387,7 @@ public class EstimationService {
 				|| activityType.equalsIgnoreCase(WSCalculationConstant.WS_CONVERSION)
 				|| activityType.equalsIgnoreCase(WSCalculationConstant.WS_UPDATEMETER)
 				|| activityType.equalsIgnoreCase(WSCalculationConstant.WS_METER_TESTING_ACTIVITY)) {
-//			taxHeadEstimates = getTaxHeadForwaterActivity(criteria, masterData, requestInfo);
-			if(criteria.getWaterConnection().getProperty().getSubusageCategory().equalsIgnoreCase("RESIDENTIAL.GOVERNMENTHOUSING")) {
-			criteria.getWaterConnection().setProposedPipeSize("15");
-				taxHeadEstimates = getTaxHeadForRegularConnection(criteria, masterData, requestInfo);
-				criteria.getWaterConnection().setProposedPipeSize("");
-			}
-			else {
-				taxHeadEstimates = getTaxHeadForwaterActivity(criteria, masterData, requestInfo);
-			}
+			taxHeadEstimates = getTaxHeadForwaterActivity(criteria, masterData, requestInfo);
 		} else {
 			if (criteria.getWaterConnection().getWaterApplicationType()
 					.equalsIgnoreCase(WSCalculationConstant.WS_TEMP_CONNECTION_TYPE)|| activityType.equalsIgnoreCase(WSCalculationConstant.WS_APPLY_FOR_TEMP_REGULAR_CON) || activityType.equalsIgnoreCase(WSCalculationConstant.WS_APPLY_FOR_TEMP_CON)) {
