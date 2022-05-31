@@ -22,11 +22,12 @@ import lombok.ToString;
  * Property
  */
 
-@ToString
 @Getter
 @Setter
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
+@Builder
+@ToString
 public class Property extends PropertyInfo {
 
 	@JsonProperty("acknowldgementNumber")
@@ -78,6 +79,9 @@ public class Property extends PropertyInfo {
 	
 	@JsonProperty("auditDetails")
 	private AuditDetails auditDetails;
+	
+	@JsonProperty("subusageCategory")
+	private String subusageCategory;
 
 	@JsonProperty("workflow")
 	private ProcessInstance workflow;

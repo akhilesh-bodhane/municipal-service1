@@ -387,7 +387,17 @@ public class EstimationService {
 				|| activityType.equalsIgnoreCase(WSCalculationConstant.WS_CONVERSION)
 				|| activityType.equalsIgnoreCase(WSCalculationConstant.WS_UPDATEMETER)
 				|| activityType.equalsIgnoreCase(WSCalculationConstant.WS_METER_TESTING_ACTIVITY)) {
-			taxHeadEstimates = getTaxHeadForwaterActivity(criteria, masterData, requestInfo);
+
+			if(criteria.getWaterConnection().getProperty().getSubusageCategory().equalsIgnoreCase("RESIDENTIAL.GOVERNMENTHOUSING")) {
+
+				criteria.getWaterConnection().setActivityType(WSCalculationConstant.WS_TEMPORARY_DISCONNECTION2);
+				taxHeadEstimates = getTaxHeadForwaterActivity(criteria, masterData, requestInfo);
+
+			}
+			else {
+				taxHeadEstimates = getTaxHeadForwaterActivity(criteria, masterData, requestInfo);
+			}
+
 		} else {
 			if (criteria.getWaterConnection().getWaterApplicationType()
 					.equalsIgnoreCase(WSCalculationConstant.WS_TEMP_CONNECTION_TYPE)|| activityType.equalsIgnoreCase(WSCalculationConstant.WS_APPLY_FOR_TEMP_REGULAR_CON) || activityType.equalsIgnoreCase(WSCalculationConstant.WS_APPLY_FOR_TEMP_CON)) {
@@ -496,12 +506,26 @@ public class EstimationService {
 				unitCost = new BigDecimal(charge.getAsNumber(WSCalculationConstant.UNIT_COST_CONST).toString());
 
 				BigDecimal securityFee = BigDecimal.ZERO;
+				
+				
+				BigDecimal meterfittingCharges = BigDecimal.ZERO;
+				meterfittingCharges = new BigDecimal(charge.getAsNumber(WSCalculationConstant.METER_FIT_FEE_CONST).toString());
+				if (!(meterfittingCharges.compareTo(BigDecimal.ZERO) == 0))
+					estimates.add(TaxHeadEstimate.builder().taxHeadCode(WSCalculationConstant.WS_METER_CHARGE)
+							.estimateAmount(meterfittingCharges.setScale(2, 2)).build());
+			
+				BigDecimal meterTestingFee = BigDecimal.ZERO;
+				meterTestingFee = new BigDecimal(charge.getAsNumber(WSCalculationConstant.METER_TEST_FEE_CONST).toString());
+				if (!(meterTestingFee.compareTo(BigDecimal.ZERO) == 0))
+					estimates.add(TaxHeadEstimate.builder().taxHeadCode(WSCalculationConstant.WS_METER_TESTING_CHARGE)
+							.estimateAmount(meterTestingFee.setScale(2, 2)).build());
 
 				BigDecimal additionalCharges = BigDecimal.ZERO;
 				BigDecimal constructionCharges = BigDecimal.ZERO;
 				securityFee = new BigDecimal(
 						criteria.getWaterConnection().getWaterApplication().getSecurityCharge() == null ? 0.0
 								: criteria.getWaterConnection().getWaterApplication().getSecurityCharge());
+				securityFee = new BigDecimal(charge.getAsNumber(WSCalculationConstant.SECRUTY_FEE_CONST).toString());
 
 				additionalCharges = new BigDecimal(
 						criteria.getWaterConnection().getWaterApplication().getAdditionalCharges() == null ? 0.0
@@ -526,7 +550,9 @@ public class EstimationService {
 				if (criteria.getWaterConnection().getActivityType()
 						.equalsIgnoreCase(WSCalculationConstant.WS_PERMANENT_DISCONNECTION)
 						|| criteria.getWaterConnection().getActivityType()
-								.equalsIgnoreCase(WSCalculationConstant.WS_TEMPORARY_DISCONNECTION)) {
+								.equalsIgnoreCase(WSCalculationConstant.WS_TEMPORARY_DISCONNECTION)
+								|| criteria.getWaterConnection().getActivityType()
+								.equalsIgnoreCase(WSCalculationConstant.WS_TEMPORARY_DISCONNECTION2)) {
 					if (!(unitCost.compareTo(BigDecimal.ZERO) == 0)) {
 						estimates.add(TaxHeadEstimate.builder().taxHeadCode(WSCalculationConstant.WS_DISCONNECTION_FEE)
 								.estimateAmount(unitCost.setScale(2, 2)).build());
