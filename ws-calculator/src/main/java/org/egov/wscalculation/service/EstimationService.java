@@ -372,6 +372,16 @@ public class EstimationService {
 					requestInfo.getUserInfo().getTenantId());
 			criteria.setWaterConnection(waterConnection);
 		}
+		
+		String Usage = null ;
+		if ( StringUtils.isEmpty(criteria.getWaterConnection().getProperty().getSubusageCategory()) ) {
+			Usage = criteria.getWaterConnection().getProperty().getUsageCategory();
+			
+		}
+		else  {
+			Usage= criteria.getWaterConnection().getProperty().getSubusageCategory();
+		}
+		
 		if (StringUtils.isEmpty(criteria.getWaterConnection())) {
 			throw new CustomException("WATER_CONNECTION_NOT_FOUND",
 					"Water Connection are not present for " + criteria.getApplicationNo() + " Application no");
@@ -387,11 +397,13 @@ public class EstimationService {
 				|| activityType.equalsIgnoreCase(WSCalculationConstant.WS_CONVERSION)
 				|| activityType.equalsIgnoreCase(WSCalculationConstant.WS_UPDATEMETER)
 				|| activityType.equalsIgnoreCase(WSCalculationConstant.WS_METER_TESTING_ACTIVITY)) {
-
-			if(criteria.getWaterConnection().getProperty().getSubusageCategory().equalsIgnoreCase("RESIDENTIAL.GOVERNMENTHOUSING")) {
+			
+			
+			if(Usage.equalsIgnoreCase("RESIDENTIAL.GOVERNMENTHOUSING")) {
 
 				criteria.getWaterConnection().setActivityType(WSCalculationConstant.WS_TEMPORARY_DISCONNECTION2);
 				taxHeadEstimates = getTaxHeadForwaterActivity(criteria, masterData, requestInfo);
+				criteria.getWaterConnection().setActivityType(WSCalculationConstant.WS_TEMPORARY_DISCONNECTION);
 
 			}
 			else {

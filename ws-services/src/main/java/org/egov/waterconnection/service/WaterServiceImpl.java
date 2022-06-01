@@ -161,6 +161,7 @@ public class WaterServiceImpl implements WaterService {
 		}
 		
 		Property property = validateProperty.getOrValidateProperty(waterConnectionRequest);
+		waterConnectionRequest.getWaterConnection().setProperty(property);
 		validateProperty.validatePropertyCriteria(property);
 		boolean isStateUpdatable = true;
 		BusinessService businessService = null;
