@@ -41,6 +41,8 @@ public class ServiceRequestRepository {
 
 	public static final String SERVICE_SEARCH_WITH_DETAILS = "select array_to_json(array_agg(row_to_json(serviceRequests))) from (select (select (select (row_to_json(services)) from ( select *, (select (select row_to_json(auditDetails) from (select createdtime, lastmodifiedtime, createdby, lastmodifiedby from eg_pgr_service where svc.serviceRequestId=eg_pgr_service.serviceRequestId) auditDetails) as auditDetails), (select (select (row_to_json(addressDetail)) from (select * from eg_pgr_address where eg_pgr_address.uuid=eg_pgr_service.addressid) addressDetail) as addressDetail) from eg_pgr_service svc where svc.serviceRequestId=eg_pgr_service.serviceRequestId order by createdtime desc) services) as services),(select (select array_to_json(array_agg(row_to_json(actionHistory))) from ( select * from eg_pgr_action where businessKey=eg_pgr_service.serviceRequestId order by \"when\" desc) actionHistory) as actionHistory) from eg_pgr_service WHERE ";
 
+	public static final String SERVICE_SEARCH_WITH_COUNT = "select array_to_json(array_agg(row_to_json(services))) from (select (row_to_json(services)) from ( select count(*) from eg_pgr_service where ";
+
 	/**
 	 * Fetches results from searcher framework based on the uri and request that
 	 * define what is to be searched.
@@ -88,12 +90,14 @@ public class ServiceRequestRepository {
 		}
 
 		List<String> convertPGOBjects = convertPGOBjects(maps);
-		Type type = new TypeToken<ArrayList<Map<String, Object>>>() {
-		}.getType();
-		Gson gson = new Gson();
-		List<Map<String, Object>> data = gson.fromJson(convertPGOBjects.toString(), type);
 		Map<String, Object> result = new HashMap<>();
-		result.put("services", data);
+		if (convertPGOBjects != null) {
+			Type type = new TypeToken<ArrayList<Map<String, Object>>>() {
+			}.getType();
+			Gson gson = new Gson();
+			List<Map<String, Object>> data = gson.fromJson(convertPGOBjects.toString(), type);
+			result.put("services", data);
+		}
 		return result;
 	}
 
@@ -205,5 +209,110 @@ public class ServiceRequestRepository {
 		log.info("Complaint Type wise report query: " + query);
 		return query;
 
+	}
+
+	public Object fetchDataCount(ServiceReqSearchCriteria serviceReqSearchCriteria) {
+
+		Map<String, Object> preparedStatementValues = new HashMap<>();
+		String query = getPGRCountQuery(serviceReqSearchCriteria);
+		List<PGobject> maps = null;
+		try {
+
+			maps = namedParameterJdbcTemplate.queryForList(query, preparedStatementValues, PGobject.class);
+		} catch (DataAccessResourceFailureException ex) {
+			log.info("Query Execution Failed Due To Timeout: ", ex);
+			PSQLException cause = (PSQLException) ex.getCause();
+			if (cause != null && cause.getSQLState().equals("57014")) {
+				throw new CustomException("QUERY_EXECUTION_TIMEOUT", "Query failed, as it took more than expected");
+			} else {
+				throw ex;
+			}
+		} catch (Exception e) {
+			log.info("Query Execution Failed: ", e);
+			throw e;
+		}
+
+		List<String> convertPGOBjects = convertPGOBjects(maps);
+		Map<String, Object> result = new HashMap<>();
+		if (convertPGOBjects != null) {
+			Type type = new TypeToken<ArrayList<Map<String, Object>>>() {
+			}.getType();
+			Gson gson = new Gson();
+			List<Map<String, Object>> data = gson.fromJson(convertPGOBjects.toString(), type);
+			result.put("count", data);
+		}
+		return result;
+
+	}
+
+	public String getPGRCountQuery(ServiceReqSearchCriteria serviceReqSearchCriteria) {
+		String query = SERVICE_SEARCH_WITH_COUNT;
+		StringBuilder whereStr = new StringBuilder();
+
+		if (serviceReqSearchCriteria.getTenantId() != null && !serviceReqSearchCriteria.getTenantId().isEmpty()) {
+			whereStr.append(" tenantid=").append("'" + serviceReqSearchCriteria.getTenantId() + "'");
+		}
+
+		if (serviceReqSearchCriteria.getActive() != null) {
+			whereStr.append(" and active=").append(serviceReqSearchCriteria.getActive());
+		} else {
+			whereStr.append(" and active=").append(serviceReqSearchCriteria.getActive());
+		}
+
+		if (serviceReqSearchCriteria.getServiceRequestId() != null
+				&& !serviceReqSearchCriteria.getServiceRequestId().isEmpty()) {
+			StringBuilder serviceRequestId = new StringBuilder("(");
+			serviceReqSearchCriteria.getServiceRequestId().stream()
+					.forEach(p -> serviceRequestId.append("'").append(p).append("',"));
+			serviceRequestId.deleteCharAt(serviceRequestId.length() - 1);
+			serviceRequestId.append(")");
+			whereStr.append(" and serviceRequestId in ").append(serviceRequestId);
+		}
+
+		if (serviceReqSearchCriteria.getPhone() != null && !serviceReqSearchCriteria.getPhone().isEmpty()) {
+			whereStr.append(" and phone=").append("'" + serviceReqSearchCriteria.getPhone() + "'");
+		}
+
+		if (serviceReqSearchCriteria.getStartDate() != null && serviceReqSearchCriteria.getStartDate() != 0) {
+			whereStr.append(" and to_timestamp(cast(createdtime/1000 as bigint))::date >=")
+					.append("to_timestamp(cast(" + serviceReqSearchCriteria.getStartDate() + "/1000 as bigint))::date");
+		}
+		if (serviceReqSearchCriteria.getEndDate() != null && serviceReqSearchCriteria.getEndDate() != 0) {
+			whereStr.append(" and to_timestamp(cast(createdtime/1000 as bigint))::date <=")
+					.append("to_timestamp(cast(" + serviceReqSearchCriteria.getEndDate() + "/1000 as bigint))::date");
+		}
+		if (serviceReqSearchCriteria.getStatus() != null && !serviceReqSearchCriteria.getStatus().isEmpty()) {
+			StringBuilder status = new StringBuilder("(");
+			serviceReqSearchCriteria.getStatus().stream().forEach(p -> status.append("'").append(p).append("',"));
+			status.deleteCharAt(status.length() - 1);
+			status.append(")");
+			whereStr.append(" and status in ").append(status);
+		}
+		if (serviceReqSearchCriteria.getCategory() != null && !serviceReqSearchCriteria.getCategory().isEmpty()) {
+			StringBuilder category = new StringBuilder("(");
+			serviceReqSearchCriteria.getCategory().stream().forEach(p -> category.append("'").append(p).append("',"));
+			category.deleteCharAt(category.length() - 1);
+			category.append(")");
+			whereStr.append(" and category in ").append(category);
+		}
+
+		whereStr.append(" order by createdtime desc LIMIT ");
+		if (serviceReqSearchCriteria.getNoOfRecords() != null && serviceReqSearchCriteria.getNoOfRecords() != 0) {
+			whereStr.append(" serviceReqSearchCriteria.getNoOfRecords() ");
+		} else {
+			whereStr.append(" 200 ");
+		}
+
+		whereStr.append(" OFFSET ");
+		if (serviceReqSearchCriteria.getOffset() != null && serviceReqSearchCriteria.getOffset() != 0) {
+			whereStr.append(" serviceReqSearchCriteria.getOffset() ");
+		} else {
+			whereStr.append(" 0 ");
+		}
+
+		whereStr.append(") as services) services");
+		query = query + whereStr.toString();
+		log.info("Complaint Type wise report Count query: " + query);
+		return query;
 	}
 }
