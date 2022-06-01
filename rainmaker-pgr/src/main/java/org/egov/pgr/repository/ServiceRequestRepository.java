@@ -296,20 +296,6 @@ public class ServiceRequestRepository {
 			whereStr.append(" and category in ").append(category);
 		}
 
-		whereStr.append(" order by createdtime desc LIMIT ");
-		if (serviceReqSearchCriteria.getNoOfRecords() != null && serviceReqSearchCriteria.getNoOfRecords() != 0) {
-			whereStr.append(" serviceReqSearchCriteria.getNoOfRecords() ");
-		} else {
-			whereStr.append(" 200 ");
-		}
-
-		whereStr.append(" OFFSET ");
-		if (serviceReqSearchCriteria.getOffset() != null && serviceReqSearchCriteria.getOffset() != 0) {
-			whereStr.append(" serviceReqSearchCriteria.getOffset() ");
-		} else {
-			whereStr.append(" 0 ");
-		}
-
 		whereStr.append(") as services) services");
 		query = query + whereStr.toString();
 		log.info("Complaint Type wise report Count query: " + query);
