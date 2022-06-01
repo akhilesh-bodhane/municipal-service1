@@ -1824,7 +1824,8 @@ public class GrievanceService {
 		Double count = 0.0;
 		try {
 			response = serviceRequestRepository.fetchDataCount(serviceReqSearchCriteria);
-			count = JsonPath.read(response, PGRConstants.PG_JSONPATH_COUNT);
+			if (response != null)
+				count = JsonPath.read(response, PGRConstants.PG_JSONPATH_COUNT);
 		} catch (Exception e) {
 			throw e;
 		}

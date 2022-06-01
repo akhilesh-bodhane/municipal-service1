@@ -90,12 +90,14 @@ public class ServiceRequestRepository {
 		}
 
 		List<String> convertPGOBjects = convertPGOBjects(maps);
-		Type type = new TypeToken<ArrayList<Map<String, Object>>>() {
-		}.getType();
-		Gson gson = new Gson();
-		List<Map<String, Object>> data = gson.fromJson(convertPGOBjects.toString(), type);
 		Map<String, Object> result = new HashMap<>();
-		result.put("services", data);
+		if (convertPGOBjects != null) {
+			Type type = new TypeToken<ArrayList<Map<String, Object>>>() {
+			}.getType();
+			Gson gson = new Gson();
+			List<Map<String, Object>> data = gson.fromJson(convertPGOBjects.toString(), type);
+			result.put("services", data);
+		}
 		return result;
 	}
 
@@ -231,16 +233,18 @@ public class ServiceRequestRepository {
 		}
 
 		List<String> convertPGOBjects = convertPGOBjects(maps);
-		Type type = new TypeToken<ArrayList<Map<String, Object>>>() {
-		}.getType();
-		Gson gson = new Gson();
-		List<Map<String, Object>> data = gson.fromJson(convertPGOBjects.toString(), type);
 		Map<String, Object> result = new HashMap<>();
-		result.put("count", data);
+		if (convertPGOBjects != null) {
+			Type type = new TypeToken<ArrayList<Map<String, Object>>>() {
+			}.getType();
+			Gson gson = new Gson();
+			List<Map<String, Object>> data = gson.fromJson(convertPGOBjects.toString(), type);
+			result.put("count", data);
+		}
 		return result;
-	
+
 	}
-	
+
 	public String getPGRCountQuery(ServiceReqSearchCriteria serviceReqSearchCriteria) {
 		String query = SERVICE_SEARCH_WITH_COUNT;
 		StringBuilder whereStr = new StringBuilder();
