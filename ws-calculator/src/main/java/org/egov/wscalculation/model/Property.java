@@ -49,6 +49,9 @@ public class Property extends PropertyInfo {
 	
 	@JsonProperty("usageCategory")
 	private String usageCategory;
+	
+	@JsonProperty("subusageCategory")
+	private String subusageCategory;
 
 	@JsonProperty("noOfFloors")
 	private Long noOfFloors;
