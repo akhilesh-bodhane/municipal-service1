@@ -374,7 +374,11 @@ public class EstimationService {
 		}
 		
 		String Usage = null ;
-		if ( StringUtils.isEmpty(criteria.getWaterConnection().getProperty().getSubusageCategory()) ) {
+		if (( StringUtils.isEmpty(criteria.getWaterConnection().getProperty()))) {
+			Usage= "";
+		}
+		
+		else if (( StringUtils.isEmpty(criteria.getWaterConnection().getProperty().getSubusageCategory()))) {
 			Usage = criteria.getWaterConnection().getProperty().getUsageCategory();
 			
 		}
@@ -398,13 +402,14 @@ public class EstimationService {
 				|| activityType.equalsIgnoreCase(WSCalculationConstant.WS_UPDATEMETER)
 				|| activityType.equalsIgnoreCase(WSCalculationConstant.WS_METER_TESTING_ACTIVITY)) {
 			
-			
-			if(Usage.equalsIgnoreCase("RESIDENTIAL.GOVERNMENTHOUSING")) {
+
+			if(Usage.equalsIgnoreCase("RESIDENTIAL.GOVERNMENTHOUSING") && activityType.equalsIgnoreCase(WSCalculationConstant.WS_REACTIVATE)) {
+
 
 				criteria.getWaterConnection().setActivityType(WSCalculationConstant.WS_TEMPORARY_DISCONNECTION2);
 				taxHeadEstimates = getTaxHeadForwaterActivity(criteria, masterData, requestInfo);
-				criteria.getWaterConnection().setActivityType(WSCalculationConstant.WS_TEMPORARY_DISCONNECTION);
-
+				criteria.getWaterConnection().setActivityType(WSCalculationConstant.WS_REACTIVATE);
+//				criteria.getWaterConnection().setProposedPipeSize("");
 			}
 			else {
 				taxHeadEstimates = getTaxHeadForwaterActivity(criteria, masterData, requestInfo);
