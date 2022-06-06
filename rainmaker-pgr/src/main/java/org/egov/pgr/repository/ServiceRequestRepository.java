@@ -97,8 +97,9 @@ public class ServiceRequestRepository {
 			Gson gson = new Gson();
 			List<Map<String, Object>> data = gson.fromJson(convertPGOBjects.toString(), type);
 			result.put("services", data);
+			return result;
 		}
-		return result;
+		return null;
 	}
 
 	/**
