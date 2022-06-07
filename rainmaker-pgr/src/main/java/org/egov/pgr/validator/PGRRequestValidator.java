@@ -1,6 +1,7 @@
 package org.egov.pgr.validator;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -246,8 +247,11 @@ public class PGRRequestValidator {
 	public void validateSearch(ServiceReqSearchCriteria criteria, RequestInfo requestInfo) {
 		Map<String, String> errorMap = new HashMap<>();
 		validateUserRBACProxy(errorMap, requestInfo);
-		if ((criteria.getStartDate() != null && criteria.getStartDate() > new Date().getTime())
-				|| (criteria.getEndDate() != null && criteria.getEndDate() > new Date().getTime())) {
+		Calendar cal = Calendar.getInstance();
+		cal.roll(Calendar.DATE, 1);
+		
+		if ((criteria.getStartDate() != null && criteria.getStartDate() > cal.getTime().getTime())
+				|| (criteria.getEndDate() != null && criteria.getEndDate() > cal.getTime().getTime())) {
 			errorMap.put(ErrorConstants.INVALID_START_END_DATE_CODE, ErrorConstants.INVALID_START_END_DATE_MSG);
 		}
 		if ((criteria.getStartDate() != null && criteria.getEndDate() != null)

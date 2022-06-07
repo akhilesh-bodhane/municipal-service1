@@ -156,12 +156,12 @@ public class ServiceRequestRepository {
 
 		if (serviceReqSearchCriteria.getServiceRequestId() != null
 				&& !serviceReqSearchCriteria.getServiceRequestId().isEmpty()) {
-			StringBuilder serviceRequestId = new StringBuilder("(");
+			StringBuilder serviceRequestId = new StringBuilder("[");
 			serviceReqSearchCriteria.getServiceRequestId().stream()
-					.forEach(p -> serviceRequestId.append("'").append(p).append("',"));
+					.forEach(p -> serviceRequestId.append("'%").append(p).append("%',"));
 			serviceRequestId.deleteCharAt(serviceRequestId.length() - 1);
-			serviceRequestId.append(")");
-			whereStr.append(" and serviceRequestId in ").append(serviceRequestId);
+			serviceRequestId.append("]");
+			whereStr.append(" and serviceRequestId LIKE ANY(ARRAY").append(serviceRequestId);
 		}
 
 		if (serviceReqSearchCriteria.getPhone() != null && !serviceReqSearchCriteria.getPhone().isEmpty()) {
