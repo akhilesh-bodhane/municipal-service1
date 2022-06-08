@@ -403,18 +403,21 @@ public class EstimationService {
 				|| activityType.equalsIgnoreCase(WSCalculationConstant.WS_METER_TESTING_ACTIVITY)) {
 			
 
+if(Usage != null) {
 			if(Usage.equalsIgnoreCase("RESIDENTIAL.GOVERNMENTHOUSING") && activityType.equalsIgnoreCase(WSCalculationConstant.WS_REACTIVATE)) {
 
-
-				criteria.getWaterConnection().setActivityType(WSCalculationConstant.WS_TEMPORARY_DISCONNECTION2);
-				taxHeadEstimates = getTaxHeadForwaterActivity(criteria, masterData, requestInfo);
-				criteria.getWaterConnection().setActivityType(WSCalculationConstant.WS_REACTIVATE);
-//				criteria.getWaterConnection().setProposedPipeSize("");
+						criteria.getWaterConnection().setActivityType(WSCalculationConstant.WS_REACTIVATE2);
+						taxHeadEstimates = getTaxHeadForwaterActivity(criteria, masterData, requestInfo);
+						criteria.getWaterConnection().setActivityType(WSCalculationConstant.WS_REACTIVATE);
+//						criteria.getWaterConnection().setProposedPipeSize("");
+					}
+					else {
+						taxHeadEstimates = getTaxHeadForwaterActivity(criteria, masterData, requestInfo);
+					}
 			}
 			else {
 				taxHeadEstimates = getTaxHeadForwaterActivity(criteria, masterData, requestInfo);
 			}
-
 		} else {
 			if (criteria.getWaterConnection().getWaterApplicationType()
 					.equalsIgnoreCase(WSCalculationConstant.WS_TEMP_CONNECTION_TYPE)|| activityType.equalsIgnoreCase(WSCalculationConstant.WS_APPLY_FOR_TEMP_REGULAR_CON) || activityType.equalsIgnoreCase(WSCalculationConstant.WS_APPLY_FOR_TEMP_CON)) {
