@@ -30,135 +30,139 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class ServiceResponse   {
-  @JsonProperty("ResponseInfo")
-  private ResponseInfo responseInfo = null;
+public class ServiceResponse {
+	@JsonProperty("ResponseInfo")
+	private ResponseInfo responseInfo = null;
 
-  @JsonProperty("services")
-  @Valid
-  private List<ServiceRequestData> services = new ArrayList<ServiceRequestData>();
+	@JsonProperty("services")
+	@Valid
+	private List<ServiceRequestData> services = new ArrayList<ServiceRequestData>();
 
-  @JsonProperty("actionHistory")
-  @Valid
-  private List<ActionHistory> actionHistory = null;
+	@JsonProperty("actionHistory")
+	@Valid
+	private List<ActionHistory> actionHistory = null;
 
-  public ServiceResponse responseInfo(ResponseInfo responseInfo) {
-    this.responseInfo = responseInfo;
-    return this;
-  }
+	@JsonProperty("totalRecords")
+	@Valid
+	private String totalRecords;
 
-  /**
-   * Get responseInfo
-   * @return responseInfo
-  **/
-  @NotNull
+	public ServiceResponse responseInfo(ResponseInfo responseInfo) {
+		this.responseInfo = responseInfo;
+		return this;
+	}
 
-  @Valid
+	/**
+	 * Get responseInfo
+	 * 
+	 * @return responseInfo
+	 **/
+	@NotNull
 
-  public ResponseInfo getResponseInfo() {
-    return responseInfo;
-  }
+	@Valid
 
-  public void setResponseInfo(ResponseInfo responseInfo) {
-    this.responseInfo = responseInfo;
-  }
+	public ResponseInfo getResponseInfo() {
+		return responseInfo;
+	}
 
-  public ServiceResponse services(List<ServiceRequestData> services) {
-    this.services = services;
-    return this;
-  }
+	public void setResponseInfo(ResponseInfo responseInfo) {
+		this.responseInfo = responseInfo;
+	}
 
-  public ServiceResponse addServicesItem(ServiceRequestData servicesItem) {
-    this.services.add(servicesItem);
-    return this;
-  }
+	public ServiceResponse services(List<ServiceRequestData> services) {
+		this.services = services;
+		return this;
+	}
 
-  /**
-   * Get services
-   * @return services
-  **/
-  @NotNull
+	public ServiceResponse addServicesItem(ServiceRequestData servicesItem) {
+		this.services.add(servicesItem);
+		return this;
+	}
 
-  @Valid
+	/**
+	 * Get services
+	 * 
+	 * @return services
+	 **/
+	@NotNull
 
-  public List<ServiceRequestData> getServices() {
-    return services;
-  }
+	@Valid
 
-  public void setServices(List<ServiceRequestData> services) {
-    this.services = services;
-  }
+	public List<ServiceRequestData> getServices() {
+		return services;
+	}
 
-  public ServiceResponse actionHistory(List<ActionHistory> actionHistory) {
-    this.actionHistory = actionHistory;
-    return this;
-  }
+	public void setServices(List<ServiceRequestData> services) {
+		this.services = services;
+	}
 
-  public ServiceResponse addActionHistoryItem(ActionHistory actionHistoryItem) {
-    if (this.actionHistory == null) {
-      this.actionHistory = new ArrayList<ActionHistory>();
-    }
-    this.actionHistory.add(actionHistoryItem);
-    return this;
-  }
+	public ServiceResponse actionHistory(List<ActionHistory> actionHistory) {
+		this.actionHistory = actionHistory;
+		return this;
+	}
 
-  /**
-   * Get actionHistory
-   * @return actionHistory
-  **/
-  @Valid
+	public ServiceResponse addActionHistoryItem(ActionHistory actionHistoryItem) {
+		if (this.actionHistory == null) {
+			this.actionHistory = new ArrayList<ActionHistory>();
+		}
+		this.actionHistory.add(actionHistoryItem);
+		return this;
+	}
 
-  public List<ActionHistory> getActionHistory() {
-    return actionHistory;
-  }
+	/**
+	 * Get actionHistory
+	 * 
+	 * @return actionHistory
+	 **/
+	@Valid
 
-  public void setActionHistory(List<ActionHistory> actionHistory) {
-    this.actionHistory = actionHistory;
-  }
+	public List<ActionHistory> getActionHistory() {
+		return actionHistory;
+	}
 
+	public void setActionHistory(List<ActionHistory> actionHistory) {
+		this.actionHistory = actionHistory;
+	}
 
-  @Override
-  public boolean equals(java.lang.Object o) {
-    if (this == o) {
-      return true;
-    }
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-    ServiceResponse serviceResponse = (ServiceResponse) o;
-    return Objects.equals(this.responseInfo, serviceResponse.responseInfo) &&
-        Objects.equals(this.services, serviceResponse.services) &&
-        Objects.equals(this.actionHistory, serviceResponse.actionHistory);
-  }
+	@Override
+	public boolean equals(java.lang.Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
+		ServiceResponse serviceResponse = (ServiceResponse) o;
+		return Objects.equals(this.responseInfo, serviceResponse.responseInfo)
+				&& Objects.equals(this.services, serviceResponse.services)
+				&& Objects.equals(this.actionHistory, serviceResponse.actionHistory);
+	}
 
-  @Override
-  public int hashCode() {
-    return Objects.hash(responseInfo, services, actionHistory);
-  }
+	@Override
+	public int hashCode() {
+		return Objects.hash(responseInfo, services, actionHistory);
+	}
 
-  @Override
-  public String toString() {
-    StringBuilder sb = new StringBuilder();
-    sb.append("class ServiceResponse {\n");
-    
-    sb.append("    responseInfo: ").append(toIndentedString(responseInfo)).append("\n");
-    sb.append("    services: ").append(toIndentedString(services)).append("\n");
-    sb.append("    actionHistory: ").append(toIndentedString(actionHistory)).append("\n");
-    sb.append("}");
-    return sb.toString();
-  }
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("class ServiceResponse {\n");
 
-  /**
-   * Convert the given object to string with each line indented by 4 spaces
-   * (except the first line).
-   */
-  private String toIndentedString(java.lang.Object o) {
-    if (o == null) {
-      return "null";
-    }
-    return o.toString().replace("\n", "\n    ");
-  }
+		sb.append("    responseInfo: ").append(toIndentedString(responseInfo)).append("\n");
+		sb.append("    services: ").append(toIndentedString(services)).append("\n");
+		sb.append("    actionHistory: ").append(toIndentedString(actionHistory)).append("\n");
+		sb.append("}");
+		return sb.toString();
+	}
 
+	/**
+	 * Convert the given object to string with each line indented by 4 spaces
+	 * (except the first line).
+	 */
+	private String toIndentedString(java.lang.Object o) {
+		if (o == null) {
+			return "null";
+		}
+		return o.toString().replace("\n", "\n    ");
+	}
 
 }
-
