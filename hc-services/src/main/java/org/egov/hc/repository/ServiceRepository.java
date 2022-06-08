@@ -110,12 +110,16 @@ public class ServiceRepository {
 		}
 	}
 
-	public List<ServiceRequestData> findRequest(RequestData requestData) throws ParseException {
+	public List<ServiceRequestData> findRequest(RequestData requestData, List<String> recCount) throws ParseException {
 
 		List<Object> preparedStmtList = new ArrayList<>();
 		String query = queryBuilder.getHCSearchQuery(requestData, preparedStmtList);
 		log.info("Query: " + query);
 		List<ServiceRequestData> serviceRequestList = jdbcTemplate.query(query, preparedStmtList.toArray(), rowMapper);
+
+		recCount.add(
+				serviceRequestList != null && !serviceRequestList.isEmpty() ? String.valueOf(serviceRequestList.size())
+						: "0");
 		return serviceRequestList;
 
 	}

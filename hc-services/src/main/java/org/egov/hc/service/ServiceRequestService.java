@@ -1188,6 +1188,7 @@ public class ServiceRequestService {
 	public ResponseEntity<ServiceResponse> searchRequest(RequestData requestData, RequestInfo requestInfo) {
 
 		List<ServiceRequestData> serviceRequest = null;
+		List<String> recCount = new ArrayList<String>();
 		List<ServiceRequestData> serviceRequestList = new ArrayList<>();
 		String responseValidate = "";
 
@@ -1198,7 +1199,7 @@ public class ServiceRequestService {
 		if (responseValidate.equals("")) {
 
 			try {
-				serviceRequest = serviceRepository.findRequest(requestData);
+				serviceRequest = serviceRepository.findRequest(requestData, recCount);
 
 			} catch (ParseException e) {
 				log.info("Parse Exception");
@@ -1206,11 +1207,12 @@ public class ServiceRequestService {
 			if (serviceRequestList == null) {
 				return new ResponseEntity(ServiceResponse.builder()
 						.responseInfo(ResponseInfo.builder().msgId("Invalid role  or blank data ").build())
-						.services(serviceRequest).build(), HttpStatus.BAD_REQUEST);
+						.totalRecords(recCount.isEmpty() ? "" : recCount.get(0)).services(serviceRequest).build(),
+						HttpStatus.BAD_REQUEST);
 			} else {
 				return new ResponseEntity(ServiceResponse.builder()
 						.responseInfo(ResponseInfo.builder().status(HCConstants.SUCCESS).build())
-						.services(serviceRequest).build(), HttpStatus.OK);
+						.totalRecords(recCount.isEmpty() ? "" : recCount.get(0)).services(serviceRequest).build(), HttpStatus.OK);
 			}
 		} else {
 			return new ResponseEntity(ServiceResponse.builder()
@@ -1412,8 +1414,8 @@ public class ServiceRequestService {
 		} catch (JsonProcessingException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} 
-		
+		}
+
 		// geting data from processinstance with service_request_id
 		ServiceRequest procesinstancedata = getProcesinstanceData(serviceRequest, service_request_id_new,
 				service_request_id, serviceRequestServiceType, serviceRequestGet);
@@ -1423,8 +1425,8 @@ public class ServiceRequestService {
 		} catch (JsonProcessingException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} 
-		
+		}
+
 		// service request id (old) this service request status update(mark as Rejected)
 		updateStatus(procesinstancedata, service_request_id_new, service_request_id);
 		try {
@@ -1432,14 +1434,14 @@ public class ServiceRequestService {
 		} catch (JsonProcessingException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} 
+		}
 		updateServiceRequestStatus(procesinstancedata, service_request_id, serviceRequestServiceType);
 		try {
 			System.out.println("HC WF : 12 : " + objectMapper.writeValueAsString(serviceRequest));
 		} catch (JsonProcessingException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} 
+		}
 	}
 
 	private String generateServiceRequestId(String service_request_id) {
@@ -1694,7 +1696,7 @@ public class ServiceRequestService {
 		} catch (JsonProcessingException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} 
+		}
 		log.info("Update service request : " + infowraperforupdate);
 		hCProducer.push(hcConfiguration.getUpdateStatusTopic(), infowraperforupdate);
 
@@ -1709,8 +1711,8 @@ public class ServiceRequestService {
 		} catch (JsonProcessingException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} 
-		
+		}
+
 		User employeeData = employeeStoredData(serviceRequestGetData);
 
 		try {
@@ -1718,7 +1720,7 @@ public class ServiceRequestService {
 		} catch (JsonProcessingException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} 
+		}
 		try {
 			String procesinstanceData = getProcesinstanceDataFromprocesinstance(service_request_id,
 					serviceRequestGetData);
@@ -1731,18 +1733,18 @@ public class ServiceRequestService {
 			} catch (JsonProcessingException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-			} 
+			}
 			log.info("get data from procesinstance :" + procesinstanceData);
 			serviceRequestGetData = procesinstanceBulkData(procesinstanceData, bussinessServiceData,
 					serviceRequestGetData, service_request_id, service_request_id_new, bussinessServiceDataOld,
 					serviceRequestGet);
-			
+
 			try {
 				System.out.println("HC WF : 5 : " + objectMapper.writeValueAsString(serviceRequestGetData));
 			} catch (JsonProcessingException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-			} 
+			}
 
 		} catch (HttpClientErrorException e) {
 			log.info("Handled exception");
@@ -1794,7 +1796,7 @@ public class ServiceRequestService {
 		} catch (JsonProcessingException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} 
+		}
 		String businessService = null;
 		String nextStateAndSla = null;
 		ArrayList<ProcessInstance> ProcessInstanceList = new ArrayList<>();
@@ -1878,7 +1880,7 @@ public class ServiceRequestService {
 			} catch (JsonProcessingException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-			} 
+			}
 			if (serviceRequestGetData.getServices().get(0).getIsUT() == serviceRequestGet.getIsUT())
 				saveBulkProcessInstance(ProcessInstanceList);
 
@@ -1887,7 +1889,7 @@ public class ServiceRequestService {
 			} catch (JsonProcessingException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-			} 
+			}
 			serviceRequestGetData = setActionInfo(serviceRequestGetData, serviceRequestData);
 
 			try {
@@ -1895,7 +1897,7 @@ public class ServiceRequestService {
 			} catch (JsonProcessingException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-			} 
+			}
 		} catch (Exception ex) {
 
 			System.out.println("  DATA PARSING EXCEPTION " + ex);

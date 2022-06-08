@@ -98,7 +98,7 @@ public class ServiceRequestServiceTest {
 				                  .msgId("20170310130900|en_IN").userInfo(User.builder().id(94L).tenantId("ch").build()).build();
 		
 		Mockito.when(objectMapper.convertValue(requestdata, RequestData.class)).thenReturn(requestData);
-		Mockito.when(serviceRepository.findRequest(requestdata)).thenReturn(new ArrayList<ServiceRequestData>());
+		//Mockito.when(serviceRepository.findRequest(requestdata,"0")).thenReturn(new ArrayList<ServiceRequestData>());
 //		Assert.assertEquals(HttpStatus.OK, requestService.searchRequest(requestdata, requestInfo).getStatusCode());
 	}
 
