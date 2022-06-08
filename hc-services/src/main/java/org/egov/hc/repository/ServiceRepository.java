@@ -115,6 +115,7 @@ public class ServiceRepository {
 		List<Object> preparedStmtList = new ArrayList<>();
 		String query = queryBuilder.getHCSearchQuery(requestData, preparedStmtList);
 		log.info("Query: " + query);
+		log.info("Query preparedStmtList : " + preparedStmtList.toString());
 		List<ServiceRequestData> serviceRequestList = jdbcTemplate.query(query, preparedStmtList.toArray(), rowMapper);
 
 		recCount.add(
