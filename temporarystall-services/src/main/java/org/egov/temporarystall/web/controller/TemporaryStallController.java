@@ -35,7 +35,7 @@ public class TemporaryStallController {
 	}
 	
 	@PostMapping(value = "/_update")
-	public ResponseEntity<ResponseInfoWrapper> updateStallApplication(@RequestBody StallRequest stallrequest) throws Exception {
+	public ResponseEntity<ResponseInfoWrapper> updateStallApplication(@RequestBody StallRequest stallrequest) {
 		return stallService.updateStallApplication(stallrequest);
 	}
 
