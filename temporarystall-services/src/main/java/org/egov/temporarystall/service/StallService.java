@@ -243,7 +243,7 @@ public class StallService {
 	
 	///
 	
-	public ResponseEntity<ResponseInfoWrapper> updateStallApplication(StallRequest stallrequest) throws Exception {
+	public ResponseEntity<ResponseInfoWrapper> updateStallApplication(StallRequest stallrequest) {
 		StallApplication StallApplication = objectMapper.convertValue(stallrequest.getStallApplicationRequest(),
 				StallApplication.class);			
 		
