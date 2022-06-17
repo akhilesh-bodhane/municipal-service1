@@ -72,13 +72,15 @@ public class CommonConstants {
 	public static final String STALL_APPLICATION_CREATED = "Application Created";
 	
 	public static final String MDMS_FESTIVAL = "Festival";
-	public static final String MDMS_PM_PATH = "$.MdmsRes.Temporary-Stall";
-	public static final String MDMS_TAXHEAD_PATH = "$.MdmsRes.Temporary-Stall.Festival";
-	public static final String MDMS_TAXHEAD_SIZE_PATH = "$.MdmsRes.Temporary-Stall.size";
+	public static final String MDMS_PM_PATH = "$.MdmsRes.TemporaryStall";
+	public static final String MDMS_TAXHEAD_PATH = "$.MdmsRes.TemporaryStall.Festival";
+	public static final String MDMS_TAXHEAD_SIZE_PATH = "$.MdmsRes.TemporaryStall.size";
+	public static final String MDMS_TAXHEAD_STALL_CONFIG_PATH = "$.MdmsRes.TemporaryStall.Stallconfig";
 	public static final String MDMS_TEMPORARYSTALL = "TemporaryStall";
 	public static final String MDMS_EGF_MASTER = "egf-master";
 	public static final String MDMS_FINANCIALYEAR = "FinancialYear";
 	public static final String SIZE = "size";
+	public static final String STALLCONFIG = "Stallconfig";
 	
 	public static final String BWT_TAXHEAD_CODE_1 = "WATER_TANKAR_CHARGES_BOOKING_BRANCH";
 

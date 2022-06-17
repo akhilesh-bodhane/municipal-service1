@@ -68,6 +68,7 @@ public class MDMSService {
 		List<MasterDetail> billMasterDetails = new ArrayList<>();
 		billMasterDetails.add(MasterDetail.builder().name(CommonConstants.MDMS_FESTIVAL).build());
 		billMasterDetails.add(MasterDetail.builder().name(CommonConstants.SIZE).build());
+		billMasterDetails.add(MasterDetail.builder().name(CommonConstants.STALLCONFIG).build());
 		ModuleDetail billModuleDtls = ModuleDetail.builder().masterDetails(billMasterDetails)
 				.moduleName(CommonConstants.MDMS_TEMPORARYSTALL).build();
 		

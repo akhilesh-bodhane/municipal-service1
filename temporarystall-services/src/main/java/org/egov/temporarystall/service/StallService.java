@@ -198,6 +198,21 @@ public class StallService {
 	return 0;
 
 	List jsonOutput = JsonPath.read(mdmsData, CommonConstants.MDMS_TAXHEAD_SIZE_PATH);
+	
+List jsonOutput1 = JsonPath.read(mdmsData, CommonConstants.MDMS_TAXHEAD_STALL_CONFIG_PATH);
+	
+	for (Object entry : jsonOutput1) {
+		HashMap<String, Object> map = (HashMap<String, Object>) entry;
+
+		String value = ((String) map.get("value"));
+		
+		if(value!=null && value.equalsIgnoreCase(stallapplication.getStallsize())) {
+			sizeamount = new Integer(map.get("amount").toString());
+			
+			return sizeamount;
+		
+		}		
+		}
 
 
 	for (Object entry : jsonOutput) {
@@ -209,13 +224,14 @@ public class StallService {
 //	String requestdays = ((String) map.get("maxdays"));
 
 
-	   if("Diwali".equalsIgnoreCase(stallapplication.getFestival()) && stallapplication.getNoofdays()== 20) {
-	    if("Up to 250Sq.ft".equalsIgnoreCase(stallapplication.getStallsize())){
-	sizeamount = 2000;
-
-	break;
-	 }
-	   }
+	/*
+	 * if("Diwali".equalsIgnoreCase(stallapplication.getFestival()) &&
+	 * stallapplication.getNoofdays()== 20) {
+	 * if("Up to 250Sq.ft".equalsIgnoreCase(stallapplication.getStallsize())){
+	 * sizeamount = 2000;
+	 * 
+	 * break; } }
+	 */
 	if(sector!=null && (!"17".equalsIgnoreCase(stallapplication.getSector()) && !"22".equalsIgnoreCase(stallapplication.getSector()))) {
 	if(size !=null && size.equalsIgnoreCase(stallapplication.getStallsize())){
 	sizeamount = new Integer(map.get("rate").toString());
