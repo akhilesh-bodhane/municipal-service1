@@ -118,7 +118,9 @@ public class StallService {
 			
 			double amount=stallapplication.getNoofdays() * stallsizerate ;
 			
-			double totalamount =  amount + (amount * 0.18);
+			double totalamt =  amount + (amount * 0.18);
+			
+			double totalamount = Math.round(totalamt + 0.4);
 			
 			
 			
@@ -291,12 +293,12 @@ List jsonOutput1 = JsonPath.read(mdmsData, CommonConstants.MDMS_TAXHEAD_STALL_CO
 					
 					double amount=StallApplication.getNoofdays() * stallsizerate ;
 					
-					double totalamount =  amount + (amount * 0.18);
+					double totalamt =  amount + (amount * 0.18);
+					
+					double totalamount = Math.round(totalamt + 0.4);
 					
 					StallApplication.setTotalamount(totalamount);
 					
-//					List<Demand> searchResult = calculation.searchDemand("ch.chandigarh",
-//							Collections.singleton(StallApplication.getApplicationId()), stallrequest.getRequestInfo());
 					
 					StringBuilder uri = new StringBuilder();
 					uri = uri.append(config.getBillingHost()).append(config.getBillingHostSerach());
@@ -315,54 +317,37 @@ List jsonOutput1 = JsonPath.read(mdmsData, CommonConstants.MDMS_TAXHEAD_STALL_CO
 					append.append("consumerCodes=").append(StallApplication.getApplicationId()).append("&tenantId=ch.chandigarh");
 					
 					  
-//					Object fetchResultCollecto = repository1.fetchResult(append,
-//						stallrequest.getRequestInfo());
-//					Object fetchResult2 = repository1.fetchResult(append, stallrequest.getRequestInfo());
-					
-//					RequestInfo req =new RequestInfo(stallrequest.getRequestInfo());
-					
-					
-					
-//					Demand demand = StallApplication.getDemand();
-				
-					
-//                     
-//					convertValue.
-//					List<DemandDetail> demandDetails = demand.getDemandDetails();
-//					List<DemandDetail> updatedDemandDetails = getUpdatedDemandDetails(calculation, demandDetails);
-//					demand.setDemandDetails(updatedDemandDetails);
-//					demands.add(demand);
-//				}
+
 					
 						
-						org.egov.common.contract.request.User i1 = new org.egov.common.contract.request.User();
+						org.egov.common.contract.request.User user = new org.egov.common.contract.request.User();
 
 //						User lp = stallrequest.getRequestInfo().getUserInfo();
-						i1.setId(stallrequest.getRequestInfo().getUserInfo().getId());
-						i1.setEmailId(stallrequest.getRequestInfo().getUserInfo().getEmailId());
-						i1.setName(stallrequest.getRequestInfo().getUserInfo().getName());
-						i1.setTenantId(stallrequest.getRequestInfo().getUserInfo().getTenantId());
-						i1.setType(stallrequest.getRequestInfo().getUserInfo().getType());
-						i1.setUuid(stallrequest.getRequestInfo().getUserInfo().getUuid());
-						i1.setUserName(stallrequest.getRequestInfo().getUserInfo().getUserName());
+						user.setId(stallrequest.getRequestInfo().getUserInfo().getId());
+						user.setEmailId(stallrequest.getRequestInfo().getUserInfo().getEmailId());
+						user.setName(stallrequest.getRequestInfo().getUserInfo().getName());
+						user.setTenantId(stallrequest.getRequestInfo().getUserInfo().getTenantId());
+						user.setType(stallrequest.getRequestInfo().getUserInfo().getType());
+						user.setUuid(stallrequest.getRequestInfo().getUserInfo().getUuid());
+						user.setUserName(stallrequest.getRequestInfo().getUserInfo().getUserName());
 
 				
 						double j =0;
 
 						
 
-						DemandDetail ff = new DemandDetail();
-//						ff.setId(stallid);
-						ff.setTaxHeadMasterCode("TEMPORARY_STALL_CHARGES_BOOKING");
-						ff.setDemandId(StallApplication.getApplicationId());
-						ff.setTenantId("ch.chandigarh");
-						ff.setCollectionAmount(j);
-						ff.setTaxAmount(totalamount);
-						ff.setAuditDetails(StallApplication.getAuditDetails());
+						DemandDetail demanddetails = new DemandDetail();
+//						demanddetails.setId(stallid);
+						demanddetails.setTaxHeadMasterCode("TEMPORARY_STALL_CHARGES_BOOKING");
+						demanddetails.setDemandId(StallApplication.getApplicationUuid());
+						demanddetails.setTenantId("ch.chandigarh");
+						demanddetails.setCollectionAmount(j);
+						demanddetails.setTaxAmount(totalamount);
+						demanddetails.setAuditDetails(StallApplication.getAuditDetails());
 
 						List<DemandDetail> dema1 = new ArrayList<>();
 
-						dema1.add(ff);
+						dema1.add(demanddetails);
 
 						List<Demand> dema = new ArrayList<>();
 						Demand build2 = Demand.builder().id(StallApplication.getApplicationUuid()).tenantId("ch.chandigarh")
@@ -371,13 +356,12 @@ List jsonOutput1 = JsonPath.read(mdmsData, CommonConstants.MDMS_TAXHEAD_STALL_CO
 								.taxPeriodFrom(StallApplication.getAuditDetails().getLastModifiedTime())
 								.taxPeriodTo(StallApplication.getAuditDetails().getLastModifiedTime())
 								.demandDetails(dema1).auditDetails(StallApplication.getAuditDetails())
-								.minimumAmountPayable(BigDecimal.ZERO).status(StatusEnum.ACTIVE).payer(i1)
+								.minimumAmountPayable(BigDecimal.ZERO).status(StatusEnum.ACTIVE).payer(user)
 								.demandDetails(dema1).build();
 						dema.add(build2);
 						DemandRequest DR = new DemandRequest();
 						DemandRequest build = DR.builder().demands(dema).build();
 						DemandRequest request = new DemandRequest(stallrequest.getRequestInfo(), dema);
-//							DemandBuilder businessService = Demand.builder().id(stallid).tenantId("ch").consumerCode("123").consumerType("temp").businessService("temp");
 
 						
 						MdmsResponse response2 = mapper.convertValue(
