@@ -85,6 +85,9 @@ public class StallApplication {
 	
 	@JsonProperty("demaniddetailid")
 	private String demaniddetailid;
+	
+	@JsonProperty("paymentstatus")
+	private String paymentstatus;
 
 	@JsonProperty("financialBusinessService")
 	private String financialBusinessService;

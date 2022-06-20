@@ -394,10 +394,16 @@ List jsonOutput1 = JsonPath.read(mdmsData, CommonConstants.MDMS_TAXHEAD_STALL_CO
 						DemandRequest request = new DemandRequest(stallrequest.getRequestInfo(), dema);
 
 						
+						if(stallPaymentStatus.getPaymentstatus()==null) {
+						
 						MdmsResponse response2 = mapper.convertValue(
 								repository1.fetchResult(repository.getBillingUpdateUrl(), request),
 								MdmsResponse.class);
-					
+						StallApplication.setApplicationstatus(CommonConstants.ACTION_DRAFT);
+						}
+						else {
+							StallApplication.setApplicationstatus(CommonConstants.ACTION_PAYMENT);	
+						}
 					StallApplication.setApplicationDocument(stalldoc);
 					repository.updateSTALLApplication(StallApplication);
 		
