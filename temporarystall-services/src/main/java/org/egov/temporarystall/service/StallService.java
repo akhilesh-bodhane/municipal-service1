@@ -393,7 +393,8 @@ List jsonOutput1 = JsonPath.read(mdmsData, CommonConstants.MDMS_TAXHEAD_STALL_CO
 						DemandRequest build = DR.builder().demands(dema).build();
 						DemandRequest request = new DemandRequest(stallrequest.getRequestInfo(), dema);
 
-						
+						StallApplication stallPaymentStatus = repository.getStallPaymentStatus(StallApplication);
+		
 						if(stallPaymentStatus.getPaymentstatus()==null) {
 						
 						MdmsResponse response2 = mapper.convertValue(
