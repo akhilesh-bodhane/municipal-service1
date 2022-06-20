@@ -80,6 +80,12 @@ public class StallApplication {
 	@JsonProperty("financialyear")
 	private String financialyear;
 	
+	@JsonProperty("demanid")
+	private String demanid;
+	
+	@JsonProperty("demaniddetailid")
+	private String demaniddetailid;
+
 	@JsonProperty("financialBusinessService")
 	private String financialBusinessService;
 	

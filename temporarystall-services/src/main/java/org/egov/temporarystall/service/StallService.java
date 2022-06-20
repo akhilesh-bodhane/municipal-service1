@@ -1,5 +1,6 @@
 package org.egov.temporarystall.service;
 
+import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -10,10 +11,12 @@ import java.util.UUID;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.request.Role;
 import org.egov.common.contract.response.ResponseInfo;
+import org.egov.mdms.model.MdmsCriteriaReq;
 import org.egov.mdms.model.MdmsResponse;
 import org.egov.temporarystall.common.CommonConstants;
 import org.egov.temporarystall.config.StallConfiguration;
 import org.egov.temporarystall.idgen.model.IdGenerationResponse;
+import org.egov.temporarystall.model.Payment;
 import org.egov.temporarystall.model.ResponseInfoWrapper;
 import org.egov.temporarystall.model.StallApplication;
 import org.egov.temporarystall.model.StallApplicationDocument;
@@ -286,7 +289,7 @@ public class StallService {
 					uri = uri.append(config.getBillingHost()).append(config.getBillingHostSerach());
 					
 					uri = uri.append("tenantId=").append("ch.chandigarh").append("&businessService=").append("TEMPORARY_STALL_CHARGES_BOOKING&consumerCode=").append(StallApplication.getApplicationId());
-					
+					StallRequest.builder().requestInfo(stallrequest.getRequestInfo()).build();
 					Object fetchResult = repository1.fetchResult(uri,
 							stallrequest.getRequestInfo());   
 					
@@ -294,14 +297,30 @@ public class StallService {
 					
 					
 					StringBuilder curi = new StringBuilder();
-//					uric = uri.append(config.getBillingHost()).append(config.getBillingHostSerach());
 					StringBuilder append = curi.append(config.getCollectionHostSerach()).append(config.getCollectionSearcheUrl());
 					append.append("consumerCodes=").append(StallApplication.getApplicationId()).append("&tenantId=ch.chandigarh");
 					
-					  
-//					Object fetchResultCollecto = repository1.fetchResult(append,
-//						stallrequest.getRequestInfo());
-//					Object fetchResult2 = repository1.fetchResult(append, stallrequest.getRequestInfo());
+
+					StringBuilder curii = new StringBuilder();
+
+					StallRequest build3 = StallRequest.builder().requestInfo(stallrequest.getRequestInfo()).build();
+					Object fetchResult2 = repository1.fetchResult(append, build3);
+
+					
+					Payment response3= mapper.convertValue(fetchResult2, Payment.class);
+					System.out.println(response3.getTotalAmountPaid());
+					if(response3.getTotalAmountPaid() !=  null && response3.getTotalDue() != null){
+						if(response3.getTotalAmountPaid()==response3.getTotalDue()) {
+							StallApplication.setApplicationstatus(CommonConstants.ACTION_PAYMENT);
+						}
+						else {
+							StallApplication.setApplicationstatus(CommonConstants.ACTION_DRAFT);
+						}
+						
+					}
+					else {
+						StallApplication.setApplicationstatus(CommonConstants.ACTION_DRAFT);
+					}
 					
 //					RequestInfo req =new RequestInfo(stallrequest.getRequestInfo());
 					
@@ -317,6 +336,12 @@ public class StallService {
 //					demand.setDemandDetails(updatedDemandDetails);
 //					demands.add(demand);
 //				}
+					
+			StallApplication stallDemand = repository.getStallDemand(StallApplication);
+			
+			StallApplication stallDemandId = repository.getStallDemandDetailId(StallApplication);
+			
+			
 					
 						
 						org.egov.common.contract.request.User i1 = new org.egov.common.contract.request.User();
@@ -349,7 +374,7 @@ public class StallService {
 						dema1.add(ff);
 
 						List<Demand> dema = new ArrayList<>();
-						Demand build2 = Demand.builder().id(StallApplication.getApplicationUuid()).tenantId("ch.chandigarh")
+						Demand build2 = Demand.builder().id(stallDemand.getDemanid()).tenantId("ch.chandigarh")
 								.consumerCode(StallApplication.getApplicationId()).consumerType("booking")
 								.businessService("TEMPORARY_STALL_CHARGES_BOOKING")
 								.taxPeriodFrom(StallApplication.getAuditDetails().getLastModifiedTime())

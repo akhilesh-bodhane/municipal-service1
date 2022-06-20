@@ -7,8 +7,11 @@ import java.util.List;
 import org.egov.temporarystall.config.StallConfiguration;
 import org.egov.temporarystall.model.StallApplication;
 import org.egov.temporarystall.model.StallRequest;
+import org.egov.temporarystall.model.demand.DemandDetail;
 import org.egov.temporarystall.producer.Producer;
 import org.egov.temporarystall.repository.builder.STALLQueryBuilder;
+import org.egov.temporarystall.repository.rowmapper.DemandDetailRowMapper;
+import org.egov.temporarystall.repository.rowmapper.DemandRowMapper;
 import org.egov.temporarystall.repository.rowmapper.STALLRowMapper;
 import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +28,13 @@ public class TemporaryStallRepository {
 	private JdbcTemplate jdbcTemplate;
 	
 	private STALLRowMapper tempstallRowMapper;
+	
+	@Autowired
+	private DemandRowMapper demandRowMapper;
+	
+	
+	@Autowired
+	private DemandDetailRowMapper demandDetailRowMapper;
 	
 	@Autowired
 	public TemporaryStallRepository(Producer producer, StallConfiguration config,JdbcTemplate jdbcTemplate,STALLRowMapper tempstallRowMapper) {
@@ -57,6 +67,32 @@ public class TemporaryStallRepository {
 			throw new CustomException("Exception",e.getMessage());
 		}
 
+	}
+	
+	public StallApplication getStallDemand(StallApplication stallApplication) {
+		StallApplication stall = new StallApplication();
+		
+		
+		
+			return jdbcTemplate.query(STALLQueryBuilder.GET_STALL_DEMAND_QUERY,
+					new Object[] {  stallApplication.getApplicationId(), 
+							        stallApplication.getApplicationId()				
+							        		
+								 }, demandRowMapper);
+		
+	}
+	
+	public StallApplication getStallDemandDetailId(StallApplication stallApplication) {
+		StallApplication stall = new StallApplication();
+		
+		
+		
+			return jdbcTemplate.query(STALLQueryBuilder.GET_STALL_DEMAND_DETAIL_QUERY,
+					new Object[] {  stallApplication.getApplicationId(), 
+							        stallApplication.getApplicationId()				
+							        		
+								 }, demandDetailRowMapper);
+		
 	}
 	
 	public StringBuilder getBillingUpdateUrl() {
