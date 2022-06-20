@@ -81,8 +81,6 @@ public class DemandServiceImpl implements DemandService {
 		
 		demands = getDemandsForBwt(stallRequest);
 
-		
-
 		 demandRepository.saveDemand(stallRequest.getRequestInfo(), demands);
 
 	}
@@ -102,48 +100,15 @@ public class DemandServiceImpl implements DemandService {
 			String tenantId = bookingsRequest.getStallApplicationRequest().getTenantId();
 
 			String taxHeadCode = CommonConstants.STALL_TAX_HEAD_CODE;
-			
-			//demandDetails.
-			//demandDetails.add(DemandDetail.builder().totalAmount(bookingsRequest.getStallApplicationRequest().getTotalamount()));
-
-			/*String taxHeadCode2 = CommonConstants.BWT_TAXHEAD_CODE_2;
-			
-			  List<TaxHeadEstimate> taxHeadEstimate1 =
-			  bookingsCalculator.getTaxHeadEstimate(bookingsRequest, taxHeadCode1,
-			  taxHeadCode2);
-			 
-
-			
-			  taxHeadEstimate1.forEach(taxHeadEstimate -> {
-			  demandDetails.add(DemandDetail.builder().feesperday(taxHeadEstimate.
-			  getEstimateAmount())
-			  .taxHeadMasterCode(taxHeadEstimate.getTaxHeadCode()).collectionAmount(
-			  BigDecimal.ZERO) .tenantId(tenantId).build()); });*/
-			  
-			  
+					  
 			  demandDetails.add(DemandDetail.builder().taxAmount(bookingsRequest.getStallApplicationRequest().getTotalamount())
 			  .taxHeadMasterCode(taxHeadCode).collectionAmount(0) 
 			  .tenantId(tenantId).demandId(bookingsRequest.getStallApplicationRequest().getApplicationId())
 			  .auditDetails(bookingsRequest.getAuditDetails()).id(UUID.randomUUID().toString()).build());
-			  
-			
-			 
-			 
-
-/*			Long taxPeriodFrom = 1554057000000L;
-			Long taxPeriodTo = 1869676199000L;
-*/			
-			 //Object mdmsData = mdmsService.mDMSCall(bookingsRequest.getRequestInfo(), tenantId);
-			 
-			 //Object mdmsData = mdmsService.mDMSCall(bookingsRequest.getRequestInfo(), bookingsRequest.getStallApplicationRequest().getTenantId());
 
             Long taxPeriodFrom = System.currentTimeMillis();
             Long taxPeriodTo = System.currentTimeMillis();
-
-           // Map<String, Long> taxPeriods = mdmsService.getTaxPeriods(bookingsRequest.getRequestInfo(), bookingsRequest.getStallApplicationRequest(), mdmsData);
-           // taxPeriodFrom = taxPeriods.get(CommonConstants.MDMS_STARTDATE);
-            //taxPeriodTo = taxPeriods.get(CommonConstants.MDMS_ENDDATE);
-            
+           
 			List<String> combinedBillingSlabs = new LinkedList<>();
 
 			Demand singleDemand = Demand.builder().status(StatusEnum.ACTIVE)
@@ -163,8 +128,6 @@ public class DemandServiceImpl implements DemandService {
 		return demands;
 
 	}
-	
-
 	
 	}
 

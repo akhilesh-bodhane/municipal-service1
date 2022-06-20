@@ -1799,4 +1799,36 @@ public class GrievanceService {
 		else
 			return enrichResult(requestInfo, serviceResponse);
 	}
+
+	/**
+	 * Fetches count of service requests and returns in the reqd format.
+	 * 
+	 * @param requestInfo
+	 * @param serviceReqSearchCriteria
+	 * @return Object
+	 * @author vishal
+	 */
+	public Object getCountDB(RequestInfo requestInfo, ServiceReqSearchCriteria serviceReqSearchCriteria) {
+		StringBuilder uri = new StringBuilder();
+		SearcherRequest searcherRequest = null;
+		try {
+			enrichRequest(requestInfo, serviceReqSearchCriteria);
+		} catch (CustomException e) {
+			if (e.getMessage().equals(ErrorConstants.NO_DATA_MSG))
+				return pGRUtils.getDefaultCountResponse(requestInfo);
+			else
+				throw e;
+		}
+
+		Object response = null;
+		Double count = 0.0;
+		try {
+			response = serviceRequestRepository.fetchDataCount(serviceReqSearchCriteria);
+			if (response != null)
+				count = JsonPath.read(response, PGRConstants.PG_JSONPATH_COUNT);
+		} catch (Exception e) {
+			throw e;
+		}
+		return new CountResponse(factory.createResponseInfoFromRequestInfo(requestInfo, true), count);
+	}
 }

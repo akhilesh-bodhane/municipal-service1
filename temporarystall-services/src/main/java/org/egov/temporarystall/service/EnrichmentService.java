@@ -32,20 +32,6 @@ public class EnrichmentService {
 
 		demandService.createDemand(stallrequest);
 
-		/*
-		 * if
-		 * (!BookingsConstants.BUSINESS_SERVICE_BWT.equals(stallrequest.getBookingsModel
-		 * ().getBusinessService())) { if
-		 * (!bookingsService.isBookingExists(bookingsRequest.getBookingsModel().
-		 * getBkApplicationNumber())) { demandService.createDemand(bookingsRequest); }
-		 * else demandService.updateDemand(bookingsRequest); } else { if
-		 * (!bookingsService.isBookingExists(bookingsRequest.getBookingsModel().
-		 * getBkApplicationNumber())) { demandService.createDemand(bookingsRequest); } }
-		 */
-
 	}
 	
-	
-	
-
 }

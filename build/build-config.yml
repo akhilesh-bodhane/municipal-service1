@@ -103,6 +103,12 @@ config:
         dockerfile: "build/maven/Dockerfile"
       - work-dir: "estate-services/src/main/resources/db"
         image-name: "est-services-db"
+        
+  - name: "builds/municipal-services/temporarystall-services"
+    build:
+      - work-dir: "temporarystall-services"
+        image-name: "temporarystall-services"
+        dockerfile: "build/maven/Dockerfile"
 
   - name: "builds/municipal-services/firenoc-services"
     build:

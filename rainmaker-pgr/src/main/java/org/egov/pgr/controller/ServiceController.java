@@ -145,4 +145,21 @@ public class ServiceController {
 				serviceReqSearchCriteria);
 		return new ResponseEntity<>(serviceReqResponse, HttpStatus.OK);
 	}
+	
+	 /**
+		 * Controller to fetch count of service requests based on a given criteria
+		 * 
+		 * @param requestInfoWrapper
+		 * @param serviceReqSearchCriteria
+		 * @return ResponseEntity<?>
+		 * @author vishal
+		 */
+		@PostMapping("/db/_count")
+		@ResponseBody
+		private ResponseEntity<?> countDB(@RequestBody @Valid RequestInfoWrapper requestInfoWrapper,
+				@ModelAttribute @Valid ServiceReqSearchCriteria serviceReqSearchCriteria) {
+			pgrRequestValidator.validateSearch(serviceReqSearchCriteria, requestInfoWrapper.getRequestInfo());
+			Object countResponse = service.getCountDB(requestInfoWrapper.getRequestInfo(), serviceReqSearchCriteria);
+			return new ResponseEntity<>(countResponse, HttpStatus.OK);
+		}
 }
