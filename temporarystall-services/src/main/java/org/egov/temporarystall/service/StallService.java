@@ -322,24 +322,24 @@ List jsonOutput1 = JsonPath.read(mdmsData, CommonConstants.MDMS_TAXHEAD_STALL_CO
 
 					StringBuilder curii = new StringBuilder();
 
-					StallRequest build3 = StallRequest.builder().requestInfo(stallrequest.getRequestInfo()).build();
-					Object fetchResult2 = repository1.fetchResult(append, build3);
+// 					StallRequest build3 = StallRequest.builder().requestInfo(stallrequest.getRequestInfo()).build();
+// 					Object fetchResult2 = repository1.fetchResult(append, build3);
 
 					
-					Payment response3= mapper.convertValue(fetchResult2, Payment.class);
-					System.out.println(response3.getTotalAmountPaid());
-					if(response3.getTotalAmountPaid() !=  null && response3.getTotalDue() != null){
-						if(response3.getTotalAmountPaid()==response3.getTotalDue()) {
-							StallApplication.setApplicationstatus(CommonConstants.ACTION_PAYMENT);
-						}
-						else {
-							StallApplication.setApplicationstatus(CommonConstants.ACTION_DRAFT);
-						}
+// 					Payment response3= mapper.convertValue(fetchResult2, Payment.class);
+// 					System.out.println(response3.getTotalAmountPaid());
+// 					if(response3.getTotalAmountPaid() !=  null && response3.getTotalDue() != null){
+// 						if(response3.getTotalAmountPaid()==response3.getTotalDue()) {
+// 							StallApplication.setApplicationstatus(CommonConstants.ACTION_PAYMENT);
+// 						}
+// 						else {
+// 							StallApplication.setApplicationstatus(CommonConstants.ACTION_DRAFT);
+// 						}
 						
-					}
-					else {
-						StallApplication.setApplicationstatus(CommonConstants.ACTION_DRAFT);
-					}
+// 					}
+// 					else {
+// 						StallApplication.setApplicationstatus(CommonConstants.ACTION_DRAFT);
+// 					}
 					
 
 					
