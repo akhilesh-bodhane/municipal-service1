@@ -14,5 +14,11 @@ public class STALLQueryBuilder {
 			+ "	 where TS.applicationn_id=(case when ?  <>'' then ?  else TS.applicationn_id end) and \n"
 			+ "	 TS.mobile_no=(case when ?  <>'' then ?  else TS.mobile_no end) \n"
 			+ "	 group by TS.id    ORDER BY created_time desc";
+	
+	
+	public static final String GET_STALL_DEMAND_QUERY = "select id from egbs_demand_v1 edv where consumercode =(case when ?  <>'' then ?  else consumercode end)";
+	
+	
+	public static final String GET_STALL_DEMAND_DETAIL_QUERY ="select id from egbs_demanddetail_v1 edv where demandid  in (select id  from egbs_demand_v1 edv where consumercode =(case when ?  <>'' then ?  else consumercode end) )";
 
 }

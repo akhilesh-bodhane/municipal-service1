@@ -64,6 +64,7 @@ public class CommonConstants {
 	public static final String ACTION_CREATE="CREATE";
 	public static final String ACTION_UPDATE="UPDATE";
 	public static final String ACTION_DRAFT="DRAFTED";
+	public static final String ACTION_PAYMENT="FEES PAID";
 	public static final String SUCCESS = "Success";
 	public static final String FAIL = "Fail";
 	public static final String SUCCESSFUL = "successful";
