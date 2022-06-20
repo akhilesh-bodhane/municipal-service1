@@ -12,6 +12,7 @@ import org.egov.temporarystall.producer.Producer;
 import org.egov.temporarystall.repository.builder.STALLQueryBuilder;
 import org.egov.temporarystall.repository.rowmapper.DemandDetailRowMapper;
 import org.egov.temporarystall.repository.rowmapper.DemandRowMapper;
+import org.egov.temporarystall.repository.rowmapper.PaymentStatusRowMapper;
 import org.egov.temporarystall.repository.rowmapper.STALLRowMapper;
 import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +36,10 @@ public class TemporaryStallRepository {
 	
 	@Autowired
 	private DemandDetailRowMapper demandDetailRowMapper;
+
+	
+	@Autowired
+	private PaymentStatusRowMapper paymentStatusRowMapper;
 	
 	@Autowired
 	public TemporaryStallRepository(Producer producer, StallConfiguration config,JdbcTemplate jdbcTemplate,STALLRowMapper tempstallRowMapper) {
@@ -92,6 +97,19 @@ public class TemporaryStallRepository {
 							        stallApplication.getApplicationId()				
 							        		
 								 }, demandDetailRowMapper);
+		
+	}
+	
+	public StallApplication getStallPaymentStatus(StallApplication stallApplication) {
+		StallApplication stall = new StallApplication();
+		
+		
+		
+			return jdbcTemplate.query(STALLQueryBuilder.GET_STALL_PAYMENT_STATUS_QUERY,
+					new Object[] {  stallApplication.getApplicationId(), 
+							        stallApplication.getApplicationId()				
+							        		
+								 }, paymentStatusRowMapper);
 		
 	}
 	
