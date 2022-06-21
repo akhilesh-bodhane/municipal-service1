@@ -262,4 +262,7 @@ public class WSConfiguration {
 	@Value("${ws.sms.notification_template.citizen.case3}")
 	private String notificationTemplateCitizenCase3;
 	
+	@Value("${create.ws.tt.workflow.name}")
+	private String businessServiceTTValue;
+	
 }
