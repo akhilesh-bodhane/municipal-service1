@@ -87,7 +87,7 @@ public class TemporaryStallRepository {
 		
 	}
 	
-	public StallApplication getStallDemandDetailId(StallApplication stallApplication) {
+	public List<StallApplication> getStallDemandDetailId(StallApplication stallApplication) {
 		StallApplication stall = new StallApplication();
 		
 		

@@ -21,17 +21,17 @@ import org.springframework.stereotype.Component;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Component
-public class DemandDetailRowMapper  implements ResultSetExtractor<StallApplication> {
+public class DemandDetailRowMapper  implements ResultSetExtractor<List<StallApplication>> {
 	
 	@Autowired
 	private ObjectMapper mapper;
 	
 	
 	@Override
-	public StallApplication extractData(ResultSet rs) throws SQLException, DataAccessException {
+	public List<StallApplication> extractData(ResultSet rs) throws SQLException, DataAccessException {
 		Map<String, StallApplication> sepMap = new HashMap<>();
 		
-//		List<StallApplication> listSTALLApplication = new ArrayList<>();
+		List<StallApplication> listSTALLApplication = new ArrayList<>();
 		StallApplication stallapp = new StallApplication();
 	
 		while (rs.next()) {
@@ -47,12 +47,14 @@ public class DemandDetailRowMapper  implements ResultSetExtractor<StallApplicati
 					
 					
 					sepMap.put(id, stallapp);
-//					
+					
+					listSTALLApplication.add(stallapp);
+					
 				}
 		}
 
 		
-		return stallapp;
+		return listSTALLApplication;
 	}
 
 }

@@ -100,11 +100,18 @@ public class DemandServiceImpl implements DemandService {
 			String tenantId = bookingsRequest.getStallApplicationRequest().getTenantId();
 
 			String taxHeadCode = CommonConstants.STALL_TAX_HEAD_CODE;
+			
+			String taxHeadCodeGst = CommonConstants.STALL_TAX_HEAD_CODE_GST;
 					  
-			  demandDetails.add(DemandDetail.builder().taxAmount(bookingsRequest.getStallApplicationRequest().getTotalamount())
+			  demandDetails.add(DemandDetail.builder().taxAmount(bookingsRequest.getStallApplicationRequest().getAmount())
 			  .taxHeadMasterCode(taxHeadCode).collectionAmount(0) 
 			  .tenantId(tenantId).demandId(bookingsRequest.getStallApplicationRequest().getApplicationId())
 			  .auditDetails(bookingsRequest.getAuditDetails()).id(UUID.randomUUID().toString()).build());
+			  
+			  demandDetails.add(DemandDetail.builder().taxAmount(bookingsRequest.getStallApplicationRequest().getGstamount())
+					  .taxHeadMasterCode(taxHeadCodeGst).collectionAmount(0) 
+					  .tenantId(tenantId).demandId(bookingsRequest.getStallApplicationRequest().getApplicationId())
+					  .auditDetails(bookingsRequest.getAuditDetails()).id(UUID.randomUUID().toString()).build());
 
             Long taxPeriodFrom = System.currentTimeMillis();
             Long taxPeriodTo = System.currentTimeMillis();

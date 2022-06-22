@@ -119,11 +119,24 @@ public class StallService {
 			
 			double stallsizerate = getStallsize(stallrequest.getRequestInfo(), mdmsData,stallapplication);
 			
-			double amount=stallapplication.getNoofdays() * stallsizerate ;
+            double gstrate = getGstRate(stallrequest.getRequestInfo(), mdmsData,stallapplication);
 			
-			double totalamt =  amount + (amount * 0.18);
+			double amount= stallsizerate * stallapplication.getNoofdays();
 			
-			double totalamount = Math.round(totalamt + 0.4);
+			double gstamount= gstrate * stallapplication.getNoofdays();
+			
+			double totalamount= amount + gstamount;
+	
+	
+		    stallapplication.setAmount(amount);
+			
+			stallapplication.setGstamount(gstamount);			
+			
+			//double amount=stallapplication.getNoofdays() * stallsizerate ;
+			
+			//double totalamt =  amount + (amount * 0.18);
+			
+			//double totalamount = Math.round(totalamt + 0.4);
 			
 			
 			
@@ -262,6 +275,76 @@ List jsonOutput1 = JsonPath.read(mdmsData, CommonConstants.MDMS_TAXHEAD_STALL_CO
 	return sizeamount;
 	}
 	
+	@SuppressWarnings("unlikely-arg-type")
+	public int getGstRate(RequestInfo requestInfo,Object mdmsData,StallApplication stallapplication) {
+	int gstamount = 0;
+	try {
+
+	LinkedHashMap opmsData = JsonPath.read(mdmsData, CommonConstants.MDMS_PM_PATH);
+	if (opmsData.size() == 0)
+	return 0;
+
+	List jsonOutput = JsonPath.read(mdmsData, CommonConstants.MDMS_TAXHEAD_SIZE_PATH);
+	
+    List jsonOutput1 = JsonPath.read(mdmsData, CommonConstants.MDMS_TAXHEAD_STALL_CONFIG_PATH);
+	
+	for (Object entry : jsonOutput1) {
+		HashMap<String, Object> map = (HashMap<String, Object>) entry;
+
+		String value = ((String) map.get("value"));
+		
+		if(value!=null && value.equalsIgnoreCase(stallapplication.getStallsize())) {
+			gstamount = new Integer(map.get("gstrate").toString());
+			
+			return gstamount;
+		
+		}		
+		}
+
+
+	for (Object entry : jsonOutput) {
+	HashMap<String, Object> map = (HashMap<String, Object>) entry;
+
+
+	String sector = ((String) map.get("sector")).split("\\.")[0];
+	String size = ((String) map.get("size"));
+//	String requestdays = ((String) map.get("maxdays"));
+
+
+	/*
+	 * if("Diwali".equalsIgnoreCase(stallapplication.getFestival()) &&
+	 * stallapplication.getNoofdays()== 20) {
+	 * if("Up to 250Sq.ft".equalsIgnoreCase(stallapplication.getStallsize())){
+	 * sizeamount = 2000;
+	 * 
+	 * break; } }
+	 */
+	if(sector!=null && (!"17".equalsIgnoreCase(stallapplication.getSector()) && !"22".equalsIgnoreCase(stallapplication.getSector()))) {
+	if(size !=null && size.equalsIgnoreCase(stallapplication.getStallsize())){
+		gstamount = new Integer(map.get("gstrate").toString());
+
+	break;
+	}
+	}
+	if(sector.equalsIgnoreCase(stallapplication.getSector())) {
+	if(size !=null && size.equalsIgnoreCase(stallapplication.getStallsize())) {
+		gstamount = new Integer(map.get("gstrate").toString());
+
+	break;
+	}
+	}
+
+	}
+
+
+	} catch (Exception e) {
+	throw new CustomException("MDMS ERROR", "Failed to get calculationType");
+	}
+
+	return gstamount;
+	}
+	
+	
 	///
 	
 	public ResponseEntity<ResponseInfoWrapper> updateStallApplication(StallRequest stallrequest) {
@@ -294,11 +377,26 @@ List jsonOutput1 = JsonPath.read(mdmsData, CommonConstants.MDMS_TAXHEAD_STALL_CO
 					
 					double stallsizerate = getStallsize(stallrequest.getRequestInfo(), mdmsData,StallApplication);
 					
-					double amount=StallApplication.getNoofdays() * stallsizerate ;
+					 double gstrate = getGstRate(stallrequest.getRequestInfo(), mdmsData,StallApplication);
+						
+						double amount= stallsizerate * StallApplication.getNoofdays();
+						
+						double gstamount= gstrate * StallApplication.getNoofdays();
+						
+						double totalamount= amount + gstamount;
+				
+				
+						StallApplication.setAmount(amount);
+						
+						StallApplication.setGstamount(gstamount);	
 					
-					double totalamt =  amount + (amount * 0.18);
-					
-					double totalamount = Math.round(totalamt + 0.4);
+					/*
+					 * double amount=StallApplication.getNoofdays() * stallsizerate ;
+					 * 
+					 * double totalamt = amount + (amount * 0.18);
+					 * 
+					 * double totalamount = Math.round(totalamt + 0.4);
+					 */
 					
 					StallApplication.setTotalamount(totalamount);
 					
@@ -345,7 +443,7 @@ List jsonOutput1 = JsonPath.read(mdmsData, CommonConstants.MDMS_TAXHEAD_STALL_CO
 					
 			StallApplication stallDemand = repository.getStallDemand(StallApplication);
 			
-			StallApplication stallDemandId = repository.getStallDemandDetailId(StallApplication);
+			List<StallApplication> stallDemandId = repository.getStallDemandDetailId(StallApplication);
 			
 			
 					
@@ -367,17 +465,28 @@ List jsonOutput1 = JsonPath.read(mdmsData, CommonConstants.MDMS_TAXHEAD_STALL_CO
 						
 
 						DemandDetail demanddetails = new DemandDetail();
-						demanddetails.setId(stallDemandId.getDemaniddetailid());
+						demanddetails.setId(stallDemandId.get(0).getDemaniddetailid());
 						demanddetails.setTaxHeadMasterCode("TEMPORARY_STALL_CHARGES_BOOKING");
 						demanddetails.setDemandId(stallDemand.getDemanid());
 						demanddetails.setTenantId("ch.chandigarh");
 						demanddetails.setCollectionAmount(j);
-						demanddetails.setTaxAmount(totalamount);
+						demanddetails.setTaxAmount(amount);
 						demanddetails.setAuditDetails(StallApplication.getAuditDetails());
+						
+						DemandDetail demanddetailsGst = new DemandDetail();
+						demanddetailsGst.setId(stallDemandId.get(1).getDemaniddetailid());
+						demanddetailsGst.setTaxHeadMasterCode("TEMPORARY_STALL_GST_CHARGES_BOOKING");
+						demanddetailsGst.setDemandId(stallDemand.getDemanid());
+						demanddetailsGst.setTenantId("ch.chandigarh");
+						demanddetailsGst.setCollectionAmount(j);
+						demanddetailsGst.setTaxAmount(gstamount);
+						demanddetailsGst.setAuditDetails(StallApplication.getAuditDetails());
 
 						List<DemandDetail> dema1 = new ArrayList<>();
 
 						dema1.add(demanddetails);
+						
+						dema1.add(demanddetailsGst);
 
 						List<Demand> dema = new ArrayList<>();
 						Demand build2 = Demand.builder().id(stallDemand.getDemanid()).tenantId("ch.chandigarh")

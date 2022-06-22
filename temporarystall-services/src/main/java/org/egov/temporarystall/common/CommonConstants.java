@@ -92,5 +92,7 @@ public class CommonConstants {
     public static final String MDMS_ENDDATE  = "endingDate";
     
     public static final String STALL_TAX_HEAD_CODE = "TEMPORARY_STALL_CHARGES_BOOKING";
+    
+    public static final String STALL_TAX_HEAD_CODE_GST = "TEMPORARY_STALL_GST_CHARGES_BOOKING";
 
 }
