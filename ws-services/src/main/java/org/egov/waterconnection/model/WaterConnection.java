@@ -107,6 +107,10 @@ public class WaterConnection extends Connection {
 	@JsonProperty("activityType")
 	private String activityType = null;
 	
+	
+	@JsonProperty("waterChargesTT")
+	private String waterChargesTT = null;
+	
 	@JsonProperty("paymentMODE")
 	private String paymentMODE = null;
 

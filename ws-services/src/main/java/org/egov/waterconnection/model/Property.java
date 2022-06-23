@@ -82,6 +82,9 @@ public class Property extends PropertyInfo {
 	
 	@JsonProperty("subusageCategory")
 	private String subusageCategory;
+	
+	@JsonProperty("ploatAreaTT")
+	private String ploatAreaTT;
 
 	@JsonProperty("workflow")
 	private ProcessInstance workflow;

@@ -20,6 +20,9 @@ public class WaterProperty {
 
 	@JsonProperty("plotNo")
 	private String plotNo = null;
+	
+	@JsonProperty("ploatAreaTT")
+	private String ploatAreaTT;
 
 	@JsonProperty("sectorNo")
 	private String sectorNo = null;
@@ -66,6 +69,14 @@ public class WaterProperty {
 			return "null";
 		}
 		return o.toString().replace("\n", "\n    ");
+	}
+
+	public String getPloatAreaTT() {
+		return ploatAreaTT;
+	}
+
+	public void setPloatAreaTT(String ploatAreaTT) {
+		this.ploatAreaTT = ploatAreaTT;
 	}
 
 	public String getId() {

@@ -371,4 +371,6 @@ public class WSCalculationConstant {
 	
 	public static final String WS_METER_TESTING_ACTIVITY = "APPLY_FOR_METER_TESTING";
 	
+	public static final String WS_TT_WATER_ACTIVITY = "TT_WATER_CONNECTION";
+	
 }
