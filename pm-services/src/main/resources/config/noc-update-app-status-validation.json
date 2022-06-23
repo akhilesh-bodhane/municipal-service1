@@ -8269,7 +8269,7 @@
             }
          }
       },
-      "UTEE-REVIEWOFUTEE L4":{
+      "UTWD-REVIEWOFUTEE L4":{
          "PENDINGAPPROVAL":{
             "remarks":{
                "fieldName":"remarks",
@@ -8305,7 +8305,7 @@
             }
          }
       },
-      "UTEE-REASSIGNTOUTEE L3":{
+      "UTWD-REASSIGNTOUTEE L3":{
          "PENDINGAPPROVAL":{
             "remarks":{
                "fieldName":"remarks",
