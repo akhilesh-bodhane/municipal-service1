@@ -48,6 +48,11 @@ public class WaterApplication {
 	@JsonProperty("paymentMode")
 	private String paymentMode;
 	
+	@JsonProperty("waterChargesTT")
+	private String waterChargesTT = null;	
+	
+
+	
 	@JsonProperty("application_code")
 	private String application_code=null;
 	
@@ -140,6 +145,14 @@ public class WaterApplication {
 
 	public String getComments() {
 		return comments;
+	}
+
+	public String getWaterChargesTT() {
+		return waterChargesTT;
+	}
+
+	public void setWaterChargesTT(String waterChargesTT) {
+		this.waterChargesTT = waterChargesTT;
 	}
 
 	public void setComments(String comments) {

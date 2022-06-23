@@ -400,6 +400,7 @@ public class EstimationService {
 				|| activityType.equalsIgnoreCase(WSCalculationConstant.WS_CHANGE_OWNER_INFO)
 				|| activityType.equalsIgnoreCase(WSCalculationConstant.WS_CONVERSION)
 				|| activityType.equalsIgnoreCase(WSCalculationConstant.WS_UPDATEMETER)
+				|| activityType.equalsIgnoreCase(WSCalculationConstant.WS_TT_WATER_ACTIVITY)
 				|| activityType.equalsIgnoreCase(WSCalculationConstant.WS_METER_TESTING_ACTIVITY)) {
 			
 

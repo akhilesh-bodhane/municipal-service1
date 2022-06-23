@@ -162,6 +162,8 @@ public class WaterRowMapper implements ResultSetExtractor<List<WaterConnection>>
 					property.setUsageSubCategory(rs.getString("usagesubcategory"));
 
 					property.setPlotNo(rs.getString("propertyplotno"));
+					
+					property.setPloatAreaTT(rs.getString("ploatAreaTT"));
 
 					property.setSectorNo(rs.getString("propertysectorno"));
 					
@@ -197,8 +199,8 @@ public class WaterRowMapper implements ResultSetExtractor<List<WaterConnection>>
 			app.setIsFerruleApplicable(rs.getBoolean("app_ferrule"));
 			app.setSecurityCharge(rs.getDouble("app_securitycharge"));
 			app.setTotalAmountPaid(rs.getString("total_amount_paid"));
-
-			app.setAdditionalCharges(rs.getDouble("additionalcharges"));
+			app.setWaterChargesTT(rs.getString("waterChargesTT"));
+		    app.setAdditionalCharges(rs.getDouble("additionalcharges"));
 			app.setConstructionCharges(rs.getDouble("constructioncharges"));
 			app.setPaymentMode(rs.getString("paymentmode"));
 			app.setIsMeterStolen(rs.getBoolean("ismeterstolen"));
