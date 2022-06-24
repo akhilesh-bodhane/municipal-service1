@@ -59,7 +59,7 @@ public class WsQueryBuilder {
 			/* + " conn.*, wc.*, document.*, plumber.*, application.*, property.*, " */
 			+ " wc.connectionCategory, wc.connectionType, wc.waterSource, wc.meterCount, wc.meterRentCode, wc.mfrCode, wc.meterDigits, wc.meterUnit, wc.sanctionedCapacity,"
 			+ " wc.meterId, wc.meterInstallationDate, wc.pipeSize, wc.noOfTaps, wc.proposedPipeSize, wc.proposedTaps, wc.connection_id as connection_Id, wc.connectionExecutionDate, wc.initialmeterreading,wc.lastmeterreading, wc.appCreatedDate,wc.proposed_meterid, wc.proposed_meterinstallationdate,wc.proposed_initialmeterreading,wc.proposed_lastmeterreading,wc.proposed_metercount,wc.proposed_meterrentcode,wc.proposed_mfrcode,wc.proposed_meterdigits,  wc.proposed_sanctionedcapacity,wc.proposed_meterunit,"
-			+ " wc.detailsprovidedby, wc.estimationfileStoreId , wc.sanctionfileStoreId , wc.estimationLetterDate, py.paymentmode,"
+			+ " wc.detailsprovidedby, wc.estimationfileStoreId , wc.sanctionfileStoreId , wc.estimationLetterDate, py.paymentmode,py.lastmodifiedtime as paymentdate ,"
 			+ " conn.id as conn_id, conn.tenantid, conn.applicationNo, conn.applicationStatus, conn.status, conn.connectionNo, conn.oldConnectionNo, conn.property_id, conn.roadcuttingarea,"
 			+ " conn.aadharNo, conn.ferruleSize, conn.action, conn.adhocpenalty, conn.adhocrebate, conn.adhocpenaltyreason, conn.applicationType, conn.dateEffectiveFrom,"
 			+ " conn.adhocpenaltycomment, conn.adhocrebatereason, conn.adhocrebatecomment, conn.cccode, conn.div, conn.subdiv, conn.ledger_no,conn.ledgergroup, conn.createdBy as ws_createdBy, conn.lastModifiedBy as ws_lastModifiedBy,"
