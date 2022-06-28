@@ -101,6 +101,12 @@ public class StallApplication {
 	@JsonProperty("gstamount")
 	private double gstamount;
 	
+	@JsonProperty("nomineename")
+	private String nomineename;
+	
+	@JsonProperty("relation")
+	private String relation;
+	
 	@JsonProperty("applicationDocument")
 	private List<StallApplicationDocument> applicationDocument;
 	

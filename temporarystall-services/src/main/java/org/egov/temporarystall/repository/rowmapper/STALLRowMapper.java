@@ -62,6 +62,8 @@ public class STALLRowMapper  implements ResultSetExtractor<List<StallApplication
 					stallapp.setApplicationstatus(rs.getString("application_status"));
 					stallapp.setAmount(rs.getInt("main_amount"));
 					stallapp.setGstamount(rs.getInt("gst_amont"));
+					stallapp.setNomineename(rs.getString("nominee_name"));
+					stallapp.setRelation(rs.getString("relation"));
 					stallapp.setAuditDetails(audit);
 
 					List<StallApplicationDocument> documentAttachment = null;
