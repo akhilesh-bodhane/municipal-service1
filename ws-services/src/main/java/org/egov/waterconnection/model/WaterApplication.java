@@ -48,6 +48,22 @@ public class WaterApplication {
 	@JsonProperty("paymentMode")
 	private String paymentMode;
 	
+	@JsonProperty("waterChargesTT")
+	private String waterChargesTT = null;	
+	
+	@JsonProperty("paymentDate")
+	private Long paymentDate = null;
+	
+
+	
+	public Long getPaymentDate() {
+		return paymentDate;
+	}
+
+	public void setPaymentDate(Long paymentDate) {
+		this.paymentDate = paymentDate;
+	}
+
 	@JsonProperty("application_code")
 	private String application_code=null;
 	
@@ -77,14 +93,13 @@ public class WaterApplication {
 
 	@Override
 	public String toString() {
-		StringBuilder sb = new StringBuilder();
-		sb.append("class waterApplication {\n");
-		sb.append("    id: ").append(toIndentedString(id)).append("\n");
-		sb.append("    applicationNo: ").append(toIndentedString(applicationNo)).append("\n");
-		sb.append("    applicationStatus: ").append(toIndentedString(applicationStatus)).append("\n");
-		sb.append("    action: ").append(toIndentedString(action)).append("\n");
-		sb.append("}");
-		return sb.toString();
+		return "WaterApplication [id=" + id + ", applicationNo=" + applicationNo + ", activityType=" + activityType
+				+ ", applicationStatus=" + applicationStatus + ", action=" + action + ", comments=" + comments
+				+ ", isFerruleApplicable=" + isFerruleApplicable + ", isMeterStolen=" + isMeterStolen
+				+ ", securityCharge=" + securityCharge + ", additionalCharges=" + additionalCharges
+				+ ", constructionCharges=" + constructionCharges + ", totalAmountPaid=" + totalAmountPaid
+				+ ", paymentMode=" + paymentMode + ", waterChargesTT=" + waterChargesTT + ", paymentDate=" + paymentDate
+				+ ", application_code=" + application_code + ", auditDetails=" + auditDetails + "]";
 	}
 
 	/**
@@ -140,6 +155,14 @@ public class WaterApplication {
 
 	public String getComments() {
 		return comments;
+	}
+
+	public String getWaterChargesTT() {
+		return waterChargesTT;
+	}
+
+	public void setWaterChargesTT(String waterChargesTT) {
+		this.waterChargesTT = waterChargesTT;
 	}
 
 	public void setComments(String comments) {

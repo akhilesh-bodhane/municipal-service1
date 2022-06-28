@@ -8213,7 +8213,7 @@
             }
          }
       },
-      "UTDMEE-EDITEDATUTDMCE L1":{
+      "UTDMCE-EDITEDATUTDMCE L1":{
          "VERIFYUTCDMEE L2":{
             "remarks":{
                "fieldName":"remarks",
@@ -8269,7 +8269,7 @@
             }
          }
       },
-      "UTEE-REVIEWOFUTEE L4":{
+      "UTWD-REVIEWOFUTEE L4":{
          "PENDINGAPPROVAL":{
             "remarks":{
                "fieldName":"remarks",
@@ -8305,7 +8305,7 @@
             }
          }
       },
-      "UTEE-REASSIGNTOUTEE L3":{
+      "UTWD-REASSIGNTOUTEE L3":{
          "PENDINGAPPROVAL":{
             "remarks":{
                "fieldName":"remarks",

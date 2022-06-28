@@ -194,7 +194,10 @@ public class WaterServiceImpl implements WaterService {
 		//Call workflow
 		//Comment in Local
 		wfIntegrator.callWorkFlow(waterConnectionRequest, property);
-		if(WCConstants.WS_APPLY_FOR_TEMPORARY_CON.equalsIgnoreCase(waterConnectionRequest.getWaterConnection().getActivityType())) {
+	        if(WCConstants.WS_APPLY_FOR_TEMPORARY_CON.equalsIgnoreCase(waterConnectionRequest.getWaterConnection().getActivityType())) {
+			enrichmentService.postStatusEnrichment(waterConnectionRequest, property);
+		}
+		if(WCConstants.WS_APPLY_FOR_TT_CON.equalsIgnoreCase(waterConnectionRequest.getWaterConnection().getActivityType())) {
 			enrichmentService.postStatusEnrichment(waterConnectionRequest, property);
 		}
 		waterConnectionRequest.getWaterConnection().getWaterApplication().setApplicationStatus(

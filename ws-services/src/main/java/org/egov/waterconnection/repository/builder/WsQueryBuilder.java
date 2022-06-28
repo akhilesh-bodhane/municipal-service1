@@ -59,7 +59,7 @@ public class WsQueryBuilder {
 			/* + " conn.*, wc.*, document.*, plumber.*, application.*, property.*, " */
 			+ " wc.connectionCategory, wc.connectionType, wc.waterSource, wc.meterCount, wc.meterRentCode, wc.mfrCode, wc.meterDigits, wc.meterUnit, wc.sanctionedCapacity,"
 			+ " wc.meterId, wc.meterInstallationDate, wc.pipeSize, wc.noOfTaps, wc.proposedPipeSize, wc.proposedTaps, wc.connection_id as connection_Id, wc.connectionExecutionDate, wc.initialmeterreading,wc.lastmeterreading, wc.appCreatedDate,wc.proposed_meterid, wc.proposed_meterinstallationdate,wc.proposed_initialmeterreading,wc.proposed_lastmeterreading,wc.proposed_metercount,wc.proposed_meterrentcode,wc.proposed_mfrcode,wc.proposed_meterdigits,  wc.proposed_sanctionedcapacity,wc.proposed_meterunit,"
-			+ " wc.detailsprovidedby, wc.estimationfileStoreId , wc.sanctionfileStoreId , wc.estimationLetterDate, py.paymentmode,"
+			+ " wc.detailsprovidedby, wc.estimationfileStoreId , wc.sanctionfileStoreId , wc.estimationLetterDate, py.paymentmode,py.lastmodifiedtime as paymentdate ,"
 			+ " conn.id as conn_id, conn.tenantid, conn.applicationNo, conn.applicationStatus, conn.status, conn.connectionNo, conn.oldConnectionNo, conn.property_id, conn.roadcuttingarea,"
 			+ " conn.aadharNo, conn.ferruleSize, conn.action, conn.adhocpenalty, conn.adhocrebate, conn.adhocpenaltyreason, conn.applicationType, conn.dateEffectiveFrom,"
 			+ " conn.adhocpenaltycomment, conn.adhocrebatereason, conn.adhocrebatecomment, conn.cccode, conn.div, conn.subdiv, conn.ledger_no,conn.ledgergroup, conn.createdBy as ws_createdBy, conn.lastModifiedBy as ws_lastModifiedBy,"
@@ -69,9 +69,9 @@ public class WsQueryBuilder {
 			+ " plumber.name as plumber_name, plumber.licenseno,"
 			+ " plumber.mobilenumber as plumber_mobileNumber, plumber.gender as plumber_gender, plumber.fatherorhusbandname, plumber.correspondenceaddress,"
 			+ " plumber.relationship, " + holderSelectValues
-			+ " application.id as application_id, application.applicationno as app_applicationno, application.activitytype as app_activitytype, application.applicationstatus as app_applicationstatus, application.action as app_action, application.comments as app_comments, application.is_ferrule_applicable as app_ferrule, application.security_charges as app_securitycharge, application.total_amount_paid, application.additionalcharges, application.constructioncharges, application.outstandingcharges, application.paymentmode, application.ismeterstolen,application.application_code,"
+			+ " application.id as application_id, application.applicationno as app_applicationno, application.activitytype as app_activitytype, application.applicationstatus as app_applicationstatus, application.action as app_action, application.comments as app_comments, application.is_ferrule_applicable as app_ferrule, application.security_charges as app_securitycharge, application.total_amount_paid, application.additionalcharges, application.constructioncharges, application.outstandingcharges, application.paymentmode, application.ismeterstolen,application.application_code,application.waterchargestt as waterChargesTT,"
 			+ " application.createdBy as app_createdBy, application.lastModifiedBy as app_lastModifiedBy, application.createdTime as app_createdTime, application.lastModifiedTime as app_lastModifiedTime, "
-			+ " property.id as waterpropertyid, property.usagecategory, property.usagesubcategory,pta.doorno as propertyplotno,pta.locality as propertysectorno "
+			+ " property.id as waterpropertyid, property.usagecategory, property.usagesubcategory,property.plotareatt as ploatAreaTT,pta.doorno as propertyplotno,pta.locality as propertysectorno "
 			+ " FROM eg_ws_connection conn "
 			+  LEFT_OUTER_JOIN_STRING 
 			+ "egcl_bill bl  on  conn.applicationno = bl.consumercode"
