@@ -55,6 +55,9 @@ public class WaterConnection extends Connection {
 
 	@JsonProperty("pipeSize")
 	private String pipeSize = null;
+	
+	@JsonProperty("ploatAreaTT")
+	private String ploatAreaTT;
 
 	@JsonProperty("noOfTaps")
 	private Integer noOfTaps = null;
@@ -109,7 +112,7 @@ public class WaterConnection extends Connection {
 	
 	
 	@JsonProperty("waterChargesTT")
-	private String waterChargesTT = null;
+	private String waterChargesTT ;
 	
 	@JsonProperty("paymentMODE")
 	private String paymentMODE = null;
