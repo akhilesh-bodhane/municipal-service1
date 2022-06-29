@@ -197,9 +197,7 @@ public class WaterServiceImpl implements WaterService {
 	        if(WCConstants.WS_APPLY_FOR_TEMPORARY_CON.equalsIgnoreCase(waterConnectionRequest.getWaterConnection().getActivityType())) {
 			enrichmentService.postStatusEnrichment(waterConnectionRequest, property);
 		}
-		if(WCConstants.WS_APPLY_FOR_TT_CON.equalsIgnoreCase(waterConnectionRequest.getWaterConnection().getActivityType())) {
-			enrichmentService.postStatusEnrichment(waterConnectionRequest, property);
-		}
+	
 		waterConnectionRequest.getWaterConnection().getWaterApplication().setApplicationStatus(
 				waterConnectionRequest.getWaterConnection().getApplicationStatus());
 		waterConnectionRequest.getWaterConnection().getWaterApplication().setAction(
