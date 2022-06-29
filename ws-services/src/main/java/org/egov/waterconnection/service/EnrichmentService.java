@@ -248,11 +248,7 @@ public class EnrichmentService {
 	 */
 	public void postStatusEnrichment(WaterConnectionRequest waterConnectionrequest, Property property) {
 		if (WCConstants.ACTIVATE_CONNECTION.equalsIgnoreCase(waterConnectionrequest.getWaterConnection().getProcessInstance().getAction())
-				|| WCConstants.ACTION_ACTIVATE_TEMP_CONNECTION.equalsIgnoreCase(waterConnectionrequest.getWaterConnection().getProcessInstance().getAction())
-				|| (WCConstants.ACTION_ACTIVATE_TT_CONNECTION.equalsIgnoreCase(waterConnectionrequest.getWaterConnection().getProcessInstance().getAction()) 
-				&& waterConnectionrequest.getWaterConnection().getActivityType().equalsIgnoreCase(WCConstants.WS_APPLY_FOR_TT_CON)
-				)
-				) {
+				|| WCConstants.ACTION_ACTIVATE_TEMP_CONNECTION.equalsIgnoreCase(waterConnectionrequest.getWaterConnection().getProcessInstance().getAction())) {
 			setConnectionNO(waterConnectionrequest,property);
 		}
 	}
