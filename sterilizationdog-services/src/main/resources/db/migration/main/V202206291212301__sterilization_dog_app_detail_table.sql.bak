@@ -1,0 +1,35 @@
+-- public.sterilization_dog_application_detail definition
+
+-- Drop table
+
+-- DROP TABLE public.sterilization_dog_application_detail;
+
+CREATE TABLE public.sterilization_dog_application_detail (
+	id varchar(64) NOT NULL,
+	application_id varchar(64) NOT NULL,
+    pick bool NULL,
+	release bool NULL,
+	pick_sector varchar(255) NULL,
+	pick_gender varchar(255) NULL,
+	pick_houseno varchar(255) NULL,
+	pick_latitude varchar(255) NULL,
+	picklongitutde varchar(255) NULL,
+    dog_color varchar(255) NULL,	
+	pick_type varchar(255) NULL,
+    drop_sector varchar(255) NULL,
+	drop_gender varchar(255) NULL,
+	drop_houseno varchar(255) NULL,
+	drop_latitude varchar(255) NULL,
+	drop_longitutde varchar(255) NULL,
+	tenant_id varchar(256) NULL,
+	is_active bool NULL,
+	created_by varchar(64) NULL,
+	created_time varchar NULL,
+	last_modified_by varchar(64) NULL,
+	last_modified_time varchar NULL,
+	application_status varchar NULL,
+	CONSTRAINT applicationn_id UNIQUE (applicationn_id),
+	CONSTRAINT sterilization_dog_application_pkey PRIMARY KEY (id)
+);
+
+
