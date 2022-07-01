@@ -6676,7 +6676,7 @@
          }
       },
       "UTSE-REASSIGNTOUTSE L2":{
-         "REASSIGNTOUTCHDSE":{
+          "REASSIGNTOUTCHDSE":{
             "remarks":{
                "fieldName":"remarks",
                "mandatory":"true",
@@ -6693,7 +6693,7 @@
                "validateRegularExp":"\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
             }
          },
-         "REVIEWOFUTCE L1":{
+         "REVIEWOFUTEE L3":{
             "remarks":{
                "fieldName":"remarks",
                "mandatory":"true",
@@ -7300,7 +7300,7 @@
                "validateRegularExp":"\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
             }
          },
-         "REASSIGNTOUTCHDSE L1":{
+         "REASSIGNTOUTCDMEE":{
             "remarks":{
                "fieldName":"remarks",
                "mandatory":"true",
