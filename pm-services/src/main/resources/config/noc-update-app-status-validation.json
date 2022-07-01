@@ -7300,7 +7300,7 @@
                "validateRegularExp":"\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
             }
          },
-         "REASSIGNTOUTCHDSE L1":{
+         "REASSIGNTOUTCDMEE":{
             "remarks":{
                "fieldName":"remarks",
                "mandatory":"true",
@@ -7336,7 +7336,7 @@
                "validateRegularExp":"\\[\\{\"fileStoreId\":\"(.*?)\"\\}\\]"
             }
          },
-         "REASSIGNTOUTCHDSE L1":{
+         "REASSIGNTOUTCDMEE":{
             "remarks":{
                "fieldName":"remarks",
                "mandatory":"true",
