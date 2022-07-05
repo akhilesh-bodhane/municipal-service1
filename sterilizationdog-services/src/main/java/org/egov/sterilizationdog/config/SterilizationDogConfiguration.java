@@ -63,7 +63,10 @@ public class SterilizationDogConfiguration {
 
 	// SterilizationDog Config topics
 	@Value("${persister.save.sterilizationdogapplication.topic}")
-	private String SterilizationDogApplicationSaveTopic;	
+	private String SterilizationDogApplicationSaveTopic;
+	
+	@Value("${persister.update.sterilizationdogapplication.topic}")
+	private String SterilizationDogApplicationUpdateTopic;	
 	
 	
 }

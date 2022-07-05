@@ -37,4 +37,10 @@ public class SterilizationDogController {
 	  return sterilizationdogService.getSterilizationDogApplication(sterilizationdogServi);
 	  }
 	  
+	  
+	  @PostMapping(value = "/_release")
+	  public ResponseEntity<ResponseInfoWrapper> updateSterilizationDogApplication(@RequestBody SterilizationDogRequest sterilizationdogrequest){
+			return sterilizationdogService.updateSterilizationDogApplication(sterilizationdogrequest);
+		}
+	  
 }

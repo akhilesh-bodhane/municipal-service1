@@ -58,4 +58,10 @@ public class SterilizationDogRepository {
 
 	}
 	
+	public void updateSterilizationDogApplication(SterilizationDogApplication sterilizationdogrequest) {
+		SterilizationDogRequest infoWrapper = SterilizationDogRequest.builder().sterilizationdogApplicationRequest(sterilizationdogrequest).build();
+		producer.push(config.getSterilizationDogApplicationUpdateTopic(), infoWrapper);
+		
+	}
+	
 }

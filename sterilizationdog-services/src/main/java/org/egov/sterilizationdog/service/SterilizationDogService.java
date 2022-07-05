@@ -111,4 +111,39 @@ public class SterilizationDogService {
 			throw new CustomException(CommonConstants.STERILIZATION__DOG_APPLICATION_EXCEPTION_CODE, e.getMessage());
 		}
 	}
+	
+	
+	public ResponseEntity<ResponseInfoWrapper> updateSterilizationDogApplication(SterilizationDogRequest sterilizationdogrequest) {
+		SterilizationDogApplication sterilizationdogapplication = objectMapper.convertValue(sterilizationdogrequest.getSterilizationdogApplicationRequest(),
+				SterilizationDogApplication.class);			
+		
+		sterilizationdogapplication.setAuditDetails(
+				auditDetailsUtil.getAuditDetails(sterilizationdogrequest.getRequestInfo(), CommonConstants.ACTION_CREATE));
+		sterilizationdogapplication.setRelease(true);
+		sterilizationdogapplication.setApplicationstatus(CommonConstants.ACTION_CREATE);
+		// Update document to Sterilization_Dog_application_document table
+					List<SterilizationDogDocument> sterilizationdogdoc = new ArrayList<>();
+					for (SterilizationDogDocument docobj : sterilizationdogapplication.getApplicationDocument()) {
+						SterilizationDogDocument document = new SterilizationDogDocument();
+						document.setDocumnetUuid(docobj.getDocumnetUuid());
+						document.setDroppicture(docobj.getDroppicture());
+						document.setApplicationUuid(docobj.getApplicationUuid());
+						document.setDropfilestoreId(docobj.getDropfilestoreId());
+						document.setAuditDetails(
+								auditDetailsUtil.getAuditDetails(sterilizationdogrequest.getRequestInfo(), CommonConstants.ACTION_CREATE));
+						document.setIsActive(true);
+						sterilizationdogdoc.add(document);
+
+					}
+					
+					sterilizationdogapplication.setApplicationDocument(sterilizationdogdoc);
+					
+					repository.updateSterilizationDogApplication(sterilizationdogapplication);
+		
+					return new ResponseEntity<>(ResponseInfoWrapper.builder()
+							.responseInfo(ResponseInfo.builder().status(CommonConstants.SUCCESS).build())
+							.responseBody(sterilizationdogapplication).build(), HttpStatus.CREATED);
+		
+		
+	}
 }
