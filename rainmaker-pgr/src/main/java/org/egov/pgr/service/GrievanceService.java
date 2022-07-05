@@ -79,6 +79,12 @@ public class GrievanceService {
 	@Value("${egov.hr.employee.v2.search.endpoint}")
 	private String hrEmployeeV2SearchEndpoint;
 
+	@Value("${egov.hrms.host}")
+	private String egovHRMShost;
+
+	@Value("${egov.hrms.search.endpoint}")
+	private String egovHRMSSearchEndpoint;
+
 	@Value("${egov.user.host}")
 	private String userBasePath;
 
@@ -144,9 +150,54 @@ public class GrievanceService {
 		enrichServiceRequestForUpdate(request);
 		if (null == request.getActionInfo())
 			request.setActionInfo(new ArrayList<ActionInfo>());
+		enrichServiceRequestDepartment(request);
 		pGRProducer.push(updateTopic, request);
 		pGRProducer.push(updateIndexTopic, dataTranformationForIndexer(request, false));
 		return getServiceResponse(request);
+	}
+
+	private void enrichServiceRequestDepartment(ServiceRequest request) {
+		request.getServices().stream().map(s -> {
+			ActionInfo actionInfo = request.getActionInfo().stream()
+					.filter(e -> e.getStatus().equalsIgnoreCase(s.getStatus().toString())).findAny().orElse(null);
+
+			if (actionInfo.getAssignee() != null) {
+				Map<String, String> employeeDetails = getEmployeeDetails(s.getTenantId(), actionInfo.getAssignee(),
+						request.getRequestInfo());
+				s.setRevisedDepartment(
+						employeeDetails.get("department") != null ? employeeDetails.get("department") : "");
+			}
+			return s;
+		}).collect(Collectors.toList());
+	}
+
+	/**
+	 * Get department on department code
+	 * 
+	 * @param serviceReqSearchCriteria
+	 * @param requestInfo
+	 * @param departmentCode
+	 * @return String
+	 */
+	public String getDepartment(RequestInfo requestInfo, List<String> departmentCodes, String tenantId) {
+		StringBuilder deptUri = new StringBuilder();
+		String department = null;
+		Object response = null;
+		MdmsCriteriaReq mdmsCriteriaReq = pGRUtils.prepareMdMsRequestForDept(deptUri, tenantId, departmentCodes,
+				requestInfo);
+		try {
+			response = serviceRequestRepository.fetchResult(deptUri, mdmsCriteriaReq);
+			if (null == response) {
+				return null;
+			}
+			List<String> departments = JsonPath.read(response, PGRConstants.JSONPATH_DEPARTMENTS);
+			if (!CollectionUtils.isEmpty(departments)) {
+				department = departments.get(0);
+			}
+		} catch (Exception e) {
+			log.error("Exception in getDepartment: " + e);
+		}
+		return department;
 	}
 
 	/**
@@ -1830,5 +1881,35 @@ public class GrievanceService {
 			throw e;
 		}
 		return new CountResponse(factory.createResponseInfoFromRequestInfo(requestInfo, true), count);
+	}
+
+	public Map<String, String> getEmployeeDetails(String tenantId, String id, RequestInfo requestInfo) {
+		StringBuilder uri = new StringBuilder();
+		RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
+		requestInfoWrapper.setRequestInfo(requestInfo);
+		uri.append(egovHRMShost).append(egovHRMSSearchEndpoint).append("?ids=" + id).append("&tenantId=" + tenantId);
+		Object response = null;
+		Map<String, String> employeeDetails = new HashMap<>();
+		try {
+			response = serviceRequestRepository.fetchResult(uri, requestInfoWrapper);
+			if (null == response) {
+				return employeeDetails;
+			}
+			employeeDetails.put("name", JsonPath.read(response, PGRConstants.EMPLOYEE_NAME_JSONPATH));
+			employeeDetails.put("phone", JsonPath.read(response, PGRConstants.EMPLOYEE_PHNO_JSONPATH));
+			employeeDetails.put("uuid", JsonPath.read(response, PGRConstants.USER_UUID_JSONPATH));
+
+			List<String> depts = JsonPath.read(response, PGRConstants.EMPLOYEE_DEPTCODE_JSONPATH);
+			if (!CollectionUtils.isEmpty(depts)) {
+				employeeDetails.put("department", depts.get(0));
+			}
+			List<String> designnations = JsonPath.read(response, PGRConstants.EMPLOYEE_DESGCODE_JSONPATH);
+			if (!CollectionUtils.isEmpty(designnations)) {
+				employeeDetails.put("designation", designnations.get(0));
+			}
+		} catch (Exception e) {
+			log.error("Exception: ", e);
+		}
+		return employeeDetails;
 	}
 }
