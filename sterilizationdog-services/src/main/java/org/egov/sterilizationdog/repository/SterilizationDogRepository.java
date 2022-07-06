@@ -48,7 +48,7 @@ public class SterilizationDogRepository {
 		
 		try {
 			
-			if(stallApplication.getFromDate() == null && stallApplication.getToDate() == null){
+			if(stallApplication.getFromDate() == null && stallApplication.getToDate() == null && stallApplication.getApplicationId() == null){
 				
 				return sterilizationdog = jdbcTemplate.query(SterilizationDogQueryBuilder.GET_STERILIZATION_DOG_APPLICATION_QUERY,
 						new Object[] {											 		
@@ -58,6 +58,8 @@ public class SterilizationDogRepository {
 						new Object[] {  stallApplication.getApplicationId(), 
 								        stallApplication.getApplicationId(),
 								        stallApplication.getFromDate(),
+								        stallApplication.getFromDate(),
+								        stallApplication.getToDate(),
 								        stallApplication.getToDate()
 								        
 									 }, SterlizationDogRowMapper);
