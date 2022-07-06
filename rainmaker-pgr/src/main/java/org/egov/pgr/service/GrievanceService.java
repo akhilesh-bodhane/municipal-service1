@@ -52,6 +52,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.util.CollectionUtils;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.jsonpath.JsonPath;
 
@@ -151,6 +152,14 @@ public class GrievanceService {
 		if (null == request.getActionInfo())
 			request.setActionInfo(new ArrayList<ActionInfo>());
 		enrichServiceRequestDepartment(request);
+		ObjectMapper mapper = new ObjectMapper();
+		try {
+			System.out.println("PGR UPDATE : " + mapper.writeValueAsString(request));
+		} catch (JsonProcessingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
 		pGRProducer.push(updateTopic, request);
 		pGRProducer.push(updateIndexTopic, dataTranformationForIndexer(request, false));
 		return getServiceResponse(request);
@@ -164,8 +173,12 @@ public class GrievanceService {
 			if (actionInfo.getAssignee() != null) {
 				Map<String, String> employeeDetails = getEmployeeDetails(s.getTenantId(), actionInfo.getAssignee(),
 						request.getRequestInfo());
-				s.setRevisedDepartment(
-						employeeDetails.get("department") != null ? employeeDetails.get("department") : "");
+				s.setRevisedDepartment(getDepartment(request.getRequestInfo(),
+						Arrays.asList(
+								employeeDetails.get("department") != null ? employeeDetails.get("department") : ""),
+						s.getTenantId()));
+			} else {
+				s.setRevisedDepartment(s.getCategory());
 			}
 			return s;
 		}).collect(Collectors.toList());
