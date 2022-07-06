@@ -47,10 +47,19 @@ public class SterilizationDogRepository {
 		
 		
 		try {
-			return sterilizationdog = jdbcTemplate.query(SterilizationDogQueryBuilder.GET_STERILIZATION_DOG_APPLICATION_QUERY,
-					new Object[] {  stallApplication.getApplicationId(), 
-							        stallApplication.getApplicationId() 											 		
-								 }, SterlizationDogRowMapper);
+			
+			if("".equalsIgnoreCase(stallApplication.getApplicationId()) || stallApplication.getApplicationId() == null){
+				
+				return sterilizationdog = jdbcTemplate.query(SterilizationDogQueryBuilder.GET_STERILIZATION_DOG_APPLICATION_QUERY,
+						new Object[] {											 		
+									 }, SterlizationDogRowMapper);				
+			}else {
+				return sterilizationdog = jdbcTemplate.query(SterilizationDogQueryBuilder.GET_STERILIZATION_DOG_APPLICATION_ID_QUERY,
+						new Object[] {  stallApplication.getApplicationId(), 
+								        stallApplication.getApplicationId() 											 		
+									 }, SterlizationDogRowMapper);
+			}
+						
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new CustomException("Exception",e.getMessage());
