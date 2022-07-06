@@ -152,14 +152,6 @@ public class GrievanceService {
 		if (null == request.getActionInfo())
 			request.setActionInfo(new ArrayList<ActionInfo>());
 		enrichServiceRequestDepartment(request);
-		ObjectMapper mapper = new ObjectMapper();
-		try {
-			System.out.println("PGR UPDATE : " + mapper.writeValueAsString(request));
-		} catch (JsonProcessingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
 		pGRProducer.push(updateTopic, request);
 		pGRProducer.push(updateIndexTopic, dataTranformationForIndexer(request, false));
 		return getServiceResponse(request);
@@ -174,8 +166,8 @@ public class GrievanceService {
 				Map<String, String> employeeDetails = getEmployeeDetails(s.getTenantId(), actionInfo.getAssignee(),
 						request.getRequestInfo());
 				s.setRevisedDepartment(getDepartment(request.getRequestInfo(),
-						Arrays.asList(
-								employeeDetails.get("department") != null ? employeeDetails.get("department") : ""),
+						Arrays.asList(employeeDetails.get("department") != null ? employeeDetails.get("department")
+								: s.getCategory()),
 						s.getTenantId()));
 			} else {
 				s.setRevisedDepartment(s.getCategory());
