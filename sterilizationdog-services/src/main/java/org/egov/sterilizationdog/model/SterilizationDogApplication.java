@@ -78,6 +78,12 @@ public class SterilizationDogApplication {
 	@JsonProperty("applicationstatus")
 	private String applicationstatus;
 	
+	@JsonProperty("fromDate")
+	private Long fromDate;
+	
+	@JsonProperty("toDate")
+	private Long toDate;
+	
 	
 	@JsonProperty("applicationDocument")
 	private List<SterilizationDogDocument> applicationDocument;
