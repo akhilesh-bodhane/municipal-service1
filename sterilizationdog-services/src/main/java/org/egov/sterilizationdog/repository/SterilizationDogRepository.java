@@ -48,10 +48,13 @@ public class SterilizationDogRepository {
 		
 		try {
 			
-			if(stallApplication.getFromDate() == null && stallApplication.getToDate() == null && stallApplication.getApplicationId() == null){
+			if(stallApplication.getApplicationId() == null){
 				
 				return sterilizationdog = jdbcTemplate.query(SterilizationDogQueryBuilder.GET_STERILIZATION_DOG_APPLICATION_QUERY,
-						new Object[] {											 		
+						new Object[] {stallApplication.getFromDate(),
+						              stallApplication.getFromDate(),
+						              stallApplication.getToDate(),
+						              stallApplication.getToDate()											 		
 									 }, SterlizationDogRowMapper);				
 			}else {
 				return sterilizationdog = jdbcTemplate.query(SterilizationDogQueryBuilder.GET_STERILIZATION_DOG_APPLICATION_ID_QUERY,

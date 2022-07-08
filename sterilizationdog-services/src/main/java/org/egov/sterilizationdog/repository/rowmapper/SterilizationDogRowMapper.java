@@ -52,6 +52,11 @@ public class SterilizationDogRowMapper  implements ResultSetExtractor<List<Steri
 					sterilizationDogapp.setPicklongitude(rs.getString("picklongitutde"));
 					sterilizationDogapp.setDogcolor(rs.getString("dog_color"));
 					sterilizationDogapp.setPicktype(rs.getString("pick_type"));
+					sterilizationDogapp.setDropsector(rs.getString("drop_sector"));
+					sterilizationDogapp.setDropgender(rs.getString("drop_gender"));
+					sterilizationDogapp.setDrophouseno(rs.getString("drop_houseno"));
+					sterilizationDogapp.setDroplatitude(rs.getString("drop_latitude"));
+					sterilizationDogapp.setDroplongitude(rs.getString("drop_longitutde"));
 					sterilizationDogapp.setTenantId(rs.getString("tenant_id"));
 					
 					sterilizationDogapp.setAuditDetails(audit);
