@@ -683,293 +683,593 @@ public class HCNotificationConsumer {
 			Map<String, String> messageMap, String employeeName, String notifcationType,
 			String service_request_id_new) {
 		String text = null;
-		DateFormat df = new SimpleDateFormat(hcConfiguration.getNotificationDateFormat());
-		Date dateobj = new Date();
-		String genratedDate = df.format(dateobj);
 
-		switch (action) {
+		// If UT is True the start UT SMS message
+		if (serviceReq.getIsUT() != null && serviceReq.getIsUT() == true) {
 
-		case WorkFlowConfigs.ACTION_OPEN:
-			if (notifcationType.equals(HCConstants.SMS)) {
-				text = messageMap.get(HCConstants.HC_CITIZEN_SUBMITREQUEST_SMS_NOTIFICATION);
-			} else if (notifcationType.equals(HCConstants.EMAIL)) {
+			DateFormat df = new SimpleDateFormat(hcConfiguration.getNotificationDateFormat());
+			Date dateobj = new Date();
+			String genratedDate = df.format(dateobj);
 
-				text = messageMap.get(HCConstants.HC_CITIZEN_SUBMITREQUEST_EMAIL_NOTIFICATION);
+			switch (action) {
 
-			} else if (notifcationType.equals(HCConstants.PUSH)) {
-				text = messageMap.get(HCConstants.HC_CITIZEN_SUBMITREQUEST_PUSH_NOTIFICATION);
+			case WorkFlowConfigs.ACTION_OPEN:
+				if (notifcationType.equals(HCConstants.SMS)) {
+					text = messageMap.get(HCConstants.UTHC_CITIZEN_SUBMITREQUEST_SMS_NOTIFICATION);
+				} else if (notifcationType.equals(HCConstants.EMAIL)) {
+
+					text = messageMap.get(HCConstants.HC_CITIZEN_SUBMITREQUEST_EMAIL_NOTIFICATION);
+
+				} else if (notifcationType.equals(HCConstants.PUSH)) {
+					text = messageMap.get(HCConstants.HC_CITIZEN_SUBMITREQUEST_PUSH_NOTIFICATION);
+				}
+
+				if (text != null) {
+					text = text.replace(HCConstants.SMS_NOTIFICATION_EMP_NAME_KEY, serviceReq.getOwnerName())
+							.replace(HCConstants.SMS_NOTIFICATION_SERVICEREQUEST_ID, serviceReq.getService_request_id())
+							.replace(HCConstants.SMS_NOTIFICATION_SERVICEREQUEST_TYPE, serviceReq.getServiceType())
+							.replace(HCConstants.SMS_NOTIFICATION_SERVICEREQUEST_DATE_KEY, genratedDate);
+				}
+				break;
+
+			case WorkFlowConfigs.APPROVE:
+
+				if (notifcationType.equals(HCConstants.SMS)) {
+					text = messageMap.get(HCConstants.UTHC_EMPLOYEE_ACTION_APPROVE_SMS_NOTIFICATION);
+				} else if (notifcationType.equals(HCConstants.EMAIL)) {
+
+					text = messageMap.get(HCConstants.HC_EMPLOYEE_ACTION_APPROVE_EMAIL_NOTIFICATION);
+				} else if (notifcationType.equals(HCConstants.PUSH)) {
+					text = messageMap.get(HCConstants.HC_EMPLOYEE_ACTION_APPROVE_PUSH_NOTIFICATION);
+				}
+				if (text != null) {
+					text = text.replace(HCConstants.SMS_NOTIFICATION_EMP_NAME_KEY, employeeName)
+							.replace(HCConstants.SMS_NOTIFICATION_SERVICEREQUEST_ID, serviceReq.getService_request_id())
+
+							.replace(HCConstants.SMS_NOTIFICATION_SERVICEREQUEST_DATE_KEY, genratedDate);
+				}
+				break;
+
+			case WorkFlowConfigs.ACTION_ASSIGN:
+
+				if (notifcationType.equals(HCConstants.SMS)) {
+					text = messageMap.get(HCConstants.UTHC_EMPLOYEE_ACTION_ASSIGN_SMS_NOTIFICATION);
+				} else if (notifcationType.equals(HCConstants.EMAIL)) {
+
+					text = messageMap.get(HCConstants.HC_EMPLOYEE_ACTION_ASSIGN_EMAIL_NOTIFICATION);
+				} else if (notifcationType.equals(HCConstants.PUSH)) {
+					text = messageMap.get(HCConstants.HC_EMPLOYEE_ACTION_ASSIGN_PUSH_NOTIFICATION);
+				}
+
+				if (text != null) {
+					text = text.replace(HCConstants.SMS_NOTIFICATION_EMP_NAME_KEY, employeeName)
+							.replace(HCConstants.SMS_NOTIFICATION_USER_NAME_KEY, serviceReq.getOwnerName())
+							.replace(HCConstants.SMS_NOTIFICATION_SERVICEREQUEST_ID, serviceReq.getService_request_id())
+
+							.replace(HCConstants.SMS_NOTIFICATION_SERVICEREQUEST_DATE_KEY, genratedDate);
+				}
+				break;
+
+			case WorkFlowConfigs.VERIFY_AND_FORWARD_TO_SDO:
+
+				if (notifcationType.equals(HCConstants.SMS)) {
+					text = messageMap.get(HCConstants.UTHC_EMPLOYEE_FORWARD_TO_SDO_SMS_NOTIFICATION);
+				} else if (notifcationType.equals(HCConstants.EMAIL)) {
+
+					text = messageMap.get(HCConstants.HC_EMPLOYEE_FORWARD_TO_SDO_EMAIL_NOTIFICATION);
+				} else if (notifcationType.equals(HCConstants.PUSH)) {
+					text = messageMap.get(HCConstants.HC_EMPLOYEE_FORWARD_TO_SDO_PUSH_NOTIFICATION);
+				}
+				if (text != null) {
+					text = text.replace(HCConstants.SMS_NOTIFICATION_EMP_NAME_KEY, serviceReq.getOwnerName())
+							.replace(HCConstants.SMS_NOTIFICATION_SERVICEREQUEST_ID, serviceReq.getService_request_id())
+							.replace(HCConstants.SMS_NOTIFICATION_SERVICEREQUEST_DATE_KEY, genratedDate);
+				}
+				break;
+			case WorkFlowConfigs.INSPECT:
+
+				if (notifcationType.equals(HCConstants.SMS)) {
+					text = messageMap.get(HCConstants.UTHC_EMPLOYEE_INSPECT_SMS_NOTIFICATION);
+				} else if (notifcationType.equals(HCConstants.EMAIL)) {
+
+					text = messageMap.get(HCConstants.HC_EMPLOYEE_INSPECT_EMAIL_NOTIFICATION);
+				} else if (notifcationType.equals(HCConstants.PUSH)) {
+					text = messageMap.get(HCConstants.HC_EMPLOYEE_INSPECT_PUSH_NOTIFICATION);
+				}
+				if (text != null) {
+					text = text.replace(HCConstants.SMS_NOTIFICATION_EMP_NAME_KEY, serviceReq.getOwnerName())
+							.replace(HCConstants.SMS_NOTIFICATION_SERVICEREQUEST_ID, serviceReq.getService_request_id())
+							.replace(HCConstants.SMS_NOTIFICATION_SERVICEREQUEST_DATE_KEY, genratedDate);
+				}
+				break;
+
+			case WorkFlowConfigs.FORWARDFORINSPECTION:
+
+				if (notifcationType.equals(HCConstants.SMS)) {
+					text = messageMap.get(HCConstants.UTHC_EMPLOYEE_INSPECTION_SMS_NOTIFICATION);
+				} else if (notifcationType.equals(HCConstants.EMAIL)) {
+					text = messageMap.get(HCConstants.HC_EMPLOYEE_INSPECTION_EMAIL_NOTIFICATION);
+				} else if (notifcationType.equals(HCConstants.PUSH)) {
+					text = messageMap.get(HCConstants.HC_EMPLOYEE_INSPECTION_PUSH_NOTIFICATION);
+				}
+				if (text != null) {
+					text = text.replace(HCConstants.SMS_NOTIFICATION_EMP_NAME_KEY, serviceReq.getOwnerName())
+							.replace(HCConstants.SMS_NOTIFICATION_SERVICEREQUEST_ID, serviceReq.getService_request_id())
+							.replace(HCConstants.SMS_NOTIFICATION_SERVICEREQUEST_DATE_KEY, genratedDate);
+				}
+				break;
+
+			case WorkFlowConfigs.VERIFYANDFORWARD:
+
+				if (notifcationType.equals(HCConstants.SMS)) {
+					text = messageMap.get(HCConstants.UTHC_EMPLOYEE_REQUEST_FORWARD_SMS_NOTIFICATION);
+				} else if (notifcationType.equals(HCConstants.EMAIL)) {
+
+					text = messageMap.get(HCConstants.HC_EMPLOYEE_REQUEST_FORWARD_EMAIL_NOTIFICATION);
+				} else if (notifcationType.equals(HCConstants.PUSH)) {
+					text = messageMap.get(HCConstants.HC_EMPLOYEE_REQUEST_FORWARD_PUSH_NOTIFICATION);
+				}
+				if (text != null) {
+					text = text.replace(HCConstants.SMS_NOTIFICATION_EMP_NAME_KEY, serviceReq.getOwnerName())
+							.replace(HCConstants.SMS_NOTIFICATION_SERVICEREQUEST_ID, serviceReq.getService_request_id())
+							.replace(HCConstants.SMS_NOTIFICATION_SERVICEREQUEST_DATE_KEY, genratedDate);
+				}
+				break;
+
+			case WorkFlowConfigs.REQUESTCLARIFICATION:
+
+				if (notifcationType.equals(HCConstants.SMS)) {
+					text = messageMap.get(HCConstants.UTHC_EMPLOYEE_CLARIFICATION_SMS_NOTIFICATION);
+				} else if (notifcationType.equals(HCConstants.EMAIL)) {
+
+					text = messageMap.get(HCConstants.HC_EMPLOYEE_CLARIFICATION_EMAIL_NOTIFICATION);
+				} else if (notifcationType.equals(HCConstants.PUSH)) {
+					text = messageMap.get(HCConstants.HC_EMPLOYEE_CLARIFICATION_PUSH_NOTIFICATION);
+				}
+				if (text != null) {
+					text = text.replace(HCConstants.SMS_NOTIFICATION_EMP_NAME_KEY, serviceReq.getOwnerName())
+							.replace(HCConstants.SMS_NOTIFICATION_SERVICEREQUEST_ID, serviceReq.getService_request_id())
+							.replace(HCConstants.SMS_NOTIFICATION_SERVICEREQUEST_DATE_KEY, genratedDate);
+				}
+				break;
+
+			case WorkFlowConfigs.ACTION_INITIATE:
+
+				if (notifcationType.equals(HCConstants.SMS)) {
+					text = messageMap.get(HCConstants.UTHC_EMPLOYEE_REQUEST_SMS_NOTIFICATION);
+				} else if (notifcationType.equals(HCConstants.EMAIL)) {
+
+					text = messageMap.get(HCConstants.HC_EMPLOYEE_REQUEST_EMAIL_NOTIFICATION);
+				} else if (notifcationType.equals(HCConstants.PUSH)) {
+					text = messageMap.get(HCConstants.HC_EMPLOYEE_REQUEST_PUSH_NOTIFICATION);
+				}
+				if (text != null) {
+					text = text.replace(HCConstants.SMS_NOTIFICATION_EMP_NAME_KEY, serviceReq.getOwnerName())
+							.replace(HCConstants.SMS_NOTIFICATION_SERVICEREQUEST_ID, serviceReq.getService_request_id())
+							.replace(HCConstants.SMS_NOTIFICATION_SERVICEREQUEST_DATE_KEY, genratedDate);
+				}
+				break;
+
+			case WorkFlowConfigs.ACTION_REJECT:
+
+				if (notifcationType.equals(HCConstants.SMS)) {
+					text = messageMap.get(HCConstants.UTHC_CITIZEN_REJECTSERVICEREQUEST_SMS_NOTIFICATION);
+				} else if (notifcationType.equals(HCConstants.EMAIL)) {
+
+					text = messageMap.get(HCConstants.HC_CITIZEN_REJECTSERVICEREQUEST_EMAIL_NOTIFICATION);
+				} else if (notifcationType.equals(HCConstants.PUSH)) {
+					text = messageMap.get(HCConstants.HC_CITIZEN_REJECTSERVICEREQUEST_PUSH_NOTIFICATION);
+				}
+
+				if (text != null) {
+					text = text.replace(HCConstants.SMS_NOTIFICATION_EMP_NAME_KEY, serviceReq.getOwnerName())
+							.replace(HCConstants.SMS_NOTIFICATION_SERVICEREQUEST_ID, serviceReq.getService_request_id())
+							.replace(HCConstants.SMS_NOTIFICATION_SERVICEREQUEST_TYPE, serviceReq.getServiceType())
+							.replace(HCConstants.SMS_NOTIFICATION_SERVICEREQUEST_DATE_KEY, genratedDate);
+				}
+				break;
+			case WorkFlowConfigs.ACTION_COMPLETE:
+
+				if (notifcationType.equals(HCConstants.SMS)) {
+					text = messageMap.get(HCConstants.UTHC_CITIZEN_SERVICEREQUESTCOMPLETED_SMS_NOTIFICATION);
+				} else if (notifcationType.equals(HCConstants.EMAIL)) {
+
+					text = messageMap.get(HCConstants.HC_CITIZEN_SERVICEREQUESTCOMPLETED_EMAIL_NOTIFICATION);
+				} else if (notifcationType.equals(HCConstants.PUSH)) {
+					text = messageMap.get(HCConstants.HC_CITIZEN_SERVICEREQUESTCOMPLETED_PUSH_NOTIFICATION);
+				}
+
+				if (text != null) {
+					text = text.replaceAll(HCConstants.SMS_NOTIFICATION_EMP_NAME_KEY, serviceReq.getOwnerName())
+							.replaceAll(HCConstants.SMS_NOTIFICATION_SERVICEREQUEST_ID,
+									serviceReq.getService_request_id())
+							.replaceAll(HCConstants.SMS_NOTIFICATION_SERVICEREQUEST_TYPE, serviceReq.getServiceType())
+							.replaceAll(HCConstants.SMS_NOTIFICATION_SERVICEREQUEST_DATE_KEY, genratedDate);
+				}
+				break;
+
+			case WorkFlowConfigs.ACTION_UPDATE:
+
+				if (notifcationType.equals(HCConstants.SMS)) {
+					text = messageMap.get(HCConstants.UTHC_CITIZEN_REQUEST_FOR_UPDATE_SMS_NOTIFICATION);
+				} else if (notifcationType.equals(HCConstants.EMAIL)) {
+
+					text = messageMap.get(HCConstants.HC_CITIZEN_REQUEST_FOR_UPDATE_EMAIL_NOTIFICATION);
+				} else if (notifcationType.equals(HCConstants.PUSH)) {
+					text = messageMap.get(HCConstants.HC_CITIZEN_REQUEST_FOR_UPDATE_PUSH_NOTIFICATION);
+				}
+				if (text != null) {
+					text = text.replace(HCConstants.SMS_NOTIFICATION_EMP_NAME_KEY, serviceReq.getOwnerName())
+							.replace(HCConstants.SMS_NOTIFICATION_SERVICEREQUEST_ID,
+									serviceReq.getService_request_id_old())
+							.replace(HCConstants.NOTIFICATION_SERVICEREQUEST_ID_NEW, serviceReq.getService_request_id())
+							.replace(HCConstants.SMS_NOTIFICATION_SERVICEREQUEST_DATE_KEY, genratedDate);
+				}
+				break;
+
+			case WorkFlowConfigs.EDIT:
+
+				if (notifcationType.equals(HCConstants.SMS)) {
+					text = messageMap.get(HCConstants.UTHC_CITIZEN_REQUEST_FOR_UPDATE_SMS_NOTIFICATION);
+				} else if (notifcationType.equals(HCConstants.EMAIL)) {
+
+					text = messageMap.get(HCConstants.HC_CITIZEN_REQUEST_FOR_UPDATE_EMAIL_NOTIFICATION);
+				} else if (notifcationType.equals(HCConstants.PUSH)) {
+					text = messageMap.get(HCConstants.HC_CITIZEN_REQUEST_FOR_UPDATE_PUSH_NOTIFICATION);
+				}
+				if (text != null) {
+					text = text.replace(HCConstants.SMS_NOTIFICATION_EMP_NAME_KEY, serviceReq.getOwnerName())
+							.replace(HCConstants.SMS_NOTIFICATION_SERVICEREQUEST_ID,
+									serviceReq.getService_request_id_old())
+							.replace(HCConstants.NOTIFICATION_SERVICEREQUEST_ID_NEW, serviceReq.getService_request_id())
+							.replace(HCConstants.SMS_NOTIFICATION_SERVICEREQUEST_DATE_KEY, genratedDate);
+				}
+				break;
+
+			case WorkFlowConfigs.ACTION_INITIATED:
+
+				if (notifcationType.equals(HCConstants.SMS)) {
+					text = messageMap.get(HCConstants.UTHC_CITIZEN_REQUEST_FOR_UPDATE_SMS_NOTIFICATION);
+				} else if (notifcationType.equals(HCConstants.EMAIL)) {
+
+					text = messageMap.get(HCConstants.HC_CITIZEN_REQUEST_FOR_UPDATE_EMAIL_NOTIFICATION);
+				} else if (notifcationType.equals(HCConstants.PUSH)) {
+					text = messageMap.get(HCConstants.HC_CITIZEN_REQUEST_FOR_UPDATE_PUSH_NOTIFICATION);
+				}
+				if (text != null) {
+					text = text.replace(HCConstants.SMS_NOTIFICATION_EMP_NAME_KEY, serviceReq.getOwnerName())
+							.replace(HCConstants.SMS_NOTIFICATION_SERVICEREQUEST_ID,
+									serviceReq.getService_request_id_old())
+							.replace(HCConstants.NOTIFICATION_SERVICEREQUEST_ID_NEW, serviceReq.getService_request_id())
+							.replace(HCConstants.SMS_NOTIFICATION_SERVICEREQUEST_DATE_KEY, genratedDate);
+				}
+				break;
+
+			case WorkFlowConfigs.VERIFY_FOR_CLOSURE:
+
+				if (notifcationType.equals(HCConstants.SMS)) {
+					text = messageMap.get(HCConstants.UTHC_EMPLOYEE_VERIFY_FOR_CLOSURE_SMS_NOTIFICATION);
+				} else if (notifcationType.equals(HCConstants.EMAIL)) {
+					text = messageMap.get(HCConstants.HC_EMPLOYEE_VERIFY_FOR_CLOSURE_EMAIL_NOTIFICATION);
+				} else if (notifcationType.equals(HCConstants.PUSH)) {
+					text = messageMap.get(HCConstants.HC_EMPLOYEE_VERIFY_FOR_CLOSURE_PUSH_NOTIFICATION);
+				}
+				if (text != null) {
+					text = text.replace(HCConstants.SMS_NOTIFICATION_EMP_NAME_KEY, serviceReq.getOwnerName())
+							.replace(HCConstants.SMS_NOTIFICATION_SERVICEREQUEST_ID, serviceReq.getService_request_id())
+							.replace(HCConstants.SMS_NOTIFICATION_SERVICEREQUEST_DATE_KEY, genratedDate);
+				}
+				break;
+
+			case WorkFlowConfigs.FORWARDED_FOR_COMPLETION:
+
+				if (notifcationType.equals(HCConstants.SMS)) {
+					text = messageMap.get(HCConstants.UTHC_EMPLOYEE_FORWARDED_FOR_COMPLETION_SMS_NOTIFICATION);
+				} else if (notifcationType.equals(HCConstants.EMAIL)) {
+					text = messageMap.get(HCConstants.HC_EMPLOYEE_FORWARDED_FOR_COMPLETION_EMAIL_NOTIFICATION);
+				} else if (notifcationType.equals(HCConstants.PUSH)) {
+					text = messageMap.get(HCConstants.HC_EMPLOYEE_FORWARDED_FOR_COMPLETION_PUSH_NOTIFICATION);
+				}
+				if (text != null) {
+					text = text.replace(HCConstants.SMS_NOTIFICATION_EMP_NAME_KEY, serviceReq.getOwnerName())
+							.replace(HCConstants.SMS_NOTIFICATION_SERVICEREQUEST_ID, serviceReq.getService_request_id())
+							.replace(HCConstants.SMS_NOTIFICATION_SERVICEREQUEST_DATE_KEY, genratedDate);
+				}
+				break;
 			}
+		} else {
 
-			if (text != null) {
-				text = text.replace(HCConstants.SMS_NOTIFICATION_EMP_NAME_KEY, serviceReq.getOwnerName())
-						.replace(HCConstants.SMS_NOTIFICATION_SERVICEREQUEST_ID, serviceReq.getService_request_id())
-						.replace(HCConstants.SMS_NOTIFICATION_SERVICEREQUEST_TYPE, serviceReq.getServiceType())
-						.replace(HCConstants.SMS_NOTIFICATION_SERVICEREQUEST_DATE_KEY, genratedDate);
+			DateFormat df = new SimpleDateFormat(hcConfiguration.getNotificationDateFormat());
+			Date dateobj = new Date();
+			String genratedDate = df.format(dateobj);
+
+			switch (action) {
+
+			case WorkFlowConfigs.ACTION_OPEN:
+				if (notifcationType.equals(HCConstants.SMS)) {
+					text = messageMap.get(HCConstants.HC_CITIZEN_SUBMITREQUEST_SMS_NOTIFICATION);
+				} else if (notifcationType.equals(HCConstants.EMAIL)) {
+
+					text = messageMap.get(HCConstants.HC_CITIZEN_SUBMITREQUEST_EMAIL_NOTIFICATION);
+
+				} else if (notifcationType.equals(HCConstants.PUSH)) {
+					text = messageMap.get(HCConstants.HC_CITIZEN_SUBMITREQUEST_PUSH_NOTIFICATION);
+				}
+
+				if (text != null) {
+					text = text.replace(HCConstants.SMS_NOTIFICATION_EMP_NAME_KEY, serviceReq.getOwnerName())
+							.replace(HCConstants.SMS_NOTIFICATION_SERVICEREQUEST_ID, serviceReq.getService_request_id())
+							.replace(HCConstants.SMS_NOTIFICATION_SERVICEREQUEST_TYPE, serviceReq.getServiceType())
+							.replace(HCConstants.SMS_NOTIFICATION_SERVICEREQUEST_DATE_KEY, genratedDate);
+				}
+				break;
+
+			case WorkFlowConfigs.APPROVE:
+
+				if (notifcationType.equals(HCConstants.SMS)) {
+					text = messageMap.get(HCConstants.HC_EMPLOYEE_ACTION_APPROVE_SMS_NOTIFICATION);
+				} else if (notifcationType.equals(HCConstants.EMAIL)) {
+
+					text = messageMap.get(HCConstants.HC_EMPLOYEE_ACTION_APPROVE_EMAIL_NOTIFICATION);
+				} else if (notifcationType.equals(HCConstants.PUSH)) {
+					text = messageMap.get(HCConstants.HC_EMPLOYEE_ACTION_APPROVE_PUSH_NOTIFICATION);
+				}
+				if (text != null) {
+					text = text.replace(HCConstants.SMS_NOTIFICATION_EMP_NAME_KEY, employeeName)
+							.replace(HCConstants.SMS_NOTIFICATION_SERVICEREQUEST_ID, serviceReq.getService_request_id())
+
+							.replace(HCConstants.SMS_NOTIFICATION_SERVICEREQUEST_DATE_KEY, genratedDate);
+				}
+				break;
+
+			case WorkFlowConfigs.ACTION_ASSIGN:
+
+				if (notifcationType.equals(HCConstants.SMS)) {
+					text = messageMap.get(HCConstants.HC_EMPLOYEE_ACTION_ASSIGN_SMS_NOTIFICATION);
+				} else if (notifcationType.equals(HCConstants.EMAIL)) {
+
+					text = messageMap.get(HCConstants.HC_EMPLOYEE_ACTION_ASSIGN_EMAIL_NOTIFICATION);
+				} else if (notifcationType.equals(HCConstants.PUSH)) {
+					text = messageMap.get(HCConstants.HC_EMPLOYEE_ACTION_ASSIGN_PUSH_NOTIFICATION);
+				}
+
+				if (text != null) {
+					text = text.replace(HCConstants.SMS_NOTIFICATION_EMP_NAME_KEY, employeeName)
+							.replace(HCConstants.SMS_NOTIFICATION_USER_NAME_KEY, serviceReq.getOwnerName())
+							.replace(HCConstants.SMS_NOTIFICATION_SERVICEREQUEST_ID, serviceReq.getService_request_id())
+
+							.replace(HCConstants.SMS_NOTIFICATION_SERVICEREQUEST_DATE_KEY, genratedDate);
+				}
+				break;
+
+			case WorkFlowConfigs.VERIFY_AND_FORWARD_TO_SDO:
+
+				if (notifcationType.equals(HCConstants.SMS)) {
+					text = messageMap.get(HCConstants.HC_EMPLOYEE_FORWARD_TO_SDO_SMS_NOTIFICATION);
+				} else if (notifcationType.equals(HCConstants.EMAIL)) {
+
+					text = messageMap.get(HCConstants.HC_EMPLOYEE_FORWARD_TO_SDO_EMAIL_NOTIFICATION);
+				} else if (notifcationType.equals(HCConstants.PUSH)) {
+					text = messageMap.get(HCConstants.HC_EMPLOYEE_FORWARD_TO_SDO_PUSH_NOTIFICATION);
+				}
+				if (text != null) {
+					text = text.replace(HCConstants.SMS_NOTIFICATION_EMP_NAME_KEY, serviceReq.getOwnerName())
+							.replace(HCConstants.SMS_NOTIFICATION_SERVICEREQUEST_ID, serviceReq.getService_request_id())
+							.replace(HCConstants.SMS_NOTIFICATION_SERVICEREQUEST_DATE_KEY, genratedDate);
+				}
+				break;
+			case WorkFlowConfigs.INSPECT:
+
+				if (notifcationType.equals(HCConstants.SMS)) {
+					text = messageMap.get(HCConstants.HC_EMPLOYEE_INSPECT_SMS_NOTIFICATION);
+				} else if (notifcationType.equals(HCConstants.EMAIL)) {
+
+					text = messageMap.get(HCConstants.HC_EMPLOYEE_INSPECT_EMAIL_NOTIFICATION);
+				} else if (notifcationType.equals(HCConstants.PUSH)) {
+					text = messageMap.get(HCConstants.HC_EMPLOYEE_INSPECT_PUSH_NOTIFICATION);
+				}
+				if (text != null) {
+					text = text.replace(HCConstants.SMS_NOTIFICATION_EMP_NAME_KEY, serviceReq.getOwnerName())
+							.replace(HCConstants.SMS_NOTIFICATION_SERVICEREQUEST_ID, serviceReq.getService_request_id())
+							.replace(HCConstants.SMS_NOTIFICATION_SERVICEREQUEST_DATE_KEY, genratedDate);
+				}
+				break;
+
+			case WorkFlowConfigs.FORWARDFORINSPECTION:
+
+				if (notifcationType.equals(HCConstants.SMS)) {
+					text = messageMap.get(HCConstants.HC_EMPLOYEE_INSPECTION_SMS_NOTIFICATION);
+				} else if (notifcationType.equals(HCConstants.EMAIL)) {
+					text = messageMap.get(HCConstants.HC_EMPLOYEE_INSPECTION_EMAIL_NOTIFICATION);
+				} else if (notifcationType.equals(HCConstants.PUSH)) {
+					text = messageMap.get(HCConstants.HC_EMPLOYEE_INSPECTION_PUSH_NOTIFICATION);
+				}
+				if (text != null) {
+					text = text.replace(HCConstants.SMS_NOTIFICATION_EMP_NAME_KEY, serviceReq.getOwnerName())
+							.replace(HCConstants.SMS_NOTIFICATION_SERVICEREQUEST_ID, serviceReq.getService_request_id())
+							.replace(HCConstants.SMS_NOTIFICATION_SERVICEREQUEST_DATE_KEY, genratedDate);
+				}
+				break;
+
+			case WorkFlowConfigs.VERIFYANDFORWARD:
+
+				if (notifcationType.equals(HCConstants.SMS)) {
+					text = messageMap.get(HCConstants.HC_EMPLOYEE_REQUEST_FORWARD_SMS_NOTIFICATION);
+				} else if (notifcationType.equals(HCConstants.EMAIL)) {
+
+					text = messageMap.get(HCConstants.HC_EMPLOYEE_REQUEST_FORWARD_EMAIL_NOTIFICATION);
+				} else if (notifcationType.equals(HCConstants.PUSH)) {
+					text = messageMap.get(HCConstants.HC_EMPLOYEE_REQUEST_FORWARD_PUSH_NOTIFICATION);
+				}
+				if (text != null) {
+					text = text.replace(HCConstants.SMS_NOTIFICATION_EMP_NAME_KEY, serviceReq.getOwnerName())
+							.replace(HCConstants.SMS_NOTIFICATION_SERVICEREQUEST_ID, serviceReq.getService_request_id())
+							.replace(HCConstants.SMS_NOTIFICATION_SERVICEREQUEST_DATE_KEY, genratedDate);
+				}
+				break;
+
+			case WorkFlowConfigs.REQUESTCLARIFICATION:
+
+				if (notifcationType.equals(HCConstants.SMS)) {
+					text = messageMap.get(HCConstants.HC_EMPLOYEE_CLARIFICATION_SMS_NOTIFICATION);
+				} else if (notifcationType.equals(HCConstants.EMAIL)) {
+
+					text = messageMap.get(HCConstants.HC_EMPLOYEE_CLARIFICATION_EMAIL_NOTIFICATION);
+				} else if (notifcationType.equals(HCConstants.PUSH)) {
+					text = messageMap.get(HCConstants.HC_EMPLOYEE_CLARIFICATION_PUSH_NOTIFICATION);
+				}
+				if (text != null) {
+					text = text.replace(HCConstants.SMS_NOTIFICATION_EMP_NAME_KEY, serviceReq.getOwnerName())
+							.replace(HCConstants.SMS_NOTIFICATION_SERVICEREQUEST_ID, serviceReq.getService_request_id())
+							.replace(HCConstants.SMS_NOTIFICATION_SERVICEREQUEST_DATE_KEY, genratedDate);
+				}
+				break;
+
+			case WorkFlowConfigs.ACTION_INITIATE:
+
+				if (notifcationType.equals(HCConstants.SMS)) {
+					text = messageMap.get(HCConstants.HC_EMPLOYEE_REQUEST_SMS_NOTIFICATION);
+				} else if (notifcationType.equals(HCConstants.EMAIL)) {
+
+					text = messageMap.get(HCConstants.HC_EMPLOYEE_REQUEST_EMAIL_NOTIFICATION);
+				} else if (notifcationType.equals(HCConstants.PUSH)) {
+					text = messageMap.get(HCConstants.HC_EMPLOYEE_REQUEST_PUSH_NOTIFICATION);
+				}
+				if (text != null) {
+					text = text.replace(HCConstants.SMS_NOTIFICATION_EMP_NAME_KEY, serviceReq.getOwnerName())
+							.replace(HCConstants.SMS_NOTIFICATION_SERVICEREQUEST_ID, serviceReq.getService_request_id())
+							.replace(HCConstants.SMS_NOTIFICATION_SERVICEREQUEST_DATE_KEY, genratedDate);
+				}
+				break;
+
+			case WorkFlowConfigs.ACTION_REJECT:
+
+				if (notifcationType.equals(HCConstants.SMS)) {
+					text = messageMap.get(HCConstants.HC_CITIZEN_REJECTSERVICEREQUEST_SMS_NOTIFICATION);
+				} else if (notifcationType.equals(HCConstants.EMAIL)) {
+
+					text = messageMap.get(HCConstants.HC_CITIZEN_REJECTSERVICEREQUEST_EMAIL_NOTIFICATION);
+				} else if (notifcationType.equals(HCConstants.PUSH)) {
+					text = messageMap.get(HCConstants.HC_CITIZEN_REJECTSERVICEREQUEST_PUSH_NOTIFICATION);
+				}
+
+				if (text != null) {
+					text = text.replace(HCConstants.SMS_NOTIFICATION_EMP_NAME_KEY, serviceReq.getOwnerName())
+							.replace(HCConstants.SMS_NOTIFICATION_SERVICEREQUEST_ID, serviceReq.getService_request_id())
+							.replace(HCConstants.SMS_NOTIFICATION_SERVICEREQUEST_TYPE, serviceReq.getServiceType())
+							.replace(HCConstants.SMS_NOTIFICATION_SERVICEREQUEST_DATE_KEY, genratedDate);
+				}
+				break;
+			case WorkFlowConfigs.ACTION_COMPLETE:
+
+				if (notifcationType.equals(HCConstants.SMS)) {
+					text = messageMap.get(HCConstants.HC_CITIZEN_SERVICEREQUESTCOMPLETED_SMS_NOTIFICATION);
+				} else if (notifcationType.equals(HCConstants.EMAIL)) {
+
+					text = messageMap.get(HCConstants.HC_CITIZEN_SERVICEREQUESTCOMPLETED_EMAIL_NOTIFICATION);
+				} else if (notifcationType.equals(HCConstants.PUSH)) {
+					text = messageMap.get(HCConstants.HC_CITIZEN_SERVICEREQUESTCOMPLETED_PUSH_NOTIFICATION);
+				}
+
+				if (text != null) {
+					text = text.replaceAll(HCConstants.SMS_NOTIFICATION_EMP_NAME_KEY, serviceReq.getOwnerName())
+							.replaceAll(HCConstants.SMS_NOTIFICATION_SERVICEREQUEST_ID,
+									serviceReq.getService_request_id())
+							.replaceAll(HCConstants.SMS_NOTIFICATION_SERVICEREQUEST_TYPE, serviceReq.getServiceType())
+							.replaceAll(HCConstants.SMS_NOTIFICATION_SERVICEREQUEST_DATE_KEY, genratedDate);
+				}
+				break;
+
+			case WorkFlowConfigs.ACTION_UPDATE:
+
+				if (notifcationType.equals(HCConstants.SMS)) {
+					text = messageMap.get(HCConstants.HC_CITIZEN_REQUEST_FOR_UPDATE_SMS_NOTIFICATION);
+				} else if (notifcationType.equals(HCConstants.EMAIL)) {
+
+					text = messageMap.get(HCConstants.HC_CITIZEN_REQUEST_FOR_UPDATE_EMAIL_NOTIFICATION);
+				} else if (notifcationType.equals(HCConstants.PUSH)) {
+					text = messageMap.get(HCConstants.HC_CITIZEN_REQUEST_FOR_UPDATE_PUSH_NOTIFICATION);
+				}
+				if (text != null) {
+					text = text.replace(HCConstants.SMS_NOTIFICATION_EMP_NAME_KEY, serviceReq.getOwnerName())
+							.replace(HCConstants.SMS_NOTIFICATION_SERVICEREQUEST_ID,
+									serviceReq.getService_request_id_old())
+							.replace(HCConstants.NOTIFICATION_SERVICEREQUEST_ID_NEW, serviceReq.getService_request_id())
+							.replace(HCConstants.SMS_NOTIFICATION_SERVICEREQUEST_DATE_KEY, genratedDate);
+				}
+				break;
+
+			case WorkFlowConfigs.EDIT:
+
+				if (notifcationType.equals(HCConstants.SMS)) {
+					text = messageMap.get(HCConstants.HC_CITIZEN_REQUEST_FOR_UPDATE_SMS_NOTIFICATION);
+				} else if (notifcationType.equals(HCConstants.EMAIL)) {
+
+					text = messageMap.get(HCConstants.HC_CITIZEN_REQUEST_FOR_UPDATE_EMAIL_NOTIFICATION);
+				} else if (notifcationType.equals(HCConstants.PUSH)) {
+					text = messageMap.get(HCConstants.HC_CITIZEN_REQUEST_FOR_UPDATE_PUSH_NOTIFICATION);
+				}
+				if (text != null) {
+					text = text.replace(HCConstants.SMS_NOTIFICATION_EMP_NAME_KEY, serviceReq.getOwnerName())
+							.replace(HCConstants.SMS_NOTIFICATION_SERVICEREQUEST_ID,
+									serviceReq.getService_request_id_old())
+							.replace(HCConstants.NOTIFICATION_SERVICEREQUEST_ID_NEW, serviceReq.getService_request_id())
+							.replace(HCConstants.SMS_NOTIFICATION_SERVICEREQUEST_DATE_KEY, genratedDate);
+				}
+				break;
+
+			case WorkFlowConfigs.ACTION_INITIATED:
+
+				if (notifcationType.equals(HCConstants.SMS)) {
+					text = messageMap.get(HCConstants.HC_CITIZEN_REQUEST_FOR_UPDATE_SMS_NOTIFICATION);
+				} else if (notifcationType.equals(HCConstants.EMAIL)) {
+
+					text = messageMap.get(HCConstants.HC_CITIZEN_REQUEST_FOR_UPDATE_EMAIL_NOTIFICATION);
+				} else if (notifcationType.equals(HCConstants.PUSH)) {
+					text = messageMap.get(HCConstants.HC_CITIZEN_REQUEST_FOR_UPDATE_PUSH_NOTIFICATION);
+				}
+				if (text != null) {
+					text = text.replace(HCConstants.SMS_NOTIFICATION_EMP_NAME_KEY, serviceReq.getOwnerName())
+							.replace(HCConstants.SMS_NOTIFICATION_SERVICEREQUEST_ID,
+									serviceReq.getService_request_id_old())
+							.replace(HCConstants.NOTIFICATION_SERVICEREQUEST_ID_NEW, serviceReq.getService_request_id())
+							.replace(HCConstants.SMS_NOTIFICATION_SERVICEREQUEST_DATE_KEY, genratedDate);
+				}
+				break;
+
+			case WorkFlowConfigs.VERIFY_FOR_CLOSURE:
+
+				if (notifcationType.equals(HCConstants.SMS)) {
+					text = messageMap.get(HCConstants.HC_EMPLOYEE_VERIFY_FOR_CLOSURE_SMS_NOTIFICATION);
+				} else if (notifcationType.equals(HCConstants.EMAIL)) {
+					text = messageMap.get(HCConstants.HC_EMPLOYEE_VERIFY_FOR_CLOSURE_EMAIL_NOTIFICATION);
+				} else if (notifcationType.equals(HCConstants.PUSH)) {
+					text = messageMap.get(HCConstants.HC_EMPLOYEE_VERIFY_FOR_CLOSURE_PUSH_NOTIFICATION);
+				}
+				if (text != null) {
+					text = text.replace(HCConstants.SMS_NOTIFICATION_EMP_NAME_KEY, serviceReq.getOwnerName())
+							.replace(HCConstants.SMS_NOTIFICATION_SERVICEREQUEST_ID, serviceReq.getService_request_id())
+							.replace(HCConstants.SMS_NOTIFICATION_SERVICEREQUEST_DATE_KEY, genratedDate);
+				}
+				break;
+
+			case WorkFlowConfigs.FORWARDED_FOR_COMPLETION:
+
+				if (notifcationType.equals(HCConstants.SMS)) {
+					text = messageMap.get(HCConstants.HC_EMPLOYEE_FORWARDED_FOR_COMPLETION_SMS_NOTIFICATION);
+				} else if (notifcationType.equals(HCConstants.EMAIL)) {
+					text = messageMap.get(HCConstants.HC_EMPLOYEE_FORWARDED_FOR_COMPLETION_EMAIL_NOTIFICATION);
+				} else if (notifcationType.equals(HCConstants.PUSH)) {
+					text = messageMap.get(HCConstants.HC_EMPLOYEE_FORWARDED_FOR_COMPLETION_PUSH_NOTIFICATION);
+				}
+				if (text != null) {
+					text = text.replace(HCConstants.SMS_NOTIFICATION_EMP_NAME_KEY, serviceReq.getOwnerName())
+							.replace(HCConstants.SMS_NOTIFICATION_SERVICEREQUEST_ID, serviceReq.getService_request_id())
+							.replace(HCConstants.SMS_NOTIFICATION_SERVICEREQUEST_DATE_KEY, genratedDate);
+				}
+				break;
 			}
-			break;
-
-		case WorkFlowConfigs.APPROVE:
-
-			if (notifcationType.equals(HCConstants.SMS)) {
-				text = messageMap.get(HCConstants.HC_EMPLOYEE_ACTION_APPROVE_SMS_NOTIFICATION);
-			} else if (notifcationType.equals(HCConstants.EMAIL)) {
-
-				text = messageMap.get(HCConstants.HC_EMPLOYEE_ACTION_APPROVE_EMAIL_NOTIFICATION);
-			} else if (notifcationType.equals(HCConstants.PUSH)) {
-				text = messageMap.get(HCConstants.HC_EMPLOYEE_ACTION_APPROVE_PUSH_NOTIFICATION);
-			}
-			if (text != null) {
-				text = text.replace(HCConstants.SMS_NOTIFICATION_EMP_NAME_KEY, employeeName)
-						.replace(HCConstants.SMS_NOTIFICATION_SERVICEREQUEST_ID, serviceReq.getService_request_id())
-
-						.replace(HCConstants.SMS_NOTIFICATION_SERVICEREQUEST_DATE_KEY, genratedDate);
-			}
-			break;
-
-		case WorkFlowConfigs.ACTION_ASSIGN:
-
-			if (notifcationType.equals(HCConstants.SMS)) {
-				text = messageMap.get(HCConstants.HC_EMPLOYEE_ACTION_ASSIGN_SMS_NOTIFICATION);
-			} else if (notifcationType.equals(HCConstants.EMAIL)) {
-
-				text = messageMap.get(HCConstants.HC_EMPLOYEE_ACTION_ASSIGN_EMAIL_NOTIFICATION);
-			} else if (notifcationType.equals(HCConstants.PUSH)) {
-				text = messageMap.get(HCConstants.HC_EMPLOYEE_ACTION_ASSIGN_PUSH_NOTIFICATION);
-			}
-
-			if (text != null) {
-				text = text.replace(HCConstants.SMS_NOTIFICATION_EMP_NAME_KEY, employeeName)
-						.replace(HCConstants.SMS_NOTIFICATION_USER_NAME_KEY, serviceReq.getOwnerName())
-						.replace(HCConstants.SMS_NOTIFICATION_SERVICEREQUEST_ID, serviceReq.getService_request_id())
-
-						.replace(HCConstants.SMS_NOTIFICATION_SERVICEREQUEST_DATE_KEY, genratedDate);
-			}
-			break;
-
-		case WorkFlowConfigs.VERIFY_AND_FORWARD_TO_SDO:
-
-			if (notifcationType.equals(HCConstants.SMS)) {
-				text = messageMap.get(HCConstants.HC_EMPLOYEE_FORWARD_TO_SDO_SMS_NOTIFICATION);
-			} else if (notifcationType.equals(HCConstants.EMAIL)) {
-
-				text = messageMap.get(HCConstants.HC_EMPLOYEE_FORWARD_TO_SDO_EMAIL_NOTIFICATION);
-			} else if (notifcationType.equals(HCConstants.PUSH)) {
-				text = messageMap.get(HCConstants.HC_EMPLOYEE_FORWARD_TO_SDO_PUSH_NOTIFICATION);
-			}
-			if (text != null) {
-				text = text.replace(HCConstants.SMS_NOTIFICATION_EMP_NAME_KEY, serviceReq.getOwnerName())
-						.replace(HCConstants.SMS_NOTIFICATION_SERVICEREQUEST_ID, serviceReq.getService_request_id())
-						.replace(HCConstants.SMS_NOTIFICATION_SERVICEREQUEST_DATE_KEY, genratedDate);
-			}
-			break;
-		case WorkFlowConfigs.INSPECT:
-
-			if (notifcationType.equals(HCConstants.SMS)) {
-				text = messageMap.get(HCConstants.HC_EMPLOYEE_INSPECT_SMS_NOTIFICATION);
-			} else if (notifcationType.equals(HCConstants.EMAIL)) {
-
-				text = messageMap.get(HCConstants.HC_EMPLOYEE_INSPECT_EMAIL_NOTIFICATION);
-			} else if (notifcationType.equals(HCConstants.PUSH)) {
-				text = messageMap.get(HCConstants.HC_EMPLOYEE_INSPECT_PUSH_NOTIFICATION);
-			}
-			if (text != null) {
-				text = text.replace(HCConstants.SMS_NOTIFICATION_EMP_NAME_KEY, serviceReq.getOwnerName())
-						.replace(HCConstants.SMS_NOTIFICATION_SERVICEREQUEST_ID, serviceReq.getService_request_id())
-						.replace(HCConstants.SMS_NOTIFICATION_SERVICEREQUEST_DATE_KEY, genratedDate);
-			}
-			break;
-
-		case WorkFlowConfigs.FORWARDFORINSPECTION:
-
-			if (notifcationType.equals(HCConstants.SMS)) {
-				text = messageMap.get(HCConstants.HC_EMPLOYEE_INSPECTION_SMS_NOTIFICATION);
-			} else if (notifcationType.equals(HCConstants.EMAIL)) {
-				text = messageMap.get(HCConstants.HC_EMPLOYEE_INSPECTION_EMAIL_NOTIFICATION);
-			} else if (notifcationType.equals(HCConstants.PUSH)) {
-				text = messageMap.get(HCConstants.HC_EMPLOYEE_INSPECTION_PUSH_NOTIFICATION);
-			}
-			if (text != null) {
-				text = text.replace(HCConstants.SMS_NOTIFICATION_EMP_NAME_KEY, serviceReq.getOwnerName())
-						.replace(HCConstants.SMS_NOTIFICATION_SERVICEREQUEST_ID, serviceReq.getService_request_id())
-						.replace(HCConstants.SMS_NOTIFICATION_SERVICEREQUEST_DATE_KEY, genratedDate);
-			}
-			break;
-
-		case WorkFlowConfigs.VERIFYANDFORWARD:
-
-			if (notifcationType.equals(HCConstants.SMS)) {
-				text = messageMap.get(HCConstants.HC_EMPLOYEE_REQUEST_FORWARD_SMS_NOTIFICATION);
-			} else if (notifcationType.equals(HCConstants.EMAIL)) {
-
-				text = messageMap.get(HCConstants.HC_EMPLOYEE_REQUEST_FORWARD_EMAIL_NOTIFICATION);
-			} else if (notifcationType.equals(HCConstants.PUSH)) {
-				text = messageMap.get(HCConstants.HC_EMPLOYEE_REQUEST_FORWARD_PUSH_NOTIFICATION);
-			}
-			if (text != null) {
-				text = text.replace(HCConstants.SMS_NOTIFICATION_EMP_NAME_KEY, serviceReq.getOwnerName())
-						.replace(HCConstants.SMS_NOTIFICATION_SERVICEREQUEST_ID, serviceReq.getService_request_id())
-						.replace(HCConstants.SMS_NOTIFICATION_SERVICEREQUEST_DATE_KEY, genratedDate);
-			}
-			break;
-
-		case WorkFlowConfigs.REQUESTCLARIFICATION:
-
-			if (notifcationType.equals(HCConstants.SMS)) {
-				text = messageMap.get(HCConstants.HC_EMPLOYEE_CLARIFICATION_SMS_NOTIFICATION);
-			} else if (notifcationType.equals(HCConstants.EMAIL)) {
-
-				text = messageMap.get(HCConstants.HC_EMPLOYEE_CLARIFICATION_EMAIL_NOTIFICATION);
-			} else if (notifcationType.equals(HCConstants.PUSH)) {
-				text = messageMap.get(HCConstants.HC_EMPLOYEE_CLARIFICATION_PUSH_NOTIFICATION);
-			}
-			if (text != null) {
-				text = text.replace(HCConstants.SMS_NOTIFICATION_EMP_NAME_KEY, serviceReq.getOwnerName())
-						.replace(HCConstants.SMS_NOTIFICATION_SERVICEREQUEST_ID, serviceReq.getService_request_id())
-						.replace(HCConstants.SMS_NOTIFICATION_SERVICEREQUEST_DATE_KEY, genratedDate);
-			}
-			break;
-
-		case WorkFlowConfigs.ACTION_INITIATE:
-
-			if (notifcationType.equals(HCConstants.SMS)) {
-				text = messageMap.get(HCConstants.HC_EMPLOYEE_REQUEST_SMS_NOTIFICATION);
-			} else if (notifcationType.equals(HCConstants.EMAIL)) {
-
-				text = messageMap.get(HCConstants.HC_EMPLOYEE_REQUEST_EMAIL_NOTIFICATION);
-			} else if (notifcationType.equals(HCConstants.PUSH)) {
-				text = messageMap.get(HCConstants.HC_EMPLOYEE_REQUEST_PUSH_NOTIFICATION);
-			}
-			if (text != null) {
-				text = text.replace(HCConstants.SMS_NOTIFICATION_EMP_NAME_KEY, serviceReq.getOwnerName())
-						.replace(HCConstants.SMS_NOTIFICATION_SERVICEREQUEST_ID, serviceReq.getService_request_id())
-						.replace(HCConstants.SMS_NOTIFICATION_SERVICEREQUEST_DATE_KEY, genratedDate);
-			}
-			break;
-
-		case WorkFlowConfigs.ACTION_REJECT:
-
-			if (notifcationType.equals(HCConstants.SMS)) {
-				text = messageMap.get(HCConstants.HC_CITIZEN_REJECTSERVICEREQUEST_SMS_NOTIFICATION);
-			} else if (notifcationType.equals(HCConstants.EMAIL)) {
-
-				text = messageMap.get(HCConstants.HC_CITIZEN_REJECTSERVICEREQUEST_EMAIL_NOTIFICATION);
-			} else if (notifcationType.equals(HCConstants.PUSH)) {
-				text = messageMap.get(HCConstants.HC_CITIZEN_REJECTSERVICEREQUEST_PUSH_NOTIFICATION);
-			}
-
-			if (text != null) {
-				text = text.replace(HCConstants.SMS_NOTIFICATION_EMP_NAME_KEY, serviceReq.getOwnerName())
-						.replace(HCConstants.SMS_NOTIFICATION_SERVICEREQUEST_ID, serviceReq.getService_request_id())
-						.replace(HCConstants.SMS_NOTIFICATION_SERVICEREQUEST_TYPE, serviceReq.getServiceType())
-						.replace(HCConstants.SMS_NOTIFICATION_SERVICEREQUEST_DATE_KEY, genratedDate);
-			}
-			break;
-		case WorkFlowConfigs.ACTION_COMPLETE:
-
-			if (notifcationType.equals(HCConstants.SMS)) {
-				text = messageMap.get(HCConstants.HC_CITIZEN_SERVICEREQUESTCOMPLETED_SMS_NOTIFICATION);
-			} else if (notifcationType.equals(HCConstants.EMAIL)) {
-
-				text = messageMap.get(HCConstants.HC_CITIZEN_SERVICEREQUESTCOMPLETED_EMAIL_NOTIFICATION);
-			} else if (notifcationType.equals(HCConstants.PUSH)) {
-				text = messageMap.get(HCConstants.HC_CITIZEN_SERVICEREQUESTCOMPLETED_PUSH_NOTIFICATION);
-			}
-
-			if (text != null) {
-				text = text.replaceAll(HCConstants.SMS_NOTIFICATION_EMP_NAME_KEY, serviceReq.getOwnerName())
-						.replaceAll(HCConstants.SMS_NOTIFICATION_SERVICEREQUEST_ID, serviceReq.getService_request_id())
-						.replaceAll(HCConstants.SMS_NOTIFICATION_SERVICEREQUEST_TYPE, serviceReq.getServiceType())
-						.replaceAll(HCConstants.SMS_NOTIFICATION_SERVICEREQUEST_DATE_KEY, genratedDate);
-			}
-			break;
-
-		case WorkFlowConfigs.ACTION_UPDATE:
-
-			if (notifcationType.equals(HCConstants.SMS)) {
-				text = messageMap.get(HCConstants.HC_CITIZEN_REQUEST_FOR_UPDATE_SMS_NOTIFICATION);
-			} else if (notifcationType.equals(HCConstants.EMAIL)) {
-
-				text = messageMap.get(HCConstants.HC_CITIZEN_REQUEST_FOR_UPDATE_EMAIL_NOTIFICATION);
-			} else if (notifcationType.equals(HCConstants.PUSH)) {
-				text = messageMap.get(HCConstants.HC_CITIZEN_REQUEST_FOR_UPDATE_PUSH_NOTIFICATION);
-			}
-			if (text != null) {
-				text = text.replace(HCConstants.SMS_NOTIFICATION_EMP_NAME_KEY, serviceReq.getOwnerName())
-						.replace(HCConstants.SMS_NOTIFICATION_SERVICEREQUEST_ID, serviceReq.getService_request_id_old())
-						.replace(HCConstants.NOTIFICATION_SERVICEREQUEST_ID_NEW, serviceReq.getService_request_id())
-						.replace(HCConstants.SMS_NOTIFICATION_SERVICEREQUEST_DATE_KEY, genratedDate);
-			}
-			break;
-
-		case WorkFlowConfigs.EDIT:
-
-			if (notifcationType.equals(HCConstants.SMS)) {
-				text = messageMap.get(HCConstants.HC_CITIZEN_REQUEST_FOR_UPDATE_SMS_NOTIFICATION);
-			} else if (notifcationType.equals(HCConstants.EMAIL)) {
-
-				text = messageMap.get(HCConstants.HC_CITIZEN_REQUEST_FOR_UPDATE_EMAIL_NOTIFICATION);
-			} else if (notifcationType.equals(HCConstants.PUSH)) {
-				text = messageMap.get(HCConstants.HC_CITIZEN_REQUEST_FOR_UPDATE_PUSH_NOTIFICATION);
-			}
-			if (text != null) {
-				text = text.replace(HCConstants.SMS_NOTIFICATION_EMP_NAME_KEY, serviceReq.getOwnerName())
-						.replace(HCConstants.SMS_NOTIFICATION_SERVICEREQUEST_ID, serviceReq.getService_request_id_old())
-						.replace(HCConstants.NOTIFICATION_SERVICEREQUEST_ID_NEW, serviceReq.getService_request_id())
-						.replace(HCConstants.SMS_NOTIFICATION_SERVICEREQUEST_DATE_KEY, genratedDate);
-			}
-			break;
-
-		case WorkFlowConfigs.ACTION_INITIATED:
-
-			if (notifcationType.equals(HCConstants.SMS)) {
-				text = messageMap.get(HCConstants.HC_CITIZEN_REQUEST_FOR_UPDATE_SMS_NOTIFICATION);
-			} else if (notifcationType.equals(HCConstants.EMAIL)) {
-
-				text = messageMap.get(HCConstants.HC_CITIZEN_REQUEST_FOR_UPDATE_EMAIL_NOTIFICATION);
-			} else if (notifcationType.equals(HCConstants.PUSH)) {
-				text = messageMap.get(HCConstants.HC_CITIZEN_REQUEST_FOR_UPDATE_PUSH_NOTIFICATION);
-			}
-			if (text != null) {
-				text = text.replace(HCConstants.SMS_NOTIFICATION_EMP_NAME_KEY, serviceReq.getOwnerName())
-						.replace(HCConstants.SMS_NOTIFICATION_SERVICEREQUEST_ID, serviceReq.getService_request_id_old())
-						.replace(HCConstants.NOTIFICATION_SERVICEREQUEST_ID_NEW, serviceReq.getService_request_id())
-						.replace(HCConstants.SMS_NOTIFICATION_SERVICEREQUEST_DATE_KEY, genratedDate);
-			}
-			break;
-
-		case WorkFlowConfigs.VERIFY_FOR_CLOSURE:
-
-			if (notifcationType.equals(HCConstants.SMS)) {
-				text = messageMap.get(HCConstants.HC_EMPLOYEE_VERIFY_FOR_CLOSURE_SMS_NOTIFICATION);
-			} else if (notifcationType.equals(HCConstants.EMAIL)) {
-				text = messageMap.get(HCConstants.HC_EMPLOYEE_VERIFY_FOR_CLOSURE_EMAIL_NOTIFICATION);
-			} else if (notifcationType.equals(HCConstants.PUSH)) {
-				text = messageMap.get(HCConstants.HC_EMPLOYEE_VERIFY_FOR_CLOSURE_PUSH_NOTIFICATION);
-			}
-			if (text != null) {
-				text = text.replace(HCConstants.SMS_NOTIFICATION_EMP_NAME_KEY, serviceReq.getOwnerName())
-						.replace(HCConstants.SMS_NOTIFICATION_SERVICEREQUEST_ID, serviceReq.getService_request_id())
-						.replace(HCConstants.SMS_NOTIFICATION_SERVICEREQUEST_DATE_KEY, genratedDate);
-			}
-			break;
-
-		case WorkFlowConfigs.FORWARDED_FOR_COMPLETION:
-
-			if (notifcationType.equals(HCConstants.SMS)) {
-				text = messageMap.get(HCConstants.HC_EMPLOYEE_FORWARDED_FOR_COMPLETION_SMS_NOTIFICATION);
-			} else if (notifcationType.equals(HCConstants.EMAIL)) {
-				text = messageMap.get(HCConstants.HC_EMPLOYEE_FORWARDED_FOR_COMPLETION_EMAIL_NOTIFICATION);
-			} else if (notifcationType.equals(HCConstants.PUSH)) {
-				text = messageMap.get(HCConstants.HC_EMPLOYEE_FORWARDED_FOR_COMPLETION_PUSH_NOTIFICATION);
-			}
-			if (text != null) {
-				text = text.replace(HCConstants.SMS_NOTIFICATION_EMP_NAME_KEY, serviceReq.getOwnerName())
-						.replace(HCConstants.SMS_NOTIFICATION_SERVICEREQUEST_ID, serviceReq.getService_request_id())
-						.replace(HCConstants.SMS_NOTIFICATION_SERVICEREQUEST_DATE_KEY, genratedDate);
-			}
-			break;
 		}
-
 		return text;
 	}
 
@@ -1161,51 +1461,100 @@ public class HCNotificationConsumer {
 			int days) {
 		String text = null;
 
-		// epoc date to date convert
+		// If UT is True the start UT SMS message
+		if (serviceReq.getIsUT() != null && serviceReq.getIsUT() == true) {
+			// epoc date to date convert
 
-		String employee = serviceReq.getOwnerName();
+			String employee = serviceReq.getOwnerName();
 
-		switch (action) {
+			switch (action) {
 
-		case HCConstants.OVERDAYS:
+			case HCConstants.OVERDAYS:
 
-			if (notifcationType.equals(HCConstants.SMS)) {
-				text = messageMap.get(HCConstants.HC_EMPLOYEE_OVERDAYS_SMS_NOTIFICATION);
-			} else if (notifcationType.equals(HCConstants.EMAIL)) {
+				if (notifcationType.equals(HCConstants.SMS)) {
+					text = messageMap.get(HCConstants.UTHC_EMPLOYEE_OVERDAYS_SMS_NOTIFICATION);
+				} else if (notifcationType.equals(HCConstants.EMAIL)) {
 
-				text = messageMap.get(HCConstants.HC_EMPLOYEE_OVERDAYS_EMAIL_NOTIFICATION);
-			} else if (notifcationType.equals(HCConstants.PUSH))
-				text = messageMap.get(HCConstants.HC_EMPLOYEE_OVERDAYS_PUSH_NOTIFICATION);
+					text = messageMap.get(HCConstants.HC_EMPLOYEE_OVERDAYS_EMAIL_NOTIFICATION);
+				} else if (notifcationType.equals(HCConstants.PUSH))
+					text = messageMap.get(HCConstants.HC_EMPLOYEE_OVERDAYS_PUSH_NOTIFICATION);
 
-			if (text != null) {
-				text = text.replace(HCConstants.SMS_NOTIFICATION_EMP_NAME_KEY, employee)
-						.replace(HCConstants.SMS_NOTIFICATION_SERVICEREQUEST_TYPE, serviceReq.getServiceType())
-						.replace(HCConstants.SMS_NOTIFICATION_SERVICEREQUEST_ID, serviceReq.getService_request_id())
-						.replace(HCConstants.SMS_NOTIFICATION_SERVICEREQUEST_DATE_KEY, serviceRequestDate)
-						.replace(HCConstants.SMS_NOTIFICATION_SERVICEREQUEST_DAYS_KEY, days + "");
+				if (text != null) {
+					text = text.replace(HCConstants.SMS_NOTIFICATION_EMP_NAME_KEY, employee)
+							.replace(HCConstants.SMS_NOTIFICATION_SERVICEREQUEST_TYPE, serviceReq.getServiceType())
+							.replace(HCConstants.SMS_NOTIFICATION_SERVICEREQUEST_ID, serviceReq.getService_request_id())
+							.replace(HCConstants.SMS_NOTIFICATION_SERVICEREQUEST_DATE_KEY, serviceRequestDate)
+							.replace(HCConstants.SMS_NOTIFICATION_SERVICEREQUEST_DAYS_KEY, days + "");
+				}
+				break;
+
+			case HCConstants.REMINDER:
+				if (notifcationType.equals(HCConstants.SMS)) {
+					text = messageMap.get(HCConstants.UTHC_EMPLOYEE_REMAINDER_SMS_NOTIFICATION);
+				} else if (notifcationType.equals(HCConstants.EMAIL)) {
+
+					text = messageMap.get(HCConstants.HC_EMPLOYEE_REMAINDER_EMAIL_NOTIFICATION);
+				} else if (notifcationType.equals(HCConstants.PUSH))
+					text = messageMap.get(HCConstants.HC_EMPLOYEE_REMAINDER_PUSH_NOTIFICATION);
+
+				if (text != null) {
+					text = text.replace(HCConstants.SMS_NOTIFICATION_EMP_NAME_KEY, employee)
+							.replace(HCConstants.SMS_NOTIFICATION_SERVICEREQUEST_TYPE, serviceReq.getServiceType())
+							.replace(HCConstants.SMS_NOTIFICATION_SERVICEREQUEST_ID, serviceReq.getService_request_id())
+							.replace(HCConstants.SMS_NOTIFICATION_SERVICEREQUEST_DATE_KEY, serviceRequestDate);
+					// .replace(HCConstants.SMS_NOTIFICATION_SERVICEREQUEST_DAYS_KEY, days+"");
+				}
+				break;
+
 			}
-			break;
 
-		case HCConstants.REMINDER:
-			if (notifcationType.equals(HCConstants.SMS)) {
-				text = messageMap.get(HCConstants.HC_EMPLOYEE_REMAINDER_SMS_NOTIFICATION);
-			} else if (notifcationType.equals(HCConstants.EMAIL)) {
+		} else {
 
-				text = messageMap.get(HCConstants.HC_EMPLOYEE_REMAINDER_EMAIL_NOTIFICATION);
-			} else if (notifcationType.equals(HCConstants.PUSH))
-				text = messageMap.get(HCConstants.HC_EMPLOYEE_REMAINDER_PUSH_NOTIFICATION);
+			// epoc date to date convert
 
-			if (text != null) {
-				text = text.replace(HCConstants.SMS_NOTIFICATION_EMP_NAME_KEY, employee)
-						.replace(HCConstants.SMS_NOTIFICATION_SERVICEREQUEST_TYPE, serviceReq.getServiceType())
-						.replace(HCConstants.SMS_NOTIFICATION_SERVICEREQUEST_ID, serviceReq.getService_request_id())
-						.replace(HCConstants.SMS_NOTIFICATION_SERVICEREQUEST_DATE_KEY, serviceRequestDate);
-				// .replace(HCConstants.SMS_NOTIFICATION_SERVICEREQUEST_DAYS_KEY, days+"");
+			String employee = serviceReq.getOwnerName();
+
+			switch (action) {
+
+			case HCConstants.OVERDAYS:
+
+				if (notifcationType.equals(HCConstants.SMS)) {
+					text = messageMap.get(HCConstants.HC_EMPLOYEE_OVERDAYS_SMS_NOTIFICATION);
+				} else if (notifcationType.equals(HCConstants.EMAIL)) {
+
+					text = messageMap.get(HCConstants.HC_EMPLOYEE_OVERDAYS_EMAIL_NOTIFICATION);
+				} else if (notifcationType.equals(HCConstants.PUSH))
+					text = messageMap.get(HCConstants.HC_EMPLOYEE_OVERDAYS_PUSH_NOTIFICATION);
+
+				if (text != null) {
+					text = text.replace(HCConstants.SMS_NOTIFICATION_EMP_NAME_KEY, employee)
+							.replace(HCConstants.SMS_NOTIFICATION_SERVICEREQUEST_TYPE, serviceReq.getServiceType())
+							.replace(HCConstants.SMS_NOTIFICATION_SERVICEREQUEST_ID, serviceReq.getService_request_id())
+							.replace(HCConstants.SMS_NOTIFICATION_SERVICEREQUEST_DATE_KEY, serviceRequestDate)
+							.replace(HCConstants.SMS_NOTIFICATION_SERVICEREQUEST_DAYS_KEY, days + "");
+				}
+				break;
+
+			case HCConstants.REMINDER:
+				if (notifcationType.equals(HCConstants.SMS)) {
+					text = messageMap.get(HCConstants.HC_EMPLOYEE_REMAINDER_SMS_NOTIFICATION);
+				} else if (notifcationType.equals(HCConstants.EMAIL)) {
+
+					text = messageMap.get(HCConstants.HC_EMPLOYEE_REMAINDER_EMAIL_NOTIFICATION);
+				} else if (notifcationType.equals(HCConstants.PUSH))
+					text = messageMap.get(HCConstants.HC_EMPLOYEE_REMAINDER_PUSH_NOTIFICATION);
+
+				if (text != null) {
+					text = text.replace(HCConstants.SMS_NOTIFICATION_EMP_NAME_KEY, employee)
+							.replace(HCConstants.SMS_NOTIFICATION_SERVICEREQUEST_TYPE, serviceReq.getServiceType())
+							.replace(HCConstants.SMS_NOTIFICATION_SERVICEREQUEST_ID, serviceReq.getService_request_id())
+							.replace(HCConstants.SMS_NOTIFICATION_SERVICEREQUEST_DATE_KEY, serviceRequestDate);
+					// .replace(HCConstants.SMS_NOTIFICATION_SERVICEREQUEST_DAYS_KEY, days+"");
+				}
+				break;
+
 			}
-			break;
-
 		}
-
 		return text;
 	}
 
