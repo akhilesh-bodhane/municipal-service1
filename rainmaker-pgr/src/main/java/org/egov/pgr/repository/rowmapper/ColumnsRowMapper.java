@@ -56,8 +56,7 @@ public class ColumnsRowMapper implements ResultSetExtractor<List<DiscriptionRepo
 							.feedback(rs.getString("feedback"))
 							.reviseddepartment(rs.getString("reviseddepartment"))
 							.build();
-					
-					
+
 					map.put(id, master);
 					list.add(master);
 				}

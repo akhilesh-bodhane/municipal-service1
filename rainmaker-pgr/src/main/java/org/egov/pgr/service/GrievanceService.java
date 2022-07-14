@@ -197,7 +197,7 @@ public class GrievanceService {
 			}
 			List<String> departments = JsonPath.read(response, PGRConstants.JSONPATH_DEPARTMENTS);
 			if (!CollectionUtils.isEmpty(departments)) {
-				department = departments.get(0);
+				department = departments.get(0).trim();
 			}
 		} catch (Exception e) {
 			log.error("Exception in getDepartment: " + e);
