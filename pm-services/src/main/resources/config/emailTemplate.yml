@@ -167,7 +167,7 @@ ColumnMaps:
      roles: [UTJE,UTSDE]
      emailSubject: Application Approved
      template: Dear Employee,<br/><p>This is inform you that application id - [:applicationId:] for permission for road cut has been approved. Kindly visit the MCC Chandigarh portal for details.</p><br/>Regards,<br/>Portal Administrator (MCC Chandigarh)
-     smsTemplate: Dear Employee,This is inform you that application id [:applicationId:] for permission for road cut has been approved. Kindly visit the MCC Chandigarh portal for details.
+     smsTemplate: Dear Employee, Service request Id: [:applicationId:] has been forwarded to you. Kindly take necessary action on it. Regards, CP Division No. 1 (Roads) Eng. Department, Chandigarh Administration U.T. (App developed by Chandigarh Smart City Ltd.)
 
    - applicationType: UTROADCUTNOC
      status: [INITIATED]
@@ -209,18 +209,18 @@ ColumnMaps:
      roles: [UTJE]
      emailSubject: Road cut Application
      template: Dear Employee,<br/><p> This is inform you that application ID - [:applicationId:] has been forwarded to you. Kindly take necessary action.</p><br/>Regards,<br/>Roads department,<br/> Chandigarh Smart City Ltd.
-     smsTemplate: Dear Employee,This is inform you that application ID - [:applicationId:] has been forwarded to you. Kindly take necessary action.Regards,Roads department,Chandigarh Smart City Ltd.
+     smsTemplate: Dear Employee, Service request Id: [:applicationId:] has been forwarded to you. Kindly take necessary action on it. Regards, CP Division No. 1 (Roads) Eng. Department, Chandigarh Administration U.T. (App developed by Chandigarh Smart City Ltd.)
 
    - applicationType: UTROADCUTNOC
      status: [REASSIGNTOUTJE,REASSIGNTOUTSDE L2,REASSIGNTOUTDMEE,REASSIGNTOUTHDMEE,REASSIGNTOUTEE L3,REASSIGNTOUTCHDSE,REASSIGNTOUTDMSE,REASSIGNTOUTSE L2,REASSIGNTOUTWD,REASSIGNTOUTCHDCE,REASSIGNTOUTDMCE,REASSIGNTOUTSDEHQ]
      roles: [UTJE]
      emailSubject: Road cut Application
      template: Dear Employee,<br/><p> This is inform you that application ID - [:applicationId:] has been reassigned to you. Kindly take necessary action.</p><br/>Regards,<br/>Roads department,<br/> Chandigarh Smart City Ltd.
-     smsTemplate: Dear Employee,This is inform you that application ID - [:applicationId:] has been reassigned to you. Kindly take necessary action.Regards,Roads department,Chandigarh Smart City Ltd.
+     smsTemplate: Dear Employee, Service request Id: [:applicationId:] has been forwarded to you. Kindly take necessary action on it. Regards, CP Division No. 1 (Roads) Eng. Department, Chandigarh Administration U.T. (App developed by Chandigarh Smart City Ltd.)
 
    - applicationType: UTROADCUTNOC
      status: [INITIATED]
      roles: [UTEE]
      emailSubject: Road cut Application
      template: Dear Employee,<br/><p> This is inform you that application ID - [:applicationId:] has been forwarded to you. Kindly take necessary action.</p><br/>Regards,<br/>Roads department,<br/> Chandigarh Smart City Ltd.
-     smsTemplate: Dear Employee,This is inform you that application ID - [:applicationId:] has been forwarded to you. Kindly take necessary action.Regards,Roads department,Chandigarh Smart City Ltd.
+     smsTemplate: Dear Employee, Service request Id: [:applicationId:] has been forwarded to you. Kindly take necessary action on it. Regards, CP Division No. 1 (Roads) Eng. Department, Chandigarh Administration U.T. (App developed by Chandigarh Smart City Ltd.)
