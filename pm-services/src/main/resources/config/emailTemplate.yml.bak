@@ -223,4 +223,4 @@ ColumnMaps:
      roles: [UTEE]
      emailSubject: Road cut Application
      template: Dear Employee,<br/><p> This is inform you that application ID - [:applicationId:] has been forwarded to you. Kindly take necessary action.</p><br/>Regards,<br/>Roads department,<br/> Chandigarh Smart City Ltd.
-     smsTemplate: Dear Employee,This is inform you that application ID - [:applicationId:] has been forwarded to you. Kindly take necessary action.Regards,Roads department,Chandigarh Smart City Ltd.
+     smsTemplate: Dear Employee, Service request Id: [:applicationId:] has been forwarded to you. Kindly take necessary action on it. Regards, CP Division No. 1 (Roads) Eng. Department, Chandigarh Administration U.T. (App developed by Chandigarh Smart City Ltd.)
