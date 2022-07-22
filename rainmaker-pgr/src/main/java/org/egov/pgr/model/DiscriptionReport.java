@@ -37,5 +37,5 @@ public class DiscriptionReport {
 	 private String feedback;
 	 private String rating;
 	 private String comments;
-	 private String reviseddepartment;
+	 //private String reviseddepartment;
 }

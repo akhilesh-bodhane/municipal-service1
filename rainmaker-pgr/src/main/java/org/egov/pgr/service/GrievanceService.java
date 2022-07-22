@@ -157,24 +157,22 @@ public class GrievanceService {
 		return getServiceResponse(request);
 	}
 
-	private void enrichServiceRequestDepartment(ServiceRequest request) {
-		request.getServices().stream().map(s -> {
-			ActionInfo actionInfo = request.getActionInfo().stream()
-					.filter(e -> e.getStatus().equalsIgnoreCase(s.getStatus().toString())).findAny().orElse(null);
-
-			if (actionInfo.getAssignee() != null) {
-				Map<String, String> employeeDetails = getEmployeeDetails(s.getTenantId(), actionInfo.getAssignee(),
-						request.getRequestInfo());
-				s.setRevisedDepartment(getDepartment(request.getRequestInfo(),
-						Arrays.asList(employeeDetails.get("department") != null ? employeeDetails.get("department")
-								: s.getCategory()),
-						s.getTenantId()));
-			} else {
-				s.setRevisedDepartment(s.getCategory());
-			}
-			return s;
-		}).collect(Collectors.toList());
-	}
+	/*
+	 * private void enrichServiceRequestDepartment(ServiceRequest request) {
+	 * request.getServices().stream().map(s -> { ActionInfo actionInfo =
+	 * request.getActionInfo().stream() .filter(e ->
+	 * e.getStatus().equalsIgnoreCase(s.getStatus().toString())).findAny().orElse(
+	 * null);
+	 * 
+	 * if (actionInfo.getAssignee() != null) { Map<String, String> employeeDetails =
+	 * getEmployeeDetails(s.getTenantId(), actionInfo.getAssignee(),
+	 * request.getRequestInfo());
+	 * s.setRevisedDepartment(getDepartment(request.getRequestInfo(),
+	 * Arrays.asList(employeeDetails.get("department") != null ?
+	 * employeeDetails.get("department") : s.getCategory()), s.getTenantId())); }
+	 * else { s.setRevisedDepartment(s.getCategory()); } return s;
+	 * }).collect(Collectors.toList()); }
+	 */
 
 	/**
 	 * Get department on department code

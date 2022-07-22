@@ -207,8 +207,9 @@ public class Service   {
   @JsonProperty("slaEndTime")
   private Long slaEndTime = null;
     
-  @JsonProperty("revisedDepartment")
-  private String revisedDepartment = null;
+	/*
+	 * @JsonProperty("revisedDepartment") private String revisedDepartment = null;
+	 */
   
   }
 
