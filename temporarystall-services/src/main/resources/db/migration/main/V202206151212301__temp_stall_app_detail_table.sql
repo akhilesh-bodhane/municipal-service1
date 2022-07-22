@@ -28,8 +28,6 @@ CREATE TABLE public.temporary_stall_application_detail (
 	application_status varchar NULL,
 	main_amount int8 NULL,
 	gst_amont int8 NULL,
-	nominee_name varchar NULL,
-	relation varchar NULL,
 	CONSTRAINT applicationn_id UNIQUE (applicationn_id),
 	CONSTRAINT temporary_stall_application_detail_pkey PRIMARY KEY (id)
 );
