@@ -151,7 +151,7 @@ public class GrievanceService {
 		enrichServiceRequestForUpdate(request);
 		if (null == request.getActionInfo())
 			request.setActionInfo(new ArrayList<ActionInfo>());
-		enrichServiceRequestDepartment(request);
+		//enrichServiceRequestDepartment(request);
 		pGRProducer.push(updateTopic, request);
 		pGRProducer.push(updateIndexTopic, dataTranformationForIndexer(request, false));
 		return getServiceResponse(request);
