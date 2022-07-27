@@ -61,5 +61,9 @@ public class SmidALFMemberController {
 	public ResponseEntity<ResponseInfoWrapper> memberCount(@RequestBody NulmAlfMemberRequest memberrequest) {
 		return service.memberCount(memberrequest);
 	}
-	
+	@PostMapping(value = "/_upload1")
+	public ResponseEntity<ResponseInfoWrapper> uplaodExternalUser1(@Valid @RequestBody NulmAlfMemberRequest memberrequest)
+			throws IOException {
+		return service.uplaodExternalGuest1(memberrequest);
+	}
 }

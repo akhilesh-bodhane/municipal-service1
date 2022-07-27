@@ -28,7 +28,7 @@ public class NULMQueryBuilder {
 			+ "UPPER(NA.name) like concat('%',case when UPPER(?)<>'' then UPPER(?) else UPPER(NA.name) end,'%') AND  NA.application_status<>?  group by NA.application_uuid    ORDER BY created_time desc";
 
 	public static final String GET_ALF_APPLICATION_QUERY ="SELECT  NA.uuid,  NA.id,  NA.date_of_formation,  NA.name,  NA.registeration_date,  NA.address,account_number,  NA.bank_name,  NA.branch_name,  NA.contact_number, NA.tenant_id,\r\n" + 
-			" NA.is_active, NA.created_by, NA.created_time, NA.last_modified_by, NA.last_modified_time, adhaar_number,date_of_opening_account,\r\n" + 
+			" NA.is_active, NA.created_by, NA.created_time, NA.last_modified_by, NA.last_modified_time, NA.adhaar_number, date_of_opening_account,\r\n" + 
 			" alf_formated_through,array_to_json(array_agg(json_build_object('documentType',ND.document_type,'filestoreId',ND.filestore_id,'documnetUuid',ND.document_uuid,'isActive',ND.is_active,\r\n" + 
 			" 'tenantId',ND.tenant_id,'applicationUuid',ND.application_uuid) ))as document FROM nulm_smid_alf_details NA \r\n" + 
 			" left  join nulm_alf_application_document ND on NA.uuid=ND.application_uuid and NA.tenant_id=ND.tenant_id  AND ND.is_active='true'  where NA.id=(case when ?  <>'' then ?  else NA.id end) and NA.created_by=(case when ?  <>'' then ?  else NA.created_by end) AND NA.tenant_id=(case when ?  <>'' then ?  else NA.tenant_id end) \r\n" + 
