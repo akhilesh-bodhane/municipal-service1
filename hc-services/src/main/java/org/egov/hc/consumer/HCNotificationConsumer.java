@@ -80,7 +80,7 @@ public class HCNotificationConsumer {
 		ServiceRequest serviceReqRequest = new ServiceRequest();
 		try {
 			serviceReqRequest = mapper.convertValue(record, ServiceRequest.class);
-
+			log.info("Request Horticulture Sending sms : " + mapper.writeValueAsString(serviceReqRequest));
 		} catch (final Exception e) {
 			log.error("Error while listening to value: " + record + " on topic: " + topic + ": " + e);
 		}
