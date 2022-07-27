@@ -61,5 +61,10 @@ public class SmidShgMemberController {
 	public ResponseEntity<ResponseInfoWrapper> memberCount(@RequestBody NulmShgMemberRequest memberrequest) {
 		return service.memberCount(memberrequest);
 	}
+	@PostMapping(value = "/_upload1")
+	public ResponseEntity<ResponseInfoWrapper> uplaodExternalUser1(@Valid @RequestBody NulmShgMemberRequest memberrequest)
+			throws IOException {
+		return service.uplaodExternalGuest1(memberrequest);
+	}
 	
 }

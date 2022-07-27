@@ -3,6 +3,7 @@ package org.egov.nulm.service;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -16,6 +17,8 @@ import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.egov.common.contract.request.Role;
 import org.egov.common.contract.response.ResponseInfo;
 import org.egov.nulm.common.CommonConstants;
@@ -23,8 +26,10 @@ import org.egov.nulm.config.NULMConfiguration;
 import org.egov.nulm.idgen.model.IdGenerationResponse;
 import org.egov.nulm.model.NulmAlfMemberRequest;
 import org.egov.nulm.model.ResponseInfoWrapper;
+import org.egov.nulm.model.SmidAlfApplication;
 import org.egov.nulm.model.SmidAlfMemberApplication;
 import org.egov.nulm.repository.SmidAlfMemberRepository;
+import org.egov.nulm.repository.SmidAlfRepository;
 import org.egov.nulm.util.AuditDetailsUtil;
 import org.egov.nulm.util.IdGenRepository;
 import org.egov.nulm.web.model.Files;
@@ -54,6 +59,11 @@ public class SmidAlfMemberService {
 	private NULMConfiguration config;
 
 	private SmidAlfMemberRepository repository;
+	
+//	private IdGenRepository idgenrepository1;
+
+	@Autowired
+	private SmidAlfRepository repository2;
 
 	private IdGenRepository idgenrepository;
 
@@ -549,6 +559,293 @@ List<Files> attachmentsUrls = fileStoreUtils.getFiles(guest.getTenantId(), attac
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new CustomException(CommonConstants.SMID_SHG_APPLICATION_EXCEPTION_CODE, e.getMessage());
+		}
+	}
+  
+	
+	public ResponseEntity<ResponseInfoWrapper> uplaodExternalGuest1(NulmAlfMemberRequest memberrequest)
+			throws IOException {
+		try {
+			log.debug("inside method uplaodExternalGuest execution begins");
+
+			SmidAlfMemberApplication[] guests = objectMapper.convertValue(memberrequest.getSmidAlfMemberApplication(),
+					SmidAlfMemberApplication[].class);
+			log.debug(objectMapper.writeValueAsString(guests));
+			SmidAlfMemberApplication guest = guests[0];
+
+			Files uploadfileId = Files.builder().fileStoreId(guest.getExternalFileStoreId()).build();
+
+			List<Files> attachments = new ArrayList<>();
+			attachments.add(uploadfileId);
+			String fileUrls = null;
+			log.debug("calling getFiles method");
+			List<Files> attachmentsUrls = fileStoreUtils.getFiles(guest.getTenantId(), attachments);
+
+			for (Files files : attachmentsUrls) {
+				fileUrls = files.getUrl();
+			}
+
+			if (fileUrls == null || fileUrls.isEmpty())
+				throw new CustomException(HttpStatus.INTERNAL_SERVER_ERROR.toString(), CommonConstants.ID_GENERATION);
+
+			int lastIndexOf = fileUrls.lastIndexOf('\\') + 1;
+			int lastIndexOf1 = fileUrls.indexOf(".xls") - 1;
+			String filename = fileUrls.substring(lastIndexOf, lastIndexOf1).replaceAll(" ", "%20");
+			StringBuilder string = new StringBuilder(fileUrls);
+			string.replace(lastIndexOf, lastIndexOf1, filename);
+			UrlResource fileResource = new UrlResource(string.toString());
+			
+
+			List<SmidAlfMemberApplication> userList = new ArrayList<>();
+
+			XSSFWorkbook myWorkBook = new XSSFWorkbook(fileResource.getInputStream());
+			XSSFSheet worksheet = myWorkBook.getSheetAt(0);
+			String ss = null;
+			String nn = null;
+			Iterator<Row> rowIterator = worksheet.iterator();
+			rowIterator.next(); // skip the header row
+
+			List<SmidAlfApplication> userlist1 = new ArrayList<>();
+			List<SmidAlfMemberApplication> userlist = new ArrayList<>();
+			List<SmidAlfMemberApplication> userListFinal = null;
+
+			log.debug("XLS SHEET STARTTO READ");
+			SmidAlfApplication user1 = SmidAlfApplication.builder().build();
+
+			while (rowIterator.hasNext()) {
+				Row nextRow = rowIterator.next();
+				Iterator<Cell> cellIterator = nextRow.cellIterator();
+				SmidAlfMemberApplication user = SmidAlfMemberApplication.builder().build();
+
+				while (cellIterator.hasNext()) {
+					Cell nextCell = cellIterator.next();
+					int columnIndex = nextCell.getColumnIndex();
+					user.setApplicationId(guest.getAlfUuid() + nextCell);
+					user.setExternalFileStoreId(guest.getExternalFileStoreId());
+					switch (columnIndex) {
+					case 1:
+						nextCell.setCellType(Cell.CELL_TYPE_STRING);
+						String name = nextCell.getStringCellValue();
+						user1.setName(name);
+						if(name.isEmpty()) {
+							user1.setName(nn);	
+						}
+						break;
+					case 3:
+						nextCell.setCellType(Cell.CELL_TYPE_STRING);
+						String address1 = nextCell.getStringCellValue();
+						if (address1 == null || address1.isEmpty()) {
+							address1 = "";
+						}
+						user1.setAddress(address1);
+						break;
+					case 2:
+
+						nextCell.setCellType(Cell.CELL_TYPE_NUMERIC);
+
+						Double dateOfFormation11 = nextCell.getNumericCellValue();
+						if (dateOfFormation11 != 0.0) {
+							Date date = nextRow.getCell(2).getDateCellValue();
+							Cell cell = nextRow.getCell(2);
+							String string2 = cell.toString();
+							System.out.println("*************************");
+							System.out.println("*******hhhhhhhhhhhhh******");
+							System.out.println(string2);
+							String substr2 = string2.substring(3, 6);
+							switch (substr2) {
+							case "Jan":
+								user1.setDateOfFormation((string2).replace("Jan", "01"));
+
+								ss = (string2).replace("Jan", "01");
+								break;
+							case "Feb":
+								user1.setDateOfFormation((string2).replace("Feb", "02"));
+								break;
+							case "Mar":
+								user1.setDateOfFormation((string2).replace("Mar", "03"));
+								break;
+							case "Apr":
+								user1.setDateOfFormation((string2).replace("Apr", "04"));
+								break;
+							case "May":
+								user1.setDateOfFormation((string2).replace("May", "05"));
+								break;
+							case "Jun":
+								user1.setDateOfFormation((string2).replace("Jun", "06"));
+								break;
+							case "Jul":
+								user1.setDateOfFormation((string2).replace("Jul", "07"));
+								break;
+							case "Aug":
+								user1.setDateOfFormation((string2).replace("Aug", "08"));
+								break;
+							case "Sep":
+								user1.setDateOfFormation((string2).replace("Sep", "09"));
+								break;
+							case "Oct":
+								user1.setDateOfFormation((string2).replace("Oct", "10"));
+								break;
+							case "Nov":
+								user1.setDateOfFormation((string2).replace("Nov", "11"));
+								break;
+							case "Dec":
+								user1.setDateOfFormation((string2).replace("Dec", "12"));
+								break;
+
+							default:
+								break;
+							}
+						} else {
+							user1.setDateOfFormation(null);
+						}
+//						nextCell.setCellType(Cell.CELL_TYPE_STRING);
+//						 String dateOfFormation = nextCell.getStringCellValue();
+//						 if(dateOfFormation ==null || dateOfFormation.isEmpty())
+//							{
+//							 dateOfFormation = "";	
+//							}
+//						
+//						user1.setDateOfFormation(dateOfFormation);
+
+						break;
+//					case 4:
+//						nextCell.setCellType(Cell.CELL_TYPE_STRING);
+//						String Accno = nextCell.getStringCellValue();
+//						if(Accno ==null || Accno.isEmpty())
+//						{
+//							Accno = "";	
+//						}
+//						user1.setAccountNumber(Accno);
+//						break;
+//					case 5:
+//						nextCell.setCellType(Cell.CELL_TYPE_STRING);
+//						String bkname = nextCell.getStringCellValue();
+//						user1.setBankName(bkname);
+//						break;
+//					case 6:
+//						nextCell.setCellType(Cell.CELL_TYPE_STRING);
+//						String brnm = nextCell.getStringCellValue();
+//						if(brnm ==null || brnm.isEmpty())
+//						{
+//							brnm = "";	
+//						}
+//						user1.setBranchName(brnm);
+//						break;
+//					case 7:
+//						nextCell.setCellType(Cell.CELL_TYPE_STRING);
+//						String regcode = nextCell.getStringCellValue();
+//						if(regcode ==null || regcode.isEmpty())
+//						{
+//							regcode = "";	
+//						}
+////						user1.setBranchName(brnm);
+//						break;
+//					case 8:
+//						nextCell.setCellType(Cell.CELL_TYPE_STRING);
+//						String regdate = nextCell.getStringCellValue();
+//						if(regdate ==null || regdate.isEmpty())
+//						{
+//							regdate = "";	
+//						}
+//						user1.setRegisterationDate(regdate);
+//						break;
+					case 4:
+						nextCell.setCellType(Cell.CELL_TYPE_STRING);
+						String conno = nextCell.getStringCellValue();
+						user1.setContactNumber(conno);
+						break;
+
+					case 5:
+
+						nextCell.setCellType(Cell.CELL_TYPE_STRING);
+						String Name = nextCell.getStringCellValue();
+						if (Name == null || Name.isEmpty()) {
+							Name = "";
+						}
+
+						user.setName(Name);
+
+						break;
+					case 6:
+						nextCell.setCellType(Cell.CELL_TYPE_STRING);
+						String Position = nextCell.getStringCellValue();
+						if (Position == null || Position.isEmpty()) {
+							Position = "";
+						}
+						user.setPositionLevel(Position);
+						break;
+					case 7:
+						nextCell.setCellType(Cell.CELL_TYPE_STRING);
+						String Contact1 = nextCell.getStringCellValue();
+						if (Contact1 == null || Contact1.isEmpty()) {
+							Contact1 = "";
+						}
+						user.setMobileNo(Contact1);
+						break;
+					default:
+						break;
+					}
+
+				}
+				userlist1.add(user1);
+
+				user1.setIsActive(true);
+				user1.setTenantId("ch.chandigarh");
+				user1.setAuditDetails(auditDetailsUtil.getAuditDetails(memberrequest.getRequestInfo(),
+						CommonConstants.ACTION_CREATE));
+	
+				if(!user1.getName().equalsIgnoreCase(nn)) {
+				IdGenerationResponse id = idgenrepository.getId(memberrequest.getRequestInfo(), user1.getTenantId(),
+						config.getAlfIdgenName(), config.getAlfIdgenFormat(), 1);
+				nn=user1.getName();
+
+					user1.setId(id.getIdResponses().get(0).getId());
+					user.setApplicationId(id.getIdResponses().get(0).getId());
+				} else {
+
+					System.out.println("NNNN");
+				}
+				
+				if (!user1.getContactNumber().isEmpty()) {
+					String uuid = UUID.randomUUID().toString();
+					user1.setUuid(uuid);
+					user.setAlfUuid(user1.getUuid());
+					repository2.createGroup(user1);
+
+					String uuid7 = UUID.randomUUID().toString();
+
+					user.setApplicationUuid(uuid7);
+					user.setAlfUuid(user1.getUuid());
+
+					userList.add(user);
+				} else {
+					String uuid7 = UUID.randomUUID().toString();
+
+					user.setApplicationUuid(uuid7);
+
+					user.setAlfUuid(user1.getUuid());
+
+					userList.add(user);
+				}
+
+			}
+			System.out.println(userList);
+			log.debug("size of userList=" + userList);
+
+			if (!userList.isEmpty()) {
+				log.debug("size of userList=" + userList.size());
+				userListFinal = repository.saveGuest(userList, memberrequest);
+				return new ResponseEntity(ResponseInfoWrapper.builder()
+						.responseInfo(ResponseInfo.builder().status(CommonConstants.SUCCESS).build())
+						.responseBody(userListFinal).build(), HttpStatus.CREATED);
+			} else {
+				throw new CustomException(HttpStatus.INTERNAL_SERVER_ERROR.toString(), CommonConstants.ID_GENERATION_1);
+			}
+
+		} catch (Exception exception) {
+			
+			exception.printStackTrace();
+			throw new CustomException(HttpStatus.INTERNAL_SERVER_ERROR.toString(), CommonConstants.ID_GENERATION_2);
 		}
 	}
 
