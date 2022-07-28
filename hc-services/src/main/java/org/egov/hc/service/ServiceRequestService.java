@@ -661,6 +661,7 @@ public class ServiceRequestService {
 							&& !request.getServices().get(servReqCount).getAssignee().isEmpty())
 						updateRequest.setCurrent_assignee(request.getServices().get(servReqCount).getAssignee().get(0));
 				}
+				updateRequest.setIsUT(request.getServices().get(servReqCount).getIsUT());
 				RequestInfoWrapper infowraperforupdate = RequestInfoWrapper.builder().requestBody(updateRequest)
 						.build();
 

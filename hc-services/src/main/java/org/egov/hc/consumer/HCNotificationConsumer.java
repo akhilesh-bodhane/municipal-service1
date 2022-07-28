@@ -73,13 +73,13 @@ public class HCNotificationConsumer {
 	private RestTemplate rest;
 
 	@KafkaListener(topics = { "${kafka.topics.save.service}", "${kafka.topics.update.service}" })
-
 	public void listen(final HashMap<String, Object> record, @Header(KafkaHeaders.RECEIVED_TOPIC) String topic)
 			throws JSONException {
 		ObjectMapper mapper = new ObjectMapper();
 		ServiceRequest serviceReqRequest = new ServiceRequest();
 		try {
 			serviceReqRequest = mapper.convertValue(record, ServiceRequest.class);
+			log.error("Notification Topic Name : " + topic);
 			log.info("Request Horticulture Sending sms : " + mapper.writeValueAsString(serviceReqRequest));
 		} catch (final Exception e) {
 			log.error("Error while listening to value: " + record + " on topic: " + topic + ": " + e);
