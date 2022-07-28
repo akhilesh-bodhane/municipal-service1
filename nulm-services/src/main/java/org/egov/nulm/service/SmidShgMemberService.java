@@ -894,7 +894,7 @@ List<Files> attachmentsUrls = fileStoreUtils.getFiles(guest.getTenantId(), attac
 						}
 						user.setGender(gender);
 						break;	
-					case 16:
+					case 166:
 						nextCell.setCellType(Cell.CELL_TYPE_NUMERIC);
 						
 						Double dateOfFormation11 = nextCell.getNumericCellValue();
