@@ -71,11 +71,13 @@ public class HCNotificationConsumer {
 
 	@Autowired
 	private RestTemplate rest;
+	
+	@Autowired
+	ObjectMapper mapper;
 
 	@KafkaListener(topics = { "${kafka.topics.save.service}", "${kafka.topics.update.service}" })
 	public void listen(final HashMap<String, Object> record, @Header(KafkaHeaders.RECEIVED_TOPIC) String topic)
 			throws JSONException {
-		ObjectMapper mapper = new ObjectMapper();
 		ServiceRequest serviceReqRequest = new ServiceRequest();
 		try {
 			serviceReqRequest = mapper.convertValue(record, ServiceRequest.class);
@@ -250,7 +252,7 @@ public class HCNotificationConsumer {
 					serviceRequestobj.setRequestInfo(requestInfoset);
 
 					log.info(" Sending notification to " + userName);
-
+					log.info("Request Employee Sending sms : " + mapper.writeValueAsString(serviceRequestobj));
 					sendNotification(serviceRequestobj, messageMap, null);
 
 				}
