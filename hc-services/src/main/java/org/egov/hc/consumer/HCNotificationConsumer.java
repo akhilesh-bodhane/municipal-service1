@@ -226,7 +226,7 @@ public class HCNotificationConsumer {
 							.setService_request_id(serviceReqRequest.getServices().get(0).getService_request_id());
 					serviceRequest.setIsRoleSpecific(true);
 					String by = serviceRequest.getCreatedBy();
-
+					serviceRequest.setIsUT(serviceReqRequest.getServices().get(0).getIsUT());;
 					List Actioninfolist = new ArrayList();
 
 					ActionInfo newActionInfo = ActionInfo.builder().uuid(UUID.randomUUID().toString())
