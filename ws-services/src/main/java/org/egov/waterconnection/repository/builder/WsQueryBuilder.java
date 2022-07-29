@@ -69,22 +69,22 @@ public class WsQueryBuilder {
 			+ " plumber.name as plumber_name, plumber.licenseno,"
 			+ " plumber.mobilenumber as plumber_mobileNumber, plumber.gender as plumber_gender, plumber.fatherorhusbandname, plumber.correspondenceaddress,"
 			+ " plumber.relationship, " + holderSelectValues
-			+ " application.id as application_id, application.applicationno as app_applicationno, application.activitytype as app_activitytype, application.applicationstatus as app_applicationstatus, application.action as app_action, application.comments as app_comments, application.is_ferrule_applicable as app_ferrule, application.security_charges as app_securitycharge, application.total_amount_paid, application.additionalcharges, application.constructioncharges, application.outstandingcharges, application.paymentmode, application.ismeterstolen,application.application_code,application.waterchargestt as waterChargesTT,"
+			+ " application.id as application_id, application.applicationno as app_applicationno, application.activitytype as app_activitytype, application.applicationstatus as app_applicationstatus, application.action as app_action, application.comments as app_comments, application.is_ferrule_applicable as app_ferrule, application.security_charges as app_securitycharge, application.total_amount_paid, application.additionalcharges, application.constructioncharges, application.outstandingcharges,  application.ismeterstolen,application.application_code,application.waterchargestt as waterChargesTT,"
 			+ " application.createdBy as app_createdBy, application.lastModifiedBy as app_lastModifiedBy, application.createdTime as app_createdTime, application.lastModifiedTime as app_lastModifiedTime, "
 			+ " property.id as waterpropertyid, property.usagecategory, property.usagesubcategory,property.plotareatt as ploatAreaTT,pta.doorno as propertyplotno,pta.locality as propertysectorno "
-			+ " FROM eg_ws_connection conn "
-			+  LEFT_OUTER_JOIN_STRING 
-			+ "egcl_bill bl  on  conn.applicationno = bl.consumercode"
-			+  LEFT_OUTER_JOIN_STRING
-			+ "egcl_paymentdetail pyd on pyd.billid = bl.id"
-			+  LEFT_OUTER_JOIN_STRING
-			+ "egcl_payment py on py.id= pyd.paymentid"			
+			+ " FROM eg_ws_connection conn "			
 			+  INNER_JOIN_STRING 
 			+ "eg_ws_service wc ON wc.connection_id = conn.id"
 			+  INNER_JOIN_STRING 
 			+ "eg_pt_address pta ON conn.property_id = pta.propertyid"
 			+  INNER_JOIN_STRING
 			+ "eg_ws_application application ON application.wsid = conn.id"
+		        +  LEFT_OUTER_JOIN_STRING 
+			+ "egcl_bill bl  on  application.applicationno = bl.consumercode"
+			+  LEFT_OUTER_JOIN_STRING
+			+ "egcl_paymentdetail pyd on pyd.billid = bl.id"
+			+  LEFT_OUTER_JOIN_STRING
+			+ "egcl_payment py on py.id= pyd.paymentid"
 			+  INNER_JOIN_STRING
 			+ "eg_ws_property property ON property.wsid = conn.id"
 			+  LEFT_OUTER_JOIN_STRING
