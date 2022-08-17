@@ -1,0 +1,25 @@
+{
+    "RequestInfo": {
+        "apiId": "Mihy",
+        "ver": ".01",
+        "action": "",
+        "did": "1",
+        "key": "",
+        "msgId": "20170310130900|en_IN",
+        "requesterId": "",
+        "authToken": "589c49df-6f3f-40c5-ba5a-792934b4d417"
+    },
+    "services": [
+        {
+            "comment": "bb",
+            "assignee": [],
+            "roleList": [],
+            "isRoleSpecific": true,
+            "serviceType": "REMOVAL OF DEAD/DANGEROUS/DRY TREES",
+            "service_request_id": "CH-HC-2020-09-09-003216",
+            "wfDocuments": [],
+            "locality": "ch",
+            "action": "VERIFY AND FORWARD TO SDO"
+        }
+    ]
+}
