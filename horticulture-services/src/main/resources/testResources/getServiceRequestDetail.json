@@ -1,0 +1,56 @@
+{
+    "RequestInfo": {
+        "apiId": "Rainmaker",
+        "ver": ".01",
+        "ts": "",
+        "action": "_create",
+        "did": "1",
+        "key": "",
+        "msgId": "20170310130900|en_IN",
+        "authToken": "5000921c-b0f5-401e-a553-7c607d29f152",
+        "userInfo": {
+            "id": 94,
+            "userName": "9865845654",
+            "salutation": null,
+            "name": "Nikunj ",
+            "gender": null,
+            "mobileNumber": "9865845654",
+            "emailId": "",
+            "altContactNumber": null,
+            "pan": null,
+            "aadhaarNumber": null,
+            "permanentAddress": "pune",
+            "permanentCity": "ch.chandigarh",
+            "permanentPinCode": null,
+            "correspondenceAddress": "pune",
+            "correspondenceCity": null,
+            "correspondencePinCode": null,
+            "active": true,
+            "locale": null,
+            "type": "CITIZEN",
+            "accountLocked": false,
+            "accountLockedDate": 0,
+            "fatherOrHusbandName": "Test",
+            "signature": null,
+            "bloodGroup": null,
+            "photo": null,
+            "identificationMark": null,
+            "createdBy": 0,
+            "lastModifiedBy": 1,
+            "tenantId": "ch",
+            "roles": [
+                {
+                    "code": "CITIZEN",
+                    "name": "Citizen",
+                    "tenantId": "ch"
+                }
+            ],
+            "uuid": "c1d197d5-17c0-40d0-afc6-3096339575ad",
+            "createdDate": "23-04-2020 10:20:29",
+            "lastModifiedDate": "27-04-2020 13:34:01",
+            "dob": "4/8/1986",
+            "pwdExpiryDate": "22-07-2020 10:20:29"
+        }
+    },
+    "service_request_id": "MCC-HC-000346"
+}
