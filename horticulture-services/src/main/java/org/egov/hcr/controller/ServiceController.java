@@ -23,6 +23,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 
 import lombok.extern.slf4j.Slf4j;
@@ -50,6 +52,13 @@ public class ServiceController {
 			@RequestHeader("User-Agent") String request)
 			throws JSONException, InterruptedException, CloneNotSupportedException {
 
+		ObjectMapper mapper = new ObjectMapper();
+		try {
+			System.out.println("Create Req : " + mapper.writeValueAsString(serviceRequest));
+		} catch (JsonProcessingException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		try {
 			hcutils.validateJsonAddUpdateData(serviceRequest, HCConstants.SERVICEREQUESTCREATE);
 			if (serviceRequest.getServices().get(0).getIsEditState() == 1) {

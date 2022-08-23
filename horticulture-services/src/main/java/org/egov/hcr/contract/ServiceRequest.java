@@ -34,7 +34,7 @@ public class ServiceRequest implements Cloneable {
 		return (ServiceRequest) super.clone();
 	}
 
-	@JsonProperty("requestInfo")
+	@JsonProperty("RequestInfo")
 	private RequestInfo requestInfo = null;
 
 	@JsonProperty("services")
