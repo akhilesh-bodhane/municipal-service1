@@ -22,6 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
@@ -438,6 +439,13 @@ public class WorkflowIntegrator {
 
 	public BusinessServiceResponse getbussinessServiceDatafromprocesinstanceEdit(ServiceRequest serviceRequestGetData) {
 		BusinessServiceResponse bussinessServiceData = null;
+		ObjectMapper mapper = new ObjectMapper();
+		try {
+			System.out.println("WF SEARCH REQ : "+ mapper.writeValueAsString(serviceRequestGetData));
+		} catch (JsonProcessingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		bussinessServiceData = rest.postForObject(
 				hcConfiguration.getWfHost().concat(hcConfiguration.getWfBusinessServiceSearchPath()).concat("?")
 						.concat("tenantId=" + serviceRequestGetData.getServices().get(0).getCity()
