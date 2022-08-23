@@ -183,7 +183,7 @@ public class ServiceRequestService {
 				applicationNumberFormat = hcConfiguration.getApplicationNumberIdgenFormatForest();
 				applicationNumberFormatName = hcConfiguration.getApplicationNumberIdgenNameForest();
 			}
-
+		
 			IdGenerationResponse id = idgenrepository.getId(request.getRequestInfo(),
 					request.getServices().get(0).getTenantId(), applicationNumberFormatName, applicationNumberFormat,
 					1);
@@ -254,7 +254,7 @@ public class ServiceRequestService {
 
 			Boolean isut = Boolean
 					.parseBoolean(serviceRequest.get("isut") != null ? serviceRequest.get("isut").toString() : "false");
-			//serviceRequestData.setIsUT(isut);
+			// serviceRequestData.setIsUT(isut);
 
 			org.json.JSONObject objDocument = new org.json.JSONObject(
 					serviceRequest.get("service_request_document").toString());
@@ -308,7 +308,7 @@ public class ServiceRequestService {
 //			if (request.getServices().get(0).getIsUT())
 //				request.getServices().get(0).setServiceType(serviceType);
 
-			return getServiceResponse(request,true);
+			return getServiceResponse(request, true);
 		} catch (Exception e) {
 			throw new CustomException(HCConstants.UPDATE_REQUEST_EXCEPTION_CODE, e.getMessage());
 		}
@@ -497,7 +497,8 @@ public class ServiceRequestService {
 //						|| request.getServices().get(servReqCount).getAction().equals(HCConstants.VERIFY_FOR_CLOSURE)
 //						|| request.getServices().get(servReqCount).getAction().equals(HCConstants.FORWARDED_FOR_COMPLETION)
 				) {
-				//	getroles = wfIntegrator.parseBussinessServiceData(bussinessServiceData, request);
+					// getroles = wfIntegrator.parseBussinessServiceData(bussinessServiceData,
+					// request);
 
 					request.getServices().get(servReqCount).setRole(getroles);
 				}
@@ -638,7 +639,7 @@ public class ServiceRequestService {
 							&& !request.getServices().get(servReqCount).getAssignee().isEmpty())
 						updateRequest.setCurrent_assignee(request.getServices().get(servReqCount).getAssignee().get(0));
 				}
-				//updateRequest.setIsUT(request.getServices().get(servReqCount).getIsUT());
+				// updateRequest.setIsUT(request.getServices().get(servReqCount).getIsUT());
 				RequestInfoWrapper infowraperforupdate = RequestInfoWrapper.builder().requestBody(updateRequest)
 						.build();
 
@@ -1014,7 +1015,8 @@ public class ServiceRequestService {
 		Gson gson = new Gson();
 		String payloadData = gson.toJson(requestData, RequestData.class);
 
-	//	responseValidate = hCUtils.validateJsonAddUpdateData(payloadData, HCConstants.SERVICEREQUESTGETDETAIL);
+		// responseValidate = hCUtils.validateJsonAddUpdateData(payloadData,
+		// HCConstants.SERVICEREQUESTGETDETAIL);
 		if (responseValidate.equals("")) {
 			JSONArray serviceRequest = null;
 			try {
@@ -1159,7 +1161,8 @@ public class ServiceRequestService {
 		Gson gson = new Gson();
 		String payloadData = gson.toJson(requestData, RequestData.class);
 
-		//responseValidate = hCUtils.validateJsonAddUpdateData(payloadData, HCConstants.SERVICEREQUESTGET);
+		// responseValidate = hCUtils.validateJsonAddUpdateData(payloadData,
+		// HCConstants.SERVICEREQUESTGET);
 		if (responseValidate.equals("")) {
 
 			try {
@@ -1191,7 +1194,7 @@ public class ServiceRequestService {
 			throws JSONException, InterruptedException, CloneNotSupportedException {
 
 		ResponseEntity<ServiceRequest> responseBody = null;
-		String service_request_id_new = null;
+		String serviceRequestIdNew = null;
 		List<String> documentList = null;
 		String existingServicetype = null;
 		String existingServicetypeName = null;
@@ -1205,12 +1208,12 @@ public class ServiceRequestService {
 
 		String role = null;
 		String status = null;
-		String service_request_uuid = null;
+		String serviceRequestUuid = null;
 
 		if (null != serviceRequestGet) {
 			role = serviceRequestGet.getCurrent_assignee();
 			status = serviceRequestGet.getService_request_status();
-			service_request_uuid = serviceRequestGet.getService_request_uuid();
+			serviceRequestUuid = serviceRequestGet.getService_request_uuid();
 
 			documentList = new ArrayList<>();
 			for (int docCnt = 0; docCnt < serviceRequestGet.getMediaList().size(); docCnt++) {
@@ -1233,12 +1236,20 @@ public class ServiceRequestService {
 		String newServicetype = serviceRequest.getServices().get(0).getServiceType().toUpperCase();
 		String newServicetypeName = serviceRequest.getServices().get(0).getServiceTypeName().toUpperCase();
 
+		log.info("Checking service requet type");
 		// service request type
+		System.out.println("New Service Type : " + newServicetype + ", New Service Type Name : " + newServicetypeName);
+		System.out.println(
+				"Old Service Type : " + existingServicetype + ", Old Service Type Name : " + existingServicetypeName);
 
 		// If Both are same service type name and WF type
-		if (existingServicetypeName.equals(newServicetypeName) && existingServicetype.equals(newServicetype)) {
+		if (existingServicetypeName.equalsIgnoreCase(newServicetypeName)
+				&& existingServicetype.equalsIgnoreCase(newServicetype)) {
 			// Just Updates the data
+			responseBody = updateServiceRequest(serviceRequest, serviceRequestId, requestHeader, role, status,
+					serviceRequestUuid, existingServicetype);
 
+			updateServiceRequestStatusEdit(serviceRequest, serviceRequestId, existingServicetype, role);
 		} else {
 			// Create new App Id and reject the previous and create new application
 
@@ -1246,56 +1257,58 @@ public class ServiceRequestService {
 
 		// checking service request type
 
-		log.info("Checking service requet type");
-		/*if (serviceRequestServiceType.equals(requestdataServiceType)
-				&& serviceRequest.getServices().get(0).getIsUT() == serviceRequestGet.getIsUT()) {
-			System.out.println("Update HC - Type:true==true and isUT : true==true");
-
-			responseBody = updateServiceRequest(serviceRequest, service_request_id, requestHeader, role, status,
-					service_request_uuid, servicetype);
-
-			updateServiceRequestStatusEdit(serviceRequest, service_request_id, serviceRequestServiceType, role);
-
-		} else {
-
-			serviceRequest.getServices().get(0).setServiceType(requestdataServiceType);
-			RequestInfo requestInfo = serviceRequest.getRequestInfo();
-			ServiceRequest serviceRequestdata = getUserInfo(serviceRequest);
-
-			if (serviceRequest.getServices().get(0).getIsUT() != serviceRequestGet.getIsUT()) {
-				System.out.println("Update HC - Type:true!=true and isUT : true!=true");
-//				service_request_id_new = generateServiceRequestId(serviceRequest);
-				ServiceRequest clone = serviceRequest.clone();
-				clone.getRequestInfo().setUserInfo(serviceRequestdata.getRequestInfo().getUserInfo());
-				ServiceResponse create = create(clone, requestHeader);
-				service_request_id_new = create.getServices().get(0).getService_request_id();
-				serviceRequest.setRequestInfo(requestInfo);
-				updateProcesinstancedata(serviceRequest, service_request_id, service_request_id_new,
-						serviceRequestServiceType, serviceRequestGet);
-				return create;
-			} else {
-				System.out.println("Update HC - Type:true!=true and isUT : true==true");
-				// add entry in service request table with service_request_id =
-				// service_request_id_old_1
-				service_request_id_new = generateServiceRequestId(service_request_id);
-
-				employeeInfo.setUserInfo(serviceRequest.getRequestInfo().getUserInfo());
-
-				serviceRequestdata.getServices().get(0).setService_request_id_old(service_request_id);
-				responseBody = serviceRequestEdit(serviceRequestdata, service_request_id_new, role, status,
-						service_request_id, service_request_id_new, requestType);
-
-				serviceRequest.setRequestInfo(requestInfo);
-
-				updateProcesinstancedata(serviceRequest, service_request_id, service_request_id_new,
-						serviceRequestServiceType, serviceRequestGet);
-				// serviceRequest.getServices().get(0).setService_request_id(service_request_id_new);
-//				responseBody.getBody().getServices().get(0).setService_request_id(service_request_id_new);
-			}
-
-			log.info("updated service request");
-		}
-*/
+		/*
+		 * if (serviceRequestServiceType.equals(requestdataServiceType) &&
+		 * serviceRequest.getServices().get(0).getIsUT() == serviceRequestGet.getIsUT())
+		 * { System.out.println("Update HC - Type:true==true and isUT : true==true");
+		 * 
+		 * responseBody = updateServiceRequest(serviceRequest, service_request_id,
+		 * requestHeader, role, status, service_request_uuid, servicetype);
+		 * 
+		 * updateServiceRequestStatusEdit(serviceRequest, service_request_id,
+		 * serviceRequestServiceType, role);
+		 * 
+		 * } else {
+		 * 
+		 * serviceRequest.getServices().get(0).setServiceType(requestdataServiceType);
+		 * RequestInfo requestInfo = serviceRequest.getRequestInfo(); ServiceRequest
+		 * serviceRequestdata = getUserInfo(serviceRequest);
+		 * 
+		 * if (serviceRequest.getServices().get(0).getIsUT() !=
+		 * serviceRequestGet.getIsUT()) {
+		 * System.out.println("Update HC - Type:true!=true and isUT : true!=true"); //
+		 * service_request_id_new = generateServiceRequestId(serviceRequest);
+		 * ServiceRequest clone = serviceRequest.clone();
+		 * clone.getRequestInfo().setUserInfo(serviceRequestdata.getRequestInfo().
+		 * getUserInfo()); ServiceResponse create = create(clone, requestHeader);
+		 * service_request_id_new = create.getServices().get(0).getService_request_id();
+		 * serviceRequest.setRequestInfo(requestInfo);
+		 * updateProcesinstancedata(serviceRequest, service_request_id,
+		 * service_request_id_new, serviceRequestServiceType, serviceRequestGet); return
+		 * create; } else {
+		 * System.out.println("Update HC - Type:true!=true and isUT : true==true"); //
+		 * add entry in service request table with service_request_id = //
+		 * service_request_id_old_1 service_request_id_new =
+		 * generateServiceRequestId(service_request_id);
+		 * 
+		 * employeeInfo.setUserInfo(serviceRequest.getRequestInfo().getUserInfo());
+		 * 
+		 * serviceRequestdata.getServices().get(0).setService_request_id_old(
+		 * service_request_id); responseBody = serviceRequestEdit(serviceRequestdata,
+		 * service_request_id_new, role, status, service_request_id,
+		 * service_request_id_new, requestType);
+		 * 
+		 * serviceRequest.setRequestInfo(requestInfo);
+		 * 
+		 * updateProcesinstancedata(serviceRequest, service_request_id,
+		 * service_request_id_new, serviceRequestServiceType, serviceRequestGet); //
+		 * serviceRequest.getServices().get(0).setService_request_id(
+		 * service_request_id_new); //
+		 * responseBody.getBody().getServices().get(0).setService_request_id(
+		 * service_request_id_new); }
+		 * 
+		 * log.info("updated service request"); }
+		 */
 		// UT - Service type should be same as business service name in WF - reset
 //		if (serviceRequest.getServices().get(0).getIsUT())
 //			serviceRequest.getServices().get(0).setServiceType(serviceType);
@@ -1558,8 +1571,8 @@ public class ServiceRequestService {
 
 	}
 
-	private ResponseEntity<ServiceRequest> updateServiceRequest(ServiceRequest request, String service_request_id,
-			String requestHeader, String role, String status, String service_request_uuid, String type) {
+	private ResponseEntity<ServiceRequest> updateServiceRequest(ServiceRequest request, String serviceRequestId,
+			String requestHeader, String role, String status, String serviceRequestUuid, String serviceType) {
 		RequestInfoWrapper infoWrapper = new RequestInfoWrapper();
 		try {
 
@@ -1587,8 +1600,8 @@ public class ServiceRequestService {
 
 				documentDetailsJson.put("document", jsonArray);
 				request.getServices().get(0).setServiceMedia(documentDetailsJson.toJSONString());
-				request.getServices().get(0).setService_request_id(service_request_id);
-				request.getServices().get(0).setServiceType(type);
+				request.getServices().get(0).setService_request_id(serviceRequestId);
+				request.getServices().get(0).setServiceType(serviceType);
 				request.getServices().get(0).setCurrent_assignee(role);
 				request.getServices().get(0).setService_request_status(HCConstants.EDITED);
 				request.getServices().get(0).setCreatedBy(request.getAuditDetails().getCreatedBy());
