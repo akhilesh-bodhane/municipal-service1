@@ -144,6 +144,13 @@ public class ServiceRequestService {
 	public ServiceResponse create(ServiceRequest request, String requestHeader) throws JSONException {
 		log.info("Service layer for createss");
 
+		ObjectMapper mapper = new ObjectMapper();
+		try {
+			System.out.println("Service Layer Create Req : " + mapper.writeValueAsString(request));
+		} catch (JsonProcessingException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		// generate Service request id using IdGen
 		String serviceRequestId = generateServiceRequestId(request);
 		log.info("Generate service request id :" + serviceRequestId);

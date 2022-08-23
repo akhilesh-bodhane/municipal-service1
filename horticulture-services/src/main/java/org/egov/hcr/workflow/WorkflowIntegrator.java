@@ -148,9 +148,7 @@ public class WorkflowIntegrator {
 							}
 						}
 					}
-				}
-
-				else {
+				} else {
 					if (null != request.getServices().get(0).getWfDocuments()
 							&& !request.getServices().get(0).getWfDocuments().isEmpty()) {
 						for (int index = 0; index < servicerequestdata.getWfDocuments().size(); index++) {
@@ -441,7 +439,7 @@ public class WorkflowIntegrator {
 		BusinessServiceResponse bussinessServiceData = null;
 		ObjectMapper mapper = new ObjectMapper();
 		try {
-			System.out.println("WF SEARCH REQ : "+ mapper.writeValueAsString(serviceRequestGetData));
+			System.out.println("WF SEARCH REQ : " + mapper.writeValueAsString(serviceRequestGetData));
 		} catch (JsonProcessingException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
