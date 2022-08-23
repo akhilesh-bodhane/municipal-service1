@@ -52,6 +52,8 @@ public class IdGenRepository {
 		IdGenerationRequest req = IdGenerationRequest.builder().idRequests(reqList).requestInfo(requestInfo).build();
 		IdGenerationResponse response = null;
 		try {		
+			ObjectMapper mapper = new ObjectMapper();
+			System.out.println("ID GEN REQ : "+ mapper.writeValueAsString(req));
 			response = restTemplate.postForObject(config.getIdGenHost() + config.getIdGenPath(), req,
 					IdGenerationResponse.class);
 		} catch (HttpClientErrorException e) {
