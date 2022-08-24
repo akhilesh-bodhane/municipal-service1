@@ -190,7 +190,7 @@ public class ServiceRequestService {
 				applicationNumberFormat = hcConfiguration.getApplicationNumberIdgenFormatForest();
 				applicationNumberFormatName = hcConfiguration.getApplicationNumberIdgenNameForest();
 			}
-		
+
 			IdGenerationResponse id = idgenrepository.getId(request.getRequestInfo(),
 					request.getServices().get(0).getTenantId(), applicationNumberFormatName, applicationNumberFormat,
 					1);
@@ -1253,6 +1253,9 @@ public class ServiceRequestService {
 		if (existingServicetypeName.equalsIgnoreCase(newServicetypeName)
 				&& existingServicetype.equalsIgnoreCase(newServicetype)) {
 			// Just Updates the data
+			System.out.println(
+					"Update HORTICULTURE - ServiceTypeName:true==true And ServiceType : true==true, Application Number : "
+							+ serviceRequestId);
 			responseBody = updateServiceRequest(serviceRequest, serviceRequestId, requestHeader, role, status,
 					serviceRequestUuid, existingServicetype);
 
@@ -1260,66 +1263,43 @@ public class ServiceRequestService {
 		} else {
 			// Create new App Id and reject the previous and create new application
 
+			serviceRequest.getServices().get(0).setServiceType(newServicetype);
+			RequestInfo requestInfo = serviceRequest.getRequestInfo();
+			ServiceRequest serviceRequestdata = getUserInfo(serviceRequest);
+
+			if (!existingServicetypeName.equalsIgnoreCase(newServicetypeName)) {
+				System.out.println(
+						"Update HORTICULTURE - ServiceTypeName:true!=true And ServiceType : true==true, Application Number : "
+								+ serviceRequestId);
+//				service_request_id_new = generateServiceRequestId(serviceRequest);
+				ServiceRequest clone = serviceRequest.clone();
+				clone.getRequestInfo().setUserInfo(serviceRequestdata.getRequestInfo().getUserInfo());
+				ServiceResponse create = create(clone, requestHeader);
+				serviceRequestIdNew = create.getServices().get(0).getService_request_id();
+				serviceRequest.setRequestInfo(requestInfo);
+				updateProcesinstancedata(serviceRequest, serviceRequestId, serviceRequestIdNew, existingServicetype,
+						serviceRequestGet);
+				return create;
+			} else {
+				System.out.println(
+						"Update HORTICULTURE - ServiceTypeName:true!=true And ServiceType : true!=true, Application Number : "
+								+ serviceRequestId);
+				// add entry in service request table with service_request_id =
+				// service_request_id_old_1
+				serviceRequestIdNew = generateServiceRequestId(serviceRequestId);
+
+				employeeInfo.setUserInfo(serviceRequest.getRequestInfo().getUserInfo());
+
+				serviceRequestdata.getServices().get(0).setService_request_id_old(serviceRequestId);
+				responseBody = serviceRequestEdit(serviceRequestdata, serviceRequestIdNew, role, status,
+						serviceRequestId, serviceRequestIdNew, newServicetype);
+
+				serviceRequest.setRequestInfo(requestInfo);
+
+				updateProcesinstancedata(serviceRequest, serviceRequestId, serviceRequestIdNew, existingServicetype,
+						serviceRequestGet);
+			}
 		}
-
-		// checking service request type
-
-		/*
-		 * if (serviceRequestServiceType.equals(requestdataServiceType) &&
-		 * serviceRequest.getServices().get(0).getIsUT() == serviceRequestGet.getIsUT())
-		 * { System.out.println("Update HC - Type:true==true and isUT : true==true");
-		 * 
-		 * responseBody = updateServiceRequest(serviceRequest, service_request_id,
-		 * requestHeader, role, status, service_request_uuid, servicetype);
-		 * 
-		 * updateServiceRequestStatusEdit(serviceRequest, service_request_id,
-		 * serviceRequestServiceType, role);
-		 * 
-		 * } else {
-		 * 
-		 * serviceRequest.getServices().get(0).setServiceType(requestdataServiceType);
-		 * RequestInfo requestInfo = serviceRequest.getRequestInfo(); ServiceRequest
-		 * serviceRequestdata = getUserInfo(serviceRequest);
-		 * 
-		 * if (serviceRequest.getServices().get(0).getIsUT() !=
-		 * serviceRequestGet.getIsUT()) {
-		 * System.out.println("Update HC - Type:true!=true and isUT : true!=true"); //
-		 * service_request_id_new = generateServiceRequestId(serviceRequest);
-		 * ServiceRequest clone = serviceRequest.clone();
-		 * clone.getRequestInfo().setUserInfo(serviceRequestdata.getRequestInfo().
-		 * getUserInfo()); ServiceResponse create = create(clone, requestHeader);
-		 * service_request_id_new = create.getServices().get(0).getService_request_id();
-		 * serviceRequest.setRequestInfo(requestInfo);
-		 * updateProcesinstancedata(serviceRequest, service_request_id,
-		 * service_request_id_new, serviceRequestServiceType, serviceRequestGet); return
-		 * create; } else {
-		 * System.out.println("Update HC - Type:true!=true and isUT : true==true"); //
-		 * add entry in service request table with service_request_id = //
-		 * service_request_id_old_1 service_request_id_new =
-		 * generateServiceRequestId(service_request_id);
-		 * 
-		 * employeeInfo.setUserInfo(serviceRequest.getRequestInfo().getUserInfo());
-		 * 
-		 * serviceRequestdata.getServices().get(0).setService_request_id_old(
-		 * service_request_id); responseBody = serviceRequestEdit(serviceRequestdata,
-		 * service_request_id_new, role, status, service_request_id,
-		 * service_request_id_new, requestType);
-		 * 
-		 * serviceRequest.setRequestInfo(requestInfo);
-		 * 
-		 * updateProcesinstancedata(serviceRequest, service_request_id,
-		 * service_request_id_new, serviceRequestServiceType, serviceRequestGet); //
-		 * serviceRequest.getServices().get(0).setService_request_id(
-		 * service_request_id_new); //
-		 * responseBody.getBody().getServices().get(0).setService_request_id(
-		 * service_request_id_new); }
-		 * 
-		 * log.info("updated service request"); }
-		 */
-		// UT - Service type should be same as business service name in WF - reset
-//		if (serviceRequest.getServices().get(0).getIsUT())
-//			serviceRequest.getServices().get(0).setServiceType(serviceType);
-
 		return getServiceResponse(responseBody);
 	}
 
