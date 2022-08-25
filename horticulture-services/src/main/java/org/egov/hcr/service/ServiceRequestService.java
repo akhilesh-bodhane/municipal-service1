@@ -1909,16 +1909,9 @@ public class ServiceRequestService {
 	}
 
 	private String getbussinessServiceDatafromprocesinstance(ServiceRequest serviceRequestGetData) {
-		ObjectMapper mapper = new ObjectMapper();
-		try {
-			System.out.println("WF : " + mapper.writeValueAsString(serviceRequestGetData));
-		} catch (JsonProcessingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 		String bussinessServiceData = rest.postForObject(
 				hcConfiguration.getWfHost().concat(hcConfiguration.getWfBusinessServiceSearchPath()).concat("?")
-						.concat("tenantId=" + serviceRequestGetData.getServices().get(0).getLocality()
+						.concat("tenantId=" + serviceRequestGetData.getServices().get(0).getTenantId()
 								+ "&businessServices="
 								+ serviceRequestGetData.getServices().get(0).getServiceType().toUpperCase()),
 				serviceRequestGetData, String.class);
