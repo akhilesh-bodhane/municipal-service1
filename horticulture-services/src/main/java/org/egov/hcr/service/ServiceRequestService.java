@@ -259,9 +259,9 @@ public class ServiceRequestService {
 			String tenantId = (String) serviceRequest.get("tenant_id");
 			serviceRequestData.setTenantId(tenantId);
 
-			Boolean isut = Boolean
-					.parseBoolean(serviceRequest.get("isut") != null ? serviceRequest.get("isut").toString() : "false");
-			// serviceRequestData.setIsUT(isut);
+			serviceRequestData.setServiceTypeName(
+					serviceRequest.get("service_type_name") != null ? serviceRequest.get("service_type_name").toString()
+							: "");
 
 			org.json.JSONObject objDocument = new org.json.JSONObject(
 					serviceRequest.get("service_request_document").toString());
@@ -608,6 +608,7 @@ public class ServiceRequestService {
 
 				serviceRequest.setServiceMedia(documentDetailsJson.toJSONString());
 
+				updateRequest.setServiceTypeName(request.getServices().get(0).getServiceTypeName());
 				updateRequest.setService_request_id(service_request_id);
 				updateRequest.setCreatedTime(request.getAuditDetails().getCreatedTime());
 				updateRequest.setService_request_uuid(serviceRequest.getService_request_uuid());
@@ -2846,7 +2847,7 @@ public class ServiceRequestService {
 			// smsTemplate.replace("<service_request_type>",serviceRequest.getServices().get(0).getServiceType());
 			log.info(smsTemplate);
 			SMSRequest smsRequest = new SMSRequest(sc.getContactNumber(), smsTemplate);
-			hCProducer.push(hcConfiguration.getSmsNotifTopic(), smsRequest);
+			// hCProducer.push(hcConfiguration.getSmsNotifTopic(), smsRequest);
 			log.info("sending message to " + sc.getContactNumber());
 			log.info("sms data pushed to kafka");
 		}

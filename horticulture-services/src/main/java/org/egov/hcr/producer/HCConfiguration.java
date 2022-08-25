@@ -156,8 +156,8 @@ public class HCConfiguration {
 		@Value("${notification.sms.enabled}")
 		private Boolean isSMSNotificationEnabled;
 			
-		@Value("${kafka.topics.notification.sms}")
-		private String smsNotifTopic;
+//		@Value("${kafka.topics.notification.sms}")
+//		private String smsNotifTopic;
 
 		@Value("${notification.email.enabled}")
 		private Boolean isEmailNotificationEnabled;
