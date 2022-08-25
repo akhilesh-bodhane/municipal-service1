@@ -45,7 +45,7 @@ public class ServiceController {
 	 * 
 	 * @param ServiceReqRequest
 	 * 
-	 * @author Dhanaji Patil
+	 * @author Prakash
 	 */
 	@RequestMapping(value = "/_create", method = RequestMethod.POST)
 	public ResponseEntity<?> create(@RequestBody ServiceRequest serviceRequest,
@@ -79,7 +79,7 @@ public class ServiceController {
 	 * 
 	 * @param ServiceReqRequest
 	 * 
-	 * @author Dhanaji Patil
+	 * @author Prakash
 	 */
 
 	@PostMapping("_getDetail")
@@ -96,7 +96,7 @@ public class ServiceController {
 	 * 
 	 * @param RequestInfoWrapper,RequestData
 	 * 
-	 * @author Dhanaji Patil
+	 * @author Prakash
 	 */
 
 	@PostMapping("_get")
@@ -113,31 +113,23 @@ public class ServiceController {
 	 * 
 	 * @param ServiceReqRequest
 	 * 
-	 * @author Savita Sutar
+	 * @author Prakash
 	 */
 
 	@RequestMapping(value = "/_update", method = RequestMethod.POST)
 	public ResponseEntity<?> update(@RequestBody ServiceRequest serviceRequest,
 			@RequestHeader("User-Agent") String requestHeader) throws JSONException {
-
-		String responseValidate = "";
-
-		Gson gson = new Gson();
-		String payloadData = gson.toJson(serviceRequest.getServices().get(0), ServiceRequestData.class);
-
-		//responseValidate = hcutils.validateJsonAddUpdateData(payloadData, HCConstants.SERVICEREQUESTUPDATE);
-		if (responseValidate.equals("")) {
-
+		try {
+			hcutils.validateJsonAddUpdateData(serviceRequest, HCConstants.SERVICEREQUESTUPDATE);
 			ServiceResponse response = service.update(serviceRequest, requestHeader);
 			return new ResponseEntity<>(response, HttpStatus.CREATED);
 
-		} else {
+		} catch (Exception e) {
 			return new ResponseEntity<>(
 					ResponseInfoWrapper.builder().responseInfo(ResponseInfo.builder().status(HCConstants.FAIL).build())
-							.responseBody(responseValidate).build(),
+							.responseBody("Invalid Request Parameters.").build(),
 					HttpStatus.BAD_REQUEST);
 		}
-
 	}
 
 	@RequestMapping(value = "/_scheduler", method = RequestMethod.POST)

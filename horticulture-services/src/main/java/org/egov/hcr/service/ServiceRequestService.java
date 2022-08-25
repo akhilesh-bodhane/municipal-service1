@@ -296,30 +296,14 @@ public class ServiceRequestService {
 	 * @throws JSONException
 	 */
 	public ServiceResponse update(ServiceRequest request, String requestHeader) throws JSONException {
-
 		try {
-
-			// UT - Service type should be same as business service name in WF
-//			String serviceType = "";
-//			if (request.getServices() != null && !request.getServices().isEmpty()) {
-//				serviceType = request.getServices().get(0).getServiceType();
-//				if (request.getServices().get(0).getIsUT())
-//					request.getServices().get(0).setServiceType("UT-" + serviceType);
-//			}
-
 			enrichServiceRequestForUpdate(request, requestHeader);
 			if (null == request.getActionInfo())
 				request.setActionInfo(new ArrayList<ActionInfo>());
-
-			// UT - Service type should be same as business service name in WF - reset
-//			if (request.getServices().get(0).getIsUT())
-//				request.getServices().get(0).setServiceType(serviceType);
-
 			return getServiceResponse(request, true);
 		} catch (Exception e) {
 			throw new CustomException(HCConstants.UPDATE_REQUEST_EXCEPTION_CODE, e.getMessage());
 		}
-
 	}
 
 	/**
@@ -1925,7 +1909,13 @@ public class ServiceRequestService {
 	}
 
 	private String getbussinessServiceDatafromprocesinstance(ServiceRequest serviceRequestGetData) {
-
+		ObjectMapper mapper = new ObjectMapper();
+		try {
+			System.out.println("WF : " + mapper.writeValueAsString(serviceRequestGetData));
+		} catch (JsonProcessingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		String bussinessServiceData = rest.postForObject(
 				hcConfiguration.getWfHost().concat(hcConfiguration.getWfBusinessServiceSearchPath()).concat("?")
 						.concat("tenantId=" + serviceRequestGetData.getServices().get(0).getLocality()
