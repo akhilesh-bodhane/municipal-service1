@@ -92,8 +92,8 @@ public class RequestData {
 	@JsonProperty("treeCount")
 	private Long treeCount;
 
-	@JsonProperty("isUT")
-	private Boolean isUT;
+	@JsonProperty("serviceTypeName")
+	private String serviceTypeName;
 
 	@JsonProperty("dataPayload")
 	private JSONObject dataPayload;

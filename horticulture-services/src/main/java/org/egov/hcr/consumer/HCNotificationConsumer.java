@@ -285,10 +285,10 @@ public class HCNotificationConsumer {
 					if (hcConfiguration.getIsSMSNotificationEnabled()) {
 						SMSRequest smsRequest = prepareSMSRequest(service, actionInfo,
 								serviceReqRequest.getRequestInfo(), messageMap, service_request_id_new);
-						if (null != smsRequest)
-							hCProducer.push(hcConfiguration.getSmsNotifTopic(), smsRequest);
-						else
-							log.info("SMS notification is empty in this case");
+//						if (null != smsRequest)
+//							hCProducer.push(hcConfiguration.getSmsNotifTopic(), smsRequest);
+//						else
+//							log.info("SMS notification is empty in this case");
 					}
 
 					if (hcConfiguration.getIsEmailNotificationEnabled()
@@ -1401,7 +1401,7 @@ public class HCNotificationConsumer {
 								serviceReqRequest.getRequestInfo(), messageMap, action, serviceRequestDate, days);
 
 						log.info(" Sending sms : " + smsRequest);
-						hCProducer.push(hcConfiguration.getSmsNotifTopic(), smsRequest);
+						//hCProducer.push(hcConfiguration.getSmsNotifTopic(), smsRequest);
 
 					}
 
