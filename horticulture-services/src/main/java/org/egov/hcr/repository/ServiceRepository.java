@@ -87,7 +87,7 @@ public class ServiceRepository {
 					actualResult = (JSONArray) jdbcTemplate
 							.query(queryBuilder.SELECT_SERVICE_DETAIL_FOR_CITIZEN,
 									new Object[] { requestData.getService_request_id(),
-											requestData.getAuditDetails().getCreatedBy(), requestData.getServiceTypeName() },
+											requestData.getAuditDetails().getCreatedBy() },
 									rowMapper);
 
 				} else {

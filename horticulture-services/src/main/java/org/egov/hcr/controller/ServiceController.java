@@ -127,7 +127,7 @@ public class ServiceController {
 		} catch (Exception e) {
 			return new ResponseEntity<>(
 					ResponseInfoWrapper.builder().responseInfo(ResponseInfo.builder().status(HCConstants.FAIL).build())
-							.responseBody("Invalid Request Parameters.").build(),
+							.responseBody(e.getMessage()).build(),
 					HttpStatus.BAD_REQUEST);
 		}
 	}
