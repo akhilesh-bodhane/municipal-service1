@@ -344,4 +344,7 @@ public class ServiceRequestData {
 
 	@JsonProperty("serviceTypeName")
 	private String serviceTypeName;
+	
+	@JsonProperty("checkpoints")
+	private org.json.simple.JSONObject checkPoints;
 }
