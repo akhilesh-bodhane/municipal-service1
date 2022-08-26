@@ -644,7 +644,7 @@ public class ServiceRequestService {
 
 				if (request.getServices().get(servReqCount).getAction().equals(WorkFlowConfigs.ACTION_REJECT)
 						|| (request.getServices().get(servReqCount).getAction()
-								.equals(WorkFlowConfigs.ACTION_COMPLETE)))
+								.equals(WorkFlowConfigs.APPROVE)))
 
 				{
 					User user = new User();
