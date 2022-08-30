@@ -573,9 +573,8 @@ public class ServiceRequestService {
 
 				// Update service request form
 
-				ServiceRequestData serviceRequestGet = getData(service_request_id);
 				String bussinessServiceDataForStatus = wfIntegrator.parseBussinessServiceDataForStatus(
-						bussinessServiceDatafromprocesinstance, request, serviceRequestGet);
+						bussinessServiceDatafromprocesinstance, request, serviceRequest);
 
 				ServiceRequestData updateRequest = new ServiceRequestData();
 				List<String> documentlist = new ArrayList<>();
@@ -664,9 +663,7 @@ public class ServiceRequestService {
 				log.info(" Checking action ");
 
 				if (request.getServices().get(servReqCount).getAction().equals(WorkFlowConfigs.ACTION_REJECT)
-						|| (request.getServices().get(servReqCount).getAction().equals(WorkFlowConfigs.APPROVE)))
-
-				{
+						|| (request.getServices().get(servReqCount).getAction().equals(WorkFlowConfigs.APPROVE))) {
 					User user = new User();
 
 					String tenantIdSplited = getTenantid(serviceRequest.getTenantId());
@@ -754,16 +751,16 @@ public class ServiceRequestService {
 					request.getRequestInfo().setMsgId(msgId + "|" + hcConfiguration.getFallbackLocale());
 
 					if (request.getServices().get(servReqCount).getIsRoleSpecific().equals(true)) {
-						String tenantid = request.getRequestInfo().getUserInfo().getTenantId().split("[.]")[0];
-						Map<String, String> messageMap = notificationConsumer.getLocalizationMessage(tenantid,
-								request.getRequestInfo());
-						String role = request.getServices().get(0).getRole();
-
-						List<String> list = new ArrayList<String>(Arrays.asList(role.split(",")));
-
-						for (int roleCnt = 0; roleCnt < list.size(); roleCnt++) {
-							notificationConsumer.getRolewiseUserList(request, role, messageMap);
-						}
+//						String tenantid = request.getRequestInfo().getUserInfo().getTenantId().split("[.]")[0];
+//						Map<String, String> messageMap = notificationConsumer.getLocalizationMessage(tenantid,
+//								request.getRequestInfo());
+//						String role = request.getServices().get(0).getRole();
+//
+//						List<String> list = new ArrayList<String>(Arrays.asList(role.split(",")));
+//
+//						for (int roleCnt = 0; roleCnt < list.size(); roleCnt++) {
+//							notificationConsumer.getRolewiseUserList(request, role, messageMap);
+//						}
 					} else {
 
 						if (null != assigneeList && assigneeList.size() > 0) {
