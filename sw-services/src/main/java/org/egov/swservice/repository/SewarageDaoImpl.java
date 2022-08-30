@@ -8,9 +8,11 @@ import org.egov.common.contract.request.RequestInfo;
 import org.egov.swservice.config.SWConfiguration;
 import org.egov.swservice.model.SearchCriteria;
 import org.egov.swservice.model.SewerageConnection;
+import org.egov.swservice.model.SewerageConnectionCount;
 import org.egov.swservice.model.SewerageConnectionRequest;
 import org.egov.swservice.producer.SewarageConnectionProducer;
 import org.egov.swservice.repository.builder.SWQueryBuilder;
+import org.egov.swservice.repository.rowmapper.SewerageCountRowMapper;
 import org.egov.swservice.repository.rowmapper.SewerageRowMapper;
 import org.egov.swservice.util.SWConstants;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +38,11 @@ public class SewarageDaoImpl implements SewarageDao {
 	@Autowired
 	private SewerageRowMapper sewarageRowMapper;
 
+	
+	@Autowired
+	private SewerageCountRowMapper sewarageCountRowMapper;
+	
+	
 	@Autowired
 	private SWConfiguration swConfiguration;
 
@@ -69,6 +76,27 @@ public class SewarageDaoImpl implements SewarageDao {
 			log.info("Sewerage search result size:{}",sewarageConnectionList.size());
 		}
 		return sewarageConnectionList;
+	}
+	
+	@Override
+	public List<SewerageConnectionCount> getSewerageConnectionListCount(SearchCriteria criteria, RequestInfo requestInfo) {
+		List<Object> preparedStatement = new ArrayList<>();
+		String query = swQueryBuilder.getSearchQueryStringCount(criteria, preparedStatement, requestInfo);
+		if (query == null)
+			return Collections.emptyList();
+		// if (log.isDebugEnabled()) {
+			StringBuilder str = new StringBuilder("Sewerage query : ").append(query);
+			log.info(str.toString());
+		// }
+		List<SewerageConnectionCount> sewarageConnectionCount = jdbcTemplate.query(query, preparedStatement.toArray(),
+				sewarageCountRowMapper);
+		
+		if (sewarageConnectionCount == null) {
+			return Collections.emptyList();
+		}else {
+			log.info("Sewerage search result size:{}",sewarageConnectionCount.size());
+		}
+		return sewarageConnectionCount;
 	}
 
 	public void updateSewerageConnection(SewerageConnectionRequest sewerageConnectionRequest,

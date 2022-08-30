@@ -6,8 +6,10 @@ import javax.validation.Valid;
 import org.egov.swservice.model.RequestInfoWrapper;
 import org.egov.swservice.model.SearchCriteria;
 import org.egov.swservice.model.SewerageConnection;
+import org.egov.swservice.model.SewerageConnectionCount;
 import org.egov.swservice.model.SewerageConnectionRequest;
 import org.egov.swservice.model.SewerageConnectionResponse;
+import org.egov.swservice.model.SewerageCountConnectionResponse;
 import org.egov.swservice.service.SewarageService;
 import org.egov.swservice.util.ResponseInfoFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,6 +57,20 @@ public class SewarageController {
 
 		SewerageConnectionResponse response = SewerageConnectionResponse.builder()
 				.sewerageConnections(sewerageConnectionList).responseInfo(responseInfoFactory
+						.createResponseInfoFromRequestInfo(requestInfoWrapper.getRequestInfo(), true))
+				.build();
+		return new ResponseEntity<>(response, HttpStatus.OK);
+
+	}
+	
+	@RequestMapping(value = "/_searchCount", method = RequestMethod.POST)
+	public ResponseEntity<SewerageCountConnectionResponse> searchCount(@Valid @RequestBody RequestInfoWrapper requestInfoWrapper,
+			@Valid @ModelAttribute SearchCriteria criteria) {
+		List<SewerageConnectionCount> sewerageConnectionList = sewarageService.searchCount(criteria,
+				requestInfoWrapper.getRequestInfo());
+
+		SewerageCountConnectionResponse response = SewerageCountConnectionResponse.builder()
+				.sewerageCountConnections(sewerageConnectionList).responseInfo(responseInfoFactory
 						.createResponseInfoFromRequestInfo(requestInfoWrapper.getRequestInfo(), true))
 				.build();
 		return new ResponseEntity<>(response, HttpStatus.OK);
