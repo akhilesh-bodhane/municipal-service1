@@ -31,6 +31,7 @@ import org.egov.hcr.contract.ServiceRequest;
 import org.egov.hcr.contract.ServiceResponse;
 import org.egov.hcr.model.ActionHistory;
 import org.egov.hcr.model.ActionInfo;
+import org.egov.hcr.model.BusinessServiceResponse;
 import org.egov.hcr.model.ProcessInstance;
 import org.egov.hcr.model.ProcessInstanceRequest;
 import org.egov.hcr.model.RequestData;
@@ -469,36 +470,41 @@ public class ServiceRequestService {
 
 		String jsonRole = "";
 		String employeeUuid = null;
+		String service_request_id = null;
 
 		for (int servReqCount = 0; servReqCount < serviceReqs.size(); servReqCount++) {
 
-			String service_request_id = request.getServices().get(servReqCount).getService_request_id();
+			service_request_id = request.getServices().get(servReqCount).getService_request_id();
 			List<String> roleList = request.getServices().get(servReqCount).getRoleList();
 			List<String> assigneeList = new ArrayList<>();
 			if (null != roleList && !roleList.isEmpty()) {
 				request.getServices().get(servReqCount).setRole(roleList.get(0));
 			}
+
+			BusinessServiceResponse bussinessServiceDatafromprocesinstance = wfIntegrator
+					.getbussinessServiceDatafromprocesinstanceEdit(request);
+
 			if (request.getServices().get(servReqCount).getIsRoleSpecific().equals(true)) {
 
-				String bussinessServiceData = getbussinessServiceDatafromprocesinstance(request);
+//				String bussinessServiceData = getbussinessServiceDatafromprocesinstance(request);
 
-				if (request.getServices().get(servReqCount).getAction().equals(HCConstants.VERIFY_AND_FORWARD_TO_SDO)
-						|| request.getServices().get(servReqCount).getAction()
-								.equals(HCConstants.FORWARD_FOR_INSPECTION)
-//						|| request.getServices().get(servReqCount).getAction().equals(HCConstants.VERIFY_FOR_CLOSURE)
-//						|| request.getServices().get(servReqCount).getAction().equals(HCConstants.FORWARDED_FOR_COMPLETION)
-				) {
-					// getroles = wfIntegrator.parseBussinessServiceData(bussinessServiceData,
-					// request);
+				getroles = wfIntegrator.parseBussinessServiceData(bussinessServiceDatafromprocesinstance, request);
 
-					request.getServices().get(servReqCount).setRole(getroles);
-				}
-				if (request.getServices().get(servReqCount).getAction().equals(HCConstants.INSPECT)
-						|| (request.getServices().get(servReqCount).getAction().equals(HCConstants.APPROVE))) {
-					getroles = parseInspectedBussinessServiceData(bussinessServiceData, request);
-					request.getServices().get(servReqCount).setRole(getroles);
-				}
-
+				/*
+				 * if (request.getServices().get(servReqCount).getAction().equals(HCConstants.
+				 * VERIFY_AND_FORWARD) || request.getServices().get(servReqCount).getAction()
+				 * .equals(HCConstants.COMMENT_AND_FORWARD)) { getroles =
+				 * wfIntegrator.parseBussinessServiceData(
+				 * bussinessServiceDatafromprocesinstance, request);
+				 * 
+				 * request.getServices().get(servReqCount).setRole(getroles); } if
+				 * (request.getServices().get(servReqCount).getAction().equals(HCConstants.
+				 * INSPECT) ||
+				 * (request.getServices().get(servReqCount).getAction().equals(HCConstants.
+				 * APPROVE))) { getroles =
+				 * parseInspectedBussinessServiceData(bussinessServiceData, request);
+				 * request.getServices().get(servReqCount).setRole(getroles); }
+				 */
 				roleList.add(getroles);
 				jsonRole = getroles;
 
@@ -506,7 +512,6 @@ public class ServiceRequestService {
 
 				if (null != request.getServices().get(servReqCount).getRoleList()
 						&& request.getServices().get(servReqCount).getRoleList().size() > 0) {
-
 					String role = request.getServices().get(servReqCount).getRoleList().get(0);
 					assigneeList = serviceRepository.getRoleDetails(request, role);
 					jsonRole = role;
@@ -568,6 +573,10 @@ public class ServiceRequestService {
 
 				// Update service request form
 
+				ServiceRequestData serviceRequestGet = getData(service_request_id);
+				String bussinessServiceDataForStatus = wfIntegrator.parseBussinessServiceDataForStatus(
+						bussinessServiceDatafromprocesinstance, request, serviceRequestGet);
+
 				ServiceRequestData updateRequest = new ServiceRequestData();
 				List<String> documentlist = new ArrayList<>();
 
@@ -598,26 +607,37 @@ public class ServiceRequestService {
 				updateRequest.setService_request_uuid(serviceRequest.getService_request_uuid());
 				updateRequest.setTenantId(serviceRequest.getTenantId());
 
-				if (request.getServices().get(servReqCount).getAction().equals(HCConstants.APPROVE)
-						|| request.getServices().get(servReqCount).getAction().equals(HCConstants.VERIFY_FOR_CLOSURE)
-						|| request.getServices().get(servReqCount).getAction()
-								.equals(HCConstants.FORWARD_FOR_COMPLETION))
-					updateRequest.setService_request_status(HCConstants.APPROVED_STATUS);
-				else if (request.getServices().get(servReqCount).getAction().equals(HCConstants.COMPLETE))
-					updateRequest.setService_request_status(HCConstants.COMPLETED_STATUS);
-				else if (request.getServices().get(servReqCount).getAction().equals(HCConstants.VERIFY_AND_FORWARD))
-					updateRequest.setService_request_status(HCConstants.ASSIGNED_STATUS);
-				else if (request.getServices().get(servReqCount).getAction()
-						.equals(HCConstants.VERIFY_AND_FORWARD_TO_SDO))
-					updateRequest.setService_request_status(HCConstants.ASSIGNED_STATUS);
-				else if (request.getServices().get(servReqCount).getAction().equals(HCConstants.INSPECT))
-					updateRequest.setService_request_status(HCConstants.INSPECTED_STATUS);
-				else if (request.getServices().get(servReqCount).getAction().equals(HCConstants.REQUEST_CLARIFICATION))
-					updateRequest.setService_request_status(HCConstants.ASSIGNED_STATUS);
-				else if (request.getServices().get(servReqCount).getAction().equals(HCConstants.REJECT))
-					updateRequest.setService_request_status(HCConstants.REJECTED_STATUS);
-				else if (request.getServices().get(servReqCount).getAction().equals(HCConstants.FORWARD_FOR_INSPECTION))
-					updateRequest.setService_request_status(HCConstants.INSPECTED_STATUS);
+				/*
+				 * if (request.getServices().get(servReqCount).getAction().equals(HCConstants.
+				 * APPROVE) ||
+				 * request.getServices().get(servReqCount).getAction().equals(HCConstants.
+				 * VERIFY_FOR_CLOSURE) || request.getServices().get(servReqCount).getAction()
+				 * .equals(HCConstants.FORWARD_FOR_COMPLETION))
+				 * updateRequest.setService_request_status(HCConstants.APPROVED_STATUS); else if
+				 * (request.getServices().get(servReqCount).getAction().equals(HCConstants.
+				 * COMPLETE))
+				 * updateRequest.setService_request_status(HCConstants.COMPLETED_STATUS); else
+				 * if (request.getServices().get(servReqCount).getAction().equals(HCConstants.
+				 * VERIFY_AND_FORWARD))
+				 * updateRequest.setService_request_status(HCConstants.ASSIGNED_STATUS); else if
+				 * (request.getServices().get(servReqCount).getAction()
+				 * .equals(HCConstants.VERIFY_AND_FORWARD_TO_SDO))
+				 * updateRequest.setService_request_status(HCConstants.ASSIGNED_STATUS); else if
+				 * (request.getServices().get(servReqCount).getAction().equals(HCConstants.
+				 * INSPECT))
+				 * updateRequest.setService_request_status(HCConstants.INSPECTED_STATUS); else
+				 * if (request.getServices().get(servReqCount).getAction().equals(HCConstants.
+				 * REQUEST_CLARIFICATION))
+				 * updateRequest.setService_request_status(HCConstants.ASSIGNED_STATUS); else if
+				 * (request.getServices().get(servReqCount).getAction().equals(HCConstants.
+				 * REJECT))
+				 * updateRequest.setService_request_status(HCConstants.REJECTED_STATUS); else if
+				 * (request.getServices().get(servReqCount).getAction().equals(HCConstants.
+				 * FORWARD_FOR_INSPECTION))
+				 * updateRequest.setService_request_status(HCConstants.INSPECTED_STATUS);
+				 */
+
+				updateRequest.setService_request_status(bussinessServiceDataForStatus);
 
 				updateRequest.setServiceMedia(documentDetailsJson.toJSONString());
 				updateRequest.setLastModifiedBy(auditDetails.getLastModifiedBy());
@@ -643,8 +663,7 @@ public class ServiceRequestService {
 				log.info(" Checking action ");
 
 				if (request.getServices().get(servReqCount).getAction().equals(WorkFlowConfigs.ACTION_REJECT)
-						|| (request.getServices().get(servReqCount).getAction()
-								.equals(WorkFlowConfigs.APPROVE)))
+						|| (request.getServices().get(servReqCount).getAction().equals(WorkFlowConfigs.APPROVE)))
 
 				{
 					User user = new User();

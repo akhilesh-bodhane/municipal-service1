@@ -40,6 +40,9 @@ public class HCConstants {
 	public static final String SUBMITTED = "SUBMITTED";
 	public static final String VERIFY_AND_FORWARD = "VERIFY AND FORWARD";
 	public static final String VERIFY_AND_FORWARD_TO_SDO = "VERIFY AND FORWARD TO SDO";
+	
+	public static final String COMMENT_AND_FORWARD = "COMMENT AND FORWARD";	
+	
 	public static final String FORWARD_FOR_INSPECTION = "FORWARD FOR INSPECTION";
 	public static final String EDIT = "EDIT";
 	public static final String REJECT = "REJECT";
