@@ -607,6 +607,7 @@ public class ServiceRequestService {
 				updateRequest.setService_request_uuid(serviceRequest.getService_request_uuid());
 				updateRequest.setTenantId(serviceRequest.getTenantId());
 
+				updateRequest.setCheckPoints(request.getServices().get(0).getCheckPoints());
 				/*
 				 * if (request.getServices().get(servReqCount).getAction().equals(HCConstants.
 				 * APPROVE) ||
@@ -1841,8 +1842,10 @@ public class ServiceRequestService {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-//			if (serviceRequestGetData.getServices().get(0).getIsUT() == serviceRequestGet.getIsUT())
-//				saveBulkProcessInstance(ProcessInstanceList);
+
+//			if (serviceRequestGetData.getServices().get(0).getServiceTypeName()
+//					.equalsIgnoreCase(serviceRequestGet.getServiceTypeName()))
+			saveBulkProcessInstance(ProcessInstanceList);
 
 			try {
 				System.out.println("HC WF : 8 : " + objectMapper.writeValueAsString(serviceRequestGetData));
