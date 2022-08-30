@@ -176,6 +176,37 @@ public class SWQueryBuilder {
 			 return addPaginationWrapper(query.toString(), preparedStatement, criteria);
 		return query.toString();
 	}
+	
+	
+	public String getSearchQueryStringCount(SearchCriteria criteria, List<Object> preparedStatement,
+			RequestInfo requestInfo) {
+		if(criteria.isEmpty())
+			return null;
+		StringBuilder query = new StringBuilder(SEWERAGE_SEARCH_QUERY);
+		
+		if (!StringUtils.isEmpty(criteria.getTenantId())) {
+			addClauseIfRequired(preparedStatement, query);
+			query.append(" conn.tenantid = ? ");
+			preparedStatement.add(criteria.getTenantId());
+		}
+		
+
+		if (criteria.getFromDate() != null) {
+			addClauseIfRequired(preparedStatement, query);
+			query.append("  sc.appCreatedDate >= ? ");
+			preparedStatement.add(criteria.getFromDate());
+		}
+		if (criteria.getToDate() != null) {
+			addClauseIfRequired(preparedStatement, query);
+			query.append("  sc.appCreatedDate <= ? ");
+			preparedStatement.add(criteria.getToDate());
+		}
+		//Add OrderBy clause
+		query.append(" ORDER BY sc.appCreatedDate DESC");
+		
+		
+		return query.toString();
+	}
 
 	private void addClauseIfRequired(List<Object> values, StringBuilder queryString) {
 		if (values.isEmpty())
