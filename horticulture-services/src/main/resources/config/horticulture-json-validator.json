@@ -158,7 +158,7 @@
          "validateRegularExp":"^[a-zA-Z0-9-, ]{1,200}"
       },
 	  "serviceTypeName":{
-         "mandatory":"true",
+         "mandatory":"false",
          "validateRegularExp":"^[a-zA-Z0-9-/,& ]{1,180}$"
       }
      
