@@ -1021,24 +1021,11 @@ public class ServiceRequestService {
 	}
 
 	public ResponseEntity<?> getServiceRequestDetails(RequestData requestData) {
+		try {
+			hCUtils.validateJsonGet(requestData, HCConstants.SERVICEREQUESTGETDETAIL);
+			JSONArray serviceRequest = serviceRepository.getServiceRequest(requestData);
 
-		String responseValidate = "";
-
-		Gson gson = new Gson();
-		String payloadData = gson.toJson(requestData, RequestData.class);
-
-		// responseValidate = hCUtils.validateJsonAddUpdateData(payloadData,
-		// HCConstants.SERVICEREQUESTGETDETAIL);
-		if (responseValidate.equals("")) {
-			JSONArray serviceRequest = null;
-			try {
-				serviceRequest = serviceRepository.getServiceRequest(requestData);
-
-			} catch (Exception e) {
-				log.info("null");
-			}
 			String bisinesssla = getBussinessServiceSla(requestData);
-
 			if (serviceRequest == null || serviceRequest.isEmpty()) {
 
 				return new ResponseEntity<>(ResponseInfoWrapper.builder()
@@ -1050,13 +1037,12 @@ public class ServiceRequestService {
 						.responseInfo(ResponseInfo.builder().status(HCConstants.SUCCESS).resMsgId(bisinesssla).build())
 						.responseBody(serviceRequest).build(), HttpStatus.OK);
 			}
-		} else {
+		} catch (Exception e) {
 			return new ResponseEntity<>(
 					ResponseInfoWrapper.builder().responseInfo(ResponseInfo.builder().status(HCConstants.FAIL).build())
-							.responseBody(responseValidate).build(),
+							.responseBody(e.getMessage()).build(),
 					HttpStatus.BAD_REQUEST);
 		}
-
 	}
 
 	private String getBussinessServiceSla(RequestData requestData) {
