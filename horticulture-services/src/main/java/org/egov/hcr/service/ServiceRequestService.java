@@ -1022,7 +1022,7 @@ public class ServiceRequestService {
 
 	public ResponseEntity<?> getServiceRequestDetails(RequestData requestData) {
 		try {
-			hCUtils.validateJsonGet(requestData, HCConstants.SERVICEREQUESTGETDETAIL);
+			//hCUtils.validateJsonGet(requestData, HCConstants.SERVICEREQUESTGETDETAIL);
 			JSONArray serviceRequest = serviceRepository.getServiceRequest(requestData);
 
 			String bisinesssla = getBussinessServiceSla(requestData);
