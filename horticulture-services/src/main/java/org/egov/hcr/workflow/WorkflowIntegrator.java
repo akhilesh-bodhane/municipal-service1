@@ -435,6 +435,34 @@ public class WorkflowIntegrator {
 
 	}
 
+	public String parseBussinessServiceDataForStatus(BusinessServiceResponse bussinessServiceData,
+			ServiceRequest request, ServiceRequestData serviceRequestGet) throws JSONException {
+
+		StringBuilder status = null;
+		Boolean found = new Boolean(false);
+		for (BusinessService businessService : bussinessServiceData.getBusinessServices()) {
+			for (State s : businessService.getStates()) {
+				if (s.getApplicationStatus().trim()
+						.equalsIgnoreCase(serviceRequestGet.getService_request_status().trim())) {
+					for (Action a : s.getActions()) {
+						if (a.getAction().equals(request.getServices().get(0).getAction())) {
+							status = new StringBuilder(a.getNextState());
+							found = true;
+							break;
+						}
+					}
+					if (found)
+						break;
+				}
+				if (found)
+					break;
+			}
+			if (found)
+				break;
+		}
+		return status != null ? status.toString() : "";
+	}
+
 	public BusinessServiceResponse getbussinessServiceDatafromprocesinstanceEdit(ServiceRequest serviceRequestGetData) {
 		BusinessServiceResponse bussinessServiceData = null;
 		ObjectMapper mapper = new ObjectMapper();
