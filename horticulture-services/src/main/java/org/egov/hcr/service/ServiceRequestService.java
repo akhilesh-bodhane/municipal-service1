@@ -607,6 +607,7 @@ public class ServiceRequestService {
 				updateRequest.setService_request_uuid(serviceRequest.getService_request_uuid());
 				updateRequest.setTenantId(serviceRequest.getTenantId());
 
+				updateRequest.setCheckPoints(request.getServices().get(0).getCheckPoints());
 				/*
 				 * if (request.getServices().get(servReqCount).getAction().equals(HCConstants.
 				 * APPROVE) ||
@@ -1020,24 +1021,11 @@ public class ServiceRequestService {
 	}
 
 	public ResponseEntity<?> getServiceRequestDetails(RequestData requestData) {
+		try {
+			hCUtils.validateJsonGet(requestData, HCConstants.SERVICEREQUESTGETDETAIL);
+			JSONArray serviceRequest = serviceRepository.getServiceRequest(requestData);
 
-		String responseValidate = "";
-
-		Gson gson = new Gson();
-		String payloadData = gson.toJson(requestData, RequestData.class);
-
-		// responseValidate = hCUtils.validateJsonAddUpdateData(payloadData,
-		// HCConstants.SERVICEREQUESTGETDETAIL);
-		if (responseValidate.equals("")) {
-			JSONArray serviceRequest = null;
-			try {
-				serviceRequest = serviceRepository.getServiceRequest(requestData);
-
-			} catch (Exception e) {
-				log.info("null");
-			}
 			String bisinesssla = getBussinessServiceSla(requestData);
-
 			if (serviceRequest == null || serviceRequest.isEmpty()) {
 
 				return new ResponseEntity<>(ResponseInfoWrapper.builder()
@@ -1049,13 +1037,12 @@ public class ServiceRequestService {
 						.responseInfo(ResponseInfo.builder().status(HCConstants.SUCCESS).resMsgId(bisinesssla).build())
 						.responseBody(serviceRequest).build(), HttpStatus.OK);
 			}
-		} else {
+		} catch (Exception e) {
 			return new ResponseEntity<>(
 					ResponseInfoWrapper.builder().responseInfo(ResponseInfo.builder().status(HCConstants.FAIL).build())
-							.responseBody(responseValidate).build(),
+							.responseBody(e.getMessage()).build(),
 					HttpStatus.BAD_REQUEST);
 		}
-
 	}
 
 	private String getBussinessServiceSla(RequestData requestData) {
@@ -1841,8 +1828,10 @@ public class ServiceRequestService {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-//			if (serviceRequestGetData.getServices().get(0).getIsUT() == serviceRequestGet.getIsUT())
-//				saveBulkProcessInstance(ProcessInstanceList);
+
+//			if (serviceRequestGetData.getServices().get(0).getServiceTypeName()
+//					.equalsIgnoreCase(serviceRequestGet.getServiceTypeName()))
+			saveBulkProcessInstance(ProcessInstanceList);
 
 			try {
 				System.out.println("HC WF : 8 : " + objectMapper.writeValueAsString(serviceRequestGetData));

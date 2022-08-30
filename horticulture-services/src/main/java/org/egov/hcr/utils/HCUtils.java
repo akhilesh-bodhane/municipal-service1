@@ -13,6 +13,7 @@ import org.egov.common.contract.request.RequestInfo;
 import org.egov.hcr.contract.AuditDetails;
 import org.egov.hcr.contract.RequestInfoWrapper;
 import org.egov.hcr.contract.ServiceRequest;
+import org.egov.hcr.model.RequestData;
 import org.egov.hcr.model.ServiceRequestData;
 import org.egov.hcr.producer.HCConfiguration;
 import org.egov.tracer.model.CustomException;
@@ -111,6 +112,31 @@ public class HCUtils {
 		try {
 			Gson gson = new Gson();
 			String payloadData = gson.toJson(serviceRequest.getServices().get(0), ServiceRequestData.class);
+
+			JSONParser jsonParser = new JSONParser();
+			JSONObject jsonValidator = (JSONObject) jsonParser.parse(jsonAddObject.toJSONString());
+			jsonValidator = (JSONObject) jsonValidator.get(applicationType);
+
+			JSONObject jsonRequested = (JSONObject) jsonParser.parse(payloadData.toString());
+
+			if (jsonValidator == null || jsonRequested == null) {
+				throw new CustomException("HC_OPERATION_CREATE", "Unable to load the JSON file or requested data.");
+			}
+			responseText = commonValidation(jsonValidator, jsonRequested);
+
+		} catch (Exception e) {
+			throw new CustomException("HC_SAVE_UPDATE_GET", "Invalid Application Type or Role or datapayload data");
+		}
+
+		if (!responseText.isEmpty())
+			throw new CustomException("HC_OPERATION_CREATE", responseText);
+	}
+
+	public void validateJsonGet(RequestData requestData, String applicationType) {
+		String responseText = "";
+		try {
+			Gson gson = new Gson();
+			String payloadData = gson.toJson(requestData, RequestData.class);
 
 			JSONParser jsonParser = new JSONParser();
 			JSONObject jsonValidator = (JSONObject) jsonParser.parse(jsonAddObject.toJSONString());
