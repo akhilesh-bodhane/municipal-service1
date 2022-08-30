@@ -10,6 +10,7 @@ import org.egov.swservice.config.SWConfiguration;
 import org.egov.swservice.model.Property;
 import org.egov.swservice.model.SearchCriteria;
 import org.egov.swservice.model.SewerageConnection;
+import org.egov.swservice.model.SewerageConnectionCount;
 import org.egov.swservice.model.SewerageConnectionRequest;
 import org.egov.swservice.model.workflow.BusinessService;
 import org.egov.swservice.repository.SewarageDao;
@@ -124,6 +125,32 @@ public class SewarageServiceImpl implements SewarageService {
 
 	public List<SewerageConnection> getSewerageConnectionsList(SearchCriteria criteria, RequestInfo requestInfo) {
 		return sewarageDao.getSewerageConnectionList(criteria, requestInfo);
+	}
+	
+
+	/**
+	 * 
+	 * @param criteria
+	 *            SewarageConnectionSearchCriteria contains search criteria on
+	 *            sewarage connection
+	 * @param requestInfo
+	 * @return List (Count) of matching sewarage connection
+	 */
+	public List<SewerageConnectionCount> searchCount(SearchCriteria criteria, RequestInfo requestInfo) {
+		List<SewerageConnectionCount> sewarageConnectionList = getSewerageConnectionsListCount(criteria, requestInfo);
+		return sewarageConnectionList;
+	}
+	
+	/**
+	 * 
+	 * @param criteria
+	 *            SewarageConnectionSearchCriteria contains search criteria on
+	 *            sewarage connection
+	 * @param requestInfo
+	 * @return List(Count)  of matching water connection
+	 */
+	public List<SewerageConnectionCount> getSewerageConnectionsListCount(SearchCriteria criteria, RequestInfo requestInfo) {
+		return sewarageDao.getSewerageConnectionListCount(criteria, requestInfo);
 	}
 
 	/**
