@@ -441,15 +441,26 @@ public class WorkflowIntegrator {
 		StringBuilder status = null;
 		Boolean found = new Boolean(false);
 		for (BusinessService businessService : bussinessServiceData.getBusinessServices()) {
-			for (State s : businessService.getStates()) {
+			List<State> states = businessService.getStates();
+			for (State s : states) {
 				if (s.getApplicationStatus().trim()
 						.equalsIgnoreCase(serviceRequestGet.getService_request_status().trim())) {
 					for (Action a : s.getActions()) {
 						if (a.getAction().equals(request.getServices().get(0).getAction())) {
-							status = new StringBuilder(a.getNextState());
-							found = true;
-							break;
+							for (State ss : states) {
+								if (ss.getUuid().equalsIgnoreCase(a.getNextState())) {
+									status = new StringBuilder(ss.getApplicationStatus());
+									found = true;
+									break;
+								}
+								if (found)
+									break;
+							}
+							if (found)
+								break;
 						}
+						if (found)
+							break;
 					}
 					if (found)
 						break;
@@ -474,7 +485,7 @@ public class WorkflowIntegrator {
 		}
 		bussinessServiceData = rest.postForObject(
 				hcConfiguration.getWfHost().concat(hcConfiguration.getWfBusinessServiceSearchPath()).concat("?")
-						.concat("tenantId=" + serviceRequestGetData.getServices().get(0).getCity()
+						.concat("tenantId=" + serviceRequestGetData.getServices().get(0).getLocality()
 								+ "&businessServices="
 								+ serviceRequestGetData.getServices().get(0).getServiceType().toUpperCase()),
 				serviceRequestGetData, BusinessServiceResponse.class);
