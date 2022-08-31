@@ -475,15 +475,7 @@ public class WorkflowIntegrator {
 	}
 
 	public BusinessServiceResponse getbussinessServiceDatafromprocesinstanceEdit(ServiceRequest serviceRequestGetData) {
-		BusinessServiceResponse bussinessServiceData = null;
-		ObjectMapper mapper = new ObjectMapper();
-		try {
-			System.out.println("WF SEARCH REQ : " + mapper.writeValueAsString(serviceRequestGetData));
-		} catch (JsonProcessingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		bussinessServiceData = rest.postForObject(
+		BusinessServiceResponse bussinessServiceData = rest.postForObject(
 				hcConfiguration.getWfHost().concat(hcConfiguration.getWfBusinessServiceSearchPath()).concat("?")
 						.concat("tenantId=" + serviceRequestGetData.getServices().get(0).getLocality()
 								+ "&businessServices="
