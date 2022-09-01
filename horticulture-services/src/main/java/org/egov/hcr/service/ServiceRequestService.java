@@ -1264,8 +1264,8 @@ public class ServiceRequestService {
 			// ServiceResponse create = create(serviceRequestdata, requestHeader);
 			serviceRequest.setRequestInfo(requestInfo);
 
-			updateProcesinstancedata(serviceRequest, serviceRequestId, serviceRequestIdNew, existingServicetype,
-					serviceRequestGet, role);
+			updateProcesinstancedata(serviceRequest, serviceRequestGet, serviceRequestId, serviceRequestIdNew,
+					existingServicetype, serviceRequestGet, role);
 		}
 		return getServiceResponse(responseBody);
 	}
@@ -1330,9 +1330,9 @@ public class ServiceRequestService {
 		return uuid;
 	}
 
-	private void updateProcesinstancedata(ServiceRequest serviceRequest, String service_request_id,
-			String service_request_id_new, String serviceRequestServiceType, ServiceRequestData serviceRequestGet,
-			String role) throws JSONException {
+	private void updateProcesinstancedata(ServiceRequest serviceRequest, ServiceRequestData serviceRequestGetOld,
+			String service_request_id, String service_request_id_new, String serviceRequestServiceType,
+			ServiceRequestData serviceRequestGet, String role) throws JSONException {
 		// geting data from processinstance with service_request_id
 //		ServiceRequest procesinstancedata = getProcesinstanceData(serviceRequest, service_request_id_new,
 //				service_request_id, serviceRequestServiceType, serviceRequestGet);
@@ -1346,7 +1346,10 @@ public class ServiceRequestService {
 		if (flag) {
 			// service request id (old) this service request status update(mark as Rejected)
 			serviceRequest.getServices().get(0).setAction(HCConstants.REJECT);
-			updateStatus(serviceRequest, service_request_id_new, service_request_id);
+			serviceRequest.getServices().get(0).setService_request_uuid(serviceRequestGetOld.getService_request_uuid());
+			serviceRequest.getServices().get(0).setCurrent_assignee(null);
+			serviceRequest.getServices().get(0).setService_request_id(service_request_id);
+			updateStatus(serviceRequest, service_request_id);
 			updateServiceRequestStatus(serviceRequest, service_request_id, serviceRequestServiceType);
 		}
 	}
@@ -1577,8 +1580,7 @@ public class ServiceRequestService {
 
 	}
 
-	private String updateStatus(ServiceRequest serviceRequest, String service_request_id_new,
-			String service_request_id) {
+	private String updateStatus(ServiceRequest serviceRequest, String service_request_id) {
 
 		final AuditDetails auditDetail = hCUtils
 				.getAuditDetail(String.valueOf(serviceRequest.getRequestInfo().getUserInfo().getId()), false);
