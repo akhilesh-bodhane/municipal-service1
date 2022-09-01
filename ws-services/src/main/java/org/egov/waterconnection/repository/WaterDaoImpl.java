@@ -11,11 +11,13 @@ import org.egov.waterconnection.model.BillGeneration;
 import org.egov.waterconnection.model.BillGenerationRequest;
 import org.egov.waterconnection.model.SearchCriteria;
 import org.egov.waterconnection.model.WaterConnection;
+import org.egov.waterconnection.model.WaterConnectionCount;
 import org.egov.waterconnection.model.WaterConnectionRequest;
 import org.egov.waterconnection.model.collection.PaymentRequest;
 import org.egov.waterconnection.producer.WaterConnectionProducer;
 import org.egov.waterconnection.repository.builder.WsQueryBuilder;
 import org.egov.waterconnection.repository.rowmapper.WaterRowMapper;
+import org.egov.waterconnection.repository.rowmapper.WaterRowMapperCount;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -38,6 +40,10 @@ public class WaterDaoImpl implements WaterDao {
 
 	@Autowired
 	private WaterRowMapper waterRowMapper;
+	
+	
+	@Autowired
+	private WaterRowMapperCount waterRowMapperCount;
 	
 	@Autowired
 	private WSConfiguration wsConfiguration;
@@ -81,6 +87,31 @@ public class WaterDaoImpl implements WaterDao {
 		//System.out.println(preparedStatement.toArray());
 		//System.out.println(preparedStatement);
 		//System.out.println(waterRowMapper.toString());
+		if (waterConnectionList == null) {
+			return Collections.emptyList();
+		}
+
+		return waterConnectionList;
+	}
+	
+	@Override
+	public List<WaterConnectionCount> getWaterConnectionListCount(SearchCriteria criteria,
+			RequestInfo requestInfo) {
+		List<Object> preparedStatement = new ArrayList<>();
+		String query = wsQueryBuilder.getSearchQueryStringCount(criteria, preparedStatement, requestInfo);
+		
+	
+		
+		StringBuilder str = new StringBuilder("Water query: ").append(query);
+		
+		if (query == null)
+			return Collections.emptyList();
+
+		
+		List<WaterConnectionCount> waterConnectionList = jdbcTemplate.query(query, preparedStatement.toArray(),
+				waterRowMapperCount);
+		
+		
 		if (waterConnectionList == null) {
 			return Collections.emptyList();
 		}
