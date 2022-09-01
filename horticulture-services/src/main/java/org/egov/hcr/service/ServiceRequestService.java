@@ -490,10 +490,8 @@ public class ServiceRequestService {
 					.getbussinessServiceDatafromprocesinstanceEdit(request);
 
 			if (request.getServices().get(servReqCount).getIsRoleSpecific().equals(true)) {
-
-				getroles = wfIntegrator.parseBussinessServiceData(bussinessServiceDatafromprocesinstance, request);
-
 				if (request.getServices().get(servReqCount).getAction().equals(HCConstants.INSPECT)) {
+					getroles = wfIntegrator.parseBussinessServiceData(bussinessServiceDatafromprocesinstance, request);
 					request.getServices().get(servReqCount).setRole(getroles);
 				}
 
@@ -1267,7 +1265,7 @@ public class ServiceRequestService {
 			serviceRequest.setRequestInfo(requestInfo);
 
 			updateProcesinstancedata(serviceRequest, serviceRequestId, serviceRequestIdNew, existingServicetype,
-					serviceRequestGet);
+					serviceRequestGet, role);
 		}
 		return getServiceResponse(responseBody);
 	}
@@ -1333,17 +1331,24 @@ public class ServiceRequestService {
 	}
 
 	private void updateProcesinstancedata(ServiceRequest serviceRequest, String service_request_id,
-			String service_request_id_new, String serviceRequestServiceType, ServiceRequestData serviceRequestGet)
-			throws JSONException {
-
+			String service_request_id_new, String serviceRequestServiceType, ServiceRequestData serviceRequestGet,
+			String role) throws JSONException {
 		// geting data from processinstance with service_request_id
-		ServiceRequest procesinstancedata = getProcesinstanceData(serviceRequest, service_request_id_new,
-				service_request_id, serviceRequestServiceType, serviceRequestGet);
+//		ServiceRequest procesinstancedata = getProcesinstanceData(serviceRequest, service_request_id_new,
+//				service_request_id, serviceRequestServiceType, serviceRequestGet);
 
-		// service request id (old) this service request status update(mark as Rejected)
-		updateStatus(procesinstancedata, service_request_id_new, service_request_id);
-		updateServiceRequestStatus(procesinstancedata, service_request_id, serviceRequestServiceType);
-
+		// Create New Application Process Instance using Employee
+		boolean flag = false;
+		if (hcConfiguration.getIsExternalWorkFlowEnabled()) {
+			serviceRequest.getServices().get(0).setAction(HCConstants.EINITIATE);
+			flag = wfIntegrator.callWorkFlow(serviceRequest, service_request_id_new, role, null);
+		}
+		if (flag) {
+			// service request id (old) this service request status update(mark as Rejected)
+			serviceRequest.getServices().get(0).setAction(HCConstants.REJECT);
+			updateStatus(serviceRequest, service_request_id_new, service_request_id);
+			updateServiceRequestStatus(serviceRequest, service_request_id, serviceRequestServiceType);
+		}
 	}
 
 	private String generateServiceRequestId(String service_request_id) {
@@ -1697,6 +1702,12 @@ public class ServiceRequestService {
 			additionalDetails.put("role", role);
 			processInstant.get().setAdditionalDetails(additionalDetails);
 
+			serviceRequestGetData.getServices().get(0).setAction("EINITIATE");
+			boolean flag = false;
+			if (hcConfiguration.getIsExternalWorkFlowEnabled()) {
+				flag = wfIntegrator.callWorkFlow(serviceRequestGetData, service_request_id_new, role, null);
+			}
+
 			List<ProcessInstance> processInstances = new ArrayList<>();
 			ArrayList<ProcessInstance> ProcessInstanceList = new ArrayList<>();
 			processInstances.add(processInstant.get());
@@ -1708,7 +1719,7 @@ public class ServiceRequestService {
 				e.printStackTrace();
 			}
 
-			saveBulkProcessInstance(ProcessInstanceList);
+			// saveBulkProcessInstance(ProcessInstanceList);
 		}
 
 		// })
@@ -2720,7 +2731,7 @@ public class ServiceRequestService {
 				infoWrapper = RequestInfoWrapper.builder().services(applicatinFormList).actionInfo(actionInfos)
 						.requestInfo(request.getRequestInfo()).requestBody(request.getServices().get(0)).build();
 
-				log.info("Service request create : " + infoWrapper);
+				log.info("Service request create : " + objectMapper.writeValueAsString(infoWrapper));
 
 				hCProducer.push(hcConfiguration.getSaveTopic(), infoWrapper);
 

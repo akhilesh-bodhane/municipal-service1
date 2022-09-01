@@ -51,6 +51,7 @@ public class HCConstants {
 	public static final String REQUEST_CLARIFICATION = "REQUEST CLARIFICATION";
 	public static final String COMPLETE = "COMPLETE";
 	public static final String INITIATE = "INITIATE";
+	public static final String EINITIATE = "EINITIATE";
 	public static final String ACTION_ASSIGN = "ASSIGN";
 	public static final String VERIFY_FOR_CLOSURE = "VERIFY FOR CLOSURE";
 	public static final String FORWARDED_FOR_COMPLETION = "FORWARDED FOR COMPLETION";
