@@ -7,6 +7,8 @@ import javax.validation.Valid;
 import org.egov.waterconnection.model.RequestInfoWrapper;
 import org.egov.waterconnection.model.SearchCriteria;
 import org.egov.waterconnection.model.WaterConnection;
+import org.egov.waterconnection.model.WaterConnectionCount;
+import org.egov.waterconnection.model.WaterConnectionCountResponse;
 import org.egov.waterconnection.model.WaterConnectionRequest;
 import org.egov.waterconnection.model.WaterConnectionResponse;
 import org.egov.waterconnection.service.WaterService;
@@ -53,6 +55,18 @@ public class WaterController {
 			@Valid @ModelAttribute SearchCriteria criteria) {
 		List<WaterConnection> waterConnectionList = waterService.search(criteria, requestInfoWrapper.getRequestInfo());
 		WaterConnectionResponse response = WaterConnectionResponse.builder().waterConnection(waterConnectionList)
+				.responseInfo(responseInfoFactory.createResponseInfoFromRequestInfo(requestInfoWrapper.getRequestInfo(),
+						true))
+				.build();
+		return new ResponseEntity<>(response, HttpStatus.OK);
+	}
+	
+	
+	@RequestMapping(value = "/_searchCount", method = RequestMethod.POST)
+	public ResponseEntity<WaterConnectionCountResponse> searchCount(@Valid @RequestBody RequestInfoWrapper requestInfoWrapper,
+			@Valid @ModelAttribute SearchCriteria criteria) {
+		List<WaterConnectionCount> waterConnectionList = waterService.searchCount(criteria, requestInfoWrapper.getRequestInfo());
+		WaterConnectionCountResponse response = WaterConnectionCountResponse.builder().waterConnection(waterConnectionList)
 				.responseInfo(responseInfoFactory.createResponseInfoFromRequestInfo(requestInfoWrapper.getRequestInfo(),
 						true))
 				.build();

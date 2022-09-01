@@ -114,6 +114,20 @@ public class WsQueryBuilder {
 			"       createdtime, lastmodifiedtime, totalamount_paid, paymentmode, \r\n" + 
 			"       fromdate, todate, receiptdate, year\r\n" + 
 			"  FROM public.eg_ws_monthlybill_history where lastmodifiedtime >= ? and lastmodifiedtime <= ? ;";
+
+
+	
+	
+	private static final String WATER_SEARCH_QUERY_COUNT = "SELECT   wc.connectionType, wc.connection_id as connection_Id, conn.subdiv, py.paymentmode,py.lastmodifiedtime as paymentdate , conn.applicationStatus, conn.status,  conn.createdTime as ws_createdTime, conn.lastModifiedTime as ws_lastModifiedTime,   conn.waterApplicationType,   \r\n"
+			+ " application.activitytype as app_activitytype, conn.lastModifiedBy as ws_lastModifiedBy, conn.createdBy as ws_createdBy, application.applicationstatus as app_applicationstatus, \r\n"
+			+ " application.total_amount_paid\r\n"
+			+ " FROM \r\n"
+			+ "eg_ws_connection conn  \r\n"
+			+ "INNER JOIN eg_ws_service wc ON wc.connection_id = conn.id \r\n"
+			+ "INNER JOIN eg_ws_application application ON application.wsid = conn.id \r\n"
+			+ "LEFT OUTER JOIN egcl_bill bl  on  application.applicationno = bl.consumercode \r\n"
+			+ "LEFT OUTER JOIN egcl_paymentdetail pyd on pyd.billid = bl.id \r\n"
+			+ "LEFT OUTER JOIN egcl_payment py on py.id= pyd.paymentid ";
 	
 	
 	/**
@@ -271,6 +285,46 @@ public class WsQueryBuilder {
 		 */
 		query.append(ORDER_BY_CLAUSE);
 		return addPaginationWrapper(query.toString(), preparedStatement, criteria);
+	}
+	
+	/**
+	 * 
+	 * @param criteria
+	 *            The WaterCriteria
+	 * @param preparedStatement
+	 *            The Array Of Object
+	 * @param requestInfo
+	 *            The Request Info
+	 * @return query as a string
+	 */
+	public String getSearchQueryStringCount(SearchCriteria criteria, List<Object> preparedStatement,
+			RequestInfo requestInfo) {
+		if (criteria.isEmpty())
+				return null;
+		StringBuilder query = new StringBuilder(WATER_SEARCH_QUERY_COUNT);
+		boolean propertyIdsPresent = false;
+		
+		
+		if (!StringUtils.isEmpty(criteria.getTenantId())) {
+			addClauseIfRequired(preparedStatement, query);
+			query.append(" conn.tenantid = ? ");
+			preparedStatement.add(criteria.getTenantId());
+		}
+
+		
+		if (criteria.getFromDate() != null) {
+			addClauseIfRequired(preparedStatement, query);
+			query.append("  application.createdTime >= ? ");
+			preparedStatement.add(criteria.getFromDate());
+		}
+		if (criteria.getToDate() != null) {
+			addClauseIfRequired(preparedStatement, query);
+			query.append("  application.createdTime <= ? ");
+			preparedStatement.add(criteria.getToDate());
+		}
+		
+		query.append(ORDER_BY_CLAUSE);
+		return query.toString() ;
 	}
 	
 	private void addClauseIfRequired(List<Object> values, StringBuilder queryString) {

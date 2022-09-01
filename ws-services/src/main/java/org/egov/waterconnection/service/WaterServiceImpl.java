@@ -19,6 +19,7 @@ import org.egov.waterconnection.model.SMSRequest.SMSRequestBuilder;
 import org.egov.waterconnection.model.SearchCriteria;
 import org.egov.waterconnection.model.WaterApplication;
 import org.egov.waterconnection.model.WaterConnection;
+import org.egov.waterconnection.model.WaterConnectionCount;
 import org.egov.waterconnection.model.WaterConnectionRequest;
 import org.egov.waterconnection.model.WaterNotication;
 import org.egov.waterconnection.model.WaterNotificationRequest;
@@ -143,6 +144,27 @@ public class WaterServiceImpl implements WaterService {
 	public List<WaterConnection> getWaterConnectionsList(SearchCriteria criteria,
 			RequestInfo requestInfo) {
 		return waterDao.getWaterConnectionList(criteria, requestInfo);
+	}
+	/**
+	 * 
+	 * @param criteria WaterConnectionSearchCriteria contains search criteria on water connection
+	 * @param requestInfo 
+	 * @return List(Count) of matching water connection
+	 */
+	public List<WaterConnectionCount> searchCount(SearchCriteria criteria, RequestInfo requestInfo) {
+		List<WaterConnectionCount> waterConnectionList;
+		waterConnectionList = getWaterConnectionsListCount(criteria, requestInfo);
+		return waterConnectionList;
+	}
+	/**
+	 * 
+	 * @param criteria WaterConnectionSearchCriteria contains search criteria on water connection
+	 * @param requestInfo 
+	 * @return List(Count) of matching water connection
+	 */
+	public List<WaterConnectionCount> getWaterConnectionsListCount(SearchCriteria criteria,
+			RequestInfo requestInfo) {
+		return waterDao.getWaterConnectionListCount(criteria, requestInfo);
 	}
 	/**
 	 * 
