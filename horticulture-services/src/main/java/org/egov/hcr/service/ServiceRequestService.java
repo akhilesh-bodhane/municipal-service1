@@ -1242,6 +1242,10 @@ public class ServiceRequestService {
 			updateServiceRequestStatusEdit(serviceRequest, serviceRequestId, existingServicetype, role);
 		} else {
 			// Create new App Id and reject the previous and create new application
+			status = HCConstants.INITIATED_STATUS;
+			serviceRequest.getServices().get(0).setAction(HCConstants.INITIATE);
+			role = wfIntegrator.parseBussinessServiceData(
+					wfIntegrator.getbussinessServiceDatafromprocesinstanceEdit(serviceRequest), serviceRequest);
 
 			serviceRequest.getServices().get(0).setServiceType(newServicetype);
 			RequestInfo requestInfo = serviceRequest.getRequestInfo();
@@ -1253,12 +1257,9 @@ public class ServiceRequestService {
 			// add entry in service request table with service_request_id =
 			// service_request_id_old_1
 			serviceRequestIdNew = generateServiceRequestId(serviceRequestId);
-
 			employeeInfo.setUserInfo(serviceRequest.getRequestInfo().getUserInfo());
-
 			serviceRequestdata.getServices().get(0).setService_request_id_old(serviceRequestId);
 
-			status = HCConstants.INITIATED_STATUS;
 			responseBody = serviceRequestEdit(serviceRequestdata, serviceRequestIdNew, role, status, serviceRequestId,
 					serviceRequestIdNew, newServicetype);
 
@@ -1267,7 +1268,6 @@ public class ServiceRequestService {
 
 			updateProcesinstancedata(serviceRequest, serviceRequestId, serviceRequestIdNew, existingServicetype,
 					serviceRequestGet);
-
 		}
 		return getServiceResponse(responseBody);
 	}
@@ -1663,6 +1663,7 @@ public class ServiceRequestService {
 
 			for (BusinessService businessService : bussinessServiceDataNewType.getBusinessServices()) {
 				processInstant.get().setModuleName(businessService.getBusiness());
+				processInstant.get().setBusinessId(service_request_id_new);
 
 				List<State> states = businessService.getStates();
 				for (State state : states) {
@@ -1697,16 +1698,17 @@ public class ServiceRequestService {
 			processInstant.get().setAdditionalDetails(additionalDetails);
 
 			List<ProcessInstance> processInstances = new ArrayList<>();
+			ArrayList<ProcessInstance> ProcessInstanceList = new ArrayList<>();
 			processInstances.add(processInstant.get());
-
+			ProcessInstanceList.addAll(processInstances);
 			try {
 				System.out.println(
-						"WF New Application Type Chnage : " + objectMapper.writeValueAsString(processInstances));
+						"WF New Application Type Chnage : " + objectMapper.writeValueAsString(ProcessInstanceList));
 			} catch (JsonProcessingException e) {
 				e.printStackTrace();
 			}
 
-			saveBulkProcessInstance(processInstances);
+			saveBulkProcessInstance(ProcessInstanceList);
 		}
 
 		// })
@@ -1918,7 +1920,7 @@ public class ServiceRequestService {
 		return serviceRequestGetData;
 	}
 
-	private void saveBulkProcessInstance(List<ProcessInstance> processInstanceList) {
+	private void saveBulkProcessInstance(ArrayList<ProcessInstance> processInstanceList) {
 
 		ProcessInstanceRequest processInstanceRequest = new ProcessInstanceRequest();
 		processInstanceRequest.setProcessInstances(processInstanceList);
