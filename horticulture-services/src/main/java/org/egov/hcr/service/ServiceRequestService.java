@@ -1259,7 +1259,7 @@ public class ServiceRequestService {
 			serviceRequestdata.getServices().get(0).setService_request_id_old(serviceRequestId);
 
 			responseBody = serviceRequestEdit(serviceRequestdata, serviceRequestIdNew, role, status, serviceRequestId,
-					serviceRequestIdNew, newServicetype);
+					newServicetype);
 
 			// ServiceResponse create = create(serviceRequestdata, requestHeader);
 			serviceRequest.setRequestInfo(requestInfo);
@@ -1349,7 +1349,7 @@ public class ServiceRequestService {
 			serviceRequest.getServices().get(0).setService_request_uuid(serviceRequestGetOld.getService_request_uuid());
 			serviceRequest.getServices().get(0).setCurrent_assignee(null);
 			serviceRequest.getServices().get(0).setService_request_id(service_request_id);
-			updateStatus(serviceRequest, service_request_id);
+			updateStatus(serviceRequest);
 			updateServiceRequestStatus(serviceRequest, service_request_id, serviceRequestServiceType);
 		}
 	}
@@ -1580,7 +1580,7 @@ public class ServiceRequestService {
 
 	}
 
-	private String updateStatus(ServiceRequest serviceRequest, String service_request_id) {
+	private String updateStatus(ServiceRequest serviceRequest) {
 
 		final AuditDetails auditDetail = hCUtils
 				.getAuditDetail(String.valueOf(serviceRequest.getRequestInfo().getUserInfo().getId()), false);
@@ -1591,7 +1591,7 @@ public class ServiceRequestService {
 		updateRequest.setLastModifiedTime(auditDetail.getLastModifiedTime() - 10000);
 
 		updateRequest.setService_request_status(HCConstants.REJECTED_STATUS);
-		updateRequest.setService_request_id(service_request_id);
+		updateRequest.setService_request_id(serviceRequest.getServices().get(0).getService_request_id());
 		updateRequest.setComment(HCConstants.COMMENT);
 		updateRequest.setAction(action);
 		updateRequest.setCurrent_assignee("");
@@ -2640,9 +2640,8 @@ public class ServiceRequestService {
 		return serviceRequestData;
 	}
 
-	private ResponseEntity<ServiceRequest> serviceRequestEdit(ServiceRequest request, String service_request_id,
-			String role, String status, String history_service_request_id, String service_request_id_new_gen,
-			String requestType) {
+	private ResponseEntity<ServiceRequest> serviceRequestEdit(ServiceRequest request, String serviceRequestIdNew,
+			String role, String status, String history_service_request_id, String requestType) {
 
 		String action = HCConstants.ACTION_UPDATE;
 
@@ -2671,7 +2670,7 @@ public class ServiceRequestService {
 					documentDetailsJson.put("document", jsonArray);
 
 					request.getServices().get(0).setServiceMedia(documentDetailsJson.toJSONString());
-					request.getServices().get(0).setService_request_id(service_request_id);
+					request.getServices().get(0).setService_request_id(serviceRequestIdNew);
 					request.getServices().get(0).setHistory_service_request_id(history_service_request_id);
 
 				} else {
