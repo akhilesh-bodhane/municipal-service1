@@ -1719,7 +1719,7 @@ public class ServiceRequestService {
 				e.printStackTrace();
 			}
 
-			//saveBulkProcessInstance(processInstances);
+			saveBulkProcessInstance(processInstances);
 		}
 
 		// })
@@ -2733,7 +2733,7 @@ public class ServiceRequestService {
 
 				log.info("Service request create : " + infoWrapper);
 
-//				hCProducer.push(hcConfiguration.getSaveTopic(), infoWrapper);
+				hCProducer.push(hcConfiguration.getSaveTopic(), infoWrapper);
 
 			}
 		} catch (Exception e) {
