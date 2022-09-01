@@ -491,25 +491,12 @@ public class ServiceRequestService {
 
 			if (request.getServices().get(servReqCount).getIsRoleSpecific().equals(true)) {
 
-//				String bussinessServiceData = getbussinessServiceDatafromprocesinstance(request);
-
 				getroles = wfIntegrator.parseBussinessServiceData(bussinessServiceDatafromprocesinstance, request);
 
-				/*
-				 * if (request.getServices().get(servReqCount).getAction().equals(HCConstants.
-				 * VERIFY_AND_FORWARD) || request.getServices().get(servReqCount).getAction()
-				 * .equals(HCConstants.COMMENT_AND_FORWARD)) { getroles =
-				 * wfIntegrator.parseBussinessServiceData(
-				 * bussinessServiceDatafromprocesinstance, request);
-				 * 
-				 * request.getServices().get(servReqCount).setRole(getroles); } if
-				 * (request.getServices().get(servReqCount).getAction().equals(HCConstants.
-				 * INSPECT) ||
-				 * (request.getServices().get(servReqCount).getAction().equals(HCConstants.
-				 * APPROVE))) { getroles =
-				 * parseInspectedBussinessServiceData(bussinessServiceData, request);
-				 * request.getServices().get(servReqCount).setRole(getroles); }
-				 */
+				if (request.getServices().get(servReqCount).getAction().equals(HCConstants.INSPECT)) {
+					request.getServices().get(servReqCount).setRole(getroles);
+				}
+
 				roleList.add(getroles);
 				jsonRole = getroles;
 
