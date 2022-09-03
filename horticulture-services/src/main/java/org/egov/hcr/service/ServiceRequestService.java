@@ -596,7 +596,15 @@ public class ServiceRequestService {
 				updateRequest.setService_request_uuid(serviceRequest.getService_request_uuid());
 				updateRequest.setTenantId(serviceRequest.getTenantId());
 
-				updateRequest.setCheckPoints(request.getServices().get(0).getCheckPoints());
+				if (request.getServices().get(0).getCheckpoints() != null) {
+					updateRequest.setCheckPoint(request.getServices().get(0).getCheckpoints() != null
+							? request.getServices().get(0).getCheckpoints().toJSONString()
+							: "");
+				} else {
+					updateRequest.setCheckPoint(
+							serviceRequest.getCheckpoints() != null ? serviceRequest.getCheckpoints().toJSONString()
+									: "");
+				}
 				/*
 				 * if (request.getServices().get(servReqCount).getAction().equals(HCConstants.
 				 * APPROVE) ||
@@ -731,7 +739,14 @@ public class ServiceRequestService {
 					infowraperforupdate = RequestInfoWrapper.builder().actionInfo(actionInfos).requestInfo(requestInfo)
 							.requestBody(updateRequest).services(request.getServices()).build();
 
-					log.info("Update service request with action " + action + " and sending notification to citizen");
+					try {
+						log.info("Update service request with action " + action
+								+ " and sending notification to citizen : "
+								+ objectMapper.writeValueAsString(infowraperforupdate));
+					} catch (JsonProcessingException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 
 					hCProducer.push(hcConfiguration.getUpdateTopic(), infowraperforupdate);
 
@@ -778,6 +793,15 @@ public class ServiceRequestService {
 
 //				infowraperforupdate = RequestInfoWrapper.builder().actionInfo(actionInfos).requestInfo(requestInfo)
 //						.requestBody(updateRequest).build();
+
+					try {
+						log.info("Update service request with action " + action
+								+ " and sending notification to citizen : "
+								+ objectMapper.writeValueAsString(infowraperforupdate));
+					} catch (JsonProcessingException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 
 					hCProducer.push(hcConfiguration.getUpdateTopic(), infowraperforupdate);
 

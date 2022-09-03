@@ -242,6 +242,10 @@
 	"serviceTypeName":{
          "mandatory":"true",
          "validateRegularExp":"^[a-zA-Z0-9-/,& ]{1,180}$"
+      },
+      "checkpoints":{
+         "mandatory":"false",
+         "validateRegularExp":"^[a-zA-Z0-9-/,& ]{1,180}$"
       }
    }
 }
