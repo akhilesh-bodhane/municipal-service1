@@ -287,6 +287,11 @@ public class ServiceRequestService {
 			}
 			serviceRequestData.setMediaList(newdoclist);
 
+			if (serviceRequest.get("checkpoints") != null && !serviceRequest.get("checkpoints").toString().isEmpty()) {
+				JSONObject checkPoints = (JSONObject) new JSONParser()
+						.parse((String) serviceRequest.get("checkpoints"));
+				serviceRequestData.setCheckpoints(checkPoints);
+			}
 		} catch (Exception ex) {
 
 		}
@@ -534,8 +539,8 @@ public class ServiceRequestService {
 			JSONObject serviceRequestJson = serviceRepository.getServiceRequestData(requestData);
 			serviceRequest = parseServiceRequestData(serviceRequestJson);
 
-			deviceSource.saveDeviceDetails(requestHeader, HCConstants.DEVICE_HORTICULTURE, serviceRequest.getTenantId(),
-					HCConstants.MODULE_CODE, request.getAuditDetails(), serviceRequest.getService_request_uuid());
+//			deviceSource.saveDeviceDetails(requestHeader, HCConstants.DEVICE_HORTICULTURE, serviceRequest.getTenantId(),
+//					HCConstants.MODULE_CODE, request.getAuditDetails(), serviceRequest.getService_request_uuid());
 
 			log.info("Get data from service request table with service request id is: " + serviceRequest);
 
@@ -596,13 +601,21 @@ public class ServiceRequestService {
 				updateRequest.setService_request_uuid(serviceRequest.getService_request_uuid());
 				updateRequest.setTenantId(serviceRequest.getTenantId());
 
-				if (requestInfo.getUserInfo().getRoles().contains(HCConstants.CHECKPOINTTFCCVR)) {
-					if (request.getServices().get(0).getCheckpoints() != null) {
-						updateRequest.setCheckPoint(request.getServices().get(0).getCheckpoints() != null
-								? request.getServices().get(0).getCheckpoints().toJSONString()
-								: "");
-					}
+				// if
+				// (requestInfo.getUserInfo().getRoles().contains(HCConstants.CHECKPOINTTFCCVR))
+				// {
+				if (request.getServices().get(0).getCheckpoints() != null
+						&& !request.getServices().get(0).getCheckpoints().isEmpty()) {
+					updateRequest.setCheckPoint(request.getServices().get(0).getCheckpoints() != null
+							? request.getServices().get(0).getCheckpoints().toJSONString()
+							: null);
+				} else {
+					updateRequest.setCheckPoint(
+							serviceRequest.getCheckpoints() != null && !serviceRequest.getCheckpoints().isEmpty()
+									? serviceRequest.getCheckpoints().toJSONString()
+									: null);
 				}
+				// }
 				/*
 				 * if (request.getServices().get(servReqCount).getAction().equals(HCConstants.
 				 * APPROVE) ||
