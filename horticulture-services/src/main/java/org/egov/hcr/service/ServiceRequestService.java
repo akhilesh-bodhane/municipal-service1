@@ -287,6 +287,11 @@ public class ServiceRequestService {
 			}
 			serviceRequestData.setMediaList(newdoclist);
 
+			if (serviceRequest.get("checkpoints") != null && !serviceRequest.get("checkpoints").toString().isEmpty()) {
+				JSONObject checkPoints = (JSONObject) new JSONParser()
+						.parse((String) serviceRequest.get("checkpoints"));
+				serviceRequestData.setCheckpoints(checkPoints);
+			}
 		} catch (Exception ex) {
 
 		}
@@ -596,13 +601,21 @@ public class ServiceRequestService {
 				updateRequest.setService_request_uuid(serviceRequest.getService_request_uuid());
 				updateRequest.setTenantId(serviceRequest.getTenantId());
 
-				if (requestInfo.getUserInfo().getRoles().contains(HCConstants.CHECKPOINTTFCCVR)) {
-					if (request.getServices().get(0).getCheckpoints() != null) {
-						updateRequest.setCheckPoint(request.getServices().get(0).getCheckpoints() != null
-								? request.getServices().get(0).getCheckpoints().toJSONString()
-								: "");
-					}
+				// if
+				// (requestInfo.getUserInfo().getRoles().contains(HCConstants.CHECKPOINTTFCCVR))
+				// {
+				if (request.getServices().get(0).getCheckpoints() != null
+						&& !request.getServices().get(0).getCheckpoints().isEmpty()) {
+					updateRequest.setCheckPoint(request.getServices().get(0).getCheckpoints() != null
+							? request.getServices().get(0).getCheckpoints().toJSONString()
+							: null);
+				} else {
+					updateRequest.setCheckPoint(
+							serviceRequest.getCheckpoints() != null && !serviceRequest.getCheckpoints().isEmpty()
+									? serviceRequest.getCheckpoints().toJSONString()
+									: null);
 				}
+				// }
 				/*
 				 * if (request.getServices().get(servReqCount).getAction().equals(HCConstants.
 				 * APPROVE) ||
