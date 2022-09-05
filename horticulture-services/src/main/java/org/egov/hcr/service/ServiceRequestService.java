@@ -539,8 +539,8 @@ public class ServiceRequestService {
 			JSONObject serviceRequestJson = serviceRepository.getServiceRequestData(requestData);
 			serviceRequest = parseServiceRequestData(serviceRequestJson);
 
-			deviceSource.saveDeviceDetails(requestHeader, HCConstants.DEVICE_HORTICULTURE, serviceRequest.getTenantId(),
-					HCConstants.MODULE_CODE, request.getAuditDetails(), serviceRequest.getService_request_uuid());
+//			deviceSource.saveDeviceDetails(requestHeader, HCConstants.DEVICE_HORTICULTURE, serviceRequest.getTenantId(),
+//					HCConstants.MODULE_CODE, request.getAuditDetails(), serviceRequest.getService_request_uuid());
 
 			log.info("Get data from service request table with service request id is: " + serviceRequest);
 
