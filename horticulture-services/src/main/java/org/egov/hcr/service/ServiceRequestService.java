@@ -596,14 +596,12 @@ public class ServiceRequestService {
 				updateRequest.setService_request_uuid(serviceRequest.getService_request_uuid());
 				updateRequest.setTenantId(serviceRequest.getTenantId());
 
-				if (request.getServices().get(0).getCheckpoints() != null) {
-					updateRequest.setCheckPoint(request.getServices().get(0).getCheckpoints() != null
-							? request.getServices().get(0).getCheckpoints().toJSONString()
-							: "");
-				} else {
-					updateRequest.setCheckPoint(
-							serviceRequest.getCheckpoints() != null ? serviceRequest.getCheckpoints().toJSONString()
-									: "");
+				if (requestInfo.getUserInfo().getRoles().contains(HCConstants.CHECKPOINTTFCCVR)) {
+					if (request.getServices().get(0).getCheckpoints() != null) {
+						updateRequest.setCheckPoint(request.getServices().get(0).getCheckpoints() != null
+								? request.getServices().get(0).getCheckpoints().toJSONString()
+								: "");
+					}
 				}
 				/*
 				 * if (request.getServices().get(servReqCount).getAction().equals(HCConstants.
