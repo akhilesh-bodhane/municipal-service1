@@ -145,6 +145,15 @@ public class ViolationController {
 				+ "."+ Thread.currentThread().getStackTrace()[1].getMethodName());
 		return genearateChallanService.getSearchChallan(requestInfoWrapper);
 	}
+	
+	
+	
+	@PostMapping(value = "/_searchCount")
+	public ResponseEntity<ResponseInfoWrapper> getSearchChallanCount(@Valid @RequestBody RequestInfoWrapper requestInfoWrapper) {
+		log.info("Entering: " + Thread.currentThread().getStackTrace()[1].getClassName()
+				+ "."+ Thread.currentThread().getStackTrace()[1].getMethodName());
+		return genearateChallanService.getSearchChallanCount(requestInfoWrapper);
+	}
 
 	@PostMapping(value = "/_sendMessage")
 	public ResponseEntity<ResponseInfoWrapper> sendMessage(

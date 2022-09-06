@@ -9,6 +9,7 @@ import org.egov.ec.config.EchallanConfiguration;
 import org.egov.ec.producer.Producer;
 import org.egov.ec.repository.builder.EcQueryBuilder;
 import org.egov.ec.repository.rowmapper.ColumnsRowMapper;
+import org.egov.ec.repository.rowmapper.ViolationDetailCountRowMapper;
 import org.egov.ec.repository.rowmapper.ViolationDetailRowMapper;
 import org.egov.ec.web.models.ChallanDataBckUp;
 import org.egov.ec.web.models.EcPayment;
@@ -16,6 +17,7 @@ import org.egov.ec.web.models.EcPaymentData;
 import org.egov.ec.web.models.EcSearchCriteria;
 import org.egov.ec.web.models.RequestInfoWrapper;
 import org.egov.ec.web.models.Violation;
+import org.egov.ec.web.models.ViolationCount;
 import org.json.simple.JSONArray;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -29,6 +31,8 @@ public class ViolationRepository {
 	private JdbcTemplate jdbcTemplate;
 
 	private ViolationDetailRowMapper rowMapper;
+	
+	private ViolationDetailCountRowMapper rowCountMapper;
 
 	private ColumnsRowMapper columnsRowMapper;
 	
@@ -39,13 +43,14 @@ public class ViolationRepository {
 	private EcQueryBuilder ecQueryBuilder;
 
 	public ViolationRepository(JdbcTemplate jdbcTemplate, Producer producer, EchallanConfiguration config,
-			ViolationDetailRowMapper rowMapper, ColumnsRowMapper columnsRowMapper) {
+			ViolationDetailRowMapper rowMapper, ColumnsRowMapper columnsRowMapper ,  ViolationDetailCountRowMapper rowCountMapper) {
 		this.jdbcTemplate = jdbcTemplate;
 		this.rowMapper = rowMapper;
 		this.producer = producer;
 		this.config = config;
 		this.ecQueryBuilder = ecQueryBuilder;
 		this.columnsRowMapper=columnsRowMapper;
+		this.rowCountMapper= rowCountMapper;
 	}
 
 	 /**
@@ -213,6 +218,28 @@ public class ViolationRepository {
 						violation.getSector(), violation.getSector(),violation.getStatus(), violation.getStatus(),
 						violation.getTenantId(),violation.getChallanId(),violation.getChallanId()},
 				rowMapper);
+		
+			return violationDetailList;
+
+	}
+	
+	/**
+     * fetches the list of challans on the basis of search criterias For Count
+     *
+     * @param searchCriteria EcSearchCriteria model
+     * @return Returns the list of challans
+     */
+	public List<ViolationCount> getSearchChallanCount(ViolationCount violation) {
+		log.info("Violation Repository - getSearchChallan Method");
+
+		List<ViolationCount> violationDetailList;
+		
+		violationDetailList = jdbcTemplate.query(EcQueryBuilder.SEARCH_VIOLATION_MASTER_COUNT,
+				new Object[] { violation.getFromDate(), violation.getFromDate(),violation.getToDate(),violation.getToDate(), violation.getSiName(),
+						violation.getSiName(), violation.getEncroachmentType(), violation.getEncroachmentType(),
+						violation.getSector(), violation.getSector(),violation.getStatus(), violation.getStatus()
+						},
+				rowCountMapper);
 		
 			return violationDetailList;
 
