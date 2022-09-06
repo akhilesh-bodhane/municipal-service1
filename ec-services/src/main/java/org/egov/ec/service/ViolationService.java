@@ -24,6 +24,7 @@ import org.egov.ec.web.models.NotificationTemplate;
 import org.egov.ec.web.models.RequestInfoWrapper;
 import org.egov.ec.web.models.ResponseInfoWrapper;
 import org.egov.ec.web.models.Violation;
+import org.egov.ec.web.models.ViolationCount;
 import org.egov.ec.web.models.Idgen.IdGenerationResponse;
 import org.egov.ec.web.models.workflow.ProcessInstance;
 import org.egov.ec.web.models.workflow.ProcessInstanceRequest;
@@ -593,6 +594,41 @@ public class ViolationService {
 		}
 	}
 
+	
+	
+	/**
+	*This method will fetch list of challans For Count
+	*
+	* @param RequestInfoWrapper SearchCriteria
+	* @return ResponseInfoWrapper containing list of challans
+	* @throws CustomException VIOLATION_SEARCH_EXCEPTION
+	*/
+	public ResponseEntity<ResponseInfoWrapper> getSearchChallanCount(RequestInfoWrapper requestInfoWrapper) {
+		log.info("Violation Service - Get Search Challan");
+		try {
+
+			ViolationCount violation = objectMapper.convertValue(requestInfoWrapper.getRequestBody(),ViolationCount.class);
+			
+			String responseValidate = "";
+			
+
+					List<ViolationCount> violationPage = null;
+					
+						violationPage = repository.getSearchChallanCount(violation);			
+		
+					return new ResponseEntity<>(ResponseInfoWrapper.builder()
+							.responseInfo(ResponseInfo.builder().status(EcConstants.STATUS_SUCCESS).build()).responseBody(violationPage).build(),
+							HttpStatus.OK);
+			
+
+		} catch (Exception e) {
+			log.error("Violation Service - Search Violation Exception"+e.getMessage());
+			throw new CustomException("VIOLATION_SEARCH_EXCEPTION", e.getMessage());
+		}
+	}
+
+	
+	
 	public ResponseEntity<ResponseInfoWrapper> sendMessage(RequestInfoWrapper requestInfoWrapper, String requestHeader) {
 		log.info("Violation Service - Generate Challan");
 		Violation violationMaster = objectMapper.convertValue(requestInfoWrapper.getRequestBody(), Violation.class);
