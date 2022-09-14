@@ -35,6 +35,8 @@ public class HCConstants {
 	public static final String EXECUTIVE_ENGINEER = "EE";
 
 	// Actions
+	
+	public static final String CLOSED = "CLOSED";
 	public static final String EDITED = "EDITED";
 
 	public static final String SUBMITTED = "SUBMITTED";
@@ -92,7 +94,7 @@ public class HCConstants {
 	public static final String ACTION_CREATE = "CREATE";
 	public static final String ACTION_UPDATE = "UPDATE";
 
-	public static final String LOCALIZATION_MODULE_NAME = "rainmaker-hc";
+	public static final String LOCALIZATION_MODULE_NAME = "HORTICULTURE";
 
 	public static final String EMPLOYEE_NAME_JSONPATH = "$.Employees[0].user.name";
 	public static final String EMPLOYEE_PHNO_JSONPATH = "$.Employees[0].user.mobileNumber";
@@ -101,6 +103,27 @@ public class HCConstants {
 
 	public static final String LOCALIZATION_CODES_JSONPATH = "$.messages.*.code";
 	public static final String LOCALIZATION_MSGS_JSONPATH = "$.messages.*.message";
+
+	public static final String CITIZEN_EMAIL_BODY_NOTIFICATION = "CITIZEN_EMAIL_BODY_NOTIFICATION";
+	public static final String EMPLOYEE_EMAIL_BODY_NOTIFICATION = "EMPLOYEE_EMAIL_BODY_NOTIFICATION";
+	
+	public static final String CITIZEN_EMAIL_SUBJECT_NOTIFICATION = "CITIZEN_EMAIL_SUBJECT_NOTIFICATION";
+	public static final String EMPLOYEE_EMAIL_SUBJECT_NOTIFICATION = "EMPLOYEE_EMAIL_SUBJECT_NOTIFICATION";
+
+//	public static final String CITIZEN_EMAIL_BODY_NOTIFICATION = "CITIZEN_EMAIL_BODY_NOTIFICATION";
+//	public static final String EMPLOYEE_EMAIL_BODY_NOTIFICATION = "EMPLOYEE_EMAIL_BODY_NOTIFICATION";
+//
+//	public static final String FR_CITIZEN_EMAIL_BODY_NOTIFICATION = "FR_CITIZEN_EMAIL_BODY_NOTIFICATION";
+//	public static final String FR_EMPLOYEE_EMAIL_BODY_NOTIFICATION = "FR_EMPLOYEE_EMAIL_BODY_NOTIFICATION";
+//
+//	public static final String UT_CITIZEN_EMAIL_SUBJECT_NOTIFICATION = "UT_CITIZEN_EMAIL_SUBJECT_NOTIFICATION";
+//	public static final String UT_EMPLOYEE_EMAIL_SUBJECT_NOTIFICATION = "UT_EMPLOYEE_EMAIL_SUBJECT_NOTIFICATION";
+//
+//	public static final String MC_CITIZEN_EMAIL_SUBJECT_NOTIFICATION = "MC_CITIZEN_EMAIL_SUBJECT_NOTIFICATION";
+//	public static final String MC_EMPLOYEE_EMAIL_SUBJECT_NOTIFICATION = "MC_EMPLOYEE_EMAIL_SUBJECT_NOTIFICATION";
+//
+//	public static final String FR_CITIZEN_EMAIL_SUBJECT_NOTIFICATION = "FR_CITIZEN_EMAIL_SUBJECT_NOTIFICATION";
+//	public static final String FR_EMPLOYEE_EMAIL_SUBJECT_NOTIFICATION = "FR_EMPLOYEE_EMAIL_SUBJECT_NOTIFICATION";
 
 	// SMS - MCC
 

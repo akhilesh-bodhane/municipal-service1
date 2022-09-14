@@ -23,7 +23,6 @@ import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.request.Role;
 import org.egov.common.contract.request.User;
 import org.egov.common.contract.response.ResponseInfo;
-import org.egov.hcr.consumer.HCNotificationConsumer;
 import org.egov.hcr.contract.Action;
 import org.egov.hcr.contract.AuditDetails;
 import org.egov.hcr.contract.RequestInfoWrapper;
@@ -75,7 +74,6 @@ import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.dataformat.yaml.snakeyaml.scanner.Constant;
 import com.google.gson.Gson;
 
 import lombok.extern.slf4j.Slf4j;
@@ -106,9 +104,6 @@ public class ServiceRequestService {
 	private ServiceRepository serviceRepository;
 
 	@Autowired
-	private HCNotificationConsumer notificationConsumer;
-
-	@Autowired
 	private NotificationService notificationService;
 	@Autowired
 	private HCRowMapper rowMapper;
@@ -130,11 +125,10 @@ public class ServiceRequestService {
 	@Autowired
 	public ServiceRequestService(HCConfiguration config, HCConfiguration hcConfiguration,
 			WorkflowIntegrator wfIntegrator, ObjectMapper objectMapper, IdGenRepository idgenrepository,
-			ServiceRepository serviceRepository, HCNotificationConsumer notificationConsumer, HCConstants hcConstants) {
+			ServiceRepository serviceRepository,  HCConstants hcConstants) {
 
 		this.hcConfiguration = hcConfiguration;
 		this.idgenrepository = idgenrepository;
-		this.notificationConsumer = notificationConsumer;
 		this.wfIntegrator = wfIntegrator;
 		this.objectMapper = objectMapper;
 	}
@@ -2515,8 +2509,8 @@ public class ServiceRequestService {
 			serviceRequestobj.setServices(serviceRequestList);
 			serviceRequestobj.setActionInfo(Actioninfolist);
 			serviceRequestobj.setRequestInfo(requestInfoDetails);
-			notificationConsumer.sendSchedulerNotification(serviceRequestobj, action, serviceRequestDate, tenantId,
-					days);
+//			notificationConsumer.sendSchedulerNotification(serviceRequestobj, action, serviceRequestDate, tenantId,
+//					days);
 
 		} else {
 			System.out.println(" Sending notification to " + role + " all Employee");
@@ -2611,8 +2605,8 @@ public class ServiceRequestService {
 							serviceRequestobj.setActionInfo(Actioninfolist);
 							serviceRequestobj.setRequestInfo(requestInfoDetails);
 
-							notificationConsumer.sendSchedulerNotification(serviceRequestobj, action,
-									serviceRequestDate, tenantId, days);
+//							notificationConsumer.sendSchedulerNotification(serviceRequestobj, action,
+//									serviceRequestDate, tenantId, days);
 
 						}
 					}

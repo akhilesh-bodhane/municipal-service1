@@ -5,7 +5,6 @@ import org.egov.hcr.contract.ResponseInfoWrapper;
 import org.egov.hcr.contract.ServiceRequest;
 import org.egov.hcr.contract.ServiceResponse;
 import org.egov.hcr.model.RequestData;
-import org.egov.hcr.model.ServiceRequestData;
 import org.egov.hcr.service.ServiceRequestService;
 import org.egov.hcr.utils.HCConstants;
 import org.egov.hcr.utils.HCUtils;
@@ -25,7 +24,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.gson.Gson;
 
 import lombok.extern.slf4j.Slf4j;
 
