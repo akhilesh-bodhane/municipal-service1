@@ -165,10 +165,11 @@ public class HCNotificationConsumers {
 //		localiZationCodeBody.append("_");
 		localiZationCodeBody.append(serviceReq.getService_request_status().replace(" ", "_"));
 
-		String message = messageMap.get(localiZationCodeBody);
+		String message = messageMap.get(localiZationCodeBody.toString());
 
 		message = message.replace(HCConstants.SMS_NOTIFICATION_USER_NAME_KEY, serviceReq.getOwnerName())
 				.replace(HCConstants.SMS_NOTIFICATION_SERVICEREQUEST_ID, serviceReq.getService_request_id())
+				.replace(HCConstants.SMS_NOTIFICATION_SERVICEREQUEST_TYPE, mdmsServiceTypeName)
 				.replace(HCConstants.SMS_NOTIFICATION_SERVICEREQUEST_DATE_KEY, genratedDate);
 
 		StringBuilder localiZationCodeSubject = new StringBuilder(HCConstants.CITIZEN_EMAIL_SUBJECT_NOTIFICATION);
@@ -177,7 +178,7 @@ public class HCNotificationConsumers {
 //		localiZationCodeSubject.append("_");
 		localiZationCodeSubject.append(serviceReq.getService_request_status().replace(" ", "_"));
 
-		String subject = messageMap.get(localiZationCodeSubject);
+		String subject = messageMap.get(localiZationCodeSubject.toString());
 
 		log.info("get massage from localization and Email Id from userInfo");
 		log.info("Sending the Email : Email Id : " + emailIdRetrived + "And  Massage :" + message + "And  subject :"
@@ -203,7 +204,7 @@ public class HCNotificationConsumers {
 		localiZationCodeBody.append("_");
 		localiZationCodeBody.append(serviceReq.getService_request_status().replace(" ", "_"));
 
-		String message = messageMap.get(localiZationCodeBody);
+		String message = messageMap.get(localiZationCodeBody.toString());
 
 		if (serviceReq.getService_request_status().startsWith("EDIT") && serviceReq.getService_request_id_old() != null
 				&& !serviceReq.getService_request_id_old().isEmpty()) {
@@ -225,7 +226,7 @@ public class HCNotificationConsumers {
 		localiZationCodeSubject.append("_");
 		localiZationCodeSubject.append(serviceReq.getService_request_status().replace(" ", "_"));
 
-		String subject = messageMap.get(localiZationCodeSubject);
+		String subject = messageMap.get(localiZationCodeSubject.toString());
 
 		List<ServiceRequestData> prepareEmployeeRoleWiseList = prepareEmployeeRoleWiseList(serviceReqRequest, role);
 		if (!prepareEmployeeRoleWiseList.isEmpty()) {
@@ -506,7 +507,7 @@ public class HCNotificationConsumers {
 
 		try {
 
-			String payloadData = "{\"RequestInfo\": {\"apiId\": \"Rainmaker\",\"ver\": \".01\",\"ts\": \"\",\"action\": \"_search\",\"did\": \"1\",\"key\": \"\",\"msgId\": \"20170310130900|en_IN\",\"authToken\": null},\"MdmsCriteria\": {\"tenantId\": \"ch\",\"moduleDetails\": [{\"moduleName\": \"eg-horticulture\",\"masterDetails\": [{\"name\": \"ServiceType\"}]}]}}";
+			String payloadData = "{\"RequestInfo\": {\"apiId\": \"Rainmaker\",\"ver\": \".01\",\"ts\": \"\",\"action\": \"_search\",\"did\": \"1\",\"key\": \"\",\"msgId\": \"20170310130900|en_IN\",\"authToken\": null},\"MdmsCriteria\": {\"tenantId\": \"ch\",\"moduleDetails\": [{\"moduleName\": \"eg-horticulture\",\"masterDetails\": [{\"name\": \"ServiceTypeNew\"}]}]}}";
 
 			String mdmsData = sendPostRequest(hcConfiguration.getMdmsHost().concat(hcConfiguration.getMdmsEndpoint())
 					.concat("?").concat("&tenantId=ch"), payloadData);
@@ -516,7 +517,7 @@ public class HCNotificationConsumers {
 				org.json.JSONObject MdmsResObj = mdmsDataobj.getJSONObject("MdmsRes");
 				org.json.JSONObject eghorticultureObj = MdmsResObj.getJSONObject("eg-horticulture");
 
-				org.json.JSONArray mdmsServiceTypes = eghorticultureObj.getJSONArray("ServiceType");
+				org.json.JSONArray mdmsServiceTypes = eghorticultureObj.getJSONArray("ServiceTypeNew");
 
 				for (int cnt = 0; cnt <= mdmsServiceTypes.length(); cnt++) {
 					org.json.JSONObject mdmsServiceTypesObj = new org.json.JSONObject(
@@ -524,7 +525,7 @@ public class HCNotificationConsumers {
 
 					String servicecode = mdmsServiceTypesObj.getString("code");
 
-					if (servicecode.equals(service.getServices().get(0).getServiceType())) {
+					if (service.getServices().get(0).getServiceType().endsWith(servicecode)) {
 						servicetype = mdmsServiceTypesObj.getString("name");
 						break;
 					}
