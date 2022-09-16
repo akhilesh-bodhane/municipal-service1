@@ -39,7 +39,6 @@ public class ViolationDetailCountRowMapper implements ResultSetExtractor<List<Vi
 							.sector((rs.getString("sector") == null ? "" : rs.getString("sector")))
 							.siName((rs.getString("si_name") == null ? "" : rs.getString("si_name")))
 							.status((rs.getString("challan_status") == null ? "" : rs.getString("challan_status")))
-							.paymentDetails(ecPayment)
 							.createdTime((rs.getLong("created_time")))
 							.build();
 					
