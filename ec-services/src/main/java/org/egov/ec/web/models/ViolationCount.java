@@ -70,6 +70,9 @@ public class ViolationCount {
 	@JsonProperty("sector")
 	private String sector;
 	
+	@JsonProperty("paymentDetails")
+	private EcPaymentCount paymentDetails;
+	
 	
 	
 	@JsonProperty("createdTime")
