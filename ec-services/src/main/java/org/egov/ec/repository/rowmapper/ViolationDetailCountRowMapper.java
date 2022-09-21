@@ -44,6 +44,7 @@ public class ViolationDetailCountRowMapper implements ResultSetExtractor<List<Vi
 					
 					
 					ecPayment.setPaymentStatus(rs.getString("payment_status"));
+					ecPayment.setPaymentMode(rs.getString("payment_mode"));
 					ViolationCount.setPaymentDetails(ecPayment);
 					ViolationCountMap.put(ViolationCountUuid, ViolationCount);
 			}

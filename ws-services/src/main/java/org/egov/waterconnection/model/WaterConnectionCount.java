@@ -58,6 +58,9 @@ public class WaterConnectionCount {
 	@JsonProperty("TotalAmountPaid")
 	private String totalAmountPaid = null;
 	
+	@JsonProperty("waterApplicationList")
+	private WaterApplicationList waterApplicationList = null;
+	
 	@JsonProperty("AuditDetails")
 	private AuditDetails auditDetails = null;
 

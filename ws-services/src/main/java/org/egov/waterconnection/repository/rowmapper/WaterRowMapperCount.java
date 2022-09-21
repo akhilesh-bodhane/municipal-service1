@@ -25,6 +25,7 @@ public class WaterRowMapperCount implements ResultSetExtractor<List<WaterConnect
 	public List<WaterConnectionCount> extractData(ResultSet rs) throws SQLException, DataAccessException {
 		Map<String, WaterConnectionCount> connectionListMap = new HashMap<>();
 		WaterConnectionCount currentWaterConnection = new WaterConnectionCount();
+		WaterApplicationList waterrAppList = new WaterApplicationList();
 		
 		while (rs.next()) {
 			String applicationNo = rs.getString("connection_Id");
@@ -45,6 +46,16 @@ public class WaterRowMapperCount implements ResultSetExtractor<List<WaterConnect
 	                        .lastModifiedTime(rs.getLong("ws_lastModifiedTime"))
 	                        .build();
 				 currentWaterConnection.setAuditDetails(auditdetails);
+				 
+				 
+				 WaterApplicationList waterrAppListt =  WaterApplicationList.builder()
+						 .applicationNo(rs.getString("app_applicationno"))
+						 .applicationStatus(rs.getString("app_applicationstatus")).build();
+				
+//						 waterrAppList.setActivityType(rs.getString("app_applicationno"));
+//				 waterrAppList.setApplicationStatus(rs.getString("app_applicationstatus"));
+				 
+				 currentWaterConnection.setWaterApplicationList(waterrAppListt);
 				 
 				 
 				 

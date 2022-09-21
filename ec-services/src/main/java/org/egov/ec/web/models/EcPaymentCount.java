@@ -29,6 +29,12 @@ public class EcPaymentCount {
 	@NotNull(message = "paymentStatus should not be empty or null")
 	@NotBlank(message = "paymentStatus should not be empty or null")
 	private String paymentStatus;
+	
+	@Size(max = 256)
+	@JsonProperty("paymentMode")
+	@NotNull(message = "paymentMode should not be empty or null")
+	@NotBlank(message = "paymentMode should not be empty or null")
+	private String paymentMode;
 
 	
 }
