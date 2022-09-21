@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 
 import org.egov.ec.web.models.Document;
 import org.egov.ec.web.models.EcPayment;
+import org.egov.ec.web.models.EcPaymentCount;
 import org.egov.ec.web.models.ViolationCount;
 import org.egov.tracer.model.CustomException;
 import org.springframework.dao.DataAccessException;
@@ -23,6 +24,7 @@ public class ViolationDetailCountRowMapper implements ResultSetExtractor<List<Vi
 	public List<ViolationCount> extractData(ResultSet rs) throws SQLException, DataAccessException {
 
 		Map<String, ViolationCount> ViolationCountMap = new LinkedHashMap<>();
+		EcPaymentCount ecPayment=new EcPaymentCount();
 
 		try {
 			while (rs.next()) {
@@ -39,6 +41,10 @@ public class ViolationDetailCountRowMapper implements ResultSetExtractor<List<Vi
 							.status((rs.getString("challan_status") == null ? "" : rs.getString("challan_status")))
 							.createdTime((rs.getLong("created_time")))
 							.build();
+					
+					
+					ecPayment.setPaymentStatus(rs.getString("payment_status"));
+					ViolationCount.setPaymentDetails(ecPayment);
 					ViolationCountMap.put(ViolationCountUuid, ViolationCount);
 			}
 
