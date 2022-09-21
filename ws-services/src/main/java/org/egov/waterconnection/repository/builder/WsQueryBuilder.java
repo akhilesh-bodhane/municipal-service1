@@ -118,8 +118,11 @@ public class WsQueryBuilder {
 
 	
 	
-	private static final String WATER_SEARCH_QUERY_COUNT = "SELECT   wc.connectionType, wc.connection_id as connection_Id, conn.subdiv, py.paymentmode,py.lastmodifiedtime as paymentdate , conn.applicationStatus, conn.status,  conn.createdTime as ws_createdTime, conn.lastModifiedTime as ws_lastModifiedTime,   conn.waterApplicationType,   \r\n"
-			+ " application.activitytype as app_activitytype, conn.lastModifiedBy as ws_lastModifiedBy, conn.createdBy as ws_createdBy, application.applicationstatus as app_applicationstatus, \r\n"
+	private static final String WATER_SEARCH_QUERY_COUNT = "SELECT   wc.connectionType, wc.connection_id as connection_Id, conn.subdiv,"
+			+ " py.paymentmode,py.lastmodifiedtime as paymentdate , conn.applicationStatus, conn.status,  conn.createdTime as ws_createdTime, "
+			+ "conn.lastModifiedTime as ws_lastModifiedTime,   conn.waterApplicationType,   \r\n"
+			+ " application.activitytype as app_activitytype, application.applicationno as app_applicationno, conn.lastModifiedBy as ws_lastModifiedBy,"
+			+ " conn.createdBy as ws_createdBy, application.applicationstatus as app_applicationstatus, \r\n"
 			+ " application.total_amount_paid\r\n"
 			+ " FROM \r\n"
 			+ "eg_ws_connection conn  \r\n"
