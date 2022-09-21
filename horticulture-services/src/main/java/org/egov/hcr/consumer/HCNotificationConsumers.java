@@ -125,8 +125,14 @@ public class HCNotificationConsumers {
 					if (null != emailRequests) {
 						log.info("Sending Email Citizen");
 						hCProducer.push(hcConfiguration.getEmailNotifTopic(), emailRequests);
-					} else
+					} else {
 						log.info("email body is empty in this case");
+					}
+				}
+				// If Application is in Initial Stage send email to Employee
+				if (serviceRequestData.getService_request_status().equalsIgnoreCase(HCConstants.INITIATED_STATUS)) {
+					prepareEmailRequestEmployee(serviceReqRequest, serviceRequestData, requestInfo, messageMap,
+							mdmsServiceTypeName);
 				}
 			} else {
 				prepareEmailRequestEmployee(serviceReqRequest, serviceRequestData, requestInfo, messageMap,
@@ -166,6 +172,8 @@ public class HCNotificationConsumers {
 		localiZationCodeBody.append(serviceReq.getService_request_status().replace(" ", "_"));
 
 		String message = messageMap.get(localiZationCodeBody.toString());
+		if (message == null || message.isEmpty())
+			throw new RuntimeException("Citizen Email Template Not Found for : " + localiZationCodeBody.toString());
 
 		message = message.replace(HCConstants.SMS_NOTIFICATION_USER_NAME_KEY, serviceReq.getOwnerName())
 				.replace(HCConstants.SMS_NOTIFICATION_SERVICEREQUEST_ID, serviceReq.getService_request_id())
@@ -181,7 +189,7 @@ public class HCNotificationConsumers {
 		String subject = messageMap.get(localiZationCodeSubject.toString());
 
 		log.info("get massage from localization and Email Id from userInfo");
-		log.info("Sending the Email : Email Id : " + emailIdRetrived + "And  Massage :" + message + "And  subject :"
+		log.info("Sending the Email : Email Id : " + emailIdRetrived + " And  Massage :" + message + "And  subject :"
 				+ subject);
 		return EmailRequest.builder().email(emailIdRetrived).subject(subject).body(message).isHTML(true).build();
 	}
@@ -205,6 +213,9 @@ public class HCNotificationConsumers {
 		localiZationCodeBody.append(serviceReq.getService_request_status().replace(" ", "_"));
 
 		String message = messageMap.get(localiZationCodeBody.toString());
+
+		if (message == null || message.isEmpty())
+			throw new RuntimeException("Employee Email Template Not Found for : " + localiZationCodeBody.toString());
 
 		if (serviceReq.getService_request_status().startsWith("EDIT") && serviceReq.getService_request_id_old() != null
 				&& !serviceReq.getService_request_id_old().isEmpty()) {
@@ -245,7 +256,7 @@ public class HCNotificationConsumers {
 			}
 		}
 		log.info("get massage from localization and Email Id from userInfo");
-		log.info("Sending the Email : Email Id : " + emailIdRetrived + "And  Massage :" + message + "And  subject :"
+		log.info("Sending the Email : Email Id : " + emailIdRetrived + " And  Massage :" + message + "And  subject :"
 				+ subject);
 		return EmailRequest.builder().email(emailIdRetrived).subject(subject).body(message).isHTML(true).build();
 	}
