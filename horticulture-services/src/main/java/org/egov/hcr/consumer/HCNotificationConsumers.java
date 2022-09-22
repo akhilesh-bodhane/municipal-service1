@@ -118,6 +118,7 @@ public class HCNotificationConsumers {
 			ServiceRequestData serviceRequestData = services.get(0);
 
 			if (isCitizen.isPresent()) {
+				log.info("Sending Email Citizen for : " + serviceRequestData.getService_request_id());
 				if (hcConfiguration.getIsEmailNotificationEnabled()
 						&& (null != serviceRequestData.getEmail() && !serviceRequestData.getEmail().isEmpty())) {
 					EmailRequest emailRequests = prepareEmailRequestCitizen(serviceRequestData,
@@ -135,6 +136,7 @@ public class HCNotificationConsumers {
 							mdmsServiceTypeName);
 				}
 			} else {
+				log.info("Sending Email Employee for : " + serviceRequestData.getService_request_id());
 				prepareEmailRequestEmployee(serviceReqRequest, serviceRequestData, requestInfo, messageMap,
 						mdmsServiceTypeName);
 
@@ -199,6 +201,9 @@ public class HCNotificationConsumers {
 
 		String role = workflowIntegrator.parseBussinessServiceData(
 				workflowIntegrator.getbussinessServiceDatafromprocesinstanceEdit(serviceReqRequest), serviceReqRequest);
+		List<ServiceRequestData> prepareEmployeeRoleWiseList = prepareEmployeeRoleWiseList(serviceReqRequest, role);
+		if (prepareEmployeeRoleWiseList == null || prepareEmployeeRoleWiseList.isEmpty())
+			throw new RuntimeException("Employee Not Found for Role : " + role);
 
 		String emailIdRetrived = serviceReq.getEmail();
 
@@ -239,7 +244,6 @@ public class HCNotificationConsumers {
 
 		String subject = messageMap.get(localiZationCodeSubject.toString());
 
-		List<ServiceRequestData> prepareEmployeeRoleWiseList = prepareEmployeeRoleWiseList(serviceReqRequest, role);
 		if (!prepareEmployeeRoleWiseList.isEmpty()) {
 			for (ServiceRequestData requestData : prepareEmployeeRoleWiseList) {
 				if (hcConfiguration.getIsEmailNotificationEnabled()
