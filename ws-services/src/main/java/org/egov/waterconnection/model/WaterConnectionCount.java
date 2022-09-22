@@ -46,8 +46,8 @@ public class WaterConnectionCount {
 	private String applicationStatus = null;
 	
 	
-	@JsonProperty("WaterApplicationType")
-	private String waterApplicationType = null;
+	@JsonProperty("activityType")
+	private String activityType = null;
 	
 	@JsonProperty("PaymentMODE")
 	private String paymentMODE = null;

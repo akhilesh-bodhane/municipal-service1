@@ -36,6 +36,7 @@ public class WaterRowMapperCount implements ResultSetExtractor<List<WaterConnect
 				currentWaterConnection.setPaymentDate(rs.getLong("paymentdate"));
 				currentWaterConnection.setTotalAmountPaid(rs.getString("total_amount_paid"));
 				currentWaterConnection.setApplicationStatus(rs.getString("applicationstatus"));
+				currentWaterConnection.setActivityType(rs.getString("app_activitytype"));
 				currentWaterConnection.setPaymentMODE(rs.getString("paymentmode"));
                 currentWaterConnection.setSubdiv(rs.getString("subdiv"));
 				
