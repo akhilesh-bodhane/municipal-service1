@@ -173,7 +173,7 @@ public class HCNotificationConsumers {
 //		localiZationCodeBody.append("_");
 		localiZationCodeBody.append(serviceReq.getService_request_status().replace(" ", "_"));
 
-		String message = messageMap.get(localiZationCodeBody.toString());
+		String message = messageMap.get(localiZationCodeBody.toString().trim());
 		if (message == null || message.isEmpty())
 			throw new RuntimeException("Citizen Email Template Not Found for : " + localiZationCodeBody.toString());
 
@@ -217,7 +217,7 @@ public class HCNotificationConsumers {
 		localiZationCodeBody.append("_");
 		localiZationCodeBody.append(serviceReq.getService_request_status().replace(" ", "_"));
 
-		String message = messageMap.get(localiZationCodeBody.toString());
+		String message = messageMap.get(localiZationCodeBody.toString().trim());
 
 		if (message == null || message.isEmpty())
 			throw new RuntimeException("Employee Email Template Not Found for : " + localiZationCodeBody.toString());
@@ -296,21 +296,15 @@ public class HCNotificationConsumers {
 					org.json.JSONObject empDetails = new org.json.JSONObject(employeesList.get(i).toString());
 					org.json.JSONObject user = empDetails.getJSONObject("user");
 
-					if (!user.isNull("mobileNumber"))
-						mobileNumber = user.getString("mobileNumber");
-					else
-						mobileNumber = user.getString("");
+					serviceRequest
+							.setEmail(user.getString("emailId") != null ? user.getString("emailId").toString() : "");
 
-					userName = user.getString("userName");
+					serviceRequest.setContactNumber(
+							user.getString("mobileNumber") != null ? user.getString("mobileNumber") : "");
 
-					if (!user.isNull("emailId"))
-						serviceRequest.setEmail(user.getString("emailId").toString());
-					else
-						serviceRequest.setEmail("");
-
-					serviceRequest.setOwnerName(userName);
+					serviceRequest.setOwnerName(user.getString("userName"));
 					serviceRequest.setCity(city);
-					serviceRequest.setContactNumber(mobileNumber);
+
 					serviceRequestRoleList.add(serviceRequest);
 				}
 			} catch (Exception ex) {
@@ -319,6 +313,7 @@ public class HCNotificationConsumers {
 		} catch (HttpClientErrorException e) {
 			System.out.print("Handled exception");
 		}
+		log.info(" All " + role + " Employee PI Details :  " + serviceRequestRoleList);
 		return serviceRequestRoleList;
 	}
 
