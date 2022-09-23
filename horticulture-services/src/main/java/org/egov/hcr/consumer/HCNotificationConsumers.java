@@ -98,7 +98,7 @@ public class HCNotificationConsumers {
 		// get all the messages from localization table
 		Map<String, String> messageMap = getLocalizationMessage(
 				serviceReqRequest.getRequestInfo().getUserInfo().getTenantId(), serviceReqRequest.getRequestInfo());
-		log.info("Get localization Message Succesfully");
+		log.info("Get localization Message Succesfully : " + messageMap.keySet().toString());
 
 		if (!messageMap.isEmpty()) {
 
