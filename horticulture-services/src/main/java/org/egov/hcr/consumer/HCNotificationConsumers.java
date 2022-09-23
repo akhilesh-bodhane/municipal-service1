@@ -196,7 +196,7 @@ public class HCNotificationConsumers {
 		return EmailRequest.builder().email(emailIdRetrived).subject(subject).body(message).isHTML(true).build();
 	}
 
-	public EmailRequest prepareEmailRequestEmployee(ServiceRequest serviceReqRequest, ServiceRequestData serviceReq,
+	public void prepareEmailRequestEmployee(ServiceRequest serviceReqRequest, ServiceRequestData serviceReq,
 			RequestInfo requestInfo, Map<String, String> messageMap, String mdmsServiceTypeName) {
 
 		String role = workflowIntegrator.parseBussinessServiceData(
@@ -252,6 +252,8 @@ public class HCNotificationConsumers {
 					EmailRequest emailRequests = EmailRequest.builder().email(requestData.getEmail()).subject(subject)
 							.body(message).isHTML(true).build();
 					if (null != emailRequests) {
+						log.info("Sending the Email : Email Id : " + requestData.getEmail() + " And  Massage :" + message + "And  subject :"
+								+ subject);
 						log.info("Sending Email Employee");
 						hCProducer.push(hcConfiguration.getEmailNotifTopic(), emailRequests);
 					} else
@@ -259,10 +261,6 @@ public class HCNotificationConsumers {
 				}
 			}
 		}
-		log.info("get massage from localization and Email Id from userInfo");
-		log.info("Sending the Email : Email Id : " + emailIdRetrived + " And  Massage :" + message + "And  subject :"
-				+ subject);
-		return EmailRequest.builder().email(emailIdRetrived).subject(subject).body(message).isHTML(true).build();
 	}
 
 	public List<ServiceRequestData> prepareEmployeeRoleWiseList(ServiceRequest serviceReqRequest, String role) {
@@ -313,7 +311,6 @@ public class HCNotificationConsumers {
 		} catch (HttpClientErrorException e) {
 			System.out.print("Handled exception");
 		}
-		log.info(" All " + role + " Employee PI Details :  " + serviceRequestRoleList);
 		return serviceRequestRoleList;
 	}
 
