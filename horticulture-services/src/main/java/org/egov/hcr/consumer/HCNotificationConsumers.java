@@ -196,7 +196,7 @@ public class HCNotificationConsumers {
 		return EmailRequest.builder().email(emailIdRetrived).subject(subject).body(message).isHTML(true).build();
 	}
 
-	public EmailRequest prepareEmailRequestEmployee(ServiceRequest serviceReqRequest, ServiceRequestData serviceReq,
+	public void prepareEmailRequestEmployee(ServiceRequest serviceReqRequest, ServiceRequestData serviceReq,
 			RequestInfo requestInfo, Map<String, String> messageMap, String mdmsServiceTypeName) {
 
 		String role = workflowIntegrator.parseBussinessServiceData(
@@ -261,9 +261,6 @@ public class HCNotificationConsumers {
 				}
 			}
 		}
-		log.info("get massage from localization and Email Id from userInfo");
-		
-		return EmailRequest.builder().email(emailIdRetrived).subject(subject).body(message).isHTML(true).build();
 	}
 
 	public List<ServiceRequestData> prepareEmployeeRoleWiseList(ServiceRequest serviceReqRequest, String role) {
