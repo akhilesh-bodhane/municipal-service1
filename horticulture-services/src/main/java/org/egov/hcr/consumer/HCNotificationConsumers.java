@@ -27,8 +27,10 @@ import org.egov.hcr.contract.RequestInfoWrapper;
 import org.egov.hcr.contract.SMSRequest;
 import org.egov.hcr.contract.ServiceRequest;
 import org.egov.hcr.model.ActionInfo;
+import org.egov.hcr.model.EmployeeDetails;
 import org.egov.hcr.model.ServiceRequestData;
 import org.egov.hcr.model.Source;
+import org.egov.hcr.model.User;
 import org.egov.hcr.producer.HCConfiguration;
 import org.egov.hcr.producer.HCProducer;
 import org.egov.hcr.service.NotificationService;
@@ -44,6 +46,7 @@ import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.extern.slf4j.Slf4j;
@@ -117,7 +120,10 @@ public class HCNotificationConsumers {
 				throw new CustomException("EMPTY_DATA", "No Service data found for Sending notification");
 			ServiceRequestData serviceRequestData = services.get(0);
 
-			if (isCitizen.isPresent()) {
+			if (isCitizen.isPresent() || (serviceRequestData.getService_request_status()
+					.equalsIgnoreCase(HCConstants.REJECTED)
+					|| serviceRequestData.getService_request_status().equalsIgnoreCase(HCConstants.CLOSED)
+					|| serviceRequestData.getService_request_status().equalsIgnoreCase(HCConstants.APPROVED_STATUS))) {
 				log.info("Sending Email Citizen for : " + serviceRequestData.getService_request_id());
 				if (hcConfiguration.getIsEmailNotificationEnabled()
 						&& (null != serviceRequestData.getEmail() && !serviceRequestData.getEmail().isEmpty())) {
@@ -141,18 +147,18 @@ public class HCNotificationConsumers {
 						mdmsServiceTypeName);
 
 				// If Application is in final Stage send email to Citizen
-				if (serviceRequestData.getService_request_status().equalsIgnoreCase(HCConstants.CLOSED)) {
-					if (hcConfiguration.getIsEmailNotificationEnabled()
-							&& (null != serviceRequestData.getEmail() && !serviceRequestData.getEmail().isEmpty())) {
-						EmailRequest emailRequests = prepareEmailRequestCitizen(serviceRequestData,
-								serviceReqRequest.getRequestInfo(), messageMap, mdmsServiceTypeName);
-						if (null != emailRequests) {
-							log.info("Sending Email Citizen");
-							hCProducer.push(hcConfiguration.getEmailNotifTopic(), emailRequests);
-						} else
-							log.info("email body is empty in this case");
-					}
-				}
+//				if (serviceRequestData.getService_request_status().equalsIgnoreCase(HCConstants.CLOSED)) {
+//					if (hcConfiguration.getIsEmailNotificationEnabled()
+//							&& (null != serviceRequestData.getEmail() && !serviceRequestData.getEmail().isEmpty())) {
+//						EmailRequest emailRequests = prepareEmailRequestCitizen(serviceRequestData,
+//								serviceReqRequest.getRequestInfo(), messageMap, mdmsServiceTypeName);
+//						if (null != emailRequests) {
+//							log.info("Sending Email Citizen");
+//							hCProducer.push(hcConfiguration.getEmailNotifTopic(), emailRequests);
+//						} else
+//							log.info("email body is empty in this case");
+//					}
+//				}
 			}
 
 		}
@@ -252,8 +258,8 @@ public class HCNotificationConsumers {
 					EmailRequest emailRequests = EmailRequest.builder().email(requestData.getEmail()).subject(subject)
 							.body(message).isHTML(true).build();
 					if (null != emailRequests) {
-						log.info("Sending the Email : Email Id : " + requestData.getEmail() + " And  Massage :" + message + "And  subject :"
-								+ subject);
+						log.info("Sending the Email : Email Id : " + requestData.getEmail() + " And  Massage :"
+								+ message + "And  subject :" + subject);
 						log.info("Sending Email Employee");
 						hCProducer.push(hcConfiguration.getEmailNotifTopic(), emailRequests);
 					} else
@@ -266,50 +272,33 @@ public class HCNotificationConsumers {
 	public List<ServiceRequestData> prepareEmployeeRoleWiseList(ServiceRequest serviceReqRequest, String role) {
 
 		String city = serviceReqRequest.getServices().get(0).getCity();
-		String allRoles = null;
-
 		List<ServiceRequestData> serviceRequestRoleList = new ArrayList<ServiceRequestData>();
 
 		log.info("Get Employee data using  : " + role + " role");
 		try {
-			allRoles = rest
+			EmployeeDetails employee = rest
 					.postForObject(
 							hcConfiguration.getEgovHRMShost().concat(hcConfiguration.getEgovHRMSSearchEndpoint())
 									.concat("?").concat("roles=" + role + "&tenantId=" + city),
-							serviceReqRequest, String.class);
+							serviceReqRequest, EmployeeDetails.class);
 
-			try {
-				org.json.JSONObject obj = new org.json.JSONObject(allRoles);
+			log.info("All Employee Role  : " + role + " And Details :  " + mapper.writeValueAsString(employee));
 
-				log.info(" All " + role + " details are " + obj);
-
-				org.json.JSONArray employeesList = obj.getJSONArray("Employees");
-
-				ServiceRequestData serviceRequest = null;
-				String mobileNumber = null;
-				String userName = null;
-
-				for (int i = 0; i < employeesList.length(); i++) {
-					serviceRequest = new ServiceRequestData();
-					org.json.JSONObject empDetails = new org.json.JSONObject(employeesList.get(i).toString());
-					org.json.JSONObject user = empDetails.getJSONObject("user");
-
-					serviceRequest
-							.setEmail(user.getString("emailId") != null ? user.getString("emailId").toString() : "");
-
-					serviceRequest.setContactNumber(
-							user.getString("mobileNumber") != null ? user.getString("mobileNumber") : "");
-
-					serviceRequest.setOwnerName(user.getString("userName"));
+			if (employee != null && employee.getEmployees() != null && !employee.getEmployees().isEmpty()) {
+				for (int i = 0; i < employee.getEmployees().size(); i++) {
+					ServiceRequestData serviceRequest = new ServiceRequestData();
+					User user2 = employee.getEmployees().get(i).getUser();
+					serviceRequest.setEmail(user2.getEmailId() != null ? user2.getEmailId().toString() : "");
+					serviceRequest.setContactNumber(user2.getMobileNumber() != null ? user2.getMobileNumber() : "");
+					serviceRequest.setOwnerName(user2.getUserName());
 					serviceRequest.setCity(city);
-
 					serviceRequestRoleList.add(serviceRequest);
 				}
-			} catch (Exception ex) {
-
 			}
 		} catch (HttpClientErrorException e) {
 			System.out.print("Handled exception");
+		} catch (JsonProcessingException e) {
+			e.printStackTrace();
 		}
 		return serviceRequestRoleList;
 	}
