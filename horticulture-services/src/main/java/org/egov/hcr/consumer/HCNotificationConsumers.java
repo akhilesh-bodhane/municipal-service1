@@ -122,8 +122,7 @@ public class HCNotificationConsumers {
 
 			if (isCitizen.isPresent() || (serviceRequestData.getService_request_status()
 					.equalsIgnoreCase(HCConstants.REJECTED)
-					|| serviceRequestData.getService_request_status().equalsIgnoreCase(HCConstants.CLOSED)
-					|| serviceRequestData.getService_request_status().equalsIgnoreCase(HCConstants.APPROVED_STATUS))) {
+					|| serviceRequestData.getService_request_status().equalsIgnoreCase(HCConstants.CLOSED))) {
 				log.info("Sending Email Citizen for : " + serviceRequestData.getService_request_id());
 				if (hcConfiguration.getIsEmailNotificationEnabled()
 						&& (null != serviceRequestData.getEmail() && !serviceRequestData.getEmail().isEmpty())) {
@@ -290,7 +289,7 @@ public class HCNotificationConsumers {
 					User user2 = employee.getEmployees().get(i).getUser();
 					serviceRequest.setEmail(user2.getEmailId() != null ? user2.getEmailId().toString() : "");
 					serviceRequest.setContactNumber(user2.getMobileNumber() != null ? user2.getMobileNumber() : "");
-					serviceRequest.setOwnerName(user2.getUserName());
+					serviceRequest.setOwnerName(user2.getName());
 					serviceRequest.setCity(city);
 					serviceRequestRoleList.add(serviceRequest);
 				}
