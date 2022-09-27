@@ -277,21 +277,29 @@ public class WorkflowIntegrator {
 		StringBuilder roles = new StringBuilder();
 		Boolean found = new Boolean(false);
 		for (BusinessService businessService : bussinessServiceData.getBusinessServices()) {
-			for (State s : businessService.getStates()) {
-				for (Action a : s.getActions()) {
-					String newactions = a.getAction();
-					String newState = a.getNextState();
-					if (newactions.equals(request.getServices().get(0).getAction())) {
-						for (State ss : businessService.getStates()) {
-							if (newState.equals(ss.getUuid())) {
-								for (Action aa : ss.getActions()) {
-									for (String r : aa.getRoles()) {
-										if (null != roles && roles.length() != 0) {
-											roles.append(",").append(r);
-										} else {
-											roles.append(r);
+			if (businessService.getStates() != null) {
+				for (State s : businessService.getStates()) {
+					if (s.getActions() != null) {
+						for (Action a : s.getActions()) {
+							String newactions = a.getAction();
+							String newState = a.getNextState();
+							if (newactions.equals(request.getServices().get(0).getAction())) {
+								for (State ss : businessService.getStates()) {
+									if (newState.equals(ss.getUuid())) {
+										for (Action aa : ss.getActions()) {
+											for (String r : aa.getRoles()) {
+												if (null != roles && roles.length() != 0) {
+													roles.append(",").append(r);
+												} else {
+													roles.append(r);
+												}
+												found = true;
+											}
+											if (found)
+												break;
 										}
-										found = true;
+										if (found)
+											break;
 									}
 									if (found)
 										break;
@@ -302,14 +310,10 @@ public class WorkflowIntegrator {
 							if (found)
 								break;
 						}
-						if (found)
-							break;
 					}
 					if (found)
 						break;
 				}
-				if (found)
-					break;
 			}
 
 //			states.forEach(s -> {
