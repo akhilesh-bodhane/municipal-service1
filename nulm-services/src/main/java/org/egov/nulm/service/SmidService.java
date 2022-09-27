@@ -14,6 +14,7 @@ import org.egov.nulm.idgen.model.IdGenerationResponse;
 import org.egov.nulm.model.NulmSmidRequest;
 import org.egov.nulm.model.ResponseInfoWrapper;
 import org.egov.nulm.model.SmidApplication;
+import org.egov.nulm.model.SmidApplicationCount;
 import org.egov.nulm.repository.SmidRepository;
 import org.egov.nulm.util.AuditDetailsUtil;
 import org.egov.nulm.util.IdGenRepository;
@@ -146,6 +147,22 @@ public class SmidService {
 					SmidApplication.class);
 			List<Role> role = smidrequest.getRequestInfo().getUserInfo().getRoles();
 			List<SmidApplication> SmidApplicationresult = repository.getSMIDApplication(SmidApplication, role,
+					smidrequest.getRequestInfo().getUserInfo().getId());
+			return new ResponseEntity<>(ResponseInfoWrapper.builder()
+					.responseInfo(ResponseInfo.builder().status(CommonConstants.SUCCESS).build())
+					.responseBody(SmidApplicationresult).build(), HttpStatus.OK);
+		} catch (Exception e) {
+			throw new CustomException(CommonConstants.SMID_APPLICATION_EXCEPTION_CODE, e.getMessage());
+		}
+	}
+	
+	public ResponseEntity<ResponseInfoWrapper> getSMIDApplicationCount(NulmSmidRequest smidrequest) {
+		try {
+
+			SmidApplication SmidApplication = objectMapper.convertValue(smidrequest.getNulmSmidRequest(),
+					SmidApplication.class);
+			List<Role> role = smidrequest.getRequestInfo().getUserInfo().getRoles();
+			List<SmidApplicationCount> SmidApplicationresult = repository.getSMIDApplicationCount(SmidApplication, role,
 					smidrequest.getRequestInfo().getUserInfo().getId());
 			return new ResponseEntity<>(ResponseInfoWrapper.builder()
 					.responseInfo(ResponseInfo.builder().status(CommonConstants.SUCCESS).build())

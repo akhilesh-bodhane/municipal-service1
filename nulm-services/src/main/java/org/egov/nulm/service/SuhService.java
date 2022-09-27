@@ -12,6 +12,7 @@ import org.egov.nulm.idgen.model.IdGenerationResponse;
 import org.egov.nulm.model.NulmSuhRequest;
 import org.egov.nulm.model.ResponseInfoWrapper;
 import org.egov.nulm.model.SuhApplication;
+import org.egov.nulm.model.SuhApplicationCount;
 import org.egov.nulm.repository.SuhRepository;
 import org.egov.nulm.util.AuditDetailsUtil;
 import org.egov.nulm.util.IdGenRepository;
@@ -147,6 +148,23 @@ public class SuhService {
 			throw new CustomException(CommonConstants.SUH_APPLICATION_EXCEPTION_CODE, e.getMessage());
 		}
 	}
+	
+	public ResponseEntity<ResponseInfoWrapper> getSuhApplicationCount(NulmSuhRequest request) {
+		try {
+			SuhApplication suhapplication = objectMapper.convertValue(request.getNulmSuhRequest(),
+					SuhApplication.class);
+			List<Role> role=request.getRequestInfo().getUserInfo().getRoles();
+			List<SuhApplicationCount> SuhApplicationresult = repository.getSuhApplicationCount(suhapplication,role,request.getRequestInfo().getUserInfo().getId());
+			return new ResponseEntity<>(ResponseInfoWrapper.builder()
+					.responseInfo(ResponseInfo.builder().status(CommonConstants.SUCCESS).build())
+					.responseBody(SuhApplicationresult).build(), HttpStatus.OK);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new CustomException(CommonConstants.SUH_APPLICATION_EXCEPTION_CODE, e.getMessage());
+		}
+	}
+	
+	
 	public ResponseEntity<ResponseInfoWrapper> getShelterName(NulmSuhRequest request) {
 		try {
 			SuhApplication suhapplication = objectMapper.convertValue(request.getNulmSuhRequest(),

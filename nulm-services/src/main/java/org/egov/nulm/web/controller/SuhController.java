@@ -41,6 +41,11 @@ public class SuhController {
 		return service.getSuhApplication(request);
 	}
 	
+	@PostMapping(value = "/_getCount")
+	public ResponseEntity<ResponseInfoWrapper> getSuhApplicationCount( @RequestBody NulmSuhRequest request) {
+		return service.getSuhApplicationCount(request);
+	}
+	
 	@PostMapping(value = "/_getShelterName")
 	public ResponseEntity<ResponseInfoWrapper> getShelterName( @RequestBody NulmSuhRequest request) {
 		return service.getShelterName(request);

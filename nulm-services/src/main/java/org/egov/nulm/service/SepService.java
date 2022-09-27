@@ -12,6 +12,7 @@ import org.egov.common.contract.response.ResponseInfo;
 import org.egov.nulm.common.CommonConstants;
 import org.egov.nulm.config.NULMConfiguration;
 import org.egov.nulm.idgen.model.IdGenerationResponse;
+import org.egov.nulm.model.ApplicationCountt;
 import org.egov.nulm.model.NulmSepRequest;
 import org.egov.nulm.model.ResponseInfoWrapper;
 import org.egov.nulm.model.SepApplication;
@@ -132,6 +133,24 @@ public class SepService {
 					SepApplication.class);
 			List<Role> role = seprequest.getRequestInfo().getUserInfo().getRoles();
 			List<SepApplication> SEPApplicationresult = repository.getSEPApplication(SEPApplication, role,
+					seprequest.getRequestInfo().getUserInfo().getId());
+			return new ResponseEntity<>(ResponseInfoWrapper.builder()
+					.responseInfo(ResponseInfo.builder().status(CommonConstants.SUCCESS).build())
+					.responseBody(SEPApplicationresult).build(), HttpStatus.OK);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new CustomException(CommonConstants.SEP_APPLICATION_EXCEPTION_CODE, e.getMessage());
+		}
+	}
+	
+	
+	public ResponseEntity<ResponseInfoWrapper> getSEPApplicationCount(NulmSepRequest seprequest) {
+		try {
+
+			SepApplication SEPApplication = objectMapper.convertValue(seprequest.getNulmSepRequest(),
+					SepApplication.class);
+			List<Role> role = seprequest.getRequestInfo().getUserInfo().getRoles();
+			List<ApplicationCountt> SEPApplicationresult = repository.getSEPApplicationCount(SEPApplication, role,
 					seprequest.getRequestInfo().getUserInfo().getId());
 			return new ResponseEntity<>(ResponseInfoWrapper.builder()
 					.responseInfo(ResponseInfo.builder().status(CommonConstants.SUCCESS).build())
