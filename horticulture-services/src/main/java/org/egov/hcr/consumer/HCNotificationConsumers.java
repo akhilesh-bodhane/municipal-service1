@@ -287,17 +287,19 @@ public class HCNotificationConsumers {
 				for (int i = 0; i < employee.getEmployees().size(); i++) {
 					ServiceRequestData serviceRequest = new ServiceRequestData();
 					User user2 = employee.getEmployees().get(i).getUser();
-					log.info("USER  : " + role + " And Details :  " + mapper.writeValueAsString(user2));
-					serviceRequest.setEmail(
-							user2.getEmailId() != null && !user2.getEmailId().isEmpty() ? user2.getEmailId().toString()
-									: "");
-					serviceRequest
-							.setContactNumber(user2.getMobileNumber() != null && !user2.getMobileNumber().isEmpty()
-									? user2.getMobileNumber()
-									: "");
-					serviceRequest.setOwnerName(user2.getName());
-					serviceRequest.setCity(city);
-					serviceRequestRoleList.add(serviceRequest);
+					if (user2 != null) {
+						log.info("USER  : " + role + " And Details :  " + mapper.writeValueAsString(user2));
+						serviceRequest.setEmail(user2.getEmailId() != null && !user2.getEmailId().isEmpty()
+								? user2.getEmailId().toString()
+								: "");
+						serviceRequest
+								.setContactNumber(user2.getMobileNumber() != null && !user2.getMobileNumber().isEmpty()
+										? user2.getMobileNumber()
+										: "");
+						serviceRequest.setOwnerName(user2.getName());
+						serviceRequest.setCity(city);
+						serviceRequestRoleList.add(serviceRequest);
+					}
 				}
 			}
 		} catch (HttpClientErrorException e) {
