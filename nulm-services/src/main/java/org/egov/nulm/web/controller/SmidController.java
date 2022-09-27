@@ -37,7 +37,7 @@ public class SmidController {
 	
 	@PostMapping(value = "/_getCount")
 	public ResponseEntity<ResponseInfoWrapper> getSEPApplicationCount(@RequestBody NulmSmidRequest smidrequest) {
-		return service.getSMIDApplication(smidrequest);
+		return service.getSMIDApplicationCount(smidrequest);
 	}
 	
 	@PostMapping(value = "/_update")
