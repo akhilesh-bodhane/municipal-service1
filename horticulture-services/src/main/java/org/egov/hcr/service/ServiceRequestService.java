@@ -300,9 +300,9 @@ public class ServiceRequestService {
 	 * @param request
 	 * @throws JSONException
 	 */
-	public ServiceResponse update(ServiceRequest request, String requestHeader) throws JSONException {
+	public ServiceResponse update(ServiceRequest request) throws JSONException {
 		try {
-			enrichServiceRequestForUpdate(request, requestHeader);
+			enrichServiceRequestForUpdate(request);
 			if (null == request.getActionInfo())
 				request.setActionInfo(new ArrayList<ActionInfo>());
 			return getServiceResponse(request, true);
@@ -457,7 +457,7 @@ public class ServiceRequestService {
 	 * @param request
 	 * @throws JSONException
 	 */
-	private void enrichServiceRequestForUpdate(ServiceRequest request, String requestHeader) throws JSONException {
+	private void enrichServiceRequestForUpdate(ServiceRequest request) throws JSONException {
 
 		Map<String, List<String>> errorMap = new HashMap<>();
 		RequestInfo requestInfo = request.getRequestInfo();
