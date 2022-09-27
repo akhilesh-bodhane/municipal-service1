@@ -253,9 +253,11 @@ public class HCNotificationConsumers {
 			for (ServiceRequestData requestData : prepareEmployeeRoleWiseList) {
 				if (hcConfiguration.getIsEmailNotificationEnabled()
 						&& (null != requestData.getEmail() && !requestData.getEmail().isEmpty())) {
-					message = message.replace(HCConstants.SMS_NOTIFICATION_EMP_NAME_KEY, requestData.getOwnerName());
+					String builderMessage = new String(message);
+					builderMessage = builderMessage.replace(HCConstants.SMS_NOTIFICATION_EMP_NAME_KEY,
+							requestData.getOwnerName());
 					EmailRequest emailRequests = EmailRequest.builder().email(requestData.getEmail()).subject(subject)
-							.body(message).isHTML(true).build();
+							.body(builderMessage).isHTML(true).build();
 					if (null != emailRequests) {
 						log.info("Sending the Email : Email Id : " + requestData.getEmail() + " And  Massage :"
 								+ message + "And  subject :" + subject);

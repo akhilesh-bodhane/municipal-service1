@@ -115,11 +115,16 @@ public class ServiceController {
 	 */
 
 	@RequestMapping(value = "/_update", method = RequestMethod.POST)
-	public ResponseEntity<?> update(@RequestBody ServiceRequest serviceRequest,
-			@RequestHeader("User-Agent") String requestHeader) throws JSONException {
+	public ResponseEntity<?> update(@RequestBody ServiceRequest serviceRequest) throws JSONException {
 		try {
+			ObjectMapper mapper = new ObjectMapper();
+			try {
+				System.out.println("UPDATE API REQUEST : " + mapper.writeValueAsString(serviceRequest));
+			} catch (JsonProcessingException e) {
+				e.printStackTrace();
+			}
 			hcutils.validateJsonAddUpdateData(serviceRequest, HCConstants.SERVICEREQUESTUPDATE);
-			ServiceResponse response = service.update(serviceRequest, requestHeader);
+			ServiceResponse response = service.update(serviceRequest);
 			return new ResponseEntity<>(response, HttpStatus.CREATED);
 
 		} catch (Exception e) {
