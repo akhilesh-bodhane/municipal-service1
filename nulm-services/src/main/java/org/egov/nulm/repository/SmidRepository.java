@@ -11,9 +11,11 @@ import org.egov.nulm.model.NulmSepRequest;
 import org.egov.nulm.model.NulmSmidRequest;
 import org.egov.nulm.model.SepApplication;
 import org.egov.nulm.model.SmidApplication;
+import org.egov.nulm.model.SmidApplicationCount;
 import org.egov.nulm.producer.Producer;
 import org.egov.nulm.repository.builder.NULMQueryBuilder;
 import org.egov.nulm.repository.rowmapper.SMIDRowMapper;
+import org.egov.nulm.repository.rowmapper.SMIDRowMapperCount;
 import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -32,6 +34,9 @@ public class SmidRepository {
 	private NULMConfiguration config;
 
 	private SMIDRowMapper smidrowMapper;
+	
+	@Autowired
+	private SMIDRowMapperCount smidrowMapperCount;
 
 	@Autowired
 	public SmidRepository(JdbcTemplate jdbcTemplate, Producer producer, NULMConfiguration config,
@@ -83,6 +88,46 @@ public class SmidRepository {
 							smidApplication.getFromDate(), smidApplication.getFromDate(), smidApplication.getToDate(),
 							smidApplication.getToDate(),smidApplication.getName(),smidApplication.getName(),"" },
 					smidrowMapper);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new CustomException(CommonConstants.ROLE, e.getMessage());
+		}
+
+	}
+	
+	
+	public List<SmidApplicationCount> getSMIDApplicationCount(SmidApplication smidApplication, List<Role> role, Long userId) {
+		List<SmidApplicationCount> smid = new ArrayList<>();
+		try {
+			for (Role roleobj : role) {
+				if ((roleobj.getCode()).equalsIgnoreCase(config.getRoleEmployee())) {
+					return smid = jdbcTemplate.query(NULMQueryBuilder.GET_SMID_APPLICATION_QUERY,
+							new Object[] { smidApplication.getApplicationId(), smidApplication.getApplicationId(),
+									"", "", smidApplication.getTenantId(),
+									smidApplication.getApplicationStatus() == null ? ""
+											: smidApplication.getApplicationStatus().toString(),
+									smidApplication.getApplicationStatus() == null ? ""
+											: smidApplication.getApplicationStatus().toString(),
+									smidApplication.getFromDate(), smidApplication.getFromDate(),
+									smidApplication.getToDate(), smidApplication.getToDate(),
+									smidApplication.getName(),smidApplication.getName(),
+									smidApplication.getApplicationStatus() == null ? SmidApplication.StatusEnum.DRAFTED.toString()
+											: ""},
+							smidrowMapperCount);
+				}
+			}
+
+			return smid = jdbcTemplate.query(NULMQueryBuilder.GET_SMID_APPLICATION_QUERY,
+					new Object[] { smidApplication.getApplicationId(), smidApplication.getApplicationId(),
+							userId.toString(), userId.toString(), smidApplication.getTenantId(),
+							smidApplication.getApplicationStatus() == null ? ""
+									: smidApplication.getApplicationStatus().toString(),
+							smidApplication.getApplicationStatus() == null ? ""
+									: smidApplication.getApplicationStatus().toString(),
+							smidApplication.getFromDate(), smidApplication.getFromDate(), smidApplication.getToDate(),
+							smidApplication.getToDate(),smidApplication.getName(),smidApplication.getName(),"" },
+					smidrowMapperCount);
 
 		} catch (Exception e) {
 			e.printStackTrace();

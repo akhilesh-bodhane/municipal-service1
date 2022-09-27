@@ -33,6 +33,11 @@ public class SepController {
 		return sepService.getSEPApplication(seprequest);
 	}
 	
+	@PostMapping(value = "/_getCount")
+	public ResponseEntity<ResponseInfoWrapper> getSEPApplicationCount(@RequestBody NulmSepRequest seprequest) {
+		return sepService.getSEPApplicationCount(seprequest);
+	}
+	
 	@PostMapping(value = "/_update")
 	public ResponseEntity<ResponseInfoWrapper> updateSEPApplication(@Valid @RequestBody NulmSepRequest seprequest) {
 		return sepService.updateSEPApplication(seprequest);

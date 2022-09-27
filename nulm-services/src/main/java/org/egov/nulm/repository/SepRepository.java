@@ -6,11 +6,13 @@ import java.util.List;
 import org.egov.common.contract.request.Role;
 import org.egov.nulm.common.CommonConstants;
 import org.egov.nulm.config.NULMConfiguration;
+import org.egov.nulm.model.ApplicationCountt;
 import org.egov.nulm.model.NulmSepRequest;
 import org.egov.nulm.model.SepApplication;
 import org.egov.nulm.model.SepApplicationDocument;
 import org.egov.nulm.producer.Producer;
 import org.egov.nulm.repository.builder.NULMQueryBuilder;
+import org.egov.nulm.repository.rowmapper.ApplicationCount;
 import org.egov.nulm.repository.rowmapper.SEPRowMapper;
 import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +29,9 @@ public class SepRepository {
 	private NULMConfiguration config;
 
 	private SEPRowMapper seprowMapper;
+	
+	@Autowired
+	private ApplicationCount applicationCounttt;
 
 	@Autowired
 	public SepRepository(JdbcTemplate jdbcTemplate, Producer producer, NULMConfiguration config,
@@ -68,6 +73,40 @@ public class SepRepository {
 									sepApplication.getName(),
 									isEmployee ? SepApplication.StatusEnum.DRAFTED.toString() : ""
 								 }, seprowMapper);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new CustomException(CommonConstants.ROLE, e.getMessage());
+		}
+
+	}
+	
+	
+	public List<ApplicationCountt> getSEPApplicationCount(SepApplication sepApplication, List<Role> role, Long userId) {
+		List<ApplicationCountt> sep = new ArrayList<>();
+		boolean isEmployee=false;
+		try {
+			for (Role roleobj : role) {
+				if ((roleobj.getCode()).equalsIgnoreCase(config.getRoleEmployee())) {
+					isEmployee=true;
+				}
+			}
+			return sep = jdbcTemplate.query(NULMQueryBuilder.GET_SEP_APPLICATION_QUERY,
+					new Object[] {  sepApplication.getApplicationId(), 
+									sepApplication.getApplicationId(), 
+									isEmployee ? "" : userId.toString(), 
+									isEmployee ? "" : userId.toString(),
+									isEmployee ? "" : sepApplication.getTenantId(),
+									isEmployee ? "" : sepApplication.getTenantId(),
+									sepApplication.getApplicationStatus() == null ? "" : sepApplication.getApplicationStatus().toString(),
+									sepApplication.getApplicationStatus() == null ? "" : sepApplication.getApplicationStatus().toString(),
+									sepApplication.getFromDate(), 
+									sepApplication.getFromDate(),
+									sepApplication.getToDate(),
+									sepApplication.getToDate(),
+									sepApplication.getName(),
+									sepApplication.getName(),
+									isEmployee ? SepApplication.StatusEnum.DRAFTED.toString() : ""
+								 }, applicationCounttt);
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new CustomException(CommonConstants.ROLE, e.getMessage());

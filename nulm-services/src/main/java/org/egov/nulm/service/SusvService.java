@@ -18,6 +18,7 @@ import org.egov.nulm.idgen.model.IdGenerationResponse;
 import org.egov.nulm.model.NulmSusvRequest;
 import org.egov.nulm.model.ResponseInfoWrapper;
 import org.egov.nulm.model.SusvApplication;
+import org.egov.nulm.model.SusvApplicationCount;
 import org.egov.nulm.model.SusvApplicationDocument;
 import org.egov.nulm.repository.SusvRepository;
 import org.egov.nulm.util.AuditDetailsUtil;
@@ -281,6 +282,21 @@ public class SusvService {
 					SusvApplication.class);
 			List<Role> role = request.getRequestInfo().getUserInfo().getRoles();
 			List<SusvApplication> result = repository.getSusvApplication(susvApplication, role,
+					request.getRequestInfo().getUserInfo().getId());
+			return new ResponseEntity<>(ResponseInfoWrapper.builder()
+					.responseInfo(ResponseInfo.builder().status(CommonConstants.SUCCESS).build()).responseBody(result)
+					.build(), HttpStatus.OK);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new CustomException(CommonConstants.SUSV_APPLICATION_EXCEPTION_CODE, e.getMessage());
+		}
+	}
+	public ResponseEntity<ResponseInfoWrapper> getSusvApplicationCount(NulmSusvRequest request) {
+		try {
+			SusvApplication susvApplication = objectMapper.convertValue(request.getNulmSusvRequest(),
+					SusvApplication.class);
+			List<Role> role = request.getRequestInfo().getUserInfo().getRoles();
+			List<SusvApplicationCount> result = repository.getSusvApplicationCount(susvApplication, role,
 					request.getRequestInfo().getUserInfo().getId());
 			return new ResponseEntity<>(ResponseInfoWrapper.builder()
 					.responseInfo(ResponseInfo.builder().status(CommonConstants.SUCCESS).build()).responseBody(result)

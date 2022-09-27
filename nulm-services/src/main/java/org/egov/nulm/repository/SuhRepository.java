@@ -13,10 +13,12 @@ import org.egov.nulm.config.NULMConfiguration;
 import org.egov.nulm.model.NulmSuhRequest;
 import org.egov.nulm.model.SmidShgGroup;
 import org.egov.nulm.model.SuhApplication;
+import org.egov.nulm.model.SuhApplicationCount;
 import org.egov.nulm.producer.Producer;
 import org.egov.nulm.repository.builder.NULMQueryBuilder;
 import org.egov.nulm.repository.rowmapper.ColumnsRowMapper;
 import org.egov.nulm.repository.rowmapper.SuhRowMapper;
+import org.egov.nulm.repository.rowmapper.SuhRowMapperCount;
 import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -34,6 +36,10 @@ public class SuhRepository {
 	private NULMConfiguration config;
 	private SuhRowMapper suhrowMapper;
 	private ColumnsRowMapper columnsRowMapper;
+	
+	@Autowired
+	private SuhRowMapperCount suhrowMapperCount;
+	
 	
 	@Autowired
 	public NamedParameterJdbcTemplate namedParameterJdbcTemplate;
@@ -129,6 +135,58 @@ public class SuhRepository {
 			paramValues.put("suhId", suh.getSuhId());
 
 			return suhApp = namedParameterJdbcTemplate.query(NULMQueryBuilder.GET_SUH_QUERY, paramValues, suhrowMapper);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new CustomException(CommonConstants.ROLE, e.getMessage());
+		}
+
+	}	
+	
+	public List<SuhApplicationCount> getSuhApplicationCount(SuhApplication suh, List<Role> role, Long userId) {
+		List<SuhApplicationCount> suhApp = new ArrayList<>();
+		Map<String, Object> paramValues = new HashMap<>();
+		paramValues.put("tenantId", suh.getTenantId());
+		paramValues.put("fromDate", suh.getFromDate());
+		paramValues.put("toDate", suh.getToDate());
+		paramValues.put("nameOfShelter", suh.getNameOfShelter());
+		
+		try {
+			for (Role roleobj : role) {
+				if ((roleobj.getCode()).equalsIgnoreCase(config.getRoleEmployee())) {
+					List<Object> statusEmplyee = new ArrayList<>();
+					if (suh.getApplicationStatus() == null) {
+						statusEmplyee.add(SuhApplication.StatusEnum.APPROVED.toString());
+						statusEmplyee.add(SuhApplication.StatusEnum.REJECTED.toString());
+						statusEmplyee.add(SuhApplication.StatusEnum.CREATED.toString());
+					} else {
+						statusEmplyee.add(suh.getApplicationStatus().toString());
+					}
+					paramValues.put("status", statusEmplyee);
+					paramValues.put("createdBy", "");
+					paramValues.put("suhId", suh.getSuhId());
+					
+
+					return suhApp = namedParameterJdbcTemplate.query(NULMQueryBuilder.GET_SUH_QUERY_COUNT, paramValues,
+							suhrowMapperCount);
+
+				}
+			}
+			List<Object> statusCitizen = new ArrayList<>();
+			if (suh.getApplicationStatus() == null) {
+				statusCitizen.add(SmidShgGroup.StatusEnum.CREATED.toString());
+				statusCitizen.add(SuhApplication.StatusEnum.REJECTED.toString());
+				statusCitizen.add(SuhApplication.StatusEnum.DRAFTED.toString());
+				statusCitizen.add(SuhApplication.StatusEnum.APPROVED.toString());
+			} else {
+				statusCitizen.add(suh.getApplicationStatus().toString());
+			}
+			statusCitizen.add(suh.getApplicationStatus() == null ? "" : suh.getApplicationStatus().toString());
+			paramValues.put("status", statusCitizen);
+			paramValues.put("createdBy", userId.toString());
+			paramValues.put("suhId", suh.getSuhId());
+
+			return suhApp = namedParameterJdbcTemplate.query(NULMQueryBuilder.GET_SUH_QUERY_COUNT, paramValues, suhrowMapperCount);
 
 		} catch (Exception e) {
 			e.printStackTrace();

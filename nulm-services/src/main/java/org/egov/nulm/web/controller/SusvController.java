@@ -43,5 +43,11 @@ public class SusvController {
 	public ResponseEntity<ResponseInfoWrapper> getSusvApplication( @RequestBody NulmSusvRequest request) {
 		return service.getSusvApplication(request);
 	}
+    
+    @PostMapping(value = "/_getCount")
+	public ResponseEntity<ResponseInfoWrapper> getSusvApplicationCount( @RequestBody NulmSusvRequest request) {
+		return service.getSusvApplicationCount(request);
+	}
+    
 	
 }
