@@ -120,9 +120,9 @@ public class HCNotificationConsumers {
 				throw new CustomException("EMPTY_DATA", "No Service data found for Sending notification");
 			ServiceRequestData serviceRequestData = services.get(0);
 
-			if (isCitizen.isPresent() || (serviceRequestData.getService_request_status()
-					.equalsIgnoreCase(HCConstants.REJECTED)
-					|| serviceRequestData.getService_request_status().equalsIgnoreCase(HCConstants.CLOSED))) {
+			if (isCitizen.isPresent()
+					|| (serviceRequestData.getService_request_status().equalsIgnoreCase(HCConstants.REJECTED)
+							|| serviceRequestData.getService_request_status().equalsIgnoreCase(HCConstants.CLOSED))) {
 				log.info("Sending Email Citizen for : " + serviceRequestData.getService_request_id());
 				if (hcConfiguration.getIsEmailNotificationEnabled()
 						&& (null != serviceRequestData.getEmail() && !serviceRequestData.getEmail().isEmpty())) {
@@ -287,8 +287,14 @@ public class HCNotificationConsumers {
 				for (int i = 0; i < employee.getEmployees().size(); i++) {
 					ServiceRequestData serviceRequest = new ServiceRequestData();
 					User user2 = employee.getEmployees().get(i).getUser();
-					serviceRequest.setEmail(user2.getEmailId() != null ? user2.getEmailId().toString() : "");
-					serviceRequest.setContactNumber(user2.getMobileNumber() != null ? user2.getMobileNumber() : "");
+					log.info("USER  : " + role + " And Details :  " + mapper.writeValueAsString(user2));
+					serviceRequest.setEmail(
+							user2.getEmailId() != null && !user2.getEmailId().isEmpty() ? user2.getEmailId().toString()
+									: "");
+					serviceRequest
+							.setContactNumber(user2.getMobileNumber() != null && !user2.getMobileNumber().isEmpty()
+									? user2.getMobileNumber()
+									: "");
 					serviceRequest.setOwnerName(user2.getName());
 					serviceRequest.setCity(city);
 					serviceRequestRoleList.add(serviceRequest);
