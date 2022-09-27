@@ -268,7 +268,12 @@ public class WorkflowIntegrator {
 
 	public String parseBussinessServiceData(BusinessServiceResponse bussinessServiceData, ServiceRequest request)
 			throws JSONException {
-
+		ObjectMapper mapper = new ObjectMapper();
+		try {
+			System.out.println("WF DATA PARSING : " + mapper.writeValueAsString(bussinessServiceData));
+		} catch (JsonProcessingException e) {
+			e.printStackTrace();
+		}
 		StringBuilder roles = new StringBuilder();
 		Boolean found = new Boolean(false);
 		for (BusinessService businessService : bussinessServiceData.getBusinessServices()) {
@@ -481,6 +486,13 @@ public class WorkflowIntegrator {
 								+ "&businessServices="
 								+ serviceRequestGetData.getServices().get(0).getServiceType().toUpperCase()),
 				serviceRequestGetData, BusinessServiceResponse.class);
+		ObjectMapper mapper = new ObjectMapper();
+		try {
+			System.out.println("WF DATA : " + mapper.writeValueAsString(bussinessServiceData));
+		} catch (JsonProcessingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		return bussinessServiceData;
 	}
 
