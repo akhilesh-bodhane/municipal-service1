@@ -660,7 +660,7 @@ public class ServiceRequestService {
 
 				// notification to user when reject or completed request
 
-				action = request.getServices().get(servReqCount).getAction().replace(" ", "");
+				action = request.getServices().get(servReqCount).getAction();
 				request.getServices().get(servReqCount).setAction(action);
 
 				log.info(" Checking action ");

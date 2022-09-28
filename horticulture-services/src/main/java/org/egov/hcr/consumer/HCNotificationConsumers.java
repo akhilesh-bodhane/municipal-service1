@@ -204,13 +204,40 @@ public class HCNotificationConsumers {
 	public void prepareEmailRequestEmployee(ServiceRequest serviceReqRequest, ServiceRequestData serviceReq,
 			RequestInfo requestInfo, Map<String, String> messageMap, String mdmsServiceTypeName) {
 
-		String role = workflowIntegrator.parseBussinessServiceData(
-				workflowIntegrator.getbussinessServiceDatafromprocesinstanceEdit(serviceReqRequest), serviceReqRequest);
-		List<ServiceRequestData> prepareEmployeeRoleWiseList = prepareEmployeeRoleWiseList(serviceReqRequest, role);
-		if (prepareEmployeeRoleWiseList == null || prepareEmployeeRoleWiseList.isEmpty())
-			throw new RuntimeException("Employee Not Found for Role : " + role);
+		List<ServiceRequestData> prepareEmployeeRoleWiseList = new ArrayList<ServiceRequestData>();
 
-		String emailIdRetrived = serviceReq.getEmail();
+		List<String> assignee = serviceReqRequest.getServices().get(0).getAssignee();
+		if (assignee != null && !assignee.isEmpty()) {
+			log.info("Getting Employee Details UserWise");
+
+			String[] employeeIds = assignee.get(0).split("#");
+			ServiceRequestData service = new ServiceRequestData();
+			String employeeDetailsRetrived = notificationService.getMobileAndIdForNotificationService(requestInfo,
+					serviceReq.getCity(), employeeIds[0], HCConstants.ROLE_EMPLOYEE);
+			if (employeeDetailsRetrived == null || employeeDetailsRetrived.isEmpty())
+				throw new RuntimeException("Employee Not Found for User Id#Uuid : " + assignee.get(0));
+
+			String data = employeeDetailsRetrived.replace("|", "#");
+			String phoneNumberRetrived = data.split("#")[0];
+			String employeeNameRetrived = data.split("#")[1];
+			service.setOwnerName(employeeNameRetrived);
+			service.setEmail(data.split("#")[2]);
+			service.setContactNumber(phoneNumberRetrived);
+			prepareEmployeeRoleWiseList.add(service);
+			log.info("Received Employee Details UserWise");
+		} else {
+			log.info("Getting Employee Details RoleWise");
+			String role = workflowIntegrator.parseBussinessServiceData(
+					workflowIntegrator.getbussinessServiceDatafromprocesinstanceEdit(serviceReqRequest),
+					serviceReqRequest);
+			if (role == null || role.isEmpty())
+				throw new RuntimeException("Employee Not Found for Role : " + role);
+
+			prepareEmployeeRoleWiseList = prepareEmployeeRoleWiseList(serviceReqRequest, role);
+			if (prepareEmployeeRoleWiseList == null || prepareEmployeeRoleWiseList.isEmpty())
+				throw new RuntimeException("Employee details Not Found for Role : " + role);
+			log.info("Received Employee Details RoleWise");
+		}
 
 		DateFormat df = new SimpleDateFormat(hcConfiguration.getNotificationDateFormat());
 		Date dateobj = new Date();
