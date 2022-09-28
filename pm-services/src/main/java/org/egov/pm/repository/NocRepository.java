@@ -267,6 +267,30 @@ public class NocRepository {
 		}
 	}
 
+	
+	/**
+	 * Getting application list data to show Dashboard
+	 * 
+	 * @param required applicationType,RequestInfo and tenantId
+	 */
+	public JSONArray getNocCount(RequestData requestInfo) {
+		List<Role> roles = requestInfo.getRequestInfo().getUserInfo().getRoles();
+		String tenantId = requestInfo.getTenantId();
+		List<String> queries = new ArrayList<>();
+		String requestType = requestInfo.getApplicationType();
+		String queryString = "";
+
+		// this is for Employee
+		
+			
+			List<Object> preparedStmtList = new ArrayList<>();
+
+			String query = QueryBuilder.getSearchQueryCount(requestInfo, preparedStmtList);
+			log.info("Query: " + query);
+			return jdbcTemplate.query(query, preparedStmtList.toArray(), columnsNocRowMapper);
+		
+	}
+	
 	/**
 	 * Getting certificate data for requested applicationId
 	 * 
