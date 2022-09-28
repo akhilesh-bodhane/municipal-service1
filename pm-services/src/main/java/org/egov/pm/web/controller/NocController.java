@@ -54,6 +54,21 @@ public class NocController {
 		log.debug(String.format("STARTED GET NOC REQUEST : %1s", requestData.toString()));
 		return nocService.getNoc(requestData);
 	}
+	
+	/**
+	 * GetCount the Application Data for the given request to Show dashboard
+	 * 
+	 * @param RequestData
+	 *            for applicationType,tenantId,dataPayload,requestinfo
+	 * @return The list of applications
+	 */
+	@PostMapping("_getCount")
+	@ResponseBody
+	public ResponseEntity<NocResponse> getCount(@RequestBody RequestData requestData) {
+
+		log.debug(String.format("STARTED GET NOC REQUEST : %1s", requestData.toString()));
+		return nocService.getNocCount(requestData);
+	}
 
 	/**
 	 * Get the Application Data for the Single NOC
