@@ -84,6 +84,28 @@ public class NocService {
 					HttpStatus.OK);
 		}
 	}
+	
+	/**
+	 * Get the Application Data list for NOC to Show Dashboard
+	 * 
+	 * @param RequestData
+	 *            for applicationType,tenantId,applicationId,requestinfo
+	 * @return The data list based on role,applicationType and tenantId
+	 */
+	public ResponseEntity<NocResponse> getNocCount(RequestData requestInfo) {
+		JSONArray nocs = nocRepository.getNocCount(requestInfo);
+		if (nocs == null || nocs.isEmpty()) {
+			return new ResponseEntity(NocResponse.builder()
+					.resposneInfo(
+							ResponseInfo.builder().msgId("No Record Found").status(CommonConstants.SUCCESSFUL).build())
+					.nocApplicationDetail(nocs).build(), HttpStatus.OK);
+		} else {
+			return new ResponseEntity(
+					NocResponse.builder().resposneInfo(ResponseInfo.builder().status(CommonConstants.SUCCESS).build())
+							.nocApplicationDetail(nocs).build(),
+					HttpStatus.OK);
+		}
+	}
 
 	/**
 	 * Get the Application Data requested ID

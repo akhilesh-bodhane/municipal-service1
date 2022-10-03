@@ -326,6 +326,61 @@ public class QueryBuilder {
 		return builder.toString();
 	}
 
+	
+	private static final String BASE_QUERY_COUNT = "select "
+			+ "application_status \"applicationStatus\",sector \"sector\",EA.created_time \"createdTime\", "
+			+ "EA.application_type \"applicationType\" from egpm_noc_application_detail ED "
+			+ "inner join egpm_noc_application EA on ED.application_uuid=EA.application_uuid ";
+
+	public static String getSearchQueryCount(RequestData criteria, List<Object> preparedStmtList) {
+		StringBuilder builder = new StringBuilder(BASE_QUERY_COUNT);
+		JSONObject dataPayload = criteria.getDataPayload();
+		// service type
+		if (criteria.getApplicationType() != null) { 
+			addClauseIfRequired(preparedStmtList, builder);
+			builder.append(" EA.application_type=?");
+			preparedStmtList.add(criteria.getApplicationType());
+		}
+
+		// service request id
+		if (dataPayload.get("applicationId") != null) {
+
+			addClauseIfRequired(preparedStmtList, builder);
+			builder.append(" EA.noc_number like ?");
+			preparedStmtList.add("%" + dataPayload.get("applicationId").toString().trim() + "%");
+		}
+
+		// service request status
+		if (dataPayload.get("applicationStatus") != null) {
+
+			addClauseIfRequired(preparedStmtList, builder);
+			builder.append(" EA.application_status   = ?");
+			preparedStmtList.add(dataPayload.get("applicationStatus").toString());
+		}
+
+		// from date
+
+		if (dataPayload.get("fromDate") != null) {
+			addClauseIfRequired(preparedStmtList, builder);
+			builder.append(" EA.created_time >= ? ");
+			preparedStmtList.add(Long.parseLong(dataPayload.get("fromDate").toString()));
+		}
+
+		// to date
+		if (dataPayload.get("toDate") != null) {
+			addClauseIfRequired(preparedStmtList, builder);
+			builder.append(" EA.created_time <= ? ");
+			preparedStmtList.add(Long.parseLong(dataPayload.get("toDate").toString()));
+
+		}
+
+		builder.append(
+				" AND ED.is_active=TRUE AND EA.is_active=TRUE AND EA.application_status!='DRAFT' ORDER BY EA.created_time desc");
+		System.out.println(builder.toString());
+		return builder.toString();
+	}
+
+	
 	// private String addPaginationWrapper(String query, List<Object>
 	// preparedStmtList, RequestData criteria) {
 	//
