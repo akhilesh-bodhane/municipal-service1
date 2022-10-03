@@ -159,4 +159,13 @@ public class ServiceController {
 
 	}
 
+	@PostMapping("dashboard/_data")
+	@ResponseBody
+	public ResponseEntity<?> getDashBoardCount(@RequestBody RequestData requestData) {
+
+		log.debug(String.format("STARTED getDashBoardData SERVICE REQUEST : %1s", requestData.toString()));
+		return service.getDashBoardData(requestData, requestData.getRequestInfo());
+
+	}
+
 }

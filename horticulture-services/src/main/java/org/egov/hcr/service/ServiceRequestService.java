@@ -125,7 +125,7 @@ public class ServiceRequestService {
 	@Autowired
 	public ServiceRequestService(HCConfiguration config, HCConfiguration hcConfiguration,
 			WorkflowIntegrator wfIntegrator, ObjectMapper objectMapper, IdGenRepository idgenrepository,
-			ServiceRepository serviceRepository,  HCConstants hcConstants) {
+			ServiceRepository serviceRepository, HCConstants hcConstants) {
 
 		this.hcConfiguration = hcConfiguration;
 		this.idgenrepository = idgenrepository;
@@ -1181,6 +1181,42 @@ public class ServiceRequestService {
 
 			try {
 				serviceRequest = serviceRepository.findRequest(requestData, recCount);
+
+			} catch (ParseException e) {
+				log.info("Parse Exception");
+			}
+			if (serviceRequestList == null) {
+				return new ResponseEntity(ServiceResponse.builder()
+						.responseInfo(ResponseInfo.builder().msgId("Invalid role  or blank data ").build())
+						.totalRecords(recCount.isEmpty() ? "" : recCount.get(0)).services(serviceRequest).build(),
+						HttpStatus.BAD_REQUEST);
+			} else {
+				return new ResponseEntity(ServiceResponse.builder()
+						.responseInfo(ResponseInfo.builder().status(HCConstants.SUCCESS).build())
+						.totalRecords(recCount.isEmpty() ? "" : recCount.get(0)).services(serviceRequest).build(),
+						HttpStatus.OK);
+			}
+		} else {
+			return new ResponseEntity(ServiceResponse.builder()
+					.responseInfo(ResponseInfo.builder().msgId(responseValidate).status(HCConstants.FAIL).build())
+					.build(), HttpStatus.BAD_REQUEST);
+
+		}
+	}
+
+	public ResponseEntity<ServiceResponse> getDashBoardData(RequestData requestData, RequestInfo requestInfo) {
+
+		List<ServiceRequestData> serviceRequest = null;
+		List<String> recCount = new ArrayList<String>();
+		List<ServiceRequestData> serviceRequestList = new ArrayList<>();
+		String responseValidate = "";
+
+		Gson gson = new Gson();
+		String payloadData = gson.toJson(requestData, RequestData.class);
+		if (responseValidate.equals("")) {
+
+			try {
+				serviceRequest = serviceRepository.findDashboardData(requestData, recCount);
 
 			} catch (ParseException e) {
 				log.info("Parse Exception");

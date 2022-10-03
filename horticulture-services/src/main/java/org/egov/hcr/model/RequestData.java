@@ -107,4 +107,7 @@ public class RequestData {
 	@JsonProperty("limit")
 	private Integer limit;
 
+	@JsonProperty("searchBy")
+	private String searchBy;
+
 }
