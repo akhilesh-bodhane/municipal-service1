@@ -122,6 +122,21 @@ public class ServiceRepository {
 		return serviceRequestList;
 
 	}
+	
+	public List<ServiceRequestData> findDashboardData(RequestData requestData, List<String> recCount) throws ParseException {
+
+		List<Object> preparedStmtList = new ArrayList<>();
+		String query = queryBuilder.getDashboardSearchQuery(requestData, preparedStmtList);
+		log.info("Query: " + query);
+		log.info("Query preparedStmtList : " + preparedStmtList.toString());
+		List<ServiceRequestData> serviceRequestList = jdbcTemplate.query(query, preparedStmtList.toArray(), rowMapper);
+
+		recCount.add(
+				serviceRequestList != null && !serviceRequestList.isEmpty() ? String.valueOf(serviceRequestList.size())
+						: "0");
+		return serviceRequestList;
+
+	}
 
 	public JSONArray getuserDetails(String service_request_id) {
 
