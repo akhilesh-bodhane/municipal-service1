@@ -412,11 +412,52 @@ List jsonOutput1 = JsonPath.read(mdmsData, CommonConstants.MDMS_TAXHEAD_STALL_CO
 					
 					 double gstrate = getGstRate(stallrequest.getRequestInfo(), mdmsData,StallApplication);
 						
-						double amount= stallsizerate * StallApplication.getNoofdays();
+//						double amount= stallsizerate * StallApplication.getNoofdays();
+//						
+//						double gstamount= gstrate * StallApplication.getNoofdays();
+					 
+					 int noofdays = StallApplication.getNoofdays();
+					 
+					 if(StallApplication.getFestival().equalsIgnoreCase("Diwali")) {
+							
+							
+							if((noofdays > 3) && (noofdays <= 6) ) {
+								noofdays = 7 ;
+							}
+							else if ((noofdays > 7) && (noofdays <= 19)) {
+								noofdays = 20 ;
+							}
+							
+						}
+					 
+					  double amount ;
 						
-						double gstamount= gstrate * StallApplication.getNoofdays();
+						double gstamount;
+
+						if(StallApplication.getFestival().equalsIgnoreCase("Diwali")) {
+			            
+							 amount= stallsizerate * noofdays;
+							
+							 gstamount= gstrate * noofdays;
+						}
 						
-						double totalamount= amount + gstamount;
+						else {
+							 amount= stallsizerate * StallApplication.getNoofdays();
+							
+							 gstamount= gstrate * StallApplication.getNoofdays();
+							
+						}
+			            
+						
+						
+//						double totalamount= amount + gstamount;
+				
+				
+						StallApplication.setAmount(amount);
+						
+						StallApplication.setGstamount(gstamount);
+						
+						double totalamount = amount + gstamount;
 				
 				
 						StallApplication.setAmount(amount);
