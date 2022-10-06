@@ -119,6 +119,8 @@ public class StallService {
 			
 			double stallsizerate = getStallsize(stallrequest.getRequestInfo(), mdmsData,stallapplication);
 			
+			double gstrate = getGstRate(stallrequest.getRequestInfo(), mdmsData,stallapplication);
+			
 			int noofdays = stallapplication.getNoofdays();
 			
 			if(stallapplication.getFestival().equalsIgnoreCase("Diwali")) {
@@ -130,12 +132,14 @@ public class StallService {
 				}
 				else if ((noofdays > 7) && (noofdays <= 19)) {
 					noofdays = 20 ;
+					stallsizerate = 2000;
+					gstrate = 360 ;
 				}
 				
 			}
           
 			
-            double gstrate = getGstRate(stallrequest.getRequestInfo(), mdmsData,stallapplication);
+            
            
             double amount ;
 			
@@ -426,6 +430,8 @@ List jsonOutput1 = JsonPath.read(mdmsData, CommonConstants.MDMS_TAXHEAD_STALL_CO
 							}
 							else if ((noofdays > 7) && (noofdays <= 19)) {
 								noofdays = 20 ;
+								stallsizerate = 2000;
+								gstrate = 360 ;
 							}
 							
 						}
