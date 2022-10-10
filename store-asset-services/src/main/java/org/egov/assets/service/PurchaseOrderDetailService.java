@@ -52,7 +52,6 @@ public class PurchaseOrderDetailService extends DomainService {
 	@Autowired
 	private MdmsRepository mdmsRepository;
 
-
 	@Autowired
 	private PriceListService priceListService;
 
@@ -87,6 +86,22 @@ public class PurchaseOrderDetailService extends DomainService {
 				if (!listResponse.getPriceLists().isEmpty()) {
 					details.setPriceList(listResponse.getPriceLists().get(0));
 				}
+			}
+		}
+		return detailPagination;
+
+	}
+
+	public Pagination<PurchaseOrderDetail> searchForSpecificFields(
+			PurchaseOrderDetailSearch purchaseOrderDetailSearch) {
+		Pagination<PurchaseOrderDetail> detailPagination = purchaseOrderDetailJdbcRepository
+				.search(purchaseOrderDetailSearch);
+
+		if (!detailPagination.getPagedData().isEmpty()) {
+			Map<String, Material> materialMap = getMaterials(purchaseOrderDetailSearch.getTenantId(), mapper,
+					new RequestInfo());
+			for (PurchaseOrderDetail details : detailPagination.getPagedData()) {
+				details.setMaterial(materialMap.get(details.getMaterial().getCode()));
 			}
 		}
 		return detailPagination;

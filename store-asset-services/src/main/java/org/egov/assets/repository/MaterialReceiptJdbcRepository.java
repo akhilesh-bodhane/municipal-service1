@@ -232,7 +232,7 @@ public class MaterialReceiptJdbcRepository extends JdbcRepository {
 	}
 
 	public Pagination<MaterialReceipt> searchForSpecificFields(MaterialReceiptSearch materialReceiptSearch) {
-		String searchQuery = "select mrnStatus,receiptType,receiptDate,createdBy,createdTime,lastModifiedBy,lastModifiedTime from materialreceipt" + " :condition :orderby";
+		String searchQuery = "select mrnStatus,receiptType,receiptDate,receivingStore,mrnNumber,createdBy,createdTime,lastModifiedBy,lastModifiedTime from materialreceipt" + " :condition :orderby";
 		StringBuffer params = new StringBuffer();
 		Map<String, Object> paramValues = new HashMap<>();
 

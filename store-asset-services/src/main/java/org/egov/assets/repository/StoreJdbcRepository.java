@@ -228,6 +228,157 @@ public class StoreJdbcRepository extends JdbcRepository {
 
         return page;
     }
+    
+    public Pagination<Store> searchForSpecificFields(StoreGetRequest storeGetRequest) {
+        String searchQuery = "select name,department from store :condition :orderby";
+        StringBuffer params = new StringBuffer();
+        Map<String, Object> paramValues = new HashMap<>();
+        if (storeGetRequest.getSortBy() != null && !storeGetRequest.getSortBy().isEmpty()) {
+            validateSortByOrder(storeGetRequest.getSortBy());
+            validateEntityFieldName(storeGetRequest.getSortBy(), StoreGetRequest.class);
+        }
+        String orderBy = "order by code";
+        if (storeGetRequest.getSortBy() != null && !storeGetRequest.getSortBy().isEmpty()) {
+            orderBy = "order by " + storeGetRequest.getSortBy();
+        }
+        if (storeGetRequest.getId() != null) {
+            if (params.length() > 0)
+                params.append(" and ");
+            params.append("id in (:ids)");
+            paramValues.put("ids", storeGetRequest.getId());
+        }
+        if (storeGetRequest.getCode() != null) {
+
+            List<String> uppercaseCodes = storeGetRequest.getCode().stream()
+                    .map(String::toUpperCase).collect(Collectors.toList());
+            storeGetRequest.setCode(uppercaseCodes);
+
+            if (params.length() > 0)
+                params.append(" and ");
+            params.append("UPPER(code) in (:codes)");
+            paramValues.put("codes", uppercaseCodes);
+        }
+        if (storeGetRequest.getName() != null) {
+            if (params.length() > 0)
+                params.append(" and ");
+            params.append("name like concat('%',:name,'%')");
+            paramValues.put("name", storeGetRequest.getName());
+        }
+
+        if (!isEmpty(storeGetRequest.getSearchPurpose())
+                && storeGetRequest.getSearchPurpose().equalsIgnoreCase("createPO") && centalStorePurchase) {
+            if (params.length() > 0)
+                params.append(" and ");
+            params.append("iscentralstore = true");
+        }
+
+        if (storeGetRequest.getDescription() != null) {
+            if (params.length() > 0)
+                params.append(" and ");
+            params.append("description = :description");
+            paramValues.put("description", storeGetRequest.getDescription());
+        }
+        if (storeGetRequest.getDepartment() != null) {
+            if (params.length() > 0)
+                params.append(" and ");
+            params.append("department = :department");
+            paramValues.put("department", storeGetRequest.getDepartment());
+        }
+        if (storeGetRequest.getBillingAddress() != null) {
+            if (params.length() > 0)
+                params.append(" and ");
+            params.append("billingaddress = :billingaddress");
+            paramValues.put("billingaddress", storeGetRequest.getBillingAddress());
+        }
+
+        if (storeGetRequest.getDeliveryAddress() != null) {
+            if (params.length() > 0)
+                params.append(" and ");
+            params.append("deliveryaddress = :deliveryaddress");
+            paramValues.put("deliveryaddress", storeGetRequest.getDeliveryAddress());
+        }
+        if (storeGetRequest.getContactNo1() != null) {
+            if (params.length() > 0)
+                params.append(" and ");
+            params.append("contactno1 = :contactno1");
+            paramValues.put("contactno1", storeGetRequest.getContactNo1());
+        }
+
+        if (storeGetRequest.getOfficelocation() != null) {
+            if (params.length() > 0)
+                params.append(" and ");
+            params.append("officelocation = :officelocation");
+            paramValues.put("officelocation", storeGetRequest.getOfficelocation());
+        }
+        if (storeGetRequest.getContactNo2() != null) {
+            if (params.length() > 0)
+                params.append(" and ");
+            params.append("contactno2 = :contactno2");
+            paramValues.put("contactno2", storeGetRequest.getContactNo2());
+        }
+        if (storeGetRequest.getEmail() != null) {
+            if (params.length() > 0)
+                params.append(" and ");
+            params.append("email = :email");
+            paramValues.put("email", storeGetRequest.getEmail());
+        }
+        if (storeGetRequest.getActive() != null) {
+            if (params.length() > 0)
+                params.append(" and ");
+            params.append("active = :active");
+            paramValues.put("active", storeGetRequest.getActive());
+
+        }
+        if (storeGetRequest.getIsCentralStore() != null) {
+            if (params.length() > 0)
+                params.append(" and ");
+            params.append("iscentralstore = :iscentralstore");
+            paramValues.put("iscentralstore", storeGetRequest.getIsCentralStore());
+        }
+        if (storeGetRequest.getStoreInCharge() != null) {
+            if (params.length() > 0)
+                params.append(" and ");
+            params.append("storeincharge = :storeincharge");
+            paramValues.put("storeincharge", storeGetRequest.getStoreInCharge());
+        }
+        if (storeGetRequest.getTenantId() != null) {
+            if (params.length() > 0)
+                params.append(" and ");
+            params.append("tenantId = :tenantId");
+            paramValues.put("tenantId", storeGetRequest.getTenantId());
+        }
+        Pagination<Store> page = new Pagination<>();
+        if (storeGetRequest.getPageSize() != null)
+            page.setPageSize(storeGetRequest.getPageSize());
+        if (storeGetRequest.getOffset() != null)
+            page.setOffset(storeGetRequest.getOffset());
+        if (params.length() > 0)
+            searchQuery = searchQuery.replace(":condition", " where isdeleted is not true and " + params.toString());
+        else
+            searchQuery = searchQuery.replace(":condition", "");
+
+        searchQuery = searchQuery.replace(":orderby", orderBy);
+        page = (Pagination<Store>) getPagination(searchQuery, page, paramValues);
+
+        searchQuery = searchQuery + " :pagination";
+        searchQuery = searchQuery.replace(":pagination", "limit " + page.getPageSize() + " offset " + page.getOffset() * page.getPageSize());
+        BeanPropertyRowMapper row = new BeanPropertyRowMapper(StoreEntity.class);
+
+        List<Store> storesList = new ArrayList<>();
+
+        List<StoreEntity> storesEntities = namedParameterJdbcTemplate
+                .query(searchQuery.toString(), paramValues, row);
+
+        for (StoreEntity storesEntity : storesEntities) {
+            storesList.add(storesEntity.toDomain());
+        }
+
+        page.setTotalResults(storesList.size());
+
+        page.setPagedData(storesList);
+
+        return page;
+    }
 
 
 }
