@@ -99,17 +99,6 @@ public class MaterialReceiptService extends DomainService {
 			for (MaterialReceipt materialReceipt : materialReceiptPagination.getPagedData()) {
 				materialReceipt.receivingStore(
 						getStore(materialReceiptSearch.getTenantId(), materialReceipt.getReceivingStore().getCode()));
-
-//				if (materialReceipt.getIssueingStore() != null)
-//					materialReceipt.issueingStore(getStore(materialReceiptSearch.getTenantId(),
-//							materialReceipt.getIssueingStore().getCode()));
-//
-//				
-//				if (materialReceipt.getSupplier() != null) {
-//					Supplier supplier = getSupplier(materialReceipt.getSupplier().getCode(), materialReceiptSearch.getTenantId());
-//					if(supplier!=null)
-//						materialReceipt.setSupplier(supplier);
-//				}
 				
 				List<MaterialReceiptDetail> materialReceiptDetail = getMaterialReceiptDetailForSpecificFields(
 						materialReceipt.getMrnNumber(), materialReceiptSearch.getTenantId());
