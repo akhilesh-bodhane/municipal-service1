@@ -283,7 +283,7 @@ List jsonOutput1 = JsonPath.read(mdmsData, CommonConstants.MDMS_TAXHEAD_STALL_CO
 	 * 
 	 * break; } }
 	 */
-	if(sector!=null && (!"17".equalsIgnoreCase(stallapplication.getSector()) && !"22".equalsIgnoreCase(stallapplication.getSector()))) {
+	if(sector!=null && (!"22A".equalsIgnoreCase(stallapplication.getSector()) && !"22B".equalsIgnoreCase(stallapplication.getSector()))) {
 	if(size !=null && size.equalsIgnoreCase(stallapplication.getStallsize())){
 	sizeamount = new Integer(map.get("rate").toString());
 
@@ -460,9 +460,9 @@ List jsonOutput1 = JsonPath.read(mdmsData, CommonConstants.MDMS_TAXHEAD_STALL_CO
 						double totalamount = amount + gstamount;
 				
 				
-						StallApplication.setAmount(amount);
+// 						StallApplication.setAmount(amount);
 						
-						StallApplication.setGstamount(gstamount);	
+// 						StallApplication.setGstamount(gstamount);	
 					
 					/*
 					 * double amount=StallApplication.getNoofdays() * stallsizerate ;
