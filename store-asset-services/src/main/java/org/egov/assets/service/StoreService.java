@@ -216,6 +216,28 @@ public class StoreService extends DomainService {
 			return storeResponse;
 		}
 	}
+	
+	public StoreResponse searchForSpecificFields(StoreGetRequest storeGetRequest) {
+
+		StoreResponse storeResponse = new StoreResponse();
+		Pagination<Store> search = storeJdbcRepository.searchForSpecificFields(storeGetRequest);
+		if (!search.getPagedData().isEmpty()) {
+
+			Map<String, Department> departmentMap = getDepartment(storeGetRequest.getTenantId());
+
+			for (Store store : search.getPagedData()) {
+				store.setDepartment(departmentMap.get(store.getDepartment().getCode()));
+			}
+
+			storeResponse.setResponseInfo(null);
+			storeResponse.setStores(search.getPagedData());
+			return storeResponse;
+		} else {
+			storeResponse.setResponseInfo(null);
+			storeResponse.setStores(Collections.EMPTY_LIST);
+			return storeResponse;
+		}
+	}
 
 	private void validate(List<Store> stores, String method, String tenantId) {
 		InvalidDataException errors = new InvalidDataException();
