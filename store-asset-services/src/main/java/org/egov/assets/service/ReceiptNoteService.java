@@ -318,6 +318,14 @@ public class ReceiptNoteService extends DomainService {
 				materialReceiptPagination.getPagedData().size() > 0 ? materialReceiptPagination.getPagedData()
 						: Collections.EMPTY_LIST);
 	}
+	
+	public MaterialReceiptResponse searchForSpecificFields(MaterialReceiptSearch materialReceiptSearch) {
+		Pagination<MaterialReceipt> materialReceiptPagination = materialReceiptService.searchForSpecificFields(materialReceiptSearch);
+		MaterialReceiptResponse response = new MaterialReceiptResponse();
+		return response.responseInfo(null).materialReceipt(
+				materialReceiptPagination.getPagedData().size() > 0 ? materialReceiptPagination.getPagedData()
+						: Collections.EMPTY_LIST);
+	}
 
 	public MaterialBalanceRateResponse searchBalanceAndRate(MaterialReceiptSearch materialReceiptSearch) {
 		Pagination<MaterialBalanceRate> materialBalanceRate = materialReceiptService

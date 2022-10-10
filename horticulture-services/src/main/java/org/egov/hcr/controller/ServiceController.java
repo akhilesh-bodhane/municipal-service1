@@ -159,7 +159,7 @@ public class ServiceController {
 
 	}
 
-	@PostMapping("dashboard/_data")
+	@PostMapping("/dashboard/_data")
 	@ResponseBody
 	public ResponseEntity<?> getDashBoardCount(@RequestBody RequestData requestData) {
 

@@ -69,6 +69,32 @@ public class ReceiptnotesApiController {
 		MaterialReceiptResponse materialReceiptResponse = receiptNoteService.search(materialReceiptSearch);
 		return new ResponseEntity<>(materialReceiptResponse, HttpStatus.OK);
 	}
+	
+	@PostMapping(value = "/_dashboard", produces = { "application/json" }, consumes = { "application/json" })
+	public ResponseEntity<MaterialReceiptResponse> receiptnotesSearchDashboardPost(
+			@Valid @RequestBody org.egov.common.contract.request.RequestInfo requestInfo,
+			@NotNull @RequestParam(value = "tenantId", required = true) String tenantId,
+			@NotNull @RequestParam(value = "ids", required = false) String ids,
+			@Size(max = 100) @RequestParam(value = "mrnNumber", required = false) List<String> mrnNumber,
+			@Size(max = 3) @RequestParam(value = "receiptType", required = false) List<String> receiptType,
+			@RequestParam(value = "mrnStatus", required = false) String mrnStatus,
+			@RequestParam(value = "receivingStore", required = false) String receivingStore,
+			@RequestParam(value = "supplierCode", required = false) String supplierCode,
+			@RequestParam(value = "receiptDateFrom", required = false) Long receiptDateFrom,
+			@RequestParam(value = "receiptDate", required = false) Long receiptDate,
+			@RequestParam(value = "receiptDateTo", required = false) Long receiptDateTo,
+			@RequestParam(value = "supplierBillPaid", required = false) Boolean supplierBillPaid,
+			@Min(0) @Max(100) @RequestParam(value = "pageSize", required = false, defaultValue = "20") Integer pageSize,
+			@RequestParam(value = "pageNumber", required = false, defaultValue = "1") Integer pageNumber,
+			@RequestParam(value = "sortBy", required = false, defaultValue = "id") String sortBy) {
+		MaterialReceiptSearch materialReceiptSearch = MaterialReceiptSearch.builder().tenantId(tenantId)
+				.mrnNumber(mrnNumber).receiptType(receiptType).mrnStatus(null != mrnStatus ? asList(mrnStatus) : null)
+				.ids(null != ids ? Arrays.asList(ids) : null).receivingStore(receivingStore).supplierCode(supplierCode)
+				.receiptDate(receiptDateFrom).receiptDate(receiptDateTo).receiptDate(receiptDate).supplierBillPaid(supplierBillPaid)
+				.pageNumber(pageNumber).pageSize(pageSize).build();
+		MaterialReceiptResponse materialReceiptResponse = receiptNoteService.searchForSpecificFields(materialReceiptSearch);
+		return new ResponseEntity<>(materialReceiptResponse, HttpStatus.OK);
+	}
 
 	@PostMapping(value = "/_print", produces = { "application/json" }, consumes = { "application/json" })
 	public ResponseEntity<PDFResponse> receiptnotesPrintPost(@Valid @RequestBody PDFRequest pdfRequest,
