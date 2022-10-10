@@ -90,6 +90,35 @@ public class MaterialReceiptService extends DomainService {
 		}
 		return materialReceiptPagination;
 	}
+	
+	public Pagination<MaterialReceipt> searchForSpecificFields(MaterialReceiptSearch materialReceiptSearch) {
+		Pagination<MaterialReceipt> materialReceiptPagination = materialReceiptJdbcRepository
+				.searchForSpecificFields(materialReceiptSearch);
+
+		if (!materialReceiptPagination.getPagedData().isEmpty()) {
+			for (MaterialReceipt materialReceipt : materialReceiptPagination.getPagedData()) {
+				materialReceipt.receivingStore(
+						getStore(materialReceiptSearch.getTenantId(), materialReceipt.getReceivingStore().getCode()));
+
+//				if (materialReceipt.getIssueingStore() != null)
+//					materialReceipt.issueingStore(getStore(materialReceiptSearch.getTenantId(),
+//							materialReceipt.getIssueingStore().getCode()));
+//
+//				
+//				if (materialReceipt.getSupplier() != null) {
+//					Supplier supplier = getSupplier(materialReceipt.getSupplier().getCode(), materialReceiptSearch.getTenantId());
+//					if(supplier!=null)
+//						materialReceipt.setSupplier(supplier);
+//				}
+				
+				List<MaterialReceiptDetail> materialReceiptDetail = getMaterialReceiptDetailForSpecificFields(
+						materialReceipt.getMrnNumber(), materialReceiptSearch.getTenantId());
+				materialReceipt.setReceiptDetails(materialReceiptDetail);
+			}
+		}
+		return materialReceiptPagination;
+	}
+	
 	public JSONArray searchStock(MaterialReceiptSearch materialReceiptSearch) {
 		JSONArray materialReceiptPagination = materialReceiptJdbcRepository
 				.searchStock(materialReceiptSearch);
@@ -123,6 +152,40 @@ public class MaterialReceiptService extends DomainService {
 	}
 
 	private List<MaterialReceiptDetail> getMaterialReceiptDetail(String mrnNumber, String tenantId) {
+		MaterialReceiptDetailSearch materialReceiptDetailSearch = MaterialReceiptDetailSearch.builder()
+				.mrnNumber(Arrays.asList(mrnNumber)).tenantId(tenantId).build();
+		Pagination<MaterialReceiptDetail> materialReceiptDetails = materialReceiptDetailService
+				.search(materialReceiptDetailSearch);
+
+		if (!materialReceiptDetails.getPagedData().isEmpty()) {
+			ObjectMapper mapper = new ObjectMapper();
+			Map<String, Material> materialMap = getMaterials(tenantId, mapper, new RequestInfo());
+			Map<String, Uom> uoms = getUoms(tenantId, mapper, new RequestInfo());
+
+			for (MaterialReceiptDetail detail : materialReceiptDetails.getPagedData()) {
+
+				if (detail.getPurchaseOrderDetail() != null && detail.getPurchaseOrderDetail().getId() != null) {
+					PurchaseOrderDetailSearch purchaseOrderDetailSearch = new PurchaseOrderDetailSearch();
+					purchaseOrderDetailSearch.setIds(Arrays.asList(detail.getPurchaseOrderDetail().getId()));
+					purchaseOrderDetailSearch.setTenantId(tenantId);
+					Pagination<PurchaseOrderDetail> detailPagination = purchaseOrderDetailService
+							.search(purchaseOrderDetailSearch);
+
+					detail.setPurchaseOrderDetail(
+							!detailPagination.getPagedData().isEmpty() ? detailPagination.getPagedData().get(0) : null);
+
+				}
+
+				detail.setMaterial(materialMap.get(detail.getMaterial().getCode()));
+				detail.setUom(uoms.get(detail.getUom().getCode()));
+			}
+		}
+
+		return !materialReceiptDetails.getPagedData().isEmpty() ? materialReceiptDetails.getPagedData()
+				: Collections.EMPTY_LIST;
+	}
+	
+	private List<MaterialReceiptDetail> getMaterialReceiptDetailForSpecificFields(String mrnNumber, String tenantId) {
 		MaterialReceiptDetailSearch materialReceiptDetailSearch = MaterialReceiptDetailSearch.builder()
 				.mrnNumber(Arrays.asList(mrnNumber)).tenantId(tenantId).build();
 		Pagination<MaterialReceiptDetail> materialReceiptDetails = materialReceiptDetailService
