@@ -4,6 +4,7 @@ import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.UUID;
@@ -23,6 +24,7 @@ import org.egov.temporarystall.model.StallApplicationDocument;
 import org.egov.temporarystall.model.StallRequest;
 import org.egov.temporarystall.model.demand.Demand;
 import org.egov.temporarystall.model.demand.Demand.StatusEnum;
+import org.egov.temporarystall.producer.Producer;
 import org.egov.temporarystall.model.demand.DemandDetail;
 import org.egov.temporarystall.model.demand.DemandRequest;
 import org.egov.temporarystall.repository.TemporaryStallRepository;
@@ -57,6 +59,9 @@ public class StallService {
 	
 	@Autowired
 	private ObjectMapper mapper;
+	
+	@Autowired
+	private Producer producer;
 	
 	
 	@Autowired
@@ -195,7 +200,21 @@ public class StallService {
 		try {
 
 			StallApplication StallApplication = objectMapper.convertValue(stallrequest.getStallApplicationRequest(),
-					StallApplication.class);			
+					StallApplication.class);
+			
+			
+			if (StallApplication.getApplicationId() != null) {
+				String updatePaymentStatus = updatePaymentStatus(StallApplication);
+				
+				StallApplication.setPaymentstatus(updatePaymentStatus);
+				
+				StallRequest infoWrapper = StallRequest.builder().stallApplicationRequest(StallApplication).build();
+				
+				producer.push(config.getSTALLApplicationUpdatepaymentstatusTopic(), infoWrapper );
+			}
+			
+//			updatePaymentStatus();
+			
 			List<StallApplication> StallApplicationresult = repository.getStallApplication(StallApplication);
 			return new ResponseEntity<>(ResponseInfoWrapper.builder()
 					.responseInfo(ResponseInfo.builder().status(CommonConstants.SUCCESS).build())
@@ -206,6 +225,38 @@ public class StallService {
 		}
 	}
 	
+
+
+private String updatePaymentStatus(StallApplication stallApplication) {
+	List<StallApplication> stallPaymentStatusDB = repository.getStallPaymentStatus(stallApplication);
+	String status = null ;
+	List<String> ll = new ArrayList<>();
+	for (int i = 0; i < stallPaymentStatusDB.size(); i++) {
+		ll.add(stallPaymentStatusDB.get(i).getPaymentstatus());
+		
+	}
+	if (ll.contains("PENDING")) {
+		return status = "PENDING" ;
+	}
+	else if (ll.contains("FAILURE") || ll.contains("SUCCESS")  ) {
+		if(ll.contains("SUCCESS")) {
+			return status = "SUCCESS" ;
+		}
+		return status = "FAILURE" ;
+	} 
+	else if (ll.contains("SUCCESS") ) {
+		return status = "SUCCESS" ;
+	}
+	return status ;
+	}
+	
+//	@Scheduled(fixedDelay = 1000)
+//	private void updatePaymentStatus() {
+//		
+//		System.out.println("DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD");
+////		return status ;
+//		}
+
 //	public int getpayperrant(RequestInfo requestInfo,Object mdmsData,StallApplication stallapplication) {
 //		int feeperamount = 0;
 //		try {
@@ -576,18 +627,12 @@ List jsonOutput1 = JsonPath.read(mdmsData, CommonConstants.MDMS_TAXHEAD_STALL_CO
 						DemandRequest build = DR.builder().demands(dema).build();
 						DemandRequest request = new DemandRequest(stallrequest.getRequestInfo(), dema);
 
-						StallApplication stallPaymentStatus = repository.getStallPaymentStatus(StallApplication);
-		
-						if(stallPaymentStatus.getPaymentstatus()==null) {
 						
-						MdmsResponse response2 = mapper.convertValue(
-								repository1.fetchResult(repository.getBillingUpdateUrl(), request),
-								MdmsResponse.class);
-						StallApplication.setApplicationstatus(CommonConstants.ACTION_DRAFT);
-						}
-						else {
-							StallApplication.setApplicationstatus(CommonConstants.ACTION_PAYMENT);	
-						}
+						
+						StallApplication.setApplicationstatus(updateApplicationStatus(StallApplication));
+						
+						
+						
 					StallApplication.setApplicationDocument(stalldoc);
 					repository.updateSTALLApplication(StallApplication);
 		
@@ -598,6 +643,31 @@ List jsonOutput1 = JsonPath.read(mdmsData, CommonConstants.MDMS_TAXHEAD_STALL_CO
 		
 	}
 
+	private String updateApplicationStatus(StallApplication stallApplication) {
+		List<StallApplication> stallPaymentStatusDB = repository.getStallPaymentStatus(stallApplication);
+		String status = null ;
+		List<String> ll = new ArrayList<>();
+		for (int i = 0; i < stallPaymentStatusDB.size(); i++) {
+			ll.add(stallPaymentStatusDB.get(i).getPaymentstatus());
+			
+		}
+		if (ll.contains("PENDING")) {
+			return status = CommonConstants.ACTION_DRAFT ;
+		}
+		else if (ll.contains("FAILURE") || ll.contains("SUCCESS")  ) {
+			if(ll.contains("SUCCESS")) {
+				return status = CommonConstants.ACTION_PAYMENT ;
+			}
+			return status = CommonConstants.ACTION_DRAFT ;
+		} 
+		else if (ll.contains("SUCCESS") ) {
+			return status = CommonConstants.ACTION_PAYMENT ;
+		}
+		else {
+			 status = CommonConstants.ACTION_DRAFT ;
+		}
+		return status ;
+		}
 
 
 }

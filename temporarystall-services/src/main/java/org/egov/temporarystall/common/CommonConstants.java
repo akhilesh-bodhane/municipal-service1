@@ -65,6 +65,8 @@ public class CommonConstants {
 	public static final String ACTION_UPDATE="UPDATE";
 	public static final String ACTION_DRAFT="DRAFTED";
 	public static final String ACTION_PAYMENT="FEES PAID";
+	public static final String ACTION_PAYMENT_PENDING="FEES PAIDING";
+	public static final String ACTION_PAYMENT_FAILUARE="FEES FAILURE";
 	public static final String SUCCESS = "Success";
 	public static final String FAIL = "Fail";
 	public static final String SUCCESSFUL = "successful";
@@ -82,6 +84,13 @@ public class CommonConstants {
 	public static final String MDMS_FINANCIALYEAR = "FinancialYear";
 	public static final String SIZE = "size";
 	public static final String STALLCONFIG = "Stallconfig";
+	
+	
+	public static final String Diwali =	"Diwali" ;
+	
+	public static final String FAILURE ="FAILURE" ; 
+	
+	public static final String PENDING = "PENDING" ;
 	
 	public static final String BWT_TAXHEAD_CODE_1 = "WATER_TANKAR_CHARGES_BOOKING_BRANCH";
 

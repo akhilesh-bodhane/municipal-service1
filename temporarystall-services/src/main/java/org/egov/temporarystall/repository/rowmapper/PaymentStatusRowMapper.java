@@ -21,38 +21,41 @@ import org.springframework.stereotype.Component;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Component
-public class PaymentStatusRowMapper  implements ResultSetExtractor<StallApplication> {
+public class PaymentStatusRowMapper  implements ResultSetExtractor<List<StallApplication>> {
 	
 	@Autowired
 	private ObjectMapper mapper;
 	
 	
 	@Override
-	public StallApplication extractData(ResultSet rs) throws SQLException, DataAccessException {
+	public List<StallApplication> extractData(ResultSet rs) throws SQLException, DataAccessException {
 		Map<String, StallApplication> sepMap = new HashMap<>();
 		
-//		List<StallApplication> listSTALLApplication = new ArrayList<>();
+		List<StallApplication> listSTALLApplication = new ArrayList<>();
 		StallApplication stallapp = new StallApplication();
 	
 		while (rs.next()) {
-				String id = rs.getString("id");
+				String id = rs.getString("txn_id");
+				
 				
 				
 				stallapp = stallapp.builder().build();
-				
-					
+				if (!sepMap.containsKey(id)) {
 
-					stallapp.setPaymentstatus(rs.getString("totalamountpaid"));
+					stallapp.setPaymentstatus(rs.getString("txn_status"));
 
 					
 					
 					sepMap.put(id, stallapp);
 					
+					listSTALLApplication.add(stallapp);
+				}
+					
 				}
 		
 
 		
-		return stallapp;
+		return listSTALLApplication;
 	}
 
 }
