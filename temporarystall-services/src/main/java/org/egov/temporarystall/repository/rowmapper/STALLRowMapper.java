@@ -51,6 +51,8 @@ public class STALLRowMapper  implements ResultSetExtractor<List<StallApplication
 					stallapp.setFromdate(rs.getString("from_date"));
 					stallapp.setTodate(rs.getString("to_date"));
 					stallapp.setSector(rs.getString("sector"));
+					stallapp.setVillage(rs.getString("village"));
+					stallapp.setPaymentstatus(rs.getString("paymentstatus"));
 					stallapp.setStallsize(rs.getString("stall_size"));
 					stallapp.setAddress(rs.getString("address_details"));
 					stallapp.setLandmark(rs.getString("landmark"));
