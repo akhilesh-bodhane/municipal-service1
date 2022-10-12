@@ -21,11 +21,7 @@ public class STALLQueryBuilder {
 	
 	public static final String GET_STALL_DEMAND_DETAIL_QUERY ="select id from egbs_demanddetail_v1 edv where demandid  in (select id  from egbs_demand_v1 edv where consumercode =(case when ?  <>'' then ?  else consumercode end) )";
 	
-	public static final String GET_STALL_PAYMENT_STATUS_QUERY ="select py.id , py.totalamountpaid from egcl_payment py \n"
-	        + "INNER JOIN egcl_paymentdetail pyd ON pyd.paymentid = py.id \n"
-			+ "	INNER JOIN egcl_bill bill ON bill.id = pyd.billid  \n"
-			+ "	INNER JOIN egcl_billdetial bd ON bd.billid = bill.id \n"
-			+ "	INNER JOIN egbs_billdetail_v1 bbd ON bbd.billid = bd.billid \n"
-			+ "	where bbd.consumercode =(case when ?  <>'' then ?  else bbd.consumercode end)";
+	public static final String GET_STALL_PAYMENT_STATUS_QUERY ="select trn.txn_status , trn.txn_id from eg_pg_transactions trn \n"
+			+ "	where trn.consumer_code =(case when ?  <>'' then ?  else trn.consumer_code end)";
 
 }
