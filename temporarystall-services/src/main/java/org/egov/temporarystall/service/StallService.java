@@ -250,44 +250,7 @@ private String updatePaymentStatus(StallApplication stallApplication) {
 	return status ;
 	}
 	
-//	@Scheduled(fixedDelay = 1000)
-//	private void updatePaymentStatus() {
-//		
-//		System.out.println("DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD");
-////		return status ;
-//		}
 
-//	public int getpayperrant(RequestInfo requestInfo,Object mdmsData,StallApplication stallapplication) {
-//		int feeperamount = 0;
-//		try {
-//
-//			LinkedHashMap opmsData = JsonPath.read(mdmsData, CommonConstants.MDMS_PM_PATH);
-//			if (opmsData.size() == 0)
-//				return 0;
-//
-//			List jsonOutput = JsonPath.read(mdmsData, CommonConstants.MDMS_TAXHEAD_PATH);
-//
-//			for (Object entry : jsonOutput) {
-//				HashMap<String, Object> map = (HashMap<String, Object>) entry;
-//				
-//				String festivalname = ((String) map.get("name")).split("\\.")[0];
-//				if (festivalname != null && festivalname.equalsIgnoreCase(stallapplication.getFestival())) {
-//					feeperamount = new Integer(map.get("feesperday").toString());
-//					
-//					//stallapplication.setFeesperday(feeperamount);
-//					
-//				
-//					
-//				break;
-//				}
-//			}
-//
-//		} catch (Exception e) {
-//			throw new CustomException("MDMS ERROR", "Failed to get calculationType");
-//		}
-//
-//		return feeperamount;
-//	}
 	
 	@SuppressWarnings("unlikely-arg-type")
 	public int getStallsize(RequestInfo requestInfo,Object mdmsData,StallApplication stallapplication) {
@@ -631,7 +594,7 @@ List jsonOutput1 = JsonPath.read(mdmsData, CommonConstants.MDMS_TAXHEAD_STALL_CO
 						
 						StallApplication.setApplicationstatus(updateApplicationStatus(StallApplication));
 		
-		if ((StallApplication.getPaymentstatus() == "FAILURE") || (StallApplication.getPaymentstatus() == null)) {
+		if ((StallApplication.getPaymentstatus().equalsIgnoreCase(CommonConstants.FAILURE)) || (StallApplication.getPaymentstatus() == null)) {
 							MdmsResponse response2 = mapper.convertValue(
 									repository1.fetchResult(repository.getBillingUpdateUrl(), request),
 									MdmsResponse.class);
