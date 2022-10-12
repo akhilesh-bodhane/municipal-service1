@@ -100,7 +100,7 @@ public class TemporaryStallRepository {
 		
 	}
 	
-	public StallApplication getStallPaymentStatus(StallApplication stallApplication) {
+	public List<StallApplication> getStallPaymentStatus(StallApplication stallApplication) {
 		StallApplication stall = new StallApplication();
 		
 		
