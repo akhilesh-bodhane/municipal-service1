@@ -95,6 +95,12 @@ public class StallApplication {
 	@JsonProperty("businessservice")
 	private String businessservice;
 	
+	@JsonProperty("village")
+	private String village;
+	
+	@JsonProperty("paymentstatus")
+	private String paymentstatus;
+	
 	@JsonProperty("amount")
 	private double amount;
 	
