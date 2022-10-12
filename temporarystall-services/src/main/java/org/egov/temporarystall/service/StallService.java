@@ -630,6 +630,12 @@ List jsonOutput1 = JsonPath.read(mdmsData, CommonConstants.MDMS_TAXHEAD_STALL_CO
 						
 						
 						StallApplication.setApplicationstatus(updateApplicationStatus(StallApplication));
+		
+		if ((StallApplication.getPaymentstatus() == "FAILURE") || (StallApplication.getPaymentstatus() == null)) {
+							MdmsResponse response2 = mapper.convertValue(
+									repository1.fetchResult(repository.getBillingUpdateUrl(), request),
+									MdmsResponse.class);
+						}
 						
 						
 						
