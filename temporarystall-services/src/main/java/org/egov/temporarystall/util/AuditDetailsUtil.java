@@ -23,8 +23,10 @@ public class AuditDetailsUtil {
 		} else {
 			if (requestInfo.getUserInfo() != null && requestInfo.getUserInfo().getId() != null) {
 				auditDetails.lastModifiedBy(requestInfo.getUserInfo().getId().toString());
+				auditDetails.createdBy(requestInfo.getUserInfo().getId().toString());
 			}
 			auditDetails.lastModifiedTime(new Date().getTime());
+			auditDetails.createdTime(new Date().getTime());
 			return auditDetails;
 		}
 	}
