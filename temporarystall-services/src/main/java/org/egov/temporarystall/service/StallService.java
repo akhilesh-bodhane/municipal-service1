@@ -204,31 +204,40 @@ public class StallService {
 			
 			
 			if (StallApplication.getApplicationId() != null) {
-				String updatePaymentStatus = updatePaymentStatus(StallApplication);
-				
+			
+	        String updatePaymentStatus = updatePaymentStatus(StallApplication);
+			
+			List<StallApplication> StallApplicationresult = repository.getStallApplication(StallApplication);
+			
+			
+			if(((updatePaymentStatus != null) ) && 
+					(!updatePaymentStatus.equalsIgnoreCase(StallApplicationresult.get(0).getPaymentstatus())) ) {
 				StallApplication.setPaymentstatus(updatePaymentStatus);
 				
+				StallApplication.setAuditDetails(AuditDetails.builder().lastModifiedTime(new Date().getTime()).build());
+				
+				
+
 				StallRequest infoWrapper = StallRequest.builder().stallApplicationRequest(StallApplication).build();
 				
 				producer.push(config.getSTALLApplicationUpdatepaymentstatusTopic(), infoWrapper );
 			}
 			
-//			updatePaymentStatus();
-			
-			List<StallApplication> StallApplicationresult = repository.getStallApplication(StallApplication);
-			
-			if(StallApplication.getMobileno() != null) {
-			for (StallApplication stallApplication : StallApplicationresult) {
-				if(stallApplication.getApplicationId() != null) {
-					String updatePaymentStatus = updatePaymentStatus(stallApplication);
+			if (updatePaymentStatus != null) {
+			if(StallApplicationresult.get(0).getApplicationstatus().equalsIgnoreCase("DRAFTED") && 
+					(!updatePaymentStatus.equalsIgnoreCase(StallApplicationresult.get(0).getPaymentstatus()) )) {
+				if(!updatePaymentStatus.equalsIgnoreCase("FAILURE")) {
+					StallApplication.setApplicationstatus("FEES PAID");
+					StallApplication.setAuditDetails(AuditDetails.builder().lastModifiedTime(new Date().getTime()).build());
 					
-					StallApplication.setPaymentstatus(updatePaymentStatus);
-					
-					StallRequest infoWrapper = StallRequest.builder().stallApplicationRequest(StallApplication).build();
-					
-					producer.push(config.getSTALLApplicationUpdatepaymentstatusTopic(), infoWrapper );
-					
+					StallRequest infoWrapper = StallRequest.builder().stallApplicationRequest(StallApplication)
+							.build();
+
+					producer.push(config.getSTALLApplicationUpdateapplicationstatusTopic(), infoWrapper);
 				}
+				
+			}
+
 			}
 			}
 			
@@ -247,28 +256,25 @@ public class StallService {
 	}
 	
 
+	private String updatePaymentStatus(StallApplication stallApplication) {
+		List<StallApplication> stallPaymentStatusDB = repository.getStallPaymentStatus(stallApplication);
+		String status = null;
+		List<String> ll = new ArrayList<>();
+		for (int i = 0; i < stallPaymentStatusDB.size(); i++) {
+			ll.add(stallPaymentStatusDB.get(i).getPaymentstatus());
 
-private String updatePaymentStatus(StallApplication stallApplication) {
-	List<StallApplication> stallPaymentStatusDB = repository.getStallPaymentStatus(stallApplication);
-	String status = null ;
-	List<String> ll = new ArrayList<>();
-	for (int i = 0; i < stallPaymentStatusDB.size(); i++) {
-		ll.add(stallPaymentStatusDB.get(i).getPaymentstatus());
-		
-	}
-	if (ll.contains("PENDING")) {
-		return status = "PENDING" ;
-	}
-	else if (ll.contains("FAILURE") || ll.contains("SUCCESS")  ) {
-		if(ll.contains("SUCCESS")) {
-			return status = "SUCCESS" ;
 		}
-		return status = "FAILURE" ;
-	} 
-	else if (ll.contains("SUCCESS") ) {
-		return status = "SUCCESS" ;
-	}
-	return status ;
+		if (ll.contains("PENDING")) {
+			return status = "PENDING";
+		} else if (ll.contains("FAILURE") || ll.contains("SUCCESS")) {
+			if (ll.contains("SUCCESS")) {
+				return status = "SUCCESS";
+			}
+			return status = "FAILURE";
+		} else if (ll.contains("SUCCESS")) {
+			return status = "SUCCESS";
+		}
+		return status;
 	}
 	
 
