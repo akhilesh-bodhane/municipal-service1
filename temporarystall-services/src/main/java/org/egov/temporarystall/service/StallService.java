@@ -228,7 +228,7 @@ public class StallService {
 			if (updatePaymentStatus != null) {
 			if(StallApplicationresult.get(0).getApplicationstatus().equalsIgnoreCase("DRAFTED") && 
 					(!updatePaymentStatus.equalsIgnoreCase(StallApplicationresult.get(0).getPaymentstatus()) )) {
-				if(!updatePaymentStatus.equalsIgnoreCase("FAILURE")) {
+				if(updatePaymentStatus.equalsIgnoreCase("SUCCESS")) {
 					StallApplication.setApplicationstatus("FEES PAID");
 					StallApplication.setAuditDetails(AuditDetails.builder().lastModifiedTime(new Date().getTime()).build());
 					
