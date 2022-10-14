@@ -204,21 +204,51 @@ public class StallService {
 			
 			
 			if (StallApplication.getApplicationId() != null) {
-				String updatePaymentStatus = updatePaymentStatus(StallApplication);
-				
+			
+	        String updatePaymentStatus = updatePaymentStatus(StallApplication);
+			
+			List<StallApplication> StallApplicationresult = repository.getStallApplication(StallApplication);
+			
+			
+			if(((updatePaymentStatus != null) ) && 
+					(!updatePaymentStatus.equalsIgnoreCase(StallApplicationresult.get(0).getPaymentstatus())) ) {
 				StallApplication.setPaymentstatus(updatePaymentStatus);
 				
+				StallApplication.setAuditDetails(AuditDetails.builder().lastModifiedTime(new Date().getTime()).build());
+				
+				
+
 				StallRequest infoWrapper = StallRequest.builder().stallApplicationRequest(StallApplication).build();
 				
 				producer.push(config.getSTALLApplicationUpdatepaymentstatusTopic(), infoWrapper );
 			}
 			
-//			updatePaymentStatus();
+			if (updatePaymentStatus != null) {
+			if(StallApplicationresult.get(0).getApplicationstatus().equalsIgnoreCase("DRAFTED") && 
+					(!updatePaymentStatus.equalsIgnoreCase(StallApplicationresult.get(0).getPaymentstatus()) )) {
+				if(!updatePaymentStatus.equalsIgnoreCase("FAILURE")) {
+					StallApplication.setApplicationstatus("FEES PAID");
+					StallApplication.setAuditDetails(AuditDetails.builder().lastModifiedTime(new Date().getTime()).build());
+					
+					StallRequest infoWrapper = StallRequest.builder().stallApplicationRequest(StallApplication)
+							.build();
+
+					producer.push(config.getSTALLApplicationUpdateapplicationstatusTopic(), infoWrapper);
+				}
+				
+			}
+
+			}
+			}
 			
-			List<StallApplication> StallApplicationresult = repository.getStallApplication(StallApplication);
+			List<StallApplication> StallApplicationresultfinal = repository.getStallApplication(StallApplication);
+			
+//			if(StallApplicationresult.size() == 1)
+//			StallApplicationresult.get(0).setPaymentstatus(updatePaymentStatus);
+			
 			return new ResponseEntity<>(ResponseInfoWrapper.builder()
 					.responseInfo(ResponseInfo.builder().status(CommonConstants.SUCCESS).build())
-					.responseBody(StallApplicationresult).build(), HttpStatus.OK);
+					.responseBody(StallApplicationresultfinal).build(), HttpStatus.OK);
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new CustomException(CommonConstants.STALL_APPLICATION_EXCEPTION_CODE, e.getMessage());
@@ -226,28 +256,25 @@ public class StallService {
 	}
 	
 
+	private String updatePaymentStatus(StallApplication stallApplication) {
+		List<StallApplication> stallPaymentStatusDB = repository.getStallPaymentStatus(stallApplication);
+		String status = null;
+		List<String> ll = new ArrayList<>();
+		for (int i = 0; i < stallPaymentStatusDB.size(); i++) {
+			ll.add(stallPaymentStatusDB.get(i).getPaymentstatus());
 
-private String updatePaymentStatus(StallApplication stallApplication) {
-	List<StallApplication> stallPaymentStatusDB = repository.getStallPaymentStatus(stallApplication);
-	String status = null ;
-	List<String> ll = new ArrayList<>();
-	for (int i = 0; i < stallPaymentStatusDB.size(); i++) {
-		ll.add(stallPaymentStatusDB.get(i).getPaymentstatus());
-		
-	}
-	if (ll.contains("PENDING")) {
-		return status = "PENDING" ;
-	}
-	else if (ll.contains("FAILURE") || ll.contains("SUCCESS")  ) {
-		if(ll.contains("SUCCESS")) {
-			return status = "SUCCESS" ;
 		}
-		return status = "FAILURE" ;
-	} 
-	else if (ll.contains("SUCCESS") ) {
-		return status = "SUCCESS" ;
-	}
-	return status ;
+		if (ll.contains("PENDING")) {
+			return status = "PENDING";
+		} else if (ll.contains("FAILURE") || ll.contains("SUCCESS")) {
+			if (ll.contains("SUCCESS")) {
+				return status = "SUCCESS";
+			}
+			return status = "FAILURE";
+		} else if (ll.contains("SUCCESS")) {
+			return status = "SUCCESS";
+		}
+		return status;
 	}
 	
 
