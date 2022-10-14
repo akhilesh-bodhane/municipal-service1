@@ -615,7 +615,12 @@ List jsonOutput1 = JsonPath.read(mdmsData, CommonConstants.MDMS_TAXHEAD_STALL_CO
 						
 						StallApplication.setApplicationstatus(updateApplicationStatus(StallApplication));
 		
-		if ((StallApplication.getPaymentstatus()==CommonConstants.FAILURE)  || (StallApplication.getPaymentstatus() == null)) {
+		                             if ((CommonConstants.FAILURE.equalsIgnoreCase(StallApplication.getPaymentstatus()))  ) {
+							MdmsResponse response2 = mapper.convertValue(
+									repository1.fetchResult(repository.getBillingUpdateUrl(), request),
+									MdmsResponse.class);
+						}
+						else if ( (StallApplication.getPaymentstatus()== null ) ) {
 							MdmsResponse response2 = mapper.convertValue(
 									repository1.fetchResult(repository.getBillingUpdateUrl(), request),
 									MdmsResponse.class);
