@@ -7,13 +7,16 @@ import java.util.List;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.swservice.config.SWConfiguration;
 import org.egov.swservice.model.SearchCriteria;
+import org.egov.swservice.model.SearchTotalCollectionCriteria;
 import org.egov.swservice.model.SewerageConnection;
 import org.egov.swservice.model.SewerageConnectionCount;
 import org.egov.swservice.model.SewerageConnectionRequest;
+import org.egov.swservice.model.SewerageTotalCollections;
 import org.egov.swservice.producer.SewarageConnectionProducer;
 import org.egov.swservice.repository.builder.SWQueryBuilder;
 import org.egov.swservice.repository.rowmapper.SewerageCountRowMapper;
 import org.egov.swservice.repository.rowmapper.SewerageRowMapper;
+import org.egov.swservice.repository.rowmapper.SewerageTotalCollectionsRowMapper;
 import org.egov.swservice.util.SWConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -41,6 +44,10 @@ public class SewarageDaoImpl implements SewarageDao {
 	
 	@Autowired
 	private SewerageCountRowMapper sewarageCountRowMapper;
+	
+	
+	@Autowired
+	private SewerageTotalCollectionsRowMapper sewerageTotalCollectionRowMapper;
 	
 	
 	@Autowired
@@ -136,6 +143,31 @@ public class SewarageDaoImpl implements SewarageDao {
 	 */
 	public void saveFileStoreIds(SewerageConnectionRequest sewerageConnectionRequest) {
 		sewarageConnectionProducer.push(swConfiguration.getSaveFileStoreIdsTopic(), sewerageConnectionRequest);
+	}
+	
+	
+	@Override
+	public List<SewerageTotalCollections> getSewerageConnectionTotalCollectionListCount(SearchTotalCollectionCriteria SearchTotalCollectionCriteria,
+			RequestInfo requestInfo) {
+		List<Object> preparedStatement = new ArrayList<>();
+		String query = swQueryBuilder.getSearchQueryStringTotalCollectionCount(SearchTotalCollectionCriteria, preparedStatement, requestInfo);
+		
+		
+		StringBuilder str = new StringBuilder("Sewerage query: ").append(query);
+		
+		if (query == null)
+			return Collections.emptyList();
+
+		
+		List<SewerageTotalCollections> sewerageConnectionList = jdbcTemplate.query(query, preparedStatement.toArray(),
+				sewerageTotalCollectionRowMapper);
+		
+		
+		if (sewerageConnectionList == null) {
+			return Collections.emptyList();
+		}
+
+		return sewerageConnectionList;
 	}
 
 }

@@ -9,6 +9,7 @@ import org.egov.common.contract.request.RequestInfo;
 import org.egov.swservice.config.SWConfiguration;
 import org.egov.swservice.model.Property;
 import org.egov.swservice.model.SearchCriteria;
+import org.egov.swservice.model.SearchTotalCollectionCriteria;
 import org.egov.swservice.util.SewerageServicesUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -75,6 +76,30 @@ public class SWQueryBuilder {
             "({})" +
             " result) result_offset " +
             "WHERE offset_ > ? AND offset_ <= ?";
+	
+	
+	
+	private static final String SEWERAGE_SEARCH_QUERY_EG_PG_TOTAL_COLLECTION_COUNT = "   SELECT distinct    \r\n"
+			+ "      count(conn.applicationno) as totatconnections,       \r\n"
+			+ "      COALESCE(SUM(ept.txn_amount),0) as totalcollections\r\n"
+			+ "	  FROM \r\n"
+			+ "			eg_sw_connection conn \r\n"
+			+ "			INNER JOIN eg_pg_transactions ept on conn.applicationno  = ept.consumer_code\r\n"
+			+ "			INNER JOIN eg_sw_property property ON property.swid = conn.id\r\n"
+			+ "			 WHERE ept.consumer_code  LIKE 'SW_AP%' and conn.applicationno  LIKE 'SW_AP%' \r\n"
+			+ "			 and ept.txn_status = 'SUCCESS' and ept.txn_status_msg  = 'Transaction successful' ";
+	
+	private static final String SEWERAGE_SEARCH_QUERY_EG_CL_TOTAL_COLLECTION_COUNT = " SELECT  distinct    \r\n"
+			+ "      count(conn.applicationno)  as totatconnections,  \r\n"
+			+ "     COALESCE(SUM(py.totaldue),0) as totalcollections\r\n"
+			+ "	  FROM \r\n"
+			+ "			eg_sw_connection conn \r\n"
+			+ "			INNER JOIN egcl_bill bl  on  conn.applicationno  = bl.consumercode \r\n"
+			+ "			INNER JOIN egcl_paymentdetail pyd on pyd.billid = bl.id\r\n"
+			+ "			INNER JOIN egcl_payment py on py.id= pyd.paymentid\r\n"
+			+ "			INNER JOIN eg_sw_property property ON property.swid  = conn.id\r\n"
+			+ "			 WHERE  conn.applicationno  LIKE 'SW_AP%'  AND bl.consumercode  LIKE 'SW_AP%'  \r\n"
+			+ "			 and py.totaldue  !=0 ";
 	
 	
 	public String getSearchQueryString(SearchCriteria criteria, List<Object> preparedStatement,
@@ -268,6 +293,79 @@ public class SWQueryBuilder {
 		query.append(" connectionno in (").append(createQuery(connectionIds)).append(" )");
 		addToPreparedStatement(preparedStatement, listOfIds);
 		return query.toString();
+	}
+	
+	
+	
+	/**
+	 * 
+	 * @param criteria
+	 *            The SewerageCriteria
+	 * @param preparedStatement
+	 *            The Array Of Object
+	 * @param requestInfo
+	 *            The Request Info
+	 * @return query as a string
+	 */
+	public String getSearchQueryStringTotalCollectionCount(SearchTotalCollectionCriteria SearchTotalCollectionCriteria, List<Object> preparedStatement,
+			RequestInfo requestInfo) {
+		StringBuilder query;
+		if (SearchTotalCollectionCriteria.isEmpty())
+				return null;
+		
+		if((SearchTotalCollectionCriteria.getPaymentchannel() != null || SearchTotalCollectionCriteria.getPaymentchannel() != "") 
+		 && ("ONLINE".equals(SearchTotalCollectionCriteria.getConnectionchannel())) ) {
+		 query = new StringBuilder(SEWERAGE_SEARCH_QUERY_EG_PG_TOTAL_COLLECTION_COUNT);	
+		}
+		else {
+		 query = new StringBuilder(SEWERAGE_SEARCH_QUERY_EG_CL_TOTAL_COLLECTION_COUNT);	
+		}
+		
+		//boolean propertyIdsPresent = false;	
+		
+		if (!StringUtils.isEmpty(SearchTotalCollectionCriteria.getTenantId())) {
+			//addClauseIfRequired(preparedStatement, query);
+			query.append(" AND conn.tenantid = ? ");
+			preparedStatement.add(SearchTotalCollectionCriteria.getTenantId());
+		}
+		
+		if (!StringUtils.isEmpty(SearchTotalCollectionCriteria.getPaymentchannel())) {
+			//addClauseIfRequired(preparedStatement, query);
+			query.append(" ept.gateway = ? ");
+			preparedStatement.add(SearchTotalCollectionCriteria.getPaymentchannel());
+		}
+		
+		if (SearchTotalCollectionCriteria.getUsagetype() != null) {
+			addClauseIfRequired(preparedStatement, query);
+			query.append(" property.usagecategory = ? ");
+			preparedStatement.add(SearchTotalCollectionCriteria.getUsagetype());
+		}
+		if(!"ONLINE".equals(SearchTotalCollectionCriteria.getConnectionchannel()) &&
+				!StringUtils.isEmpty(SearchTotalCollectionCriteria.getConnectionchannel())) {
+			addClauseIfRequired(preparedStatement, query);
+			query.append(" py.paymentmode = ? ");
+			preparedStatement.add(SearchTotalCollectionCriteria.getConnectionchannel());
+		}
+		if (SearchTotalCollectionCriteria.getFromDate() != null) {
+			addClauseIfRequired(preparedStatement, query);
+			query.append(" conn.lastmodifiedtime >= ? ");
+			preparedStatement.add(SearchTotalCollectionCriteria.getFromDate());
+		}
+		if (SearchTotalCollectionCriteria.getToDate() != null) {
+			addClauseIfRequired(preparedStatement, query);
+			query.append(" conn.lastmodifiedtime <= ? ");
+			preparedStatement.add(SearchTotalCollectionCriteria.getToDate());
+		}
+		/*
+		 * if(SearchTotalCollectionCriteria.getConnectionchannel().equals("CASH")) {
+		 * addClauseIfRequired(preparedStatement, query);
+		 * query.append(" py.paymentmode = 'CASH' ");
+		 * preparedStatement.add(SearchTotalCollectionCriteria.getConnectionchannel());
+		 * }
+		 */
+		
+		//query.append(ORDER_BY_CLAUSE);
+		return query.toString() ;
 	}
 
 }

@@ -17,12 +17,14 @@ import org.egov.waterconnection.model.Property;
 import org.egov.waterconnection.model.SMSRequest;
 import org.egov.waterconnection.model.SMSRequest.SMSRequestBuilder;
 import org.egov.waterconnection.model.SearchCriteria;
+import org.egov.waterconnection.model.SearchTotalCollectionCriteria;
 import org.egov.waterconnection.model.WaterApplication;
 import org.egov.waterconnection.model.WaterConnection;
 import org.egov.waterconnection.model.WaterConnectionCount;
 import org.egov.waterconnection.model.WaterConnectionRequest;
 import org.egov.waterconnection.model.WaterNotication;
 import org.egov.waterconnection.model.WaterNotificationRequest;
+import org.egov.waterconnection.model.WaterTotalCollections;
 import org.egov.waterconnection.model.workflow.BusinessService;
 import org.egov.waterconnection.producer.WaterConnectionProducer;
 import org.egov.waterconnection.repository.WaterDao;
@@ -330,5 +332,28 @@ public class WaterServiceImpl implements WaterService {
 		}
 		
 		return template;
+	}
+	
+	/**
+	 * 
+	 * @param criteria WaterConnectionSearchCriteria contains search criteria on water connection
+	 * @param requestInfo 
+	 * @return List(Count) of matching water connection
+	 */
+	public List<WaterTotalCollections> searchTotalCollectionCount(SearchTotalCollectionCriteria SearchTotalCollectionCriteria, RequestInfo requestInfo) {
+		List<WaterTotalCollections> waterConnectionList;
+		waterConnectionList = getWaterConnectionsTotalCollectionListCount(SearchTotalCollectionCriteria, requestInfo);
+		return waterConnectionList;
+	}
+	
+	/**
+	 * 
+	 * @param criteria WaterConnectionSearchCriteria contains search criteria on water connection
+	 * @param requestInfo 
+	 * @return List(Count) of matching water connection
+	 */
+	public List<WaterTotalCollections> getWaterConnectionsTotalCollectionListCount(SearchTotalCollectionCriteria SearchTotalCollectionCriteria,
+			RequestInfo requestInfo) {
+		return waterDao.getWaterConnectionTotalCollectionListCount(SearchTotalCollectionCriteria, requestInfo);
 	}
 }

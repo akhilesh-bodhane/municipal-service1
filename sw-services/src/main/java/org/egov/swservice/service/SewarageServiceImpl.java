@@ -9,9 +9,11 @@ import org.egov.common.contract.request.RequestInfo;
 import org.egov.swservice.config.SWConfiguration;
 import org.egov.swservice.model.Property;
 import org.egov.swservice.model.SearchCriteria;
+import org.egov.swservice.model.SearchTotalCollectionCriteria;
 import org.egov.swservice.model.SewerageConnection;
 import org.egov.swservice.model.SewerageConnectionCount;
 import org.egov.swservice.model.SewerageConnectionRequest;
+import org.egov.swservice.model.SewerageTotalCollections;
 import org.egov.swservice.model.workflow.BusinessService;
 import org.egov.swservice.repository.SewarageDao;
 import org.egov.swservice.repository.SewarageDaoImpl;
@@ -210,6 +212,29 @@ public class SewarageServiceImpl implements SewarageService {
 			throw new CustomException("INVALID_SEWERAGECONNECTION_SEARCH", builder.toString());
 		}
 		return connections.get(0);
+	}
+	
+	/**
+	 * 
+	 * @param criteria SearchTotalCollectionCriteria contains search criteria on Sewerage connection
+	 * @param requestInfo 
+	 * @return List(Count) of matching Sewerage connection
+	 */
+	public List<SewerageTotalCollections> searchTotalCollectionCount(SearchTotalCollectionCriteria SearchTotalCollectionCriteria, RequestInfo requestInfo) {
+		List<SewerageTotalCollections> sewerageConnectionList;
+		sewerageConnectionList = getSewerageConnectionsTotalCollectionListCount(SearchTotalCollectionCriteria, requestInfo);
+		return sewerageConnectionList;
+	}
+	
+	/**
+	 * 
+	 * @param criteria SearchTotalCollectionCriteria contains search criteria on sewerage connection
+	 * @param requestInfo 
+	 * @return List(Count) of matching sewerage connection
+	 */
+	public List<SewerageTotalCollections> getSewerageConnectionsTotalCollectionListCount(SearchTotalCollectionCriteria SearchTotalCollectionCriteria,
+			RequestInfo requestInfo) {
+		return sewarageDao.getSewerageConnectionTotalCollectionListCount(SearchTotalCollectionCriteria, requestInfo);
 	}
 
 }

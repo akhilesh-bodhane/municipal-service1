@@ -9,6 +9,7 @@ import org.egov.waterconnection.config.WSConfiguration;
 import org.egov.waterconnection.constants.WCConstants;
 import org.egov.waterconnection.model.Property;
 import org.egov.waterconnection.model.SearchCriteria;
+import org.egov.waterconnection.model.SearchTotalCollectionCriteria;
 import org.egov.waterconnection.service.UserService;
 import org.egov.waterconnection.util.WaterServicesUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -133,6 +134,31 @@ public class WsQueryBuilder {
 			+ "LEFT OUTER JOIN egcl_payment py on py.id= pyd.paymentid ";
 	
 	
+	private static final String WATER_SEARCH_QUERY_EG_PG_TOTAL_COLLECTION_COUNT = " SELECT distinct  \r\n"
+			+ "      count(application.applicationno) as totatconnections,       \r\n"
+			+ "      COALESCE(SUM(ept.txn_amount),0) as totalcollections \r\n"
+			+ "	  FROM \r\n"
+			+ "			eg_ws_connection conn \r\n"
+			+ "			INNER JOIN eg_ws_application application ON application.wsid = conn.id \r\n"
+			+ "			INNER JOIN eg_pg_transactions ept on application.applicationno = ept.consumer_code\r\n"
+			+ "			INNER JOIN eg_ws_property property ON property.wsid = conn.id\r\n"
+			+ "			 WHERE ept.consumer_code  LIKE 'WS_AP%' \r\n"
+			+ "			 and application.applicationno  LIKE 'WS_AP%' and ept.txn_status = 'SUCCESS' and ept.txn_status_msg  = 'Transaction successful' ";
+	
+	private static final String WATER_SEARCH_QUERY_EG_CL_TOTAL_COLLECTION_COUNT = " SELECT  distinct    \r\n"
+			+ "     count(application.applicationno)  as totatconnections,  \r\n"
+			+ "     COALESCE(SUM(py.totaldue),0) as totalcollections \r\n"
+			+ "	  FROM \r\n"
+			+ "			eg_ws_connection conn \r\n"
+			+ "			INNER JOIN eg_ws_application application ON application.wsid = conn.id \r\n"
+			+ "			INNER JOIN egcl_bill bl  on  application.applicationno  = bl.consumercode \r\n"
+			+ "			INNER JOIN egcl_paymentdetail pyd on pyd.billid = bl.id\r\n"
+			+ "			INNER JOIN egcl_payment py on py.id= pyd.paymentid\r\n"
+			+ "			INNER JOIN eg_ws_property property ON property.wsid = conn.id\r\n"
+			+ "			 WHERE  application.applicationno  LIKE 'WS_AP%'  \r\n"
+			+ "			 AND bl.consumercode  LIKE 'WS_AP%' and py.totaldue  !=0 ";
+	
+	private static final String PAYMODE = "and py.paymentmode ";
 	/**
 	 * 
 	 * @param criteria
@@ -397,6 +423,78 @@ public class WsQueryBuilder {
 		query.append(" connectionno in (").append(createQuery(connectionIds)).append(" )");
 		addToPreparedStatement(preparedStatement, connectionIds);
 		return query.toString();
+	}
+	
+	
+	/**
+	 * 
+	 * @param criteria
+	 *            The WaterCriteria
+	 * @param preparedStatement
+	 *            The Array Of Object
+	 * @param requestInfo
+	 *            The Request Info
+	 * @return query as a string
+	 */
+	public String getSearchQueryStringTotalCollectionCount(SearchTotalCollectionCriteria SearchTotalCollectionCriteria, List<Object> preparedStatement,
+			RequestInfo requestInfo) {
+		StringBuilder query;
+		if (SearchTotalCollectionCriteria.isEmpty())
+				return null;
+		
+		if((SearchTotalCollectionCriteria.getPaymentchannel() != null || SearchTotalCollectionCriteria.getPaymentchannel() != "") 
+		 && ("ONLINE".equals(SearchTotalCollectionCriteria.getConnectionchannel())) ) {
+		 query = new StringBuilder(WATER_SEARCH_QUERY_EG_PG_TOTAL_COLLECTION_COUNT);	
+		}
+		else {
+		 query = new StringBuilder(WATER_SEARCH_QUERY_EG_CL_TOTAL_COLLECTION_COUNT);	
+		}
+		
+		//boolean propertyIdsPresent = false;	
+		
+		if (!StringUtils.isEmpty(SearchTotalCollectionCriteria.getTenantId())) {
+			//addClauseIfRequired(preparedStatement, query);
+			query.append(" AND conn.tenantid = ? ");
+			preparedStatement.add(SearchTotalCollectionCriteria.getTenantId());
+		}
+		
+		if (!StringUtils.isEmpty(SearchTotalCollectionCriteria.getPaymentchannel())) {
+			//addClauseIfRequired(preparedStatement, query);
+			query.append(" ept.gateway = ? ");
+			preparedStatement.add(SearchTotalCollectionCriteria.getPaymentchannel());
+		}
+		
+		if (SearchTotalCollectionCriteria.getUsagetype() != null) {
+			addClauseIfRequired(preparedStatement, query);
+			query.append(" property.usagecategory = ? ");
+			preparedStatement.add(SearchTotalCollectionCriteria.getUsagetype());
+		}
+		if(!"ONLINE".equals(SearchTotalCollectionCriteria.getConnectionchannel()) &&
+				!StringUtils.isEmpty(SearchTotalCollectionCriteria.getConnectionchannel())) {
+			addClauseIfRequired(preparedStatement, query);
+			query.append(" py.paymentmode = ? ");
+			preparedStatement.add(SearchTotalCollectionCriteria.getConnectionchannel());
+		}
+		if (SearchTotalCollectionCriteria.getFromDate() != null) {
+			addClauseIfRequired(preparedStatement, query);
+			query.append(" application.lastmodifiedtime >= ? ");
+			preparedStatement.add(SearchTotalCollectionCriteria.getFromDate());
+		}
+		if (SearchTotalCollectionCriteria.getToDate() != null) {
+			addClauseIfRequired(preparedStatement, query);
+			query.append(" application.lastmodifiedtime <= ? ");
+			preparedStatement.add(SearchTotalCollectionCriteria.getToDate());
+		}
+		/*
+		 * if(SearchTotalCollectionCriteria.getConnectionchannel().equals("CASH")) {
+		 * addClauseIfRequired(preparedStatement, query);
+		 * query.append(" py.paymentmode = 'CASH' ");
+		 * preparedStatement.add(SearchTotalCollectionCriteria.getConnectionchannel());
+		 * }
+		 */
+		
+		//query.append(ORDER_BY_CLAUSE);
+		return query.toString() ;
 	}
 	
 }

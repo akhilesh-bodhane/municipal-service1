@@ -6,11 +6,14 @@ import javax.validation.Valid;
 
 import org.egov.waterconnection.model.RequestInfoWrapper;
 import org.egov.waterconnection.model.SearchCriteria;
+import org.egov.waterconnection.model.SearchTotalCollectionCriteria;
+import org.egov.waterconnection.model.WaterCollectionCountResponse;
 import org.egov.waterconnection.model.WaterConnection;
 import org.egov.waterconnection.model.WaterConnectionCount;
 import org.egov.waterconnection.model.WaterConnectionCountResponse;
 import org.egov.waterconnection.model.WaterConnectionRequest;
 import org.egov.waterconnection.model.WaterConnectionResponse;
+import org.egov.waterconnection.model.WaterTotalCollections;
 import org.egov.waterconnection.service.WaterService;
 import org.egov.waterconnection.util.ResponseInfoFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -119,6 +122,17 @@ public class WaterController {
 				.build();
 		return new ResponseEntity<>(response, HttpStatus.OK);
 
+	}
+	
+	@RequestMapping(value = "/_searchTotalcollectionCount", method = RequestMethod.POST)
+	public ResponseEntity<WaterCollectionCountResponse> searchTotalCollectionCount(@Valid @RequestBody RequestInfoWrapper requestInfoWrapper,
+			@Valid @ModelAttribute SearchTotalCollectionCriteria SearchTotalCollectionCriteria) {
+		List<WaterTotalCollections> waterConnectionList = waterService.searchTotalCollectionCount(SearchTotalCollectionCriteria, requestInfoWrapper.getRequestInfo());
+		WaterCollectionCountResponse response = WaterCollectionCountResponse.builder().waterConnection(waterConnectionList)
+				.responseInfo(responseInfoFactory.createResponseInfoFromRequestInfo(requestInfoWrapper.getRequestInfo(),
+						true))
+				.build();
+		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 	
 	

@@ -4,10 +4,12 @@ import java.util.List;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.waterconnection.model.SearchCriteria;
+import org.egov.waterconnection.model.SearchTotalCollectionCriteria;
 import org.egov.waterconnection.model.WaterConnection;
 import org.egov.waterconnection.model.WaterConnectionCount;
 import org.egov.waterconnection.model.WaterConnectionRequest;
 import org.egov.waterconnection.model.WaterNotificationRequest;
+import org.egov.waterconnection.model.WaterTotalCollections;
 
 public interface WaterService {
 
@@ -26,5 +28,7 @@ public interface WaterService {
 	public List<WaterConnection> addConnectionMapping(WaterConnectionRequest waterConnectionRequest);
 	
 	public void sendSms(WaterNotificationRequest waterNotificationRequest);
+	
+	public List<WaterTotalCollections> searchTotalCollectionCount(SearchTotalCollectionCriteria SearchTotalCollectionCriteria, RequestInfo requestInfo);
 
 }

@@ -5,9 +5,11 @@ import java.util.List;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.waterconnection.model.BillGeneration;
 import org.egov.waterconnection.model.SearchCriteria;
+import org.egov.waterconnection.model.SearchTotalCollectionCriteria;
 import org.egov.waterconnection.model.WaterConnection;
 import org.egov.waterconnection.model.WaterConnectionCount;
 import org.egov.waterconnection.model.WaterConnectionRequest;
+import org.egov.waterconnection.model.WaterTotalCollections;
 import org.egov.waterconnection.model.collection.PaymentRequest;
 
 public interface WaterDao {
@@ -23,4 +25,6 @@ public interface WaterDao {
 	public void deleteConnectionMapping(WaterConnectionRequest waterConnectionRequest);
 
 	public void updatebillingstatus(BillGeneration bill);
+	
+	public List<WaterTotalCollections> getWaterConnectionTotalCollectionListCount(SearchTotalCollectionCriteria SearchTotalCollectionCriteria,RequestInfo requestInfo);
 }

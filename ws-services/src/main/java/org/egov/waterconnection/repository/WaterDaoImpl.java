@@ -10,10 +10,11 @@ import org.egov.waterconnection.constants.WCConstants;
 import org.egov.waterconnection.model.BillGeneration;
 import org.egov.waterconnection.model.BillGenerationRequest;
 import org.egov.waterconnection.model.SearchCriteria;
+import org.egov.waterconnection.model.SearchTotalCollectionCriteria;
 import org.egov.waterconnection.model.WaterConnection;
 import org.egov.waterconnection.model.WaterConnectionCount;
 import org.egov.waterconnection.model.WaterConnectionRequest;
-import org.egov.waterconnection.model.collection.PaymentRequest;
+import org.egov.waterconnection.model.WaterTotalCollections;
 import org.egov.waterconnection.producer.WaterConnectionProducer;
 import org.egov.waterconnection.repository.builder.WsQueryBuilder;
 import org.egov.waterconnection.repository.rowmapper.WaterRowMapper;
@@ -40,13 +41,17 @@ public class WaterDaoImpl implements WaterDao {
 
 	@Autowired
 	private WaterRowMapper waterRowMapper;
-	
+
 	
 	@Autowired
 	private WaterRowMapperCount waterRowMapperCount;
 	
 	@Autowired
 	private WSConfiguration wsConfiguration;
+	
+	
+	@Autowired
+	private org.egov.waterconnection.repository.rowmapper.WaterTotalCollectionsRowMapper WaterTotalCollectionsRowMapper;
 
 	@Value("${egov.waterservice.createwaterconnection}")
 	private String createWaterConnection;
@@ -189,4 +194,32 @@ public class WaterDaoImpl implements WaterDao {
 		waterConnectionProducer.push(wsConfiguration.getUpdateBillPayment(), billReq);
 		
 	}
+	
+	@Override
+	public List<WaterTotalCollections> getWaterConnectionTotalCollectionListCount(SearchTotalCollectionCriteria SearchTotalCollectionCriteria,
+			RequestInfo requestInfo) {
+		List<Object> preparedStatement = new ArrayList<>();
+		String query = wsQueryBuilder.getSearchQueryStringTotalCollectionCount(SearchTotalCollectionCriteria, preparedStatement, requestInfo);
+		
+		
+		StringBuilder str = new StringBuilder("Water query: ").append(query);
+		
+		if (query == null)
+			return Collections.emptyList();
+
+		
+		List<WaterTotalCollections> waterConnectionList = jdbcTemplate.query(query, preparedStatement.toArray(),
+				WaterTotalCollectionsRowMapper);
+		
+		
+		if (waterConnectionList == null) {
+			return Collections.emptyList();
+		}
+
+		return waterConnectionList;
+	}
+	
+	
+	
+
 }
