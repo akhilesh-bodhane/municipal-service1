@@ -66,9 +66,150 @@ public class MaterialIssueJdbcRepository extends JdbcRepository {
         System.out.println(allInsertQuery);
     }
 
-
     public Pagination<MaterialIssue> search(final MaterialIssueSearchContract searchContract, String issueType) {
         String searchQuery = "select * from materialissue :condition :orderby";
+        StringBuffer params = new StringBuffer();
+        Map<String, Object> paramValues = new HashMap<>();
+        if (searchContract.getSortBy() != null && !searchContract.getSortBy().isEmpty()) {
+            validateSortByOrder(searchContract.getSortBy());
+            validateEntityFieldName(searchContract.getSortBy(), MaterialIssueSearchContract.class);
+        }
+        String orderBy = "order by id";
+        if (searchContract.getSortBy() != null && !searchContract.getSortBy().isEmpty()) {
+            orderBy = "order by " + searchContract.getSortBy();
+        }
+        if (searchContract.getId() != null) {
+            if (params.length() > 0)
+                params.append(" and ");
+            params.append("id in (:ids)");
+            paramValues.put("ids", searchContract.getId());
+        }
+
+        if (searchContract.getFromStore() != null) {
+            if (params.length() > 0)
+                params.append(" and ");
+            params.append("fromstore = :fromstore");
+            paramValues.put("fromstore", searchContract.getFromStore());
+        }
+        if (searchContract.getToStore() != null) {
+            if (params.length() > 0)
+                params.append(" and ");
+            params.append("tostore = :tostore");
+            paramValues.put("tostore", searchContract.getToStore());
+        }
+        if (searchContract.getIssueNoteNumber() != null) {
+            if (params.length() > 0)
+                params.append(" and ");
+            params.append("issuenumber = :issuenumber");
+            paramValues.put("issuenumber", searchContract.getIssueNoteNumber());
+        }
+        if (searchContract.getSupplier() != null) {
+            if (params.length() > 0)
+                params.append(" and ");
+            params.append("supplier = :supplier");
+            paramValues.put("supplier", searchContract.getSupplier());
+        }
+        if (searchContract.getIssueDate() != null) {
+            if (params.length() > 0)
+                params.append(" and ");
+            params.append("issuedate = :issuedate");
+            paramValues.put("issuedate", searchContract.getIssueDate());
+        }
+        if (searchContract.getMaterialIssueStatus() != null) {
+            if (params.length() > 0)
+                params.append(" and ");
+            params.append("materialissuestatus = :materialissuestatus");
+            paramValues.put("materialissuestatus", searchContract.getMaterialIssueStatus());
+        }
+        
+        if (searchContract.getIssuePurpose() != null) {
+            if (params.length() > 0)
+                params.append(" and ");
+            params.append("issuepurpose = :issuepurpose");
+            paramValues.put("issuepurpose", searchContract.getIssuePurpose());
+        }
+        if (searchContract.getDescription() != null) {
+            if (params.length() > 0)
+                params.append(" and ");
+            params.append("description = :description");
+            paramValues.put("description", searchContract.getDescription());
+        }
+        if (searchContract.getTotalIssueValue() != null) {
+            if (params.length() > 0)
+                params.append(" and ");
+            params.append("totalissuevalue = :totalissuevalue");
+            paramValues.put("totalissuevalue", searchContract.getTotalIssueValue());
+        }
+        if (searchContract.getTenantId() != null) {
+            if (params.length() > 0)
+                params.append(" and ");
+            params.append("tenantid = :tenantid");
+            paramValues.put("tenantid", searchContract.getTenantId());
+        }
+        if (issueType != null) {
+            if (params.length() > 0)
+                params.append(" and ");
+            params.append("issuetype = :issuetype");
+            paramValues.put("issuetype", issueType);
+        }
+        if (searchContract.getScrapCreated() != null) {
+            if (params.length() > 0)
+                params.append(" and ");
+            params.append("scrapCreated = :scrapCreated");
+            paramValues.put("scrapCreated", searchContract.getScrapCreated());
+        }
+        
+		if (searchContract.getIssueFromDate() != null) {
+			if (params.length() > 0)
+				params.append(" and ");
+			params.append("TO_DATE(TO_CHAR(TO_TIMESTAMP(issuedate / 1000), 'YYYY-MM-DD'),'YYYY-MM-DD') >= TO_DATE(TO_CHAR(TO_TIMESTAMP(:fromDate / 1000), 'YYYY-MM-DD'),'YYYY-MM-DD')");
+			paramValues.put("fromDate", searchContract.getIssueFromDate());
+		}
+
+		if (searchContract.getIssueToDate() != null) {
+			if (params.length() > 0)
+				params.append(" and ");
+			params.append("TO_DATE(TO_CHAR(TO_TIMESTAMP(issuedate / 1000), 'YYYY-MM-DD'),'YYYY-MM-DD') <= TO_DATE(TO_CHAR(TO_TIMESTAMP(:toDate / 1000), 'YYYY-MM-DD'),'YYYY-MM-DD')");
+			paramValues.put("toDate", searchContract.getIssueToDate());
+		}
+
+        Pagination<MaterialIssue> page = new Pagination<>();
+        if (searchContract.getPageSize() != null)
+            page.setPageSize(searchContract.getPageSize());
+        if (searchContract.getPageNumber() != null)
+            page.setOffset(searchContract.getPageNumber());
+        if (params.length() > 0)
+            searchQuery = searchQuery.replace(":condition", " where deleted is not true and " + params.toString());
+        else
+            searchQuery = searchQuery.replace(":condition", "");
+
+        searchQuery = searchQuery.replace(":orderby", orderBy);
+        page = (Pagination<MaterialIssue>) getPagination(searchQuery, page, paramValues);
+
+        searchQuery = searchQuery + " :pagination";
+        searchQuery = searchQuery.replace(":pagination",
+                "limit " + page.getPageSize() + " offset " + page.getOffset() * page.getPageSize());
+        BeanPropertyRowMapper row = new BeanPropertyRowMapper(MaterialIssueEntity.class);
+
+        List<MaterialIssue> materialIssueList = new ArrayList<>();
+
+        List<MaterialIssueEntity> materialIssueEntities = namedParameterJdbcTemplate.query(searchQuery.toString(),
+                paramValues, row);
+
+        for (MaterialIssueEntity materialIssueEntity : materialIssueEntities) {
+
+            materialIssueList.add(materialIssueEntity.toDomain(issueType));
+        }
+
+        page.setTotalResults(materialIssueList.size());
+
+        page.setPagedData(materialIssueList);
+
+        return page;
+    }
+
+    public Pagination<MaterialIssue> searchDashboard(final MaterialIssueSearchContract searchContract, String issueType) {
+        String searchQuery = "select materialissuestatus,issueType,indentNumber,issueNumber from materialissue :condition :orderby";
         StringBuffer params = new StringBuffer();
         Map<String, Object> paramValues = new HashMap<>();
         if (searchContract.getSortBy() != null && !searchContract.getSortBy().isEmpty()) {

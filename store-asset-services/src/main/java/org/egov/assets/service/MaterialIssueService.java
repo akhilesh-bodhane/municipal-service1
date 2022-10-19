@@ -986,6 +986,39 @@ public class MaterialIssueService extends DomainService {
 		materialIssueResponse.setMaterialIssues(materialIssues.getPagedData());
 		return materialIssueResponse;
 	}
+	
+	public MaterialIssueResponse searchDashBoard(final MaterialIssueSearchContract searchContract, String type) {
+		Pagination<MaterialIssue> materialIssues = null;
+
+		materialIssues = materialIssueJdbcRepository.searchDashboard(searchContract, type);
+
+		if (materialIssues.getPagedData().size() > 0)
+			for (MaterialIssue materialIssue : materialIssues.getPagedData()) {
+				if (materialIssue.getIndent() != null && materialIssue.getIndent().getIndentNumber() != null) {
+					IndentSearch indentSearch = new IndentSearch();
+					indentSearch.setIndentNumber(materialIssue.getIndent().getIndentNumber());
+					indentSearch.setTenantId(searchContract.getTenantId());
+					IndentResponse indentResponse = indentService.search(indentSearch, new RequestInfo());
+
+					if (!indentResponse.getIndents().isEmpty())
+						materialIssue.setIndent(indentResponse.getIndents().get(0));
+				}
+				ObjectMapper mapper = new ObjectMapper();
+				Map<String, Material> materialMap = getMaterials(materialIssue.getTenantId(), mapper,
+						new RequestInfo());
+				Pagination<MaterialIssueDetail> materialIssueDetails = materialIssueDetailsJdbcRepository
+						.search(materialIssue.getIssueNumber(), materialIssue.getTenantId(), type);
+				if (materialIssueDetails.getPagedData().size() > 0) {
+					for (MaterialIssueDetail materialIssueDetail : materialIssueDetails.getPagedData()) {
+						materialIssueDetail.setMaterial(materialMap.get(materialIssueDetail.getMaterial().getCode()));
+					}
+					materialIssue.setMaterialIssueDetails(materialIssueDetails.getPagedData());
+				}
+			}
+		MaterialIssueResponse materialIssueResponse = new MaterialIssueResponse();
+		materialIssueResponse.setMaterialIssues(materialIssues.getPagedData());
+		return materialIssueResponse;
+	}
 
 	private List<MaterialReceiptDetail> getMaterialReceiptDetail(String ids, String tenantId) {
 		MaterialReceiptDetailSearch materialReceiptDetailSearch = MaterialReceiptDetailSearch.builder()
