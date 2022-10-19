@@ -3,6 +3,7 @@ package org.egov.temporarystall.service;
 import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -24,6 +25,7 @@ import org.egov.temporarystall.model.ResponseInfoWrapper;
 import org.egov.temporarystall.model.StallApplication;
 import org.egov.temporarystall.model.StallApplicationDocument;
 import org.egov.temporarystall.model.StallRequest;
+import org.egov.temporarystall.model.StallRequestSchedular;
 import org.egov.temporarystall.model.demand.Demand;
 import org.egov.temporarystall.model.demand.Demand.StatusEnum;
 import org.egov.temporarystall.producer.Producer;
@@ -37,6 +39,7 @@ import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -257,26 +260,73 @@ public class StallService {
 		}
 	}
 	
+//	@Scheduled(initialDelay = 1000, fixedRate = 10000)
+	public String schedular() {
+		List<StallApplication> StallApplicationresult = repository.getStallApplicationSchedular();
+		List<StallApplication> StallApplicationresult1 = new ArrayList<>();
+		List<StallApplication> StallApplicationresult2 = new ArrayList<>();
+		
+		
+		for (StallApplication StallApplication : StallApplicationresult) {
+			if (StallApplication.getApplicationId() != null) {
+				String updatePaymentStatus = updatePaymentStatus(StallApplication);
+				if(((updatePaymentStatus != null) ) && 
+						(!updatePaymentStatus.equalsIgnoreCase(StallApplication.getPaymentstatus())) ) {
+					StallApplication.setPaymentstatus(updatePaymentStatus);
+					
+					StallApplication.setAuditDetails(AuditDetails.builder().lastModifiedTime(new Date().getTime()).build());
+					
+					
 
-	private String updatePaymentStatus(StallApplication stallApplication) {
-		List<StallApplication> stallPaymentStatusDB = repository.getStallPaymentStatus(stallApplication);
-		String status = null;
-		List<String> ll = new ArrayList<>();
-		for (int i = 0; i < stallPaymentStatusDB.size(); i++) {
-			ll.add(stallPaymentStatusDB.get(i).getPaymentstatus());
+					StallApplicationresult1.add(StallApplication);
+					
 
+				}
+				
+				if (updatePaymentStatus != null) {
+				if((StallApplication.getApplicationstatus().equalsIgnoreCase("DRAFTED") ) 
+//						(!updatePaymentStatus.equalsIgnoreCase(StallApplication.getPaymentstatus()) ) ) 
+
+						
+						
+						) {
+					
+					if((updatePaymentStatus.equalsIgnoreCase("SUCCESS")) ) {
+						StallApplication.setApplicationstatus("FEES PAID");
+						StallApplication.setAuditDetails(AuditDetails.builder().lastModifiedTime(new Date().getTime()).build());
+						
+						StallApplicationresult2.add(StallApplication);
+						
+						
+//						StallRequest infoWrapper = StallRequest.builder().stallApplicationRequest(StallApplication)
+//								.build();
+//
+//						producer.push(config.getSTALLApplicationUpdateapplicationstatusTopic(), infoWrapper);
+					}
+					
+
+					
+					
+				}
+
+				}
+				
 		}
-		if (ll.contains("PENDING")) {
-			return status = "PENDING";
-		} else if (ll.contains("FAILURE") || ll.contains("SUCCESS")) {
-			if (ll.contains("SUCCESS")) {
-				return status = "SUCCESS";
+		
 			}
-			return status = "FAILURE";
-		} else if (ll.contains("SUCCESS")) {
-			return status = "SUCCESS";
-		}
-		return status;
+		if (!StallApplicationresult1.isEmpty()) {
+			StallRequestSchedular infoWrapper = StallRequestSchedular.builder().stallApplicationRequest(StallApplicationresult1).build();
+			
+			producer.push(config.getSTALLApplicationUpdatepaymentstatusTopic(), infoWrapper );
+			}
+			
+			if(!StallApplicationresult2.isEmpty()) {
+				StallRequestSchedular infoWrapper = StallRequestSchedular.builder().stallApplicationRequest(StallApplicationresult2)
+						.build();
+
+				producer.push(config.getSTALLApplicationUpdateapplicationstatusTopic(), infoWrapper);
+			}
+		return "UPDATE PAYMENT STATUS & APPLICATION STATUS";
 	}
 	
 
@@ -560,7 +610,7 @@ List jsonOutput1 = JsonPath.read(mdmsData, CommonConstants.MDMS_TAXHEAD_STALL_CO
 					
 			StallApplication stallDemand = repository.getStallDemand(StallApplication);
 			
-			List<StallApplication> stallDemandId = repository.getStallDemandDetailId(StallApplication);
+			List<DemandDetail> stallDemandId = repository.getStallDemandDetailId(StallApplication);
 			
 			
 					
@@ -582,7 +632,12 @@ List jsonOutput1 = JsonPath.read(mdmsData, CommonConstants.MDMS_TAXHEAD_STALL_CO
 						
 
 						DemandDetail demanddetails = new DemandDetail();
-						demanddetails.setId(stallDemandId.get(0).getDemaniddetailid());
+						for (DemandDetail demandDetail : stallDemandId) {
+							if (demandDetail.getTaxHeadMasterCode().equalsIgnoreCase("TEMPORARY_STALL_CHARGES_BOOKING")) {
+								demanddetails.setId(demandDetail.getId());
+							}
+						}
+//						demanddetails.setId(stallDemandId.get(0).getDemaniddetailid());
 						demanddetails.setTaxHeadMasterCode("TEMPORARY_STALL_CHARGES_BOOKING");
 						demanddetails.setDemandId(stallDemand.getDemanid());
 						demanddetails.setTenantId("ch.chandigarh");
@@ -591,7 +646,13 @@ List jsonOutput1 = JsonPath.read(mdmsData, CommonConstants.MDMS_TAXHEAD_STALL_CO
 						demanddetails.setAuditDetails(StallApplication.getAuditDetails());
 						
 						DemandDetail demanddetailsGst = new DemandDetail();
-						demanddetailsGst.setId(stallDemandId.get(1).getDemaniddetailid());
+						for (DemandDetail demandDetail : stallDemandId) {
+							if (demandDetail.getTaxHeadMasterCode().equalsIgnoreCase("TEMPORARY_STALL_GST_CHARGES_BOOKING")) {
+								
+								demanddetailsGst.setId(demandDetail.getId());
+							}
+						}
+//						demanddetailsGst.setId(stallDemandId.get(1).getDemaniddetailid());
 						demanddetailsGst.setTaxHeadMasterCode("TEMPORARY_STALL_GST_CHARGES_BOOKING");
 						demanddetailsGst.setDemandId(stallDemand.getDemanid());
 						demanddetailsGst.setTenantId("ch.chandigarh");
@@ -613,7 +674,7 @@ List jsonOutput1 = JsonPath.read(mdmsData, CommonConstants.MDMS_TAXHEAD_STALL_CO
 								.taxPeriodTo(StallApplication.getAuditDetails().getLastModifiedTime())
 								.demandDetails(dema1).auditDetails(StallApplication.getAuditDetails())
 								.minimumAmountPayable(BigDecimal.ZERO).status(StatusEnum.ACTIVE).payer(user)
-								.demandDetails(dema1).build();
+								.build();
 						dema.add(build2);
 						DemandRequest DR = new DemandRequest();
 						DemandRequest build = DR.builder().demands(dema).build();
@@ -672,5 +733,35 @@ List jsonOutput1 = JsonPath.read(mdmsData, CommonConstants.MDMS_TAXHEAD_STALL_CO
 		return status ;
 		}
 
+	private String updatePaymentStatus(StallApplication stallApplication) {
+		List<StallApplication> stallPaymentStatusDB = repository.getStallPaymentStatus(stallApplication);
+		String status = null;
+		List<String> ll = new ArrayList<>();
+		for (int i = 0; i < stallPaymentStatusDB.size(); i++) {
+			ll.add(stallPaymentStatusDB.get(i).getPaymentstatus());
+
+		}
+		if (ll.contains("PENDING")) {
+			return status = "PENDING";
+		} else if (ll.contains("FAILURE") || ll.contains("SUCCESS")) {
+			if (ll.contains("SUCCESS")) {
+				return status = "SUCCESS";
+			}
+			return status = "FAILURE";
+		} else if (ll.contains("SUCCESS")) {
+			return status = "SUCCESS";
+		}
+		return status;
+	}
+	
+	@Scheduled(initialDelay = 1000, fixedRate = 10000)
+	public void run() {
+
+		System.out.println("Before time is :: " + Calendar.getInstance().getTime());
+		String schedular = schedular();
+		System.out.println(schedular);
+		
+		System.out.println("After time is :: " + Calendar.getInstance().getTime());
+	}
 
 }

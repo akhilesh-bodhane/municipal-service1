@@ -74,6 +74,21 @@ public class TemporaryStallRepository {
 
 	}
 	
+	public List<StallApplication> getStallApplicationSchedular() {
+		List<StallApplication> stall = new ArrayList<>();
+		
+		
+		try {
+			return stall = jdbcTemplate.query(STALLQueryBuilder.SCHEDULAR,
+					new Object[] {  			
+								 }, tempstallRowMapper);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new CustomException("Exception",e.getMessage());
+		}
+
+	}
+	
 	public StallApplication getStallDemand(StallApplication stallApplication) {
 		StallApplication stall = new StallApplication();
 		
@@ -87,8 +102,8 @@ public class TemporaryStallRepository {
 		
 	}
 	
-	public List<StallApplication> getStallDemandDetailId(StallApplication stallApplication) {
-		StallApplication stall = new StallApplication();
+	public List<DemandDetail> getStallDemandDetailId(StallApplication stallApplication) {
+		DemandDetail stall = new DemandDetail();
 		
 		
 		
