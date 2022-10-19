@@ -713,6 +713,36 @@ public class PurchaseOrderService extends DomainService {
 		return response;
 
 	}
+	
+	public PurchaseOrderResponse searchDashBoard(PurchaseOrderSearch is) {
+
+		PurchaseOrderResponse response = new PurchaseOrderResponse();
+		Pagination<PurchaseOrder> search = null;
+
+		search = purchaseOrderRepository.searchDashBoard(is);
+
+		if (!search.getPagedData().isEmpty()) {
+			for (PurchaseOrder purchaseOrder : search.getPagedData()) {
+				purchaseOrder.setStore(getStoreDashBoard(purchaseOrder.getTenantId(), purchaseOrder.getStore().getCode()));
+
+				PurchaseOrderDetailSearch purchaseOrderDetailSearch = new PurchaseOrderDetailSearch();
+				purchaseOrderDetailSearch.setPurchaseOrder(purchaseOrder.getPurchaseOrderNumber());
+				purchaseOrderDetailSearch.setTenantId(purchaseOrder.getTenantId());
+				Pagination<PurchaseOrderDetail> detailPagination = purchaseOrderDetailService
+						.searchDashBoard(purchaseOrderDetailSearch);
+
+				purchaseOrder.setPurchaseOrderDetails(
+						!detailPagination.getPagedData().isEmpty() ? detailPagination.getPagedData()
+								: Collections.EMPTY_LIST);
+
+			}
+		}
+
+		response.setPurchaseOrders(search.getPagedData());
+		response.setPage(getPage(search));
+		return response;
+
+	}
 
 	private void validate(List<PurchaseOrder> pos, String method, String tenantId) {
 		InvalidDataException errors = new InvalidDataException();
@@ -1287,6 +1317,16 @@ public class PurchaseOrderService extends DomainService {
 		StoreGetRequest storeEntity = StoreGetRequest.builder().code(Collections.singletonList(storeCode))
 				.tenantId(tenantId).active(true).build();
 		Pagination<Store> stores = storeJdbcRepository.search(storeEntity);
+		if (!stores.getPagedData().isEmpty()) {
+			return stores.getPagedData().get(0);
+		}
+		return null;
+	}
+	
+	private Store getStoreDashBoard(String tenantId, String storeCode) {
+		StoreGetRequest storeEntity = StoreGetRequest.builder().code(Collections.singletonList(storeCode))
+				.tenantId(tenantId).active(true).build();
+		Pagination<Store> stores = storeJdbcRepository.searchForSpecificFields(storeEntity);
 		if (!stores.getPagedData().isEmpty()) {
 			return stores.getPagedData().get(0);
 		}

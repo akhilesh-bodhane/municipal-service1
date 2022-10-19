@@ -70,6 +70,38 @@ public class PurchaseordersApiController {
 		return new ResponseEntity<>(purchaseOrderService.search(purchaseOrderSearch), HttpStatus.OK);
 	}
 
+	@PostMapping(value = "/_dashboard", produces = { "application/json" }, consumes = { "application/json" })
+	public ResponseEntity<PurchaseOrderResponse> purchaseordersDashBoardPost(
+			@NotNull @RequestParam(value = "tenantId", required = true) String tenantId,
+			@Valid @RequestBody org.egov.common.contract.request.RequestInfo requestInfo,
+			@Size(max = 50) @RequestParam(value = "ids", required = false) List<String> ids,
+			@RequestParam(value = "store", required = false) String store,
+			@RequestParam(value = "purchaseOrderNumber", required = false) String purchaseOrderNumber,
+			@RequestParam(value = "purchaseOrderDate", required = false) Long purchaseOrderDate,
+			@RequestParam(value = "rateType", required = false) String rateType,
+			@RequestParam(value = "supplierCode", required = false) String supplierCode,
+			@RequestParam(value = "searchPoAdvReq", required = false) Boolean searchPoAdvReq,
+			@RequestParam(value = "status", required = false) String status,
+			@Min(0) @Max(100) @RequestParam(value = "pageSize", required = false, defaultValue = "20") Integer pageSize,
+			@RequestParam(value = "pageNumber", required = false, defaultValue = "1") Integer pageNumber,
+			@RequestParam(value = "sortBy", required = false, defaultValue = "id") String sortBy) {
+
+		PurchaseOrderSearch purchaseOrderSearch = new PurchaseOrderSearch();
+		purchaseOrderSearch.setIds(ids);
+		purchaseOrderSearch.setStore(store);
+		purchaseOrderSearch.setTenantId(tenantId);
+		purchaseOrderSearch.setPurchaseOrderNumber(purchaseOrderNumber);
+		purchaseOrderSearch.setPurchaseOrderDate(purchaseOrderDate);
+		purchaseOrderSearch.setRateType(rateType);
+		purchaseOrderSearch.setSupplier(supplierCode);
+		purchaseOrderSearch.setSearchPoAdvReq(searchPoAdvReq);
+		purchaseOrderSearch.setStatus(status);
+		purchaseOrderSearch.setPageSize(pageSize);
+		purchaseOrderSearch.setPageNumber(pageNumber);
+
+		return new ResponseEntity<>(purchaseOrderService.searchDashBoard(purchaseOrderSearch), HttpStatus.OK);
+	}
+	
 	@PostMapping(value = "/_print", produces = { "application/json" }, consumes = { "application/json" })
 	public ResponseEntity<PDFResponse> purchaseordersSearchPost(
 			@NotNull @RequestParam(value = "tenantId", required = true) String tenantId,

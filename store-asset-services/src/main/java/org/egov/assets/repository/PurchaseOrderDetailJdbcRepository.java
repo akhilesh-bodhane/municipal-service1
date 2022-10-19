@@ -189,5 +189,102 @@ public class PurchaseOrderDetailJdbcRepository extends org.egov.assets.common.Jd
 
 		return page;
 	}
+	
+	public Pagination<PurchaseOrderDetail> searchDashBoard(PurchaseOrderDetailSearch purchaseOrderDetailSearch) {
+
+		String searchQuery = "select :selectfields from :tablename :condition  :orderby   ";
+
+		Map<String, Object> paramValues = new HashMap<>();
+		StringBuffer params = new StringBuffer();
+
+		if (purchaseOrderDetailSearch.getSortBy() != null && !purchaseOrderDetailSearch.getSortBy().isEmpty()) {
+			validateSortByOrder(purchaseOrderDetailSearch.getSortBy());
+			validateEntityFieldName(purchaseOrderDetailSearch.getSortBy(), PurchaseOrderDetailEntity.class);
+		}
+
+		String orderBy = "order by purchaseorder ";
+		if (purchaseOrderDetailSearch.getSortBy() != null && !purchaseOrderDetailSearch.getSortBy().isEmpty()) {
+			orderBy = "order by " + purchaseOrderDetailSearch.getSortBy();
+		}
+
+		searchQuery = searchQuery.replace(":tablename", PurchaseOrderDetailEntity.TABLE_NAME);
+
+		searchQuery = searchQuery.replace(":selectfields", " material ");
+
+		if (purchaseOrderDetailSearch.getIds() != null) {
+			if (params.length() > 0)
+				params.append(" and ");
+			params.append("id in (:ids)");
+			paramValues.put("ids", purchaseOrderDetailSearch.getIds());
+		}
+
+		if (purchaseOrderDetailSearch.getTenantId() != null) {
+			if (params.length() > 0)
+				params.append(" and ");
+			params.append("tenantId =:tenantId");
+			paramValues.put("tenantId", purchaseOrderDetailSearch.getTenantId());
+		}
+
+		if (purchaseOrderDetailSearch.getOrdernumber() != null) {
+			if (params.length() > 0)
+				params.append(" and ");
+			params.append(" ordernumber =:orderNumber");
+			paramValues.put("orderNumber", purchaseOrderDetailSearch.getOrdernumber());
+		}
+
+		if (purchaseOrderDetailSearch.getPurchaseOrder() != null) {
+			if (params.length() > 0)
+				params.append(" and ");
+			params.append(" purchaseorder =:purchaseOrder");
+			paramValues.put("purchaseOrder", purchaseOrderDetailSearch.getPurchaseOrder());
+		}
+
+		if (purchaseOrderDetailSearch.getMaterial() != null) {
+			if (params.length() > 0)
+				params.append(" and ");
+			params.append("material =:material");
+			paramValues.put("material", purchaseOrderDetailSearch.getMaterial());
+		}
+
+		Pagination<PurchaseOrderDetail> page = new Pagination<>();
+		if (purchaseOrderDetailSearch.getPageNumber() != null) {
+			page.setOffset(purchaseOrderDetailSearch.getPageNumber() - 1);
+		}
+		if (purchaseOrderDetailSearch.getPageSize() != null) {
+			page.setPageSize(purchaseOrderDetailSearch.getPageSize());
+		}
+
+		if (params.length() > 0) {
+
+			searchQuery = searchQuery.replace(":condition", " where deleted is not true and  " + params.toString());
+
+		} else
+
+			searchQuery = searchQuery.replace(":condition", "");
+
+		searchQuery = searchQuery.replace(":orderby", orderBy);// orderBy
+		System.out.println(searchQuery);
+		page = (Pagination<PurchaseOrderDetail>) getPagination(searchQuery, page, paramValues);
+		searchQuery = searchQuery + " :pagination";
+
+		searchQuery = searchQuery.replace(":pagination",
+				"limit " + page.getPageSize() + " offset " + page.getOffset() * page.getPageSize());
+
+		BeanPropertyRowMapper row = new BeanPropertyRowMapper(PurchaseOrderDetailEntity.class);
+
+		List<PurchaseOrderDetailEntity> purchaseOrderDetailEntities = namedParameterJdbcTemplate
+				.query(searchQuery.toString(), paramValues, row);
+
+		page.setTotalResults(purchaseOrderDetailEntities.size());
+
+		List<PurchaseOrderDetail> purchaseOrderDetails = new ArrayList<>();
+		for (PurchaseOrderDetailEntity poEntity : purchaseOrderDetailEntities) {
+
+			purchaseOrderDetails.add(poEntity.toDomain());
+		}
+		page.setPagedData(purchaseOrderDetails);
+
+		return page;
+	}
 
 }

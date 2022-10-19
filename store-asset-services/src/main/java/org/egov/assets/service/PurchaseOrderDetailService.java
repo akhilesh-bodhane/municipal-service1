@@ -92,6 +92,21 @@ public class PurchaseOrderDetailService extends DomainService {
 
 	}
 
+	public Pagination<PurchaseOrderDetail> searchDashBoard(PurchaseOrderDetailSearch purchaseOrderDetailSearch) {
+		Pagination<PurchaseOrderDetail> detailPagination = purchaseOrderDetailJdbcRepository
+				.searchDashBoard(purchaseOrderDetailSearch);
+
+		if (!detailPagination.getPagedData().isEmpty()) {
+			Map<String, Material> materialMap = getMaterials(purchaseOrderDetailSearch.getTenantId(), mapper,
+					new RequestInfo());
+			for (PurchaseOrderDetail details : detailPagination.getPagedData()) {
+				details.setMaterial(materialMap.get(details.getMaterial().getCode()));
+			}
+		}
+		return detailPagination;
+
+	}
+	
 	public Pagination<PurchaseOrderDetail> searchForSpecificFields(
 			PurchaseOrderDetailSearch purchaseOrderDetailSearch) {
 		Pagination<PurchaseOrderDetail> detailPagination = purchaseOrderDetailJdbcRepository

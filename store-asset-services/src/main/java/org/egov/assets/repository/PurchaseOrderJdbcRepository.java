@@ -332,6 +332,133 @@ public class PurchaseOrderJdbcRepository extends org.egov.assets.common.JdbcRepo
 
 		return page;
 	}
+	
+	public Pagination<PurchaseOrder> searchDashBoard(PurchaseOrderSearch purchaseOrderSearch) {
+
+		if (purchaseOrderSearch.getSearchPoAdvReq() != null && purchaseOrderSearch.getSearchPoAdvReq())
+			return searchPOsForAdvanceRequisition(purchaseOrderSearch.getTenantId());
+
+		String searchQuery = "select :selectfields from :tablename :condition  :orderby   ";
+
+		Map<String, Object> paramValues = new HashMap<>();
+		StringBuffer params = new StringBuffer();
+
+		if (purchaseOrderSearch.getSortBy() != null && !purchaseOrderSearch.getSortBy().isEmpty()) {
+			validateSortByOrder(purchaseOrderSearch.getSortBy());
+			validateEntityFieldName(purchaseOrderSearch.getSortBy(), PurchaseOrderEntity.class);
+		}
+
+		String orderBy = "order by purchaseOrderNumber ";
+		if (purchaseOrderSearch.getSortBy() != null && !purchaseOrderSearch.getSortBy().isEmpty()) {
+			orderBy = "order by " + purchaseOrderSearch.getSortBy();
+		}
+
+		searchQuery = searchQuery.replace(":tablename", PurchaseOrderEntity.TABLE_NAME);
+
+		searchQuery = searchQuery.replace(":selectfields", " store,status,purchaseOrderNumber,createdby,createdtime,lastmodifiedby,lastmodifiedtime ");
+
+		// implement jdbc specfic search
+
+		if (purchaseOrderSearch.getTenantId() != null) {
+			if (params.length() > 0)
+				params.append(" and ");
+			params.append("tenantId =:tenantId");
+			paramValues.put("tenantId", purchaseOrderSearch.getTenantId());
+		}
+		if (purchaseOrderSearch.getStore() != null) {
+			if (params.length() > 0)
+				params.append(" and ");
+			params.append("store =:store ");
+			paramValues.put("store", purchaseOrderSearch.getStore());
+		}
+
+		if (purchaseOrderSearch.getPurchaseOrderDate() != null) {
+			if (params.length() > 0)
+				params.append(" and ");
+			params.append("purchaseOrderDate =:purchaseOrderDate");
+			paramValues.put("purchaseOrderDate", purchaseOrderSearch.getPurchaseOrderDate());
+		}
+		if (purchaseOrderSearch.getPurchaseOrderNumber() != null) {
+			if (params.length() > 0)
+				params.append(" and ");
+			params.append(" purchaseOrderNumber =:purchaseOrderNumber");
+			paramValues.put("purchaseOrderNumber", purchaseOrderSearch.getPurchaseOrderNumber());
+		}
+		if (purchaseOrderSearch.getPurchaseType() != null) {
+			if (params.length() > 0)
+				params.append(" and ");
+			params.append(" purchaseType =:purchaseType");
+			paramValues.put("purchaseType", purchaseOrderSearch.getPurchaseType());
+		}
+		if (purchaseOrderSearch.getSupplier() != null) {
+			if (params.length() > 0)
+				params.append(" and ");
+			params.append("supplier =:supplier");
+			paramValues.put("supplier", purchaseOrderSearch.getSupplier());
+		}
+		if (purchaseOrderSearch.getRateType() != null) {
+			if (params.length() > 0)
+				params.append(" and ");
+			params.append("rateType =:rateType");
+			paramValues.put("rateType", purchaseOrderSearch.getRateType());
+		}
+
+		if (purchaseOrderSearch.getStatus() != null) {
+			if (params.length() > 0)
+				params.append(" and ");
+			// params.append("status =:status");
+			List<String> list = Stream.of(purchaseOrderSearch.getStatus().split(",")).collect(Collectors.toList());
+			params.append("status in(:status)");
+			paramValues.put("status", list);
+		}
+
+		if (purchaseOrderSearch.getStateId() != null) {
+			if (params.length() > 0)
+				params.append(" and ");
+			params.append("stateId =:stateId");
+			paramValues.put("stateId", purchaseOrderSearch.getStateId());
+		}
+
+		Pagination<PurchaseOrder> page = new Pagination<>();
+		if (purchaseOrderSearch.getPageNumber() != null) {
+			page.setOffset(purchaseOrderSearch.getPageNumber() - 1);
+		}
+		if (purchaseOrderSearch.getPageSize() != null) {
+			page.setPageSize(purchaseOrderSearch.getPageSize());
+		}
+
+		if (params.length() > 0) {
+
+			searchQuery = searchQuery.replace(":condition", " where isdeleted is not true and  " + params.toString());
+
+		} else
+
+			searchQuery = searchQuery.replace(":condition", "");
+
+		searchQuery = searchQuery.replace(":orderby", orderBy);// orderBy
+		System.out.println(searchQuery);
+		page = (Pagination<PurchaseOrder>) getPagination(searchQuery, page, paramValues);
+		searchQuery = searchQuery + " :pagination";
+
+		searchQuery = searchQuery.replace(":pagination",
+				"limit " + page.getPageSize() + " offset " + page.getOffset() * page.getPageSize());
+
+		BeanPropertyRowMapper row = new BeanPropertyRowMapper(PurchaseOrderEntity.class);
+
+		List<PurchaseOrderEntity> purchaseOrderEntities = namedParameterJdbcTemplate.query(searchQuery.toString(),
+				paramValues, row);
+
+		page.setTotalResults(purchaseOrderEntities.size());
+
+		List<PurchaseOrder> purchaseOrders = new ArrayList<>();
+		for (PurchaseOrderEntity poEntity : purchaseOrderEntities) {
+
+			purchaseOrders.add(poEntity.toDomain());
+		}
+		page.setPagedData(purchaseOrders);
+
+		return page;
+	}
 
 	public Pagination<PurchaseOrder> searchPOsForAdvanceRequisition(String tenantId) {
 		Pagination<PurchaseOrder> page = new Pagination<>();

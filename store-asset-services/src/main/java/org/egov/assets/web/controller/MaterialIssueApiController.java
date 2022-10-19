@@ -69,6 +69,34 @@ public class MaterialIssueApiController {
 		return new ResponseEntity(materialIssueResponse, HttpStatus.OK);
 	}
 
+	@PostMapping(value = "/_dashboard", produces = { "application/json" }, consumes = { "application/json" })
+	public ResponseEntity<MaterialIssueResponse> materialIssueDashBoardPost(
+			@NotNull @RequestParam(value = "tenantId", required = true) String tenantId,
+			@Valid @RequestBody org.egov.common.contract.request.RequestInfo requestInfo,
+			@Size(max = 50) @RequestParam(value = "ids", required = false) List<String> ids,
+			@RequestParam(value = "fromStore", required = false) String fromStore,
+			@RequestParam(value = "toStore", required = false) String toStore,
+			@RequestParam(value = "issueNoteNumber", required = false) String issueNoteNumber,
+			@RequestParam(value = "issueDate", required = false) Long issueDate,
+			@RequestParam(value = "issueFromDate", required = false) Long issueFromDate,
+			@RequestParam(value = "issueToDate", required = false) Long issueToDate,
+			@RequestParam(value = "materialIssueStatus", required = false) String materialIssueStatus,
+			@RequestParam(value = "description", required = false) String description,
+			@RequestParam(value = "issuePurpose", required = false) String issuePurpose,
+			@RequestParam(value = "totalIssueValue", required = false) BigDecimal totalIssueValue,
+			@Min(0) @Max(100) @RequestParam(value = "pageSize", required = false) Integer pageSize,
+			@RequestParam(value = "pageNumber", required = false) Integer pageNumber,
+			@RequestParam(value = "sortBy", required = false) String sortBy,
+			@RequestParam(value = "purpose", required = false) String purpose) {
+
+		MaterialIssueSearchContract searchContract = new MaterialIssueSearchContract(tenantId, ids, fromStore, toStore,
+				issueNoteNumber, issuePurpose, issueDate, null, materialIssueStatus, description, totalIssueValue, null,
+				pageNumber, sortBy, pageSize, purpose,issueFromDate,issueToDate);
+		MaterialIssueResponse materialIssueResponse = materialIssueService.searchDashBoard(searchContract,
+				IssueTypeEnum.INDENTISSUE.toString());
+		return new ResponseEntity(materialIssueResponse, HttpStatus.OK);
+	}
+	
 	@PostMapping(value = "/_print", produces = { "application/json" }, consumes = { "application/json" })
 	public ResponseEntity<PDFResponse> materialIssuePrintPost(
 			@NotNull @RequestParam(value = "tenantId", required = true) String tenantId,
