@@ -10,12 +10,15 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Import;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.Scheduled;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @SpringBootApplication
+@EnableScheduling
 @ComponentScan(basePackages = {"org.egov.temporarystall","org.egov.temporarystall.web.controller","org.egov.temporarystall.config"})
 @Import({TracerConfiguration.class})
 public class TemporaryStallServices {
