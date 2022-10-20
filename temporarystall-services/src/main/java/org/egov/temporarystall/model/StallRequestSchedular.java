@@ -27,7 +27,7 @@ public class StallRequestSchedular {
 	
 	@Valid
 	@JsonProperty("StallApplicationRequest")
-	private List<StallApplication> stallApplicationRequest;
+	private List<StallApplicationSchedular> stallApplicationRequest;
 
 	@JsonProperty("AuditDetails")
 	AuditDetails auditDetails;

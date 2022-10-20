@@ -24,6 +24,7 @@ import org.egov.temporarystall.model.Payment;
 import org.egov.temporarystall.model.ResponseInfoWrapper;
 import org.egov.temporarystall.model.StallApplication;
 import org.egov.temporarystall.model.StallApplicationDocument;
+import org.egov.temporarystall.model.StallApplicationSchedular;
 import org.egov.temporarystall.model.StallRequest;
 import org.egov.temporarystall.model.StallRequestSchedular;
 import org.egov.temporarystall.model.demand.Demand;
@@ -94,6 +95,8 @@ public class StallService {
 			stallapplication.setIsActive(true);
 			stallapplication.setAuditDetails(
 					auditDetailsUtil.getAuditDetails(stallrequest.getRequestInfo(), CommonConstants.ACTION_DRAFT));
+			stallapplication.getAuditDetails().setCreatedTime(new Date().getTime());
+			stallapplication.getAuditDetails().setCreatedBy(stallrequest.getRequestInfo().getUserInfo().getId().toString());
 			// idgen service call to genrate event id
 			IdGenerationResponse id = idgenrepository.getId(stallrequest.getRequestInfo(), stallapplication.getTenantId(),
 					config.getStallapplicationNumberIdgenName(), config.getStallapplicationNumberIdgenFormat(), 1);
@@ -114,6 +117,9 @@ public class StallService {
 				document.setFilestoreId(docobj.getFilestoreId());
 				document.setAuditDetails(
 						auditDetailsUtil.getAuditDetails(stallrequest.getRequestInfo(), CommonConstants.ACTION_DRAFT));
+				document.getAuditDetails().setCreatedTime(new Date().getTime());
+				document.getAuditDetails().setCreatedBy(stallrequest.getRequestInfo().getUserInfo().getId().toString());
+				
 				document.setIsActive(true);
 				document.setTenantId(stallapplication.getTenantId());
 				stalldoc.add(document);
@@ -262,14 +268,14 @@ public class StallService {
 	
 //	@Scheduled(initialDelay = 1000, fixedRate = 10000)
 	public String schedular() {
-		List<StallApplication> StallApplicationresult = repository.getStallApplicationSchedular();
-		List<StallApplication> StallApplicationresult1 = new ArrayList<>();
-		List<StallApplication> StallApplicationresult2 = new ArrayList<>();
+		List<StallApplicationSchedular> StallApplicationresult = repository.getStallApplicationSchedular();
+		List<StallApplicationSchedular> StallApplicationresult1 = new ArrayList<>();
+		List<StallApplicationSchedular> StallApplicationresult2 = new ArrayList<>();
 		
 		
-		for (StallApplication StallApplication : StallApplicationresult) {
+		for (StallApplicationSchedular StallApplication : StallApplicationresult) {
 			if (StallApplication.getApplicationId() != null) {
-				String updatePaymentStatus = updatePaymentStatus(StallApplication);
+				String updatePaymentStatus = updatePaymentStatusSchedular(StallApplication);
 				if(((updatePaymentStatus != null) ) && 
 						(!updatePaymentStatus.equalsIgnoreCase(StallApplication.getPaymentstatus())) ) {
 					StallApplication.setPaymentstatus(updatePaymentStatus);
@@ -317,14 +323,14 @@ public class StallService {
 		if (!StallApplicationresult1.isEmpty()) {
 			StallRequestSchedular infoWrapper = StallRequestSchedular.builder().stallApplicationRequest(StallApplicationresult1).build();
 			
-			producer.push(config.getSTALLApplicationUpdatepaymentstatusTopic(), infoWrapper );
+			producer.push(config.getSTALLApplicationUpdatepaymentstatusSchedularTopic(), infoWrapper );
 			}
 			
 			if(!StallApplicationresult2.isEmpty()) {
 				StallRequestSchedular infoWrapper = StallRequestSchedular.builder().stallApplicationRequest(StallApplicationresult2)
 						.build();
 
-				producer.push(config.getSTALLApplicationUpdateapplicationstatusTopic(), infoWrapper);
+				producer.push(config.getSTALLApplicationUpdateapplicationstatusSchedularTopic(), infoWrapper);
 			}
 		return "UPDATE PAYMENT STATUS & APPLICATION STATUS";
 	}
@@ -754,14 +760,36 @@ List jsonOutput1 = JsonPath.read(mdmsData, CommonConstants.MDMS_TAXHEAD_STALL_CO
 		return status;
 	}
 	
+
+	private String updatePaymentStatusSchedular(StallApplicationSchedular stallApplication) {
+		List<StallApplicationSchedular> stallPaymentStatusDB = repository.getStallPaymentStatusSchedular(stallApplication);
+		String status = null;
+		List<String> ll = new ArrayList<>();
+		for (int i = 0; i < stallPaymentStatusDB.size(); i++) {
+			ll.add(stallPaymentStatusDB.get(i).getPaymentstatus());
+
+		}
+		if (ll.contains("PENDING")) {
+			return status = "PENDING";
+		} else if (ll.contains("FAILURE") || ll.contains("SUCCESS")) {
+			if (ll.contains("SUCCESS")) {
+				return status = "SUCCESS";
+			}
+			return status = "FAILURE";
+		} else if (ll.contains("SUCCESS")) {
+			return status = "SUCCESS";
+		}
+		return status;
+	}
+	
+
 	@Scheduled(initialDelay = 1000, fixedRate = 300000)
 	public void run() {
 
 		
 		 schedular();
 		
-		
-		
+
 	}
 
 }

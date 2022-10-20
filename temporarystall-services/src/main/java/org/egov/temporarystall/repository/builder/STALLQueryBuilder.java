@@ -16,9 +16,8 @@ public class STALLQueryBuilder {
 			+ "	 group by TS.id    ORDER BY created_time desc ";
 	
 	
-	public static final String SCHEDULAR = "SELECT TS.id, TS.applicationn_id, TS.name, TS.mobile_no, TS.festival, TS.from_date, TS.to_date, TS.sector, TS.village , TS.paymentstatus , TS.stall_size, TS.address_details, TS.landmark, TS.tenant_id, TS.total_amount, TS.is_active, TS.created_by, TS.created_time, TS.last_modified_by, TS.last_modified_time, TS.no_o_days, TS.fees_per_day, TS.application_status, TS.main_amount, TS.gst_amont, TS.nominee_name, TS.relation, \n"
-			+ "	array_to_json(array_agg(json_build_object('documnetUuid',SD.document_uuid, 'filestoreId',SD.filestore_id, 'applicationUuid',SD.id, 'documentType',SD.document_type, 'tenantId',SD.tenant_id,'isActive', SD.is_active))) as document \n"
-			+ "	FROM public.temporary_stall_application_detail TS inner join temporary_stall_application_document SD on TS.id=SD.id and TS.tenant_id=SD.tenant_id \n"
+	public static final String SCHEDULAR = "SELECT TS.id, TS.applicationn_id,  TS.paymentstatus , TS.application_status \n"
+			+ "	FROM public.temporary_stall_application_detail TS \n"
 			+ "	 where TS.application_status != 'FEES PAID'   \n"
 			+ "	 group by TS.id    ORDER BY created_time desc ";
 	
