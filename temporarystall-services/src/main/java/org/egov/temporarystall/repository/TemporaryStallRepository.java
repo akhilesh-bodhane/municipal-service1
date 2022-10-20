@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.egov.temporarystall.config.StallConfiguration;
 import org.egov.temporarystall.model.StallApplication;
+import org.egov.temporarystall.model.StallApplicationSchedular;
 import org.egov.temporarystall.model.StallRequest;
 import org.egov.temporarystall.model.demand.DemandDetail;
 import org.egov.temporarystall.producer.Producer;
@@ -13,7 +14,9 @@ import org.egov.temporarystall.repository.builder.STALLQueryBuilder;
 import org.egov.temporarystall.repository.rowmapper.DemandDetailRowMapper;
 import org.egov.temporarystall.repository.rowmapper.DemandRowMapper;
 import org.egov.temporarystall.repository.rowmapper.PaymentStatusRowMapper;
+import org.egov.temporarystall.repository.rowmapper.PaymentStatusRowMapperScheduler;
 import org.egov.temporarystall.repository.rowmapper.STALLRowMapper;
+import org.egov.temporarystall.repository.rowmapper.STALLRowMapperSchedular;
 import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -31,6 +34,9 @@ public class TemporaryStallRepository {
 	private STALLRowMapper tempstallRowMapper;
 	
 	@Autowired
+	private STALLRowMapperSchedular stallRowMapperSchedular;
+	
+	@Autowired
 	private DemandRowMapper demandRowMapper;
 	
 	
@@ -40,6 +46,10 @@ public class TemporaryStallRepository {
 	
 	@Autowired
 	private PaymentStatusRowMapper paymentStatusRowMapper;
+	
+	
+	@Autowired
+	private PaymentStatusRowMapperScheduler paymentStatusRowMapperScheduler;
 	
 	@Autowired
 	public TemporaryStallRepository(Producer producer, StallConfiguration config,JdbcTemplate jdbcTemplate,STALLRowMapper tempstallRowMapper) {
@@ -74,14 +84,14 @@ public class TemporaryStallRepository {
 
 	}
 	
-	public List<StallApplication> getStallApplicationSchedular() {
-		List<StallApplication> stall = new ArrayList<>();
+	public List<StallApplicationSchedular> getStallApplicationSchedular() {
+		List<StallApplicationSchedular> stall = new ArrayList<>();
 		
 		
 		try {
 			return stall = jdbcTemplate.query(STALLQueryBuilder.SCHEDULAR,
 					new Object[] {  			
-								 }, tempstallRowMapper);
+								 }, stallRowMapperSchedular);
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new CustomException("Exception",e.getMessage());
@@ -125,6 +135,19 @@ public class TemporaryStallRepository {
 							        stallApplication.getApplicationId()				
 							        		
 								 }, paymentStatusRowMapper);
+		
+	}
+	
+	public List<StallApplicationSchedular> getStallPaymentStatusSchedular(StallApplicationSchedular stallApplication) {
+		StallApplication stall = new StallApplication();
+		
+		
+		
+			return jdbcTemplate.query(STALLQueryBuilder.GET_STALL_PAYMENT_STATUS_QUERY,
+					new Object[] {  stallApplication.getApplicationId(), 
+							        stallApplication.getApplicationId()				
+							        		
+								 }, paymentStatusRowMapperScheduler);
 		
 	}
 	

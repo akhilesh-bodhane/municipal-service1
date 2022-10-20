@@ -104,6 +104,16 @@ public class StallConfiguration {
 		
 		@Value("${persister.update.stallapplication.applicationstatus.topic}")
 		private String STALLApplicationUpdateapplicationstatusTopic;
+		
+		
+		@Value("${persister.update.stallapplication.paymentstatus.schedular.topic}")
+		private String STALLApplicationUpdatepaymentstatusSchedularTopic;
+		
+		
+		@Value("${persister.update.stallapplication.applicationstatus.schedular.topic}")
+		private String STALLApplicationUpdateapplicationstatusSchedularTopic;
+		
+		
 
 		@Value("${egov.demand.update.endpoint}")
 		private String BillingUpdateUrl;	
