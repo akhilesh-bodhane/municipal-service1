@@ -760,6 +760,7 @@ List jsonOutput1 = JsonPath.read(mdmsData, CommonConstants.MDMS_TAXHEAD_STALL_CO
 		return status;
 	}
 	
+
 	private String updatePaymentStatusSchedular(StallApplicationSchedular stallApplication) {
 		List<StallApplicationSchedular> stallPaymentStatusDB = repository.getStallPaymentStatusSchedular(stallApplication);
 		String status = null;
@@ -781,12 +782,14 @@ List jsonOutput1 = JsonPath.read(mdmsData, CommonConstants.MDMS_TAXHEAD_STALL_CO
 		return status;
 	}
 	
+
 	@Scheduled(initialDelay = 1000, fixedRate = 300000)
 	public void run() {
 
 		
 		 schedular();
 		
+
 	}
 
 }
