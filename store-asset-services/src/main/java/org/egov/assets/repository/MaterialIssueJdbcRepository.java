@@ -209,7 +209,7 @@ public class MaterialIssueJdbcRepository extends JdbcRepository {
     }
 
     public Pagination<MaterialIssue> searchDashboard(final MaterialIssueSearchContract searchContract, String issueType) {
-        String searchQuery = "select materialissuestatus,issueType,indentNumber,issueNumber from materialissue :condition :orderby";
+        String searchQuery = "select materialissuestatus,issueType,indentNumber,issueNumber, tenantId from materialissue :condition :orderby";
         StringBuffer params = new StringBuffer();
         Map<String, Object> paramValues = new HashMap<>();
         if (searchContract.getSortBy() != null && !searchContract.getSortBy().isEmpty()) {

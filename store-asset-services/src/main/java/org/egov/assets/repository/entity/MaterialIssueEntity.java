@@ -148,7 +148,7 @@ public class MaterialIssueEntity {
 		materialIssue.setIssueDate(issueDate);
 		materialIssue.setMaterialIssueStatus(MaterialIssueStatusEnum.fromValue(materialIssueStatus));
 		materialIssue.setDescription(description);
-		materialIssue.setTotalIssueValue(BigDecimal.valueOf(totalIssueValue));
+		materialIssue.setTotalIssueValue(BigDecimal.valueOf(totalIssueValue != null ? totalIssueValue : 0));
 		materialIssue.setTotalDeductionValue(BigDecimal.valueOf(totalDeductionValue != null ? totalDeductionValue : 0));
 		materialIssue.setFileStoreId(fileStoreId);
 		materialIssue.setDesignation(designation);
