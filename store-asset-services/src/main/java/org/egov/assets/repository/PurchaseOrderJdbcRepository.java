@@ -355,7 +355,7 @@ public class PurchaseOrderJdbcRepository extends org.egov.assets.common.JdbcRepo
 
 		searchQuery = searchQuery.replace(":tablename", PurchaseOrderEntity.TABLE_NAME);
 
-		searchQuery = searchQuery.replace(":selectfields", " store,status,purchaseOrderNumber,createdby,createdtime,lastmodifiedby,lastmodifiedtime ");
+		searchQuery = searchQuery.replace(":selectfields", " store,status,purchaseOrderNumber,createdby,createdtime,lastmodifiedby,lastmodifiedtime, tenantid ");
 
 		// implement jdbc specfic search
 
