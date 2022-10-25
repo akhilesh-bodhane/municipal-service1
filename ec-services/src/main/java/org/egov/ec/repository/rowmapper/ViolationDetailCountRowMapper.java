@@ -29,7 +29,7 @@ public class ViolationDetailCountRowMapper implements ResultSetExtractor<List<Vi
 		try {
 			while (rs.next()) {
 
-				String ViolationCountUuid = rs.getString("Violation_uuid");
+				String ViolationCountUuid = rs.getString("violation_uuid");
 
 					ViolationCount ViolationCount = org.egov.ec.web.models.ViolationCount.builder().violationUuid(ViolationCountUuid)
 							.encroachmentType((rs.getString("encroachment_type") == null ? ""

@@ -31,11 +31,11 @@ public class ViolationRepository {
 	private JdbcTemplate jdbcTemplate;
 
 	private ViolationDetailRowMapper rowMapper;
-	
+
 	private ViolationDetailCountRowMapper rowCountMapper;
 
 	private ColumnsRowMapper columnsRowMapper;
-	
+
 	private Producer producer;
 
 	private EchallanConfiguration config;
@@ -43,21 +43,22 @@ public class ViolationRepository {
 	private EcQueryBuilder ecQueryBuilder;
 
 	public ViolationRepository(JdbcTemplate jdbcTemplate, Producer producer, EchallanConfiguration config,
-			ViolationDetailRowMapper rowMapper, ColumnsRowMapper columnsRowMapper ,  ViolationDetailCountRowMapper rowCountMapper) {
+			ViolationDetailRowMapper rowMapper, ColumnsRowMapper columnsRowMapper,
+			ViolationDetailCountRowMapper rowCountMapper) {
 		this.jdbcTemplate = jdbcTemplate;
 		this.rowMapper = rowMapper;
 		this.producer = producer;
 		this.config = config;
 		this.ecQueryBuilder = ecQueryBuilder;
-		this.columnsRowMapper=columnsRowMapper;
-		this.rowCountMapper= rowCountMapper;
+		this.columnsRowMapper = columnsRowMapper;
+		this.rowCountMapper = rowCountMapper;
 	}
 
-	 /**
-    * Pushes the request in generateChallan topic to save challan data 
-    *
-    * @param violationMaster Violation model
-    */
+	/**
+	 * Pushes the request in generateChallan topic to save challan data
+	 *
+	 * @param violationMaster Violation model
+	 */
 	public void generateChallan(@Valid Violation violationMaster) {
 		log.info("Violation Repository - generateChallan Method");
 		RequestInfoWrapper infoWrapper = RequestInfoWrapper.builder().requestBody(violationMaster).build();
@@ -65,41 +66,39 @@ public class ViolationRepository {
 
 	}
 
-	 /**
-	    * Pushes the request in updateChallan topic to update challan status 
-	    *
-	    * @param violationMaster Violation model
-	    */
+	/**
+	 * Pushes the request in updateChallan topic to update challan status
+	 *
+	 * @param violationMaster Violation model
+	 */
 	public void updateChallan(@Valid Violation violationMaster) {
 		log.info("Violation Repository - updateChallan Method");
 		RequestInfoWrapper infoWrapper = RequestInfoWrapper.builder().requestBody(violationMaster).build();
 		producer.push(config.getUpdateChallanTopic(), infoWrapper);
 	}
 
-	
 	/**
-     * fetches the list of challans for different screens
-     *
-     * @param searchCriteria Search criteria to apply filter
-     * @return Returns the list of challans
-     */
+	 * fetches the list of challans for different screens
+	 *
+	 * @param searchCriteria Search criteria to apply filter
+	 * @return Returns the list of challans
+	 */
 
 	public List<Violation> getChallan(EcSearchCriteria searchCriteria) {
 		log.info("Violation Repository - getChallan Method");
-		
+
 		List<Violation> violationDetailList = null;
-		
+
 		String parameter = "%" + searchCriteria.getSearchText() + "%";
 
 		if (null != searchCriteria.getSearchText() && !searchCriteria.getSearchText().isEmpty()) {
 			try {
-			violationDetailList = jdbcTemplate.query(EcQueryBuilder.GET_VIOLATION_MASTER_SEARCH,
-					new Object[] { parameter, parameter, parameter, parameter, parameter, parameter, parameter, parameter,
-							searchCriteria.getTenantId() },
-					rowMapper);
-			}catch(Exception e)
-			{
-				log.error("Violation Service - Get Violation Exception"+e.getMessage());
+				violationDetailList = jdbcTemplate.query(
+						EcQueryBuilder.GET_VIOLATION_MASTER_SEARCH, new Object[] { parameter, parameter, parameter,
+								parameter, parameter, parameter, parameter, parameter, searchCriteria.getTenantId() },
+						rowMapper);
+			} catch (Exception e) {
+				log.error("Violation Service - Get Violation Exception" + e.getMessage());
 			}
 
 			if (violationDetailList.size() >= searchCriteria.getLimit()) {
@@ -130,16 +129,16 @@ public class ViolationRepository {
 
 			} else {
 				return violationDetailList;
-			}		
+			}
 		}
 	}
 
 	/**
-     * fetches the penalty amount and fine date validation
-     *
-     * @param violationMaster Violation model
-     * @return Returns the penalty amount
-     */
+	 * fetches the penalty amount and fine date validation
+	 *
+	 * @param violationMaster Violation model
+	 * @return Returns the penalty amount
+	 */
 	public String getpenalty(@Valid Violation violationMaster) {
 		log.info("Violation Repository - getpenalty Method");
 		String numberOfViolation;
@@ -161,11 +160,12 @@ public class ViolationRepository {
 
 	}
 
-	 /**
-	    * Pushes the request in AddpaymentHistory topic to to maintain payment history for online payment
-	    *
-	    * @param ecPayment EcPayment model
-	    */
+	/**
+	 * Pushes the request in AddpaymentHistory topic to to maintain payment history
+	 * for online payment
+	 *
+	 * @param ecPayment EcPayment model
+	 */
 	public void addPayment(EcPayment ecPayment) {
 		log.info("Violation Repository - addPayment Method");
 		RequestInfoWrapper infoWrapper = RequestInfoWrapper.builder().requestBody(ecPayment).build();
@@ -174,11 +174,11 @@ public class ViolationRepository {
 	}
 
 	/**
-     * fetches the list of challans which are marked as defective by storemanager
-     *
-     * @param searchCriteria EcSearchCriteria model
-     * @return Returns the list of challans
-     */
+	 * fetches the list of challans which are marked as defective by storemanager
+	 *
+	 * @param searchCriteria EcSearchCriteria model
+	 * @return Returns the list of challans
+	 */
 	public List<Violation> getChallanForHOD(EcSearchCriteria searchCriteria) {
 		log.info("Violation Repository - getChallanForHOD Method");
 
@@ -188,11 +188,11 @@ public class ViolationRepository {
 	}
 
 	/**
-     * fetches the list of challans whoose auctions are need to be approved by hod
-     *
-     * @param searchCriteria EcSearchCriteria model
-     * @return Returns the list of challans
-     */
+	 * fetches the list of challans whoose auctions are need to be approved by hod
+	 *
+	 * @param searchCriteria EcSearchCriteria model
+	 * @return Returns the list of challans
+	 */
 	public List<Violation> getChallanForAuctionHOD(EcSearchCriteria searchCriteria) {
 		log.info("Violation Repository - getChallanForAuctionHOD Method");
 
@@ -200,52 +200,48 @@ public class ViolationRepository {
 				new Object[] { searchCriteria.getTenantId() }, rowMapper);
 		return violationDetailList;
 	}
-	
+
 	/**
-     * fetches the list of challans on the basis of search criterias
-     *
-     * @param searchCriteria EcSearchCriteria model
-     * @return Returns the list of challans
-     */
+	 * fetches the list of challans on the basis of search criterias
+	 *
+	 * @param searchCriteria EcSearchCriteria model
+	 * @return Returns the list of challans
+	 */
 	public List<Violation> getSearchChallan(Violation violation) {
 		log.info("Violation Repository - getSearchChallan Method");
 
 		List<Violation> violationDetailList;
-		
+
 		violationDetailList = jdbcTemplate.query(EcQueryBuilder.SEARCH_VIOLATION_MASTER,
-				new Object[] { violation.getFromDate(), violation.getFromDate(),violation.getToDate(),violation.getToDate(), violation.getSiName(),
-						violation.getSiName(), violation.getEncroachmentType(), violation.getEncroachmentType(),
-						violation.getSector(), violation.getSector(),violation.getStatus(), violation.getStatus(),
-						violation.getTenantId(),violation.getChallanId(),violation.getChallanId()},
+				new Object[] { violation.getFromDate(), violation.getFromDate(), violation.getToDate(),
+						violation.getToDate(), violation.getSiName(), violation.getSiName(),
+						violation.getEncroachmentType(), violation.getEncroachmentType(), violation.getSector(),
+						violation.getSector(), violation.getStatus(), violation.getStatus(), violation.getTenantId(),
+						violation.getChallanId(), violation.getChallanId() },
 				rowMapper);
-		
-			return violationDetailList;
+
+		return violationDetailList;
 
 	}
-	
+
 	/**
-     * fetches the list of challans on the basis of search criterias For Count
-     *
-     * @param searchCriteria EcSearchCriteria model
-     * @return Returns the list of challans
-     */
+	 * fetches the list of challans on the basis of search criterias For Count
+	 *
+	 * @param searchCriteria EcSearchCriteria model
+	 * @return Returns the list of challans
+	 */
 	public List<ViolationCount> getSearchChallanCount(ViolationCount violation) {
 		log.info("Violation Repository - getSearchChallan Method");
 
 		List<ViolationCount> violationDetailList;
-		
-		violationDetailList = jdbcTemplate.query(EcQueryBuilder.SEARCH_VIOLATION_MASTER_COUNT,
-				new Object[] { violation.getFromDate(), violation.getFromDate(),violation.getToDate(),violation.getToDate(), violation.getSiName(),
-						violation.getSiName(), violation.getEncroachmentType(), violation.getEncroachmentType(),
-						violation.getSector(), violation.getSector(),violation.getStatus(), violation.getStatus()
-						},
+
+		violationDetailList = jdbcTemplate.query(EcQueryBuilder.SEARCH_VIOLATION_MASTER_COUNT, new Object[] {
+				violation.getFromDate(), violation.getFromDate(), violation.getToDate(), violation.getToDate() },
 				rowCountMapper);
-		
-			return violationDetailList;
+
+		return violationDetailList;
 
 	}
-
-
 
 	public void updatePayment(EcPaymentData ecPayment) {
 		log.info("Violation Repository - updatePayment Method");
@@ -256,40 +252,46 @@ public class ViolationRepository {
 	public void deleteChallan(ChallanDataBckUp bck) {
 		RequestInfoWrapper infoWrapper = RequestInfoWrapper.builder().requestBody(bck).build();
 		producer.push(config.getDataBckChallan(), infoWrapper);
-		
+
 	}
 
 	public JSONArray getdataProcessInstance(ChallanDataBckUp bck) {
-		return  jdbcTemplate.query(EcQueryBuilder.SEARCH_PROCESS_INSTANCE,new Object[] { bck.getChallanId() ,bck.getChallanId() },	columnsRowMapper);
+		return jdbcTemplate.query(EcQueryBuilder.SEARCH_PROCESS_INSTANCE,
+				new Object[] { bck.getChallanId(), bck.getChallanId() }, columnsRowMapper);
 	}
-	
+
 	public JSONArray getdataEgecDocument(ChallanDataBckUp bck) {
-		return  jdbcTemplate.query(EcQueryBuilder.SEARCH_DOCUMENt,new Object[] { bck.getChallanId()  },columnsRowMapper);
+		return jdbcTemplate.query(EcQueryBuilder.SEARCH_DOCUMENt, new Object[] { bck.getChallanId() },
+				columnsRowMapper);
 	}
 
 	public JSONArray getdataStoreItem(ChallanDataBckUp bck) {
-		return  jdbcTemplate.query(EcQueryBuilder.SEARCH_STORE_ITEM,new Object[] { bck.getChallanId()  },columnsRowMapper);
+		return jdbcTemplate.query(EcQueryBuilder.SEARCH_STORE_ITEM, new Object[] { bck.getChallanId() },
+				columnsRowMapper);
 	}
 
 	public JSONArray getdatPayment(ChallanDataBckUp bck) {
-		return  jdbcTemplate.query(EcQueryBuilder.SEARCH_PAYMENT,new Object[] { bck.getChallanId()  },columnsRowMapper);
+		return jdbcTemplate.query(EcQueryBuilder.SEARCH_PAYMENT, new Object[] { bck.getChallanId() }, columnsRowMapper);
 	}
-   
+
 	public JSONArray getdatChallanDetail(ChallanDataBckUp bck) {
-		return  jdbcTemplate.query(EcQueryBuilder.SEARCH_CHALLAN_DETAILS,new Object[] { bck.getChallanId()  },columnsRowMapper);
+		return jdbcTemplate.query(EcQueryBuilder.SEARCH_CHALLAN_DETAILS, new Object[] { bck.getChallanId() },
+				columnsRowMapper);
 	}
-	
+
 	public JSONArray getdatChallanMaster(ChallanDataBckUp bck) {
-		return  jdbcTemplate.query(EcQueryBuilder.SEARCH_CHALLAN_MASTER,new Object[] { bck.getChallanId()  },columnsRowMapper);
+		return jdbcTemplate.query(EcQueryBuilder.SEARCH_CHALLAN_MASTER, new Object[] { bck.getChallanId() },
+				columnsRowMapper);
 	}
 
 	public JSONArray getdatViolationDetail(ChallanDataBckUp bck) {
-		return  jdbcTemplate.query(EcQueryBuilder.SEARCH_VIOLATION_DETAIL,new Object[] { },columnsRowMapper);
+		return jdbcTemplate.query(EcQueryBuilder.SEARCH_VIOLATION_DETAIL, new Object[] {}, columnsRowMapper);
 	}
 
 	public JSONArray getdatViolationMaster(ChallanDataBckUp bck) {
-		return  jdbcTemplate.query(EcQueryBuilder.SEARCH_VIOLATION_MASTER_DETAILS,new Object[] {   },columnsRowMapper);
+		return jdbcTemplate.query(EcQueryBuilder.SEARCH_VIOLATION_MASTER_DETAILS, new Object[] {}, columnsRowMapper);
 	}
+
 	public void editChallan(Violation violationMaster) {
 		RequestInfoWrapper infoWrapper = RequestInfoWrapper.builder().requestBody(violationMaster).build();
 		producer.push(config.getEditChallanTopic(), infoWrapper);
