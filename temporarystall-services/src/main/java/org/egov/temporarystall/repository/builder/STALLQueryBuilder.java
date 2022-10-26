@@ -18,7 +18,7 @@ public class STALLQueryBuilder {
 	
 	public static final String SCHEDULAR = "SELECT TS.id, TS.applicationn_id,  TS.paymentstatus , TS.application_status \n"
 			+ "	FROM public.temporary_stall_application_detail TS \n"
-			+ "	 where TS.application_status != 'FEES PAID'   \n"
+			+ "	 where TS.application_status != 'FEES PAID'  OR TS.paymentstatus = 'PENDING'   \n"
 			+ "	 group by TS.id    ORDER BY created_time desc ";
 	
 	
