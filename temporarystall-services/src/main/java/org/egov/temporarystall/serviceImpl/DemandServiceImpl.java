@@ -115,6 +115,7 @@ public class DemandServiceImpl implements DemandService {
 
             Long taxPeriodFrom = System.currentTimeMillis();
             Long taxPeriodTo = System.currentTimeMillis();
+	    Long expirydate = System.currentTimeMillis();
            
 			List<String> combinedBillingSlabs = new LinkedList<>();
 
@@ -123,7 +124,9 @@ public class DemandServiceImpl implements DemandService {
 					.demandDetails(demandDetails).payer(bookingsRequest.getRequestInfo().getUserInfo())
 					.minimumAmountPayable(config.getMinimumPayableAmount())
 					.tenantId(tenantId).taxPeriodFrom(taxPeriodFrom)
-					.taxPeriodTo(taxPeriodTo).consumerType("bookings")
+					.taxPeriodTo(taxPeriodTo)
+				        .billExpiryTime(expirydate)
+				        .consumerType("bookings")
 					.businessService("TEMPORARY_STALL_CHARGES_BOOKING")
 					.additionalDetails(Collections.singletonMap("calculationDes1cription", combinedBillingSlabs))
 					.build();
