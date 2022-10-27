@@ -76,5 +76,16 @@ import javax.servlet.http.HttpServletRequest;
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
+    @RequestMapping(value = {"/{servicename}/_revenuecollections", "/_revenuecollections"}, method = RequestMethod.POST)
+    public ResponseEntity<TLRevenueCollectionsResponse> applicationRevenueCollections(@Valid @RequestBody RequestInfoWrapper requestInfoWrapper,
+                                                       @Valid @ModelAttribute TradeLicenseSearchCriteria criteria,
+                                                       @PathVariable(required = false) String servicename) {
+       TLRevenueCollections revenueCollections = tradeLicenseService.applicationRevenueCollections(criteria, requestInfoWrapper.getRequestInfo());
+
+        TLRevenueCollectionsResponse response = TLRevenueCollectionsResponse.builder().tlRevenueCollections(revenueCollections).responseInfo(
+                responseInfoFactory.createResponseInfoFromRequestInfo(requestInfoWrapper.getRequestInfo(), true))
+                .build();
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
 
 }
