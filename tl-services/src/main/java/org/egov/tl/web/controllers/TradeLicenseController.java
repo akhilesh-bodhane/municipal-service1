@@ -1,91 +1,101 @@
 package org.egov.tl.web.controllers;
 
+import java.util.List;
 
-import org.egov.tl.service.PaymentUpdateService;
+import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
+
 import org.egov.tl.service.TradeLicenseService;
-import org.egov.tl.service.notification.PaymentNotificationService;
 import org.egov.tl.util.ResponseInfoFactory;
-import org.egov.tl.web.models.*;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import io.swagger.annotations.*;
+import org.egov.tl.web.models.RequestInfoWrapper;
+import org.egov.tl.web.models.TLRevenueCollections;
+import org.egov.tl.web.models.TLRevenueCollectionsResponse;
+import org.egov.tl.web.models.TradeLicense;
+import org.egov.tl.web.models.TradeLicenseRequest;
+import org.egov.tl.web.models.TradeLicenseResponse;
+import org.egov.tl.web.models.TradeLicenseSearchCriteria;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.io.IOException;
-import java.util.*;
-
-import javax.validation.constraints.*;
-import javax.validation.Valid;
-import javax.servlet.http.HttpServletRequest;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @RestController
-    @RequestMapping("/v1")
-    public class TradeLicenseController {
+@RequestMapping("/v1")
+public class TradeLicenseController {
 
-        private final ObjectMapper objectMapper;
+	private final ObjectMapper objectMapper;
 
-        private final HttpServletRequest request;
+	private final HttpServletRequest request;
 
-        private final TradeLicenseService tradeLicenseService;
+	private final TradeLicenseService tradeLicenseService;
 
-        private final ResponseInfoFactory responseInfoFactory;
+	private final ResponseInfoFactory responseInfoFactory;
 
-    @Autowired
-    public TradeLicenseController(ObjectMapper objectMapper, HttpServletRequest request,
-                                  TradeLicenseService tradeLicenseService, ResponseInfoFactory responseInfoFactory) {
-        this.objectMapper = objectMapper;
-        this.request = request;
-        this.tradeLicenseService = tradeLicenseService;
-        this.responseInfoFactory = responseInfoFactory;
-    }
+	@Autowired
+	public TradeLicenseController(ObjectMapper objectMapper, HttpServletRequest request,
+			TradeLicenseService tradeLicenseService, ResponseInfoFactory responseInfoFactory) {
+		this.objectMapper = objectMapper;
+		this.request = request;
+		this.tradeLicenseService = tradeLicenseService;
+		this.responseInfoFactory = responseInfoFactory;
+	}
 
+	@PostMapping({ "/{servicename}/_create", "/_create" })
+	public ResponseEntity<TradeLicenseResponse> create(@Valid @RequestBody TradeLicenseRequest tradeLicenseRequest,
+			@PathVariable(required = false) String servicename) {
+		List<TradeLicense> licenses = tradeLicenseService.create(tradeLicenseRequest, servicename);
+		TradeLicenseResponse response = TradeLicenseResponse.builder().licenses(licenses).responseInfo(
+				responseInfoFactory.createResponseInfoFromRequestInfo(tradeLicenseRequest.getRequestInfo(), true))
+				.build();
+		return new ResponseEntity<>(response, HttpStatus.OK);
+	}
 
-    @PostMapping({"/{servicename}/_create", "/_create"})
-    public ResponseEntity<TradeLicenseResponse> create(@Valid @RequestBody TradeLicenseRequest tradeLicenseRequest,
-                                                       @PathVariable(required = false) String servicename) {
-        List<TradeLicense> licenses = tradeLicenseService.create(tradeLicenseRequest, servicename);
-        TradeLicenseResponse response = TradeLicenseResponse.builder().licenses(licenses).responseInfo(
-                responseInfoFactory.createResponseInfoFromRequestInfo(tradeLicenseRequest.getRequestInfo(), true))
-                .build();
-        return new ResponseEntity<>(response, HttpStatus.OK);
-    }
+	@RequestMapping(value = { "/{servicename}/_search", "/_search" }, method = RequestMethod.POST)
+	public ResponseEntity<TradeLicenseResponse> search(@Valid @RequestBody RequestInfoWrapper requestInfoWrapper,
+			@Valid @ModelAttribute TradeLicenseSearchCriteria criteria,
+			@PathVariable(required = false) String servicename) {
+		List<TradeLicense> licenses = tradeLicenseService.search(criteria, requestInfoWrapper.getRequestInfo(),
+				servicename);
 
-    @RequestMapping(value = {"/{servicename}/_search", "/_search"}, method = RequestMethod.POST)
-    public ResponseEntity<TradeLicenseResponse> search(@Valid @RequestBody RequestInfoWrapper requestInfoWrapper,
-                                                       @Valid @ModelAttribute TradeLicenseSearchCriteria criteria,
-                                                       @PathVariable(required = false) String servicename) {
-        List<TradeLicense> licenses = tradeLicenseService.search(criteria, requestInfoWrapper.getRequestInfo(), servicename);
+		TradeLicenseResponse response = TradeLicenseResponse.builder().licenses(licenses).responseInfo(
+				responseInfoFactory.createResponseInfoFromRequestInfo(requestInfoWrapper.getRequestInfo(), true))
+				.build();
+		return new ResponseEntity<>(response, HttpStatus.OK);
+	}
 
-        TradeLicenseResponse response = TradeLicenseResponse.builder().licenses(licenses).responseInfo(
-                responseInfoFactory.createResponseInfoFromRequestInfo(requestInfoWrapper.getRequestInfo(), true))
-                .build();
-        return new ResponseEntity<>(response, HttpStatus.OK);
-    }
+	@RequestMapping(value = { "/{servicename}/_update", "/_update" }, method = RequestMethod.POST)
+	public ResponseEntity<TradeLicenseResponse> update(@Valid @RequestBody TradeLicenseRequest tradeLicenseRequest,
+			@PathVariable(required = false) String servicename) {
+		List<TradeLicense> licenses = tradeLicenseService.update(tradeLicenseRequest, servicename);
 
-    @RequestMapping(value = {"/{servicename}/_update", "/_update"}, method = RequestMethod.POST)
-    public ResponseEntity<TradeLicenseResponse> update(@Valid @RequestBody TradeLicenseRequest tradeLicenseRequest,
-                                                       @PathVariable(required = false) String servicename) {
-        List<TradeLicense> licenses = tradeLicenseService.update(tradeLicenseRequest, servicename);
+		TradeLicenseResponse response = TradeLicenseResponse.builder().licenses(licenses).responseInfo(
+				responseInfoFactory.createResponseInfoFromRequestInfo(tradeLicenseRequest.getRequestInfo(), true))
+				.build();
+		return new ResponseEntity<>(response, HttpStatus.OK);
+	}
 
-        TradeLicenseResponse response = TradeLicenseResponse.builder().licenses(licenses).responseInfo(
-                responseInfoFactory.createResponseInfoFromRequestInfo(tradeLicenseRequest.getRequestInfo(), true))
-                .build();
-        return new ResponseEntity<>(response, HttpStatus.OK);
-    }
+	@RequestMapping(value = { "/{servicename}/_revenuecollections",
+			"/_revenuecollections" }, method = RequestMethod.POST)
+	public ResponseEntity<TLRevenueCollectionsResponse> applicationRevenueCollections(
+			@Valid @RequestBody RequestInfoWrapper requestInfoWrapper,
+			@Valid @ModelAttribute TradeLicenseSearchCriteria criteria,
+			@PathVariable(required = false) String servicename) {
+		TLRevenueCollections revenueCollections = tradeLicenseService.applicationRevenueCollections(criteria,
+				requestInfoWrapper.getRequestInfo());
 
-    @RequestMapping(value = {"/{servicename}/_revenuecollections", "/_revenuecollections"}, method = RequestMethod.POST)
-    public ResponseEntity<TLRevenueCollectionsResponse> applicationRevenueCollections(@Valid @RequestBody RequestInfoWrapper requestInfoWrapper,
-                                                       @Valid @ModelAttribute TradeLicenseSearchCriteria criteria,
-                                                       @PathVariable(required = false) String servicename) {
-       TLRevenueCollections revenueCollections = tradeLicenseService.applicationRevenueCollections(criteria, requestInfoWrapper.getRequestInfo());
-
-        TLRevenueCollectionsResponse response = TLRevenueCollectionsResponse.builder().tlRevenueCollections(revenueCollections).responseInfo(
-                responseInfoFactory.createResponseInfoFromRequestInfo(requestInfoWrapper.getRequestInfo(), true))
-                .build();
-        return new ResponseEntity<>(response, HttpStatus.OK);
-    }
+		TLRevenueCollectionsResponse response = TLRevenueCollectionsResponse.builder()
+				.tlRevenueCollections(revenueCollections).responseInfo(responseInfoFactory
+						.createResponseInfoFromRequestInfo(requestInfoWrapper.getRequestInfo(), true))
+				.build();
+		return new ResponseEntity<>(response, HttpStatus.OK);
+	}
 
 }
