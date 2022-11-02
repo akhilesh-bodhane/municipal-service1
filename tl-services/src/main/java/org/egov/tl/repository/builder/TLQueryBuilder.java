@@ -80,7 +80,7 @@ public class TLQueryBuilder {
               "WHERE offset_ > ? AND offset_ <= ?";
 
 
-
+  	private static final String QUERY_COLLECTIONS = "select count(1) totalapplications, sum(p.txn_amount) totalcollections from eg_tl_tradelicense t left join eg_pg_transactions p on t.applicationnumber = p.consumer_code and p.txn_status = 'SUCCESS'";
 
 
     public String getTLSearchQuery(TradeLicenseSearchCriteria criteria, List<Object> preparedStmtList) {
@@ -232,7 +232,29 @@ public class TLQueryBuilder {
     }
 
 
+	public String getTLRevenueCollectionQuery(TradeLicenseSearchCriteria criteria, List<Object> preparedStmtList) {
 
+		StringBuilder builder = new StringBuilder(QUERY_COLLECTIONS);
+
+		if (criteria.getTenantId() != null) {
+			addClauseIfRequired(preparedStmtList, builder);
+			builder.append(" t.tenantid=? ");
+			preparedStmtList.add(criteria.getTenantId());
+		}
+		if (criteria.getFromDate() != null) {
+			addClauseIfRequired(preparedStmtList, builder);
+			builder.append("  t.applicationDate >= ? ");
+			preparedStmtList.add(criteria.getFromDate());
+		}
+
+		if (criteria.getToDate() != null) {
+			addClauseIfRequired(preparedStmtList, builder);
+			builder.append("  t.applicationDate <= ? ");
+			preparedStmtList.add(criteria.getToDate());
+		}
+
+		return builder.toString();
+	}
 
 
 }

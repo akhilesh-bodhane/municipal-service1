@@ -5,6 +5,7 @@ import org.egov.common.contract.request.RequestInfo;
 import org.egov.tl.config.TLConfiguration;
 import org.egov.tl.producer.Producer;
 import org.egov.tl.repository.builder.TLQueryBuilder;
+import org.egov.tl.repository.rowmapper.TLRevenueCollectionsRowMapper;
 import org.egov.tl.repository.rowmapper.TLRowMapper;
 import org.egov.tl.web.models.*;
 import org.egov.tl.workflow.WorkflowService;
@@ -34,16 +35,18 @@ public class TLRepository {
 
     private WorkflowService workflowService;
 
+    private TLRevenueCollectionsRowMapper revenueCollectionsRowMapper;
 
     @Autowired
     public TLRepository(JdbcTemplate jdbcTemplate, TLQueryBuilder queryBuilder, TLRowMapper rowMapper,
-                        Producer producer, TLConfiguration config, WorkflowService workflowService) {
+                        Producer producer, TLConfiguration config, WorkflowService workflowService,TLRevenueCollectionsRowMapper revenueCollectionsRowMapper) {
         this.jdbcTemplate = jdbcTemplate;
         this.queryBuilder = queryBuilder;
         this.rowMapper = rowMapper;
         this.producer = producer;
         this.config = config;
         this.workflowService = workflowService;
+        this.revenueCollectionsRowMapper =revenueCollectionsRowMapper;
     }
 
 
@@ -129,4 +132,12 @@ public class TLRepository {
     }
 
 
+	public TLRevenueCollections getCalculateRevenueCollectios(TradeLicenseSearchCriteria criteria) {
+		List<Object> preparedStmtList = new ArrayList<>();
+		String query = queryBuilder.getTLRevenueCollectionQuery(criteria, preparedStmtList);
+		log.info("Query: " + query);
+		TLRevenueCollections revenueCollections = jdbcTemplate.query(query, preparedStmtList.toArray(),
+				revenueCollectionsRowMapper);
+		return revenueCollections;
+	}
 }
