@@ -303,4 +303,10 @@ public class TradeLicenseService {
         repository.update(tradeLicenseRequest, idToIsStateUpdatableMap);
         return tradeLicenseRequest.getLicenses();
     }
+    
+	public TLRevenueCollections applicationRevenueCollections(TradeLicenseSearchCriteria criteria,
+			RequestInfo requestInfo) {
+		TLRevenueCollections calculateRevenueCollectios = repository.getCalculateRevenueCollectios(criteria);
+		return calculateRevenueCollectios;
+	}
 }

@@ -24,13 +24,12 @@ public class ServiceController {
 
 	@Autowired
 	private GrievanceService service;
-	
 
 	@Autowired
 	private PGRRequestValidator pgrRequestValidator;
-	
-	/**Dharamshala0
-	 * enpoint to create service requests
+
+	/**
+	 * Dharamshala0 enpoint to create service requests
 	 * 
 	 * @param ServiceReqRequest
 	 * @author kaviyarasan1993
@@ -56,7 +55,6 @@ public class ServiceController {
 		ServiceResponse response = service.update(serviceRequest);
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
-	
 
 	/**
 	 * Controller endpoint to fetch service requests
@@ -75,7 +73,7 @@ public class ServiceController {
 				serviceReqSearchCriteria);
 		return new ResponseEntity<>(serviceReqResponse, HttpStatus.OK);
 	}
-	
+
 	/**
 	 * Controller endpoint to fetch service requests irrespective of role
 	 * 
@@ -93,7 +91,7 @@ public class ServiceController {
 		return new ResponseEntity<>(serviceReqResponse, HttpStatus.OK);
 	}
 
-	 /**
+	/**
 	 * Controller to fetch count of service requests based on a given criteria
 	 * 
 	 * @param requestInfoWrapper
@@ -145,21 +143,21 @@ public class ServiceController {
 				serviceReqSearchCriteria);
 		return new ResponseEntity<>(serviceReqResponse, HttpStatus.OK);
 	}
-	
-	 /**
-		 * Controller to fetch count of service requests based on a given criteria
-		 * 
-		 * @param requestInfoWrapper
-		 * @param serviceReqSearchCriteria
-		 * @return ResponseEntity<?>
-		 * @author vishal
-		 */
-		@PostMapping("/db/_count")
-		@ResponseBody
-		private ResponseEntity<?> countDB(@RequestBody @Valid RequestInfoWrapper requestInfoWrapper,
-				@ModelAttribute @Valid ServiceReqSearchCriteria serviceReqSearchCriteria) {
-			pgrRequestValidator.validateSearch(serviceReqSearchCriteria, requestInfoWrapper.getRequestInfo());
-			Object countResponse = service.getCountDB(requestInfoWrapper.getRequestInfo(), serviceReqSearchCriteria);
-			return new ResponseEntity<>(countResponse, HttpStatus.OK);
-		}
+
+	/**
+	 * Controller to fetch count of service requests based on a given criteria
+	 * 
+	 * @param requestInfoWrapper
+	 * @param serviceReqSearchCriteria
+	 * @return ResponseEntity<?>
+	 * @author vishal
+	 */
+	@PostMapping("/db/_count")
+	@ResponseBody
+	private ResponseEntity<?> countDB(@RequestBody @Valid RequestInfoWrapper requestInfoWrapper,
+			@ModelAttribute @Valid ServiceReqSearchCriteria serviceReqSearchCriteria) {
+		pgrRequestValidator.validateSearch(serviceReqSearchCriteria, requestInfoWrapper.getRequestInfo());
+		Object countResponse = service.getCountDB(requestInfoWrapper.getRequestInfo(), serviceReqSearchCriteria);
+		return new ResponseEntity<>(countResponse, HttpStatus.OK);
+	}
 }

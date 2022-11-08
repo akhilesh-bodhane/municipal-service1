@@ -51,13 +51,13 @@ public class ApiConfiguration {
 
 	@Value("${ehrms.nic.service.employeeDetail.path}")
 	private String employeeDetails;
-	
+
 	@Value("${ehrms.nic.service.employeeLeaveDetail.path}")
 	private String employeeLeaveDetails;
-	
+
 	@Value("${ehrms.nic.service.employeeJoiningDetails.path}")
 	private String employeeJoiningDetails;
-		
+
 	@Value("${ehrms.nic.service.statelist.path}")
 	private String hrmsStatelist;
 
@@ -66,7 +66,7 @@ public class ApiConfiguration {
 
 	@Value("${ehrms.nic.service.empnotification.path}")
 	private String hrmsNotification;
-	
+
 	@Value("${ehrms.auth.header}")
 	private String hrmsAuthHeader;
 
@@ -75,67 +75,73 @@ public class ApiConfiguration {
 
 	@Value("${payroll.encryption.key}")
 	private String encrptionKey;
-	
-	
+
 	@Value("${persister.save.eofficeData.topic}")
 	private String eofficeSaveTopic;
-	
+
 	@Value("${url.shortner.host}")
 	private String urlShortnerHost;
 
 	@Value("${url.shortner.path}")
 	private String urlShortnerPath;
-	
+
 	@Value("${url.shortner.key}")
 	private String urlShortnerKey;
-	
+
 	@Value("${ehrms.payslip.host}")
 	private String PayslipHost;
-	
-	
+
 	@Value("${egov.demand.create.endpoint}")
 	private String demandCreateEndpoint;
-	
+
 	@Value("${egov.demand.update.endpoint}")
 	private String demandUpdateEndpoint;
-	
+
 	@Value("${egov.billingservice.host}")
 	private String billingHost;
-	
+
 	@Value("${egov.billingservice.fetchBillEndpoint}")
 	private String fetchBillEndpoint;
-	
+
 	@Value("${egov.demand.minimum.payable.amount}")
 	private BigDecimal minimumPayableAmount;
-	
-	
-	
+
 	@Value("${egov.demand.search.endpoint}")
 	private String demandSearchEndpoint;
-	
+
 	@Value("${egov.service.search.endpoint}")
 	private String billingSearchHost;
-	
+
 	@Value("${egov.payemnt.create.host}")
 	private String collectionHost;
-	
+
 	@Value("${egov.service.payment.create.endpoint}")
 	private String createPaymentEndpoint;
-	
+
 	@Value("${egov.service.opms.host}")
 	private String OPMSHost;
-	
+
 	@Value("${egov.service.echallan.host}")
 	private String echallanHost;
-	
+
 	@Value("${egov.service.horticulture.host}")
 	private String hortiHost;
-	
+
 	@Value("${egov.service.username}")
 	private String userName;
-	
+
 	@Value("${egov.service.password}")
 	private String password;
-	
-	
+
+	@Value("${fire.service.service.host}")
+	private String fireHost;
+
+	@Value("${fire.service.service.data.get}")
+	private String fireServiceDataPath;
+
+	@Value("${fire.service.service.application.get}")
+	private String fireApplicationPendingPath;
+
+	@Value("${fire.service.service.service.id}")
+	private String fireServiceId;
 }
