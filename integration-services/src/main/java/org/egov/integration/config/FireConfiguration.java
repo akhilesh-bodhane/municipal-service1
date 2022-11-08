@@ -62,5 +62,9 @@ public class FireConfiguration {
 
 	@Value("${notification.firenoc.application.process.topic}")
 	private String fireApplicaitonProcessTopic;
+	
+	@Value("${persister.save.fire.data.v2.topic}")
+	private String fireDataSaveTopicV2;
+	
 
 }

@@ -14,4 +14,8 @@ public class FireNocApplicationQueryBuilder {
 
 	public static final String GET_APPLICATION_WISE_STATUS_MAPPING_QUERY = "select app_detail_uuid,application_id,service_id,application_ref_no,service_name,department_id,department_name,submission_date,submission_mode,application_status,type_of_occupancy_use,submission_location,attribute_details,created_by,created_time,last_modified_by,last_modified_time from public.fire_noc_application_details where (TO_DATE(submission_date,'dd-MM-yyyy') >= case when :fromDate<>'' then TO_DATE(:fromDate,'yyyy-MM-dd') else TO_DATE(submission_date,'dd-MM-yyyy') end and TO_DATE(submission_date,'dd-MM-yyyy') <= case when :toDate<>'' then TO_DATE(:toDate,'yyyy-MM-dd') else TO_DATE(submission_date,'dd-MM-yyyy') end) "
 			+ "and type_of_occupancy_use = case when :typeOfOccupancyUse<>'' then :typeOfOccupancyUse else type_of_occupancy_use end and application_ref_no  = case when :applicationRefNo<>'' then :applicationRefNo else application_ref_no end";
+
+
+	public static final String GET_FIRE_SERVICE_DATA = "select * from fireservicedata where to_date(TO_CHAR(to_timestamp(createdtime / 1000), 'DD/MM/YYYY'),'DD/MM/YYYY') = NOW()::date";
+
 }
