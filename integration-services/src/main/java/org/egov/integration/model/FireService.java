@@ -31,7 +31,7 @@ public class FireService {
 	@JsonProperty("rejected")
 	public Integer rejected;
 
-	@JsonProperty("createdBy")
+	@JsonProperty("pending")
 	public Integer pending;
 
 	@JsonProperty("createdBy")
