@@ -29,7 +29,7 @@ public class FireControllerV2 {
 	}
 
 	@PostMapping(value = "/_getServiceWiseData")
-	public ResponseEntity<ResponseInfoWrapper> getServiceWiseData(
+	public ResponseEntity<ResponseFireV2> getServiceWiseData(
 			@Valid @RequestBody FireServiceSearch fireServiceSearch) {
 		return service.getServiceWiseData(fireServiceSearch);
 	}

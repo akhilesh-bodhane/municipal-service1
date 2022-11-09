@@ -26,4 +26,8 @@ public class ResponseFireV2 {
 
 	@JsonProperty("applicationPendingDetails")
 	private List<FireApplicationPendingDetail> applicationPendingDetails;
+	
+
+	@JsonProperty("serviceWiseData")
+	List<FireService> serviceWiseData;
 }
