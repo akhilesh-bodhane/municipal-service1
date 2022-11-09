@@ -9,6 +9,7 @@ import org.egov.integration.model.FireApplicationPendingDetailSearch;
 import org.egov.integration.model.FireService;
 import org.egov.integration.model.FireServiceSearch;
 import org.egov.integration.model.ResponseFireV2;
+import org.egov.integration.model.ResponseInfoFire;
 import org.egov.integration.model.ResponseInfoWrapper;
 import org.egov.integration.repository.FireRepositoryV2;
 import org.egov.integration.util.AuditDetailsUtil;
@@ -32,13 +33,13 @@ public class FireServiceV2 {
 	@Autowired
 	private ObjectMapper objectMapper;
 
-	public ResponseEntity<ResponseInfoWrapper> getServiceWiseData(FireServiceSearch fireServiceSearch) {
+	public ResponseEntity<ResponseFireV2> getServiceWiseData(FireServiceSearch fireServiceSearch) {
 		try {
 			List<FireService> serviceWiseData = repository.getServiceWiseData(fireServiceSearch);
 
-			return new ResponseEntity<>(ResponseInfoWrapper.builder()
+			return new ResponseEntity<>(ResponseFireV2.builder()
 					.responseInfo(ResponseInfo.builder().status(CommonConstants.SUCCESS).build())
-					.responseBody(serviceWiseData).build(), HttpStatus.OK);
+					.serviceWiseData(serviceWiseData).build(), HttpStatus.OK);
 
 		} catch (Exception e) {
 			throw new CustomException(CommonConstants.FIR_NOC_EXCEPTION_CODE, e.getMessage());
