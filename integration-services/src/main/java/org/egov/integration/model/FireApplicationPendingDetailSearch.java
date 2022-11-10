@@ -19,4 +19,10 @@ public class FireApplicationPendingDetailSearch {
 
 	@JsonProperty("referenceNo")
 	private String referenceNo;
+	
+	@JsonProperty("locationId")
+	private String locationId;
+	
+	@JsonProperty("serviceId")
+	private String serviceId;
 }

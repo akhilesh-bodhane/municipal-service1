@@ -141,7 +141,14 @@ public class ApiConfiguration {
 
 	@Value("${fire.service.service.application.get}")
 	private String fireApplicationPendingPath;
+	
+	@Value("${fire.service.service.application.reference.get}")
+	private String fireApplicationReferenceNumberPath;
 
 	@Value("${fire.service.service.service.id}")
 	private String fireServiceId;
+	
+	@Value("${fire.service.service.location.id}")
+	private String fireLocationId;	
+	
 }
