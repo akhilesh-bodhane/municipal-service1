@@ -9,6 +9,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Import;
 import org.springframework.scheduling.annotation.EnableAsync;
+import org.springframework.scheduling.annotation.EnableScheduling;
+
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -17,6 +19,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @ComponentScan(basePackages = {"org.egov.integration","org.egov.integration.web.controller","org.egov.integration.config","org.egov.integration.util"})
 @Import({TracerConfiguration.class})
 @EnableAsync
+@EnableScheduling
 public class IntegrationServices {
 	@Value("${app.timezone}")
     private String timeZone;

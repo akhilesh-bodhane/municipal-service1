@@ -2,6 +2,7 @@ package org.egov.integration.consumer;
 
 import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -15,13 +16,14 @@ import org.egov.tracer.model.ServiceCallException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-@Component
+@Service
 public class FireServiceDataImportScheduler {
 
 	@Autowired
@@ -40,7 +42,7 @@ public class FireServiceDataImportScheduler {
 	private RestTemplate restTemplate;
 
 //	@Scheduled(cron="0 1 1 * * *") // Every day at 01:01 AM
-	@Scheduled(cron = "0 0 0 * * *",zone = "Indian/Maldives") // Every day at 01:01 AM
+	@Scheduled(cron = "0 0 0 * * *", zone = "Asia/Calcutta") // Every day at 01:01 AM
 	public void importServiceData() {
 		System.out.println("Cro Started ");
 		StringBuilder uri = new StringBuilder(apiConfiguration.getFireHost());
