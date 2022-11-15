@@ -1,6 +1,7 @@
 package org.egov.pgr.service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -19,21 +20,33 @@ import org.egov.mdms.model.MdmsResponse;
 import org.egov.mdms.model.ModuleDetail;
 import org.egov.pgr.contract.ReportRequest;
 import org.egov.pgr.contract.ReportResponse;
+import org.egov.pgr.contract.ServiceReqSearchCriteria;
+import org.egov.pgr.model.Bucket;
 import org.egov.pgr.model.Department;
 import org.egov.pgr.model.DiscriptionReport;
+import org.egov.pgr.model.Grievence;
+import org.egov.pgr.model.GrievenceReport;
+import org.egov.pgr.model.ReportServiceResponse;
 import org.egov.pgr.model.RequestInfoWrapper;
 import org.egov.pgr.model.ResponseInfoWrapper;
 import org.egov.pgr.model.Sector;
-import org.egov.pgr.model.ServiceDef;
 import org.egov.pgr.model.ServiceDefMdms;
+import org.egov.pgr.model.TodaysAssignedComplaint;
+import org.egov.pgr.model.TodaysComplaint;
+import org.egov.pgr.model.TodaysOpenComplaint;
+import org.egov.pgr.model.TodaysReassignedComplaint;
+import org.egov.pgr.model.TodaysRejectedComplaint;
+import org.egov.pgr.model.TodaysReopenedComplaint;
 import org.egov.pgr.repository.ReportQueryBuilder;
 import org.egov.pgr.repository.ReportRepository;
 import org.egov.pgr.repository.ServiceRequestRepository;
 import org.egov.pgr.repository.rowmapper.ColumnsRowMapper;
+import org.egov.pgr.utils.ErrorConstants;
 import org.egov.pgr.utils.PGRConstants;
 import org.egov.pgr.utils.PGRUtils;
 import org.egov.pgr.utils.ReportConstants;
 import org.egov.pgr.utils.ReportUtils;
+import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -42,6 +55,7 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.jsonpath.JsonPath;
 
@@ -57,23 +71,26 @@ public class ReportService {
 
 	@Autowired
 	private ServiceRequestRepository serviceRequestRepository;
-	
-	@Autowired 
-	private   RestTemplate restTemplate;
-	
+
+	@Autowired
+	private RestTemplate restTemplate;
+
 	@Autowired
 	public NamedParameterJdbcTemplate namedParameterJdbcTemplate;
-	
+
 	@Autowired
 	private ColumnsRowMapper rowMapper;
 
 	@Autowired
 	private ReportUtils reportUtils;
-	
+
 	private final String mdmsBySearchCriteriaUrl;
+
 	@Autowired
-	public ReportService(
-			@Value("${egov.mdms.host}") final String mdmsServiceHostname,
+	private PGRUtils pGRUtils;
+
+	@Autowired
+	public ReportService(@Value("${egov.mdms.host}") final String mdmsServiceHostname,
 			@Value("${egov.mdms.search.endpoint}") final String mdmsBySearchCriteriaUrl) {
 		this.mdmsBySearchCriteriaUrl = mdmsServiceHostname + mdmsBySearchCriteriaUrl;
 	}
@@ -114,8 +131,10 @@ public class ReportService {
 	public void enrichComplaintTypeWiseReport(ReportRequest reportRequest, List<Map<String, Object>> dbResponse) {
 		for (Map<String, Object> tuple : dbResponse) {
 			tuple.put("complaint_type", reportUtils.splitCamelCase(tuple.get("complaint_type").toString()));
-			tuple.put("total_open_complaints", reportUtils.getPercentage(tuple.get("total_complaints"), tuple.get("total_open_complaints")));
-			tuple.put("outside_sla", reportUtils.getPercentage(tuple.get("total_complaints"), tuple.get("outside_sla")));
+			tuple.put("total_open_complaints",
+					reportUtils.getPercentage(tuple.get("total_complaints"), tuple.get("total_open_complaints")));
+			tuple.put("outside_sla",
+					reportUtils.getPercentage(tuple.get("total_complaints"), tuple.get("outside_sla")));
 			tuple.put("avg_citizen_rating", reportUtils.getAvgRating(tuple.get("avg_citizen_rating")));
 		}
 	}
@@ -180,26 +199,31 @@ public class ReportService {
 			}
 		}
 		for (Map<String, Object> tuple : enrichedResponse) {
-			tuple.put("total_open_complaints", reportUtils.getPercentage(tuple.get("total_complaints"), tuple.get("total_open_complaints")));
-			tuple.put("outside_sla", reportUtils.getPercentage(tuple.get("total_complaints"), tuple.get("outside_sla")));
+			tuple.put("total_open_complaints",
+					reportUtils.getPercentage(tuple.get("total_complaints"), tuple.get("total_open_complaints")));
+			tuple.put("outside_sla",
+					reportUtils.getPercentage(tuple.get("total_complaints"), tuple.get("outside_sla")));
 			tuple.put("avg_citizen_rating", reportUtils.getAvgRating(tuple.get("avg_citizen_rating")));
 		}
 		return enrichedResponse;
 	}
 
-	public List<Map<String, Object>> enrichSourceWiseReport(ReportRequest reportRequest, List<Map<String, Object>> dbResponse) {
+	public List<Map<String, Object>> enrichSourceWiseReport(ReportRequest reportRequest,
+			List<Map<String, Object>> dbResponse) {
 		List<Map<String, Object>> enrichedResponse = new ArrayList<>();
 		Map<String, Object> tuple = dbResponse.get(0);
-		Long total = Long.valueOf((null ==tuple.get("citizen_mobile_app")) ? "0" : tuple.get("citizen_mobile_app").toString()) 
-				+ Long.valueOf((null == tuple.get("citizen_web_app")) ? "0" : tuple.get("citizen_web_app").toString()) 
-				+ Long.valueOf((null == tuple.get("customer_service_desk")) ? "0" : tuple.get("customer_service_desk").toString());
-		for(String key: dbResponse.get(0).keySet()) {
+		Long total = Long
+				.valueOf((null == tuple.get("citizen_mobile_app")) ? "0" : tuple.get("citizen_mobile_app").toString())
+				+ Long.valueOf((null == tuple.get("citizen_web_app")) ? "0" : tuple.get("citizen_web_app").toString())
+				+ Long.valueOf((null == tuple.get("customer_service_desk")) ? "0"
+						: tuple.get("customer_service_desk").toString());
+		for (String key : dbResponse.get(0).keySet()) {
 			Map<String, Object> newtuple = new LinkedHashMap<>();
 			newtuple.put("Source", WordUtils.capitalize(key.replaceAll("[_]", " ")));
 			newtuple.put("Complaints Received", reportUtils.getPercentage(total, tuple.get(key)));
 			enrichedResponse.add(newtuple);
 		}
-		
+
 		return enrichedResponse;
 	}
 
@@ -213,12 +237,14 @@ public class ReportService {
 		Map<Long, String> mapOfIdAndName = getEmployeeDetails(reportRequest, employeeIds);
 
 		for (Map<String, Object> tuple : dbResponse) {
-			log.info("tuple: "+tuple);
+			log.info("tuple: " + tuple);
 			String name = mapOfIdAndName.get(
 					Long.valueOf((null == tuple.get("employee_name")) ? "0" : tuple.get("employee_name").toString()));
 			tuple.put("employee_name", StringUtils.isEmpty(name) ? "No-Name" : name);
-			tuple.put("total_open_complaints", reportUtils.getPercentage(tuple.get("total_complaints_received"), tuple.get("total_open_complaints")));
-			tuple.put("outside_sla", reportUtils.getPercentage(tuple.get("total_complaints_received"), tuple.get("outside_sla")));
+			tuple.put("total_open_complaints", reportUtils.getPercentage(tuple.get("total_complaints_received"),
+					tuple.get("total_open_complaints")));
+			tuple.put("outside_sla",
+					reportUtils.getPercentage(tuple.get("total_complaints_received"), tuple.get("outside_sla")));
 			tuple.put("avg_citizen_rating", reportUtils.getAvgRating(tuple.get("avg_citizen_rating")));
 		}
 
@@ -232,14 +258,15 @@ public class ReportService {
 			Object request = reportUtils.getGROSearchRequest(uri, employeeIds, reportRequest);
 			Object response = serviceRequestRepository.fetchResult(uri, request);
 			if (null != response) {
-				List<Map<String, Object>> resultCast = mapper.convertValue(JsonPath.read(response, PGRConstants.EMPLOYEE_BASE_JSONPATH), List.class);
+				List<Map<String, Object>> resultCast = mapper
+						.convertValue(JsonPath.read(response, PGRConstants.EMPLOYEE_BASE_JSONPATH), List.class);
 				for (Map<String, Object> employee : resultCast) {
 					Map<String, Object> user = (Map) employee.get("user");
 					mapOfIdAndName.put(Long.parseLong(employee.get("id").toString()), user.get("name").toString());
 				}
 			}
 			log.debug("mapOfIdAndName: " + mapOfIdAndName);
-		}catch(Exception e) {
+		} catch (Exception e) {
 			log.error("Exception while searching employee: ", e);
 		}
 		return mapOfIdAndName;
@@ -255,48 +282,50 @@ public class ReportService {
 		Object response = serviceRequestRepository.fetchResult(uri, request);
 		if (null != response) {
 			Map<String, String> deptCodeAndNameMap = new HashMap<>();
-			List<Map<String, Object>> resultCast = mapper.convertValue(JsonPath.read(response, "$.MdmsRes.RAINMAKER-PGR.ServiceDefs"), List.class);
+			List<Map<String, Object>> resultCast = mapper
+					.convertValue(JsonPath.read(response, "$.MdmsRes.RAINMAKER-PGR.ServiceDefs"), List.class);
+
 			for (Map<String, Object> serviceDef : resultCast) {
-				if(StringUtils.isEmpty(deptCodeAndNameMap.get(serviceDef.get("department").toString()))) {
+				if (StringUtils.isEmpty(deptCodeAndNameMap.get(serviceDef.get("department").toString()))) {
 					List<String> departmentCodes = new ArrayList<>();
 					departmentCodes.add(serviceDef.get("department").toString());
-					List<String> depts = reportUtils.getDepartment(reportRequest.getRequestInfo(), departmentCodes, reportRequest.getTenantId());
-					if(!CollectionUtils.isEmpty(depts)) {
+					List<String> depts = reportUtils.getDepartment(reportRequest.getRequestInfo(), departmentCodes,
+							reportRequest.getTenantId());
+					if (!CollectionUtils.isEmpty(depts)) {
 						deptCodeAndNameMap.put(serviceDef.get("department").toString(), depts.get(0));
 					}
 					mapOfServiceCodesAndDepts.put(serviceDef.get("serviceCode").toString(), "NA");
-				}else {
-					mapOfServiceCodesAndDepts.put(serviceDef.get("serviceCode").toString(), 
+				} else {
+					mapOfServiceCodesAndDepts.put(serviceDef.get("serviceCode").toString(),
 							deptCodeAndNameMap.get(serviceDef.get("department").toString()));
 				}
 				mapOfServiceCodesAndSLA.put(serviceDef.get("serviceCode").toString(),
 						serviceDef.get("slaHours").toString());
 			}
-			
-			
+
 		}
 		if (iWantSlahours)
 			return mapOfServiceCodesAndSLA;
 		else
 			return mapOfServiceCodesAndDepts;
 	}
-	
+
 	public List<Map<String, Object>> getServiceDefsData1(ReportRequest reportRequest, Boolean iWantSlahours) {
-	
+
 		ObjectMapper mapper = pgrUtils.getObjectMapper();
 		StringBuilder uri = new StringBuilder();
 		Object request = reportUtils.getRequestForServiceDefsSearch(uri, reportRequest.getTenantId(),
 				reportRequest.getRequestInfo());
 		Object response = serviceRequestRepository.fetchResult(uri, request);
 
-			
-			List<Map<String, Object>> resultCast = mapper.convertValue(JsonPath.read(response, "$.MdmsRes.RAINMAKER-PGR.ServiceDefs"), List.class);
-			return  resultCast;
+		List<Map<String, Object>> resultCast = mapper
+				.convertValue(JsonPath.read(response, "$.MdmsRes.RAINMAKER-PGR.ServiceDefs"), List.class);
+		return resultCast;
 	}
-	
-	public Map<String, Department> getDeptName (String tenantId, final ObjectMapper mapper, RequestInfo requestInfo) {
-		net.minidev.json.JSONArray responseJSONArray = getByCriteria(tenantId, "RAINMAKER-PGR", "PgrDepartment",
-				null, null, requestInfo);
+
+	public Map<String, Department> getDeptName(String tenantId, final ObjectMapper mapper, RequestInfo requestInfo) {
+		net.minidev.json.JSONArray responseJSONArray = getByCriteria(tenantId, "RAINMAKER-PGR", "PgrDepartment", null,
+				null, requestInfo);
 		Map<String, Department> deptMap = new HashMap<>();
 
 		if (responseJSONArray != null && responseJSONArray.size() > 0) {
@@ -309,10 +338,11 @@ public class ReportService {
 		}
 		return deptMap;
 	}
-	
-	public Map<String, ServiceDefMdms> getServiceName (String tenantId, final ObjectMapper mapper, RequestInfo requestInfo) {
-		net.minidev.json.JSONArray responseJSONArray = getByCriteria(tenantId, "RAINMAKER-PGR", "ServiceDefs",
-				null, null, requestInfo);
+
+	public Map<String, ServiceDefMdms> getServiceName(String tenantId, final ObjectMapper mapper,
+			RequestInfo requestInfo) {
+		net.minidev.json.JSONArray responseJSONArray = getByCriteria(tenantId, "RAINMAKER-PGR", "ServiceDefs", null,
+				null, requestInfo);
 		Map<String, ServiceDefMdms> serviceDefMap = new HashMap<>();
 
 		if (responseJSONArray != null && responseJSONArray.size() > 0) {
@@ -325,10 +355,10 @@ public class ReportService {
 		}
 		return serviceDefMap;
 	}
-	
-	public Map<String, Sector> getSectorName (String tenantId, final ObjectMapper mapper, RequestInfo requestInfo) {
-		net.minidev.json.JSONArray responseJSONArray = getByCriteria(tenantId, "RAINMAKER-PGR", "Sector",
-				null, null, requestInfo);
+
+	public Map<String, Sector> getSectorName(String tenantId, final ObjectMapper mapper, RequestInfo requestInfo) {
+		net.minidev.json.JSONArray responseJSONArray = getByCriteria(tenantId, "RAINMAKER-PGR", "Sector", null, null,
+				requestInfo);
 		Map<String, Sector> sectorMap = new HashMap<>();
 
 		if (responseJSONArray != null && responseJSONArray.size() > 0) {
@@ -341,6 +371,7 @@ public class ReportService {
 		}
 		return sectorMap;
 	}
+
 	public JSONArray getByCriteria(final String tenantId, final String moduleName, final String masterName,
 			final String filterFieldName, final String filterFieldValue, final RequestInfo info) {
 
@@ -369,7 +400,7 @@ public class ReportService {
 		else
 			return response.getMdmsRes().get(moduleName).get(masterName);
 	}
-	
+
 	private String getTenantId(String tenantId, String moduleName) {
 		return tenantId.split("\\.")[0];
 	}
@@ -377,25 +408,202 @@ public class ReportService {
 	public ResponseEntity<ResponseInfoWrapper> process(RequestInfoWrapper request) {
 		List<DiscriptionReport> list = new ArrayList<>();
 		ObjectMapper mapper = new ObjectMapper();
-		Map<String, ServiceDefMdms > mapOfServiceCodesAndDepts = getServiceName(request.getRequestInfo().getUserInfo().getTenantId(), mapper, new RequestInfo());
-		Map<String, Department > mapOfDepts = getDeptName(request.getRequestInfo().getUserInfo().getTenantId(), mapper, new RequestInfo());
-		Map<String, Sector > mapOfSectors = getSectorName(request.getRequestInfo().getUserInfo().getTenantId(), mapper, new RequestInfo());
+		Map<String, ServiceDefMdms> mapOfServiceCodesAndDepts = getServiceName(
+				request.getRequestInfo().getUserInfo().getTenantId(), mapper, new RequestInfo());
+		Map<String, Department> mapOfDepts = getDeptName(request.getRequestInfo().getUserInfo().getTenantId(), mapper,
+				new RequestInfo());
+		Map<String, Sector> mapOfSectors = getSectorName(request.getRequestInfo().getUserInfo().getTenantId(), mapper,
+				new RequestInfo());
 		Map<String, Object> paramValues = new HashMap<>();
-	//	paramValues.put("sla", mapOfServiceCodesAndDepts.get(key));
-		list = namedParameterJdbcTemplate.query(ReportQueryBuilder.GET_DISCRIPTION_REPORT_QUERY, paramValues, rowMapper);	
-		if(list.size()>0)
-		{
-			for(DiscriptionReport data:list) {
-			//	String sla= namedParameterJdbcTemplate.query(ReportQueryBuilder.GET_SLAHOURS_QUERY, paramValues, rowMapper);	
-			data.setDepartment(mapOfDepts.get(mapOfServiceCodesAndDepts.get(data.getServicecode()).getDepartment()).getName());
-			data.setLocality(mapOfSectors.get(data.getLocality())!=null ? mapOfSectors.get(data.getLocality()).getName() : "");
-			repository.saveData(request,data);
+		// paramValues.put("sla", mapOfServiceCodesAndDepts.get(key));
+		list = namedParameterJdbcTemplate.query(ReportQueryBuilder.GET_DISCRIPTION_REPORT_QUERY, paramValues,
+				rowMapper);
+		if (list.size() > 0) {
+			for (DiscriptionReport data : list) {
+				// String sla=
+				// namedParameterJdbcTemplate.query(ReportQueryBuilder.GET_SLAHOURS_QUERY,
+				// paramValues, rowMapper);
+				data.setDepartment(
+						mapOfDepts.get(mapOfServiceCodesAndDepts.get(data.getServicecode()).getDepartment()).getName());
+				data.setLocality(
+						mapOfSectors.get(data.getLocality()) != null ? mapOfSectors.get(data.getLocality()).getName()
+								: "");
+				repository.saveData(request, data);
 			}
 		}
-		
+
 		return new ResponseEntity<>(ResponseInfoWrapper.builder()
-				.responseInfo(ResponseInfo.builder().status("SUCCESS").build()).responseBody(null)
-				.build(), HttpStatus.OK);
+				.responseInfo(ResponseInfo.builder().status("SUCCESS").build()).responseBody(null).build(),
+				HttpStatus.OK);
 	}
 
+	public GrievenceReport getGrienceReport(RequestInfo requestInfo,
+			ServiceReqSearchCriteria serviceReqSearchCriteria) {
+		// TODO Auto-generated method stub
+
+		List<Grievence> fetchGrievenceDetails = serviceRequestRepository
+				.fetchGrievenceDetails(serviceReqSearchCriteria);
+		GrievenceReport grievenceReport = new GrievenceReport();
+
+		if (fetchGrievenceDetails != null && !fetchGrievenceDetails.isEmpty()) {
+
+			Integer closedComplaints = fetchGrievenceDetails.stream().mapToInt(e -> e.closedcomplaints).sum();
+			Integer resolvedComplaints = fetchGrievenceDetails.stream().mapToInt(e -> e.resolvedcomplaints).sum();
+
+			grievenceReport.setClosedComplaints(closedComplaints);
+			grievenceReport.setResolvedComplaints(resolvedComplaints);
+
+			List<Bucket> todaysComplaintByStatusBucket = fetchGrievenceDetails.stream().collect(
+					Collectors.groupingBy(Grievence::getStatus, Collectors.summingInt(Grievence::getAllcomplaints)))
+					.entrySet().stream().map(e -> {
+						return new Bucket(e.getKey(), e.getValue());
+					}).collect(Collectors.toList());
+
+			TodaysComplaint todaysComplaintByStatus = TodaysComplaint.builder().groupBy("Status")
+					.buckets(todaysComplaintByStatusBucket).build();
+
+			List<Bucket> todaysComplaintByChannelBucket = fetchGrievenceDetails.stream().collect(
+					Collectors.groupingBy(Grievence::getSource, Collectors.summingInt(Grievence::getAllcomplaints)))
+					.entrySet().stream().map(e -> {
+						return new Bucket(e.getKey(), e.getValue());
+					}).collect(Collectors.toList());
+
+			TodaysComplaint todaysComplaintByChannel = TodaysComplaint.builder().groupBy("Channel")
+					.buckets(todaysComplaintByChannelBucket).build();
+
+			List<Bucket> todaysComplaintByDepartmentBucket = fetchGrievenceDetails.stream().collect(Collectors
+					.groupingBy(Grievence::getServicecode, Collectors.summingInt(Grievence::getAllcomplaints)))
+					.entrySet().stream().map(e -> {
+						return new Bucket(e.getKey(), e.getValue());
+					}).collect(Collectors.toList());
+
+			TodaysComplaint todaysComplaintByDepartment = TodaysComplaint.builder().groupBy("Department")
+					.buckets(todaysComplaintByDepartmentBucket).build();
+
+			List<Bucket> todaysComplaintByCategoryBucket = fetchGrievenceDetails.stream().collect(
+					Collectors.groupingBy(Grievence::getCategory, Collectors.summingInt(Grievence::getAllcomplaints)))
+					.entrySet().stream().map(e -> {
+						return new Bucket(e.getKey(), e.getValue());
+					}).collect(Collectors.toList());
+
+			TodaysComplaint todaysComplaintByCategory = TodaysComplaint.builder().groupBy("Category")
+					.buckets(todaysComplaintByCategoryBucket).build();
+
+			List<TodaysComplaint> todaysComplaint = Arrays.asList(todaysComplaintByStatus, todaysComplaintByChannel,
+					todaysComplaintByDepartment, todaysComplaintByCategory);
+			grievenceReport.setTodaysComplaints(todaysComplaint);
+
+			// Re-Opened
+			List<Bucket> todaysComplaintByDepartmentReopenBucket = fetchGrievenceDetails.stream().collect(
+					Collectors.groupingBy(Grievence::getServicecode, Collectors.summingInt(Grievence::getReopen)))
+					.entrySet().stream().map(e -> {
+						return new Bucket(e.getKey(), e.getValue());
+					}).collect(Collectors.toList());
+
+			TodaysReopenedComplaint todaysReopenedComplaint = TodaysReopenedComplaint.builder().groupBy("Department")
+					.buckets(todaysComplaintByDepartmentReopenBucket).build();
+
+			grievenceReport.setTodaysReopenedComplaints(Arrays.asList(todaysReopenedComplaint));
+
+			// Opened
+			List<Bucket> todaysComplaintByDepartmentOpenBucket = fetchGrievenceDetails.stream()
+					.collect(
+							Collectors.groupingBy(Grievence::getServicecode, Collectors.summingInt(Grievence::getOpen)))
+					.entrySet().stream().map(e -> {
+						return new Bucket(e.getKey(), e.getValue());
+					}).collect(Collectors.toList());
+
+			TodaysOpenComplaint todaysOpenComplaint = TodaysOpenComplaint.builder().groupBy("Department")
+					.buckets(todaysComplaintByDepartmentOpenBucket).build();
+
+			grievenceReport.setTodaysOpenComplaints(Arrays.asList(todaysOpenComplaint));
+
+			// Assigned
+			List<Bucket> todaysComplaintByDepartmentAssignedBucket = fetchGrievenceDetails.stream().collect(
+					Collectors.groupingBy(Grievence::getServicecode, Collectors.summingInt(Grievence::getAssigned)))
+					.entrySet().stream().map(e -> {
+						return new Bucket(e.getKey(), e.getValue());
+					}).collect(Collectors.toList());
+
+			TodaysAssignedComplaint todaysAssignedComplaint = TodaysAssignedComplaint.builder().groupBy("Department")
+					.buckets(todaysComplaintByDepartmentAssignedBucket).build();
+
+			grievenceReport.setTodaysAssignedComplaints(Arrays.asList(todaysAssignedComplaint));
+
+			// Rejected
+			List<Bucket> todaysComplaintByDepartmentRejectedBucket = fetchGrievenceDetails.stream().collect(
+					Collectors.groupingBy(Grievence::getServicecode, Collectors.summingInt(Grievence::getRejected)))
+					.entrySet().stream().map(e -> {
+						return new Bucket(e.getKey(), e.getValue());
+					}).collect(Collectors.toList());
+
+			TodaysRejectedComplaint todaysRejectedComplaint = TodaysRejectedComplaint.builder().groupBy("Department")
+					.buckets(todaysComplaintByDepartmentRejectedBucket).build();
+
+			grievenceReport.setTodaysRejectedComplaints(Arrays.asList(todaysRejectedComplaint));
+
+			// Reassigned
+			List<Bucket> todaysComplaintByDepartmentReassignedBucket = fetchGrievenceDetails.stream().collect(Collectors
+					.groupingBy(Grievence::getServicecode, Collectors.summingInt(Grievence::getReassignrequested)))
+					.entrySet().stream().map(e -> {
+						return new Bucket(e.getKey(), e.getValue());
+					}).collect(Collectors.toList());
+
+			TodaysReassignedComplaint todaysReassignedComplaint = TodaysReassignedComplaint.builder()
+					.groupBy("Department").buckets(todaysComplaintByDepartmentReassignedBucket).build();
+
+			grievenceReport.setTodaysReassignedComplaints(Arrays.asList(todaysReassignedComplaint));
+
+			Integer closedComplaints1 = fetchGrievenceDetails.stream().mapToInt(Grievence::getClosedcomplaints).sum();
+			Integer totalComplaints = fetchGrievenceDetails.stream().mapToInt(Grievence::getTotalComplaints).sum();
+
+			grievenceReport.setCompletionRate(0.0);
+			if (totalComplaints != 0 && closedComplaints1 != 0) {
+				Double result = (double) (closedComplaints1 / totalComplaints);
+				grievenceReport.setCompletionRate(result);
+			}
+
+			ObjectMapper mapper = new ObjectMapper();
+			Object response = fetchGrievancesSLAAchievement(requestInfo, serviceReqSearchCriteria);
+
+			try {
+				ReportServiceResponse resultCast = mapper.convertValue(response, ReportServiceResponse.class);
+
+				String resolvedComplaints1 = "0";
+				if (resultCast.getReportResponses() != null && !resultCast.getReportResponses().isEmpty()) {
+					if (resultCast.getReportResponses().get(0).getReportData() != null
+							&& !resultCast.getReportResponses().get(0).getReportData().isEmpty()) {
+						resolvedComplaints1 = resultCast.getReportResponses().get(0).getReportData().get(0)
+								.get(1) != null
+										? resultCast.getReportResponses().get(0).getReportData().get(0).get(1)
+												.toString()
+										: "0";
+					}
+				}
+				grievenceReport.setSlaAchievement(resolvedComplaints1);
+
+			} catch (Exception e) {
+				throw new CustomException(ErrorConstants.ERROR_CODE_GRIVENCE, e.getMessage());
+			}
+			return grievenceReport;
+		}
+
+		throw new CustomException(ErrorConstants.ERROR_CODE_GRIVENCE, ErrorConstants.ERROR_MESSAGE_GRIVENCE);
+	}
+
+	public Object fetchGrievancesSLAAchievement(RequestInfo requestInfo,
+			ServiceReqSearchCriteria serviceReqSearchCriteria) {
+		StringBuilder uri = new StringBuilder();
+		ReportRequest reportRequest = pGRUtils.prepareSearchGrievancesSLAAchievement(uri,
+				serviceReqSearchCriteria.getTenantId(), serviceReqSearchCriteria.getStartDate(),
+				serviceReqSearchCriteria.getEndDate(), requestInfo);
+		Object response = null;
+		try {
+			response = serviceRequestRepository.fetchResult(uri, reportRequest);
+		} catch (Exception e) {
+			log.error("Exception while fetching serviceCodes: " + e);
+		}
+		return response;
+
+	}
 }
