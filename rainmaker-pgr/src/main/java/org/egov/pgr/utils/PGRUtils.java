@@ -26,6 +26,8 @@ import org.egov.mdms.model.MdmsCriteria;
 import org.egov.mdms.model.MdmsCriteriaReq;
 import org.egov.mdms.model.ModuleDetail;
 import org.egov.pgr.contract.CountResponse;
+import org.egov.pgr.contract.ParamValue;
+import org.egov.pgr.contract.ReportRequest;
 import org.egov.pgr.contract.RequestInfoWrapper;
 import org.egov.pgr.contract.SearcherRequest;
 import org.egov.pgr.contract.ServiceReqSearchCriteria;
@@ -33,6 +35,7 @@ import org.egov.pgr.contract.ServiceResponse;
 import org.egov.pgr.model.ActionHistory;
 import org.egov.pgr.model.ActionInfo;
 import org.egov.pgr.model.AuditDetails;
+import org.egov.pgr.model.SearchParam;
 import org.egov.pgr.model.Service;
 import org.egov.pgr.repository.ServiceRequestRepository;
 import org.egov.tracer.model.CustomException;
@@ -61,6 +64,12 @@ public class PGRUtils {
 
 	@Value("${egov.infra.searcher.endpoint}")
 	private String searcherEndpoint;
+
+	@Value("${egov.report.host}")
+	private String reportHost;
+
+	@Value("${egov.report.pgr.search.endpoint}")
+	private String reportEndpoint;
 
 	@Value("${egov.mdms.host}")
 	private String mdmsHost;
@@ -91,28 +100,28 @@ public class PGRUtils {
 
 	@Value("${egov.user.search.endpoint}")
 	private String egovUserSearchEndpoint;
-	
+
 	@Value("${egov.location.host}")
 	private String locationHost;
 
 	@Value("${egov.location.search.endpoint}")
 	private String locationSearchEndpoint;
-	
+
 	@Value("${egov.hrms.host}")
 	private String egovHRMShost;
 
 	@Value("${egov.hrms.search.endpoint}")
 	private String egovHRMSSearchEndpoint;
-	
+
 	@Value("${are.inactive.complaintcategories.enabled}")
-	private Boolean areInactiveComplaintCategoriesEnabled;	
+	private Boolean areInactiveComplaintCategoriesEnabled;
 
 	@Autowired
 	private ResponseInfoFactory factory;
 
 	@Autowired
 	private ServiceRequestRepository serviceRequestRepository;
-	
+
 	private static final String MODULE_NAME = "{moduleName}";
 
 	private static final String SEARCH_NAME = "{searchName}";
@@ -127,21 +136,21 @@ public class PGRUtils {
 	 * @return MdmsCriteriaReq
 	 * @author vishal
 	 */
-	public MdmsCriteriaReq prepareSearchRequestForServiceCodes(StringBuilder uri, String tenantId, List<String> departments,
-			RequestInfo requestInfo) {
+	public MdmsCriteriaReq prepareSearchRequestForServiceCodes(StringBuilder uri, String tenantId,
+			List<String> departments, RequestInfo requestInfo) {
 		uri.append(mdmsHost).append(mdmsEndpoint);
 		StringBuilder depts = new StringBuilder();
 		depts.append("[");
-		for(int i = 0; i < departments.size() ; i++) {
+		for (int i = 0; i < departments.size(); i++) {
 			depts.append("'" + departments.get(i) + "'");
-			if(i < departments.size() - 1)
+			if (i < departments.size() - 1)
 				depts.append(",");
 		}
 		depts.append("]");
 		MasterDetail masterDetail = org.egov.mdms.model.MasterDetail.builder()
-				.name(PGRConstants.MDMS_SERVICETYPE_MASTER_NAME)
-				.filter("[?(@.department IN " + depts.toString() + ")]").build();
-		if(!areInactiveComplaintCategoriesEnabled) {
+				.name(PGRConstants.MDMS_SERVICETYPE_MASTER_NAME).filter("[?(@.department IN " + depts.toString() + ")]")
+				.build();
+		if (!areInactiveComplaintCategoriesEnabled) {
 			masterDetail.setFilter("[?((@.department IN " + depts.toString() + ") && (@.active == true))]");
 		}
 		List<MasterDetail> masterDetails = new ArrayList<>();
@@ -184,12 +193,12 @@ public class PGRUtils {
 			RequestInfo requestInfo) {
 		uri.append(mdmsHost).append(mdmsEndpoint);
 		MasterDetail masterDetail = org.egov.mdms.model.MasterDetail.builder()
-				.name(PGRConstants.MDMS_SERVICETYPE_MASTER_NAME)
-				.filter("[?(@.serviceCode=='" + serviceCode + "')]").build();
-		if(!areInactiveComplaintCategoriesEnabled) {
+				.name(PGRConstants.MDMS_SERVICETYPE_MASTER_NAME).filter("[?(@.serviceCode=='" + serviceCode + "')]")
+				.build();
+		if (!areInactiveComplaintCategoriesEnabled) {
 			masterDetail.setFilter("[?((@.serviceCode=='" + serviceCode + "') && (@.active == true))]");
 		}
-		log.info("serviceCode:"+serviceCode);
+		log.info("serviceCode:" + serviceCode);
 		List<MasterDetail> masterDetails = new ArrayList<>();
 		masterDetails.add(masterDetail);
 		ModuleDetail moduleDetail = ModuleDetail.builder().moduleName(PGRConstants.MDMS_PGR_MOD_NAME)
@@ -216,8 +225,9 @@ public class PGRUtils {
 		MasterDetail masterDetail = org.egov.mdms.model.MasterDetail.builder()
 				.name(PGRConstants.MDMS_SERVICETYPE_MASTER_NAME)
 				.filter("[?(@." + fieldName + " IN " + values + ")]." + PGRConstants.SERVICE_CODES).build();
-		if(!areInactiveComplaintCategoriesEnabled) {
-			masterDetail.setFilter("[?((@." + fieldName + " IN " + values + ") && (@.active == true))]." + PGRConstants.SERVICE_CODES);
+		if (!areInactiveComplaintCategoriesEnabled) {
+			masterDetail.setFilter(
+					"[?((@." + fieldName + " IN " + values + ") && (@.active == true))]." + PGRConstants.SERVICE_CODES);
 		}
 		List<MasterDetail> masterDetails = new ArrayList<>();
 		masterDetails.add(masterDetail);
@@ -268,33 +278,40 @@ public class PGRUtils {
 	 * @param requestInfo
 	 * @return SearcherRequest
 	 * @author vishal
-	 * @throws JsonProcessingException 
+	 * @throws JsonProcessingException
 	 */
 	public SearcherRequest prepareSearchRequestWithDetails(StringBuilder uri,
-			ServiceReqSearchCriteria serviceReqSearchCriteria, RequestInfo requestInfo){
+			ServiceReqSearchCriteria serviceReqSearchCriteria, RequestInfo requestInfo) {
 		uri.append(searcherHost);
 		String endPoint = searcherEndpoint.replace(MODULE_NAME, PGRConstants.SEARCHER_PGR_MOD_NAME).replace(SEARCH_NAME,
 				PGRConstants.SEARCHER_SRSEARCH_DEF_NAME);
 		uri.append(endPoint);
-		serviceReqSearchCriteria.setNoOfRecords(null == serviceReqSearchCriteria.getNoOfRecords() ? 200L : serviceReqSearchCriteria.getNoOfRecords()); //be default we retrieve 200 records.
-		serviceReqSearchCriteria.setOffset(null == serviceReqSearchCriteria.getOffset() ? 0L : serviceReqSearchCriteria.getOffset());
+		serviceReqSearchCriteria.setNoOfRecords(
+				null == serviceReqSearchCriteria.getNoOfRecords() ? 200L : serviceReqSearchCriteria.getNoOfRecords()); // be
+																														// default
+																														// we
+																														// retrieve
+																														// 200
+																														// records.
+		serviceReqSearchCriteria
+				.setOffset(null == serviceReqSearchCriteria.getOffset() ? 0L : serviceReqSearchCriteria.getOffset());
 		/**
-		 * This if block is to support substring search on servicerequestid without changing the contract. 
-		 * Query uses an IN clause which doesn't support substring search, therefore a new temp variable is added.
-		 */		
-		if(!CollectionUtils.isEmpty(serviceReqSearchCriteria.getServiceRequestId()) &&
-				serviceReqSearchCriteria.getServiceRequestId().size() == 1) {
+		 * This if block is to support substring search on servicerequestid without
+		 * changing the contract. Query uses an IN clause which doesn't support
+		 * substring search, therefore a new temp variable is added.
+		 */
+		if (!CollectionUtils.isEmpty(serviceReqSearchCriteria.getServiceRequestId())
+				&& serviceReqSearchCriteria.getServiceRequestId().size() == 1) {
 			ObjectMapper mapper = getObjectMapper();
 			Map<String, Object> mapOfValues = mapper.convertValue(serviceReqSearchCriteria, Map.class);
 			mapOfValues.put("complaintId", serviceReqSearchCriteria.getServiceRequestId().get(0));
 			mapOfValues.put("serviceRequestId", null);
 			return SearcherRequest.builder().requestInfo(requestInfo).searchCriteria(mapOfValues).build();
-		}else {
+		} else {
 			return SearcherRequest.builder().requestInfo(requestInfo).searchCriteria(serviceReqSearchCriteria).build();
 		}
 	}
-	
-	
+
 	/**
 	 * Prepares request and uri for service request search
 	 * 
@@ -303,15 +320,23 @@ public class PGRUtils {
 	 * @param requestInfo
 	 * @return SearcherRequest
 	 * @author vishal
-	 * @throws JsonProcessingException 
+	 * @throws JsonProcessingException
 	 */
-	public SearcherRequest preparePlainSearchReq(StringBuilder uri, ServiceReqSearchCriteria serviceReqSearchCriteria, RequestInfo requestInfo){
+	public SearcherRequest preparePlainSearchReq(StringBuilder uri, ServiceReqSearchCriteria serviceReqSearchCriteria,
+			RequestInfo requestInfo) {
 		uri.append(searcherHost);
 		String endPoint = searcherEndpoint.replace(MODULE_NAME, PGRConstants.SEARCHER_PGR_MOD_NAME).replace(SEARCH_NAME,
 				PGRConstants.SEARCHER_PLAINSEARCH_DEF_NAME);
 		uri.append(endPoint);
-		serviceReqSearchCriteria.setNoOfRecords(null == serviceReqSearchCriteria.getNoOfRecords() ? 200L : serviceReqSearchCriteria.getNoOfRecords()); //be default we retrieve 200 records.
-		serviceReqSearchCriteria.setOffset(null == serviceReqSearchCriteria.getOffset() ? 0L : serviceReqSearchCriteria.getOffset());
+		serviceReqSearchCriteria.setNoOfRecords(
+				null == serviceReqSearchCriteria.getNoOfRecords() ? 200L : serviceReqSearchCriteria.getNoOfRecords()); // be
+																														// default
+																														// we
+																														// retrieve
+																														// 200
+																														// records.
+		serviceReqSearchCriteria
+				.setOffset(null == serviceReqSearchCriteria.getOffset() ? 0L : serviceReqSearchCriteria.getOffset());
 		return SearcherRequest.builder().requestInfo(requestInfo).searchCriteria(serviceReqSearchCriteria).build();
 	}
 
@@ -350,15 +375,15 @@ public class PGRUtils {
 		uri.append(endPoint);
 		return SearcherRequest.builder().requestInfo(requestInfo).searchCriteria(serviceReqSearchCriteria).build();
 	}
-	
-	public MdmsCriteriaReq prepareServiceDefSearchMdmsRequest(StringBuilder uri, String tenantId, RequestInfo requestInfo) {
+
+	public MdmsCriteriaReq prepareServiceDefSearchMdmsRequest(StringBuilder uri, String tenantId,
+			RequestInfo requestInfo) {
 		uri.append(mdmsHost).append(mdmsEndpoint);
 		MasterDetail masterDetail = org.egov.mdms.model.MasterDetail.builder()
-				.name(PGRConstants.MDMS_SERVICETYPE_MASTER_NAME)
-				.build();
-		if(!areInactiveComplaintCategoriesEnabled) {
+				.name(PGRConstants.MDMS_SERVICETYPE_MASTER_NAME).build();
+		if (!areInactiveComplaintCategoriesEnabled) {
 			masterDetail.setFilter("[?(@.active == true)]");
-		}		
+		}
 		List<MasterDetail> masterDetails = new ArrayList<>();
 		masterDetails.add(masterDetail);
 		ModuleDetail moduleDetail = ModuleDetail.builder().moduleName(PGRConstants.MDMS_PGR_MOD_NAME)
@@ -368,7 +393,7 @@ public class PGRUtils {
 		MdmsCriteria mdmsCriteria = MdmsCriteria.builder().tenantId(tenantId).moduleDetails(moduleDetails).build();
 		return MdmsCriteriaReq.builder().requestInfo(requestInfo).mdmsCriteria(mdmsCriteria).build();
 	}
-	
+
 	public RequestInfoWrapper prepareRequestForEmployeeSearch(StringBuilder uri, RequestInfo requestInfo,
 			ServiceReqSearchCriteria serviceReqSearchCriteria) {
 		RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
@@ -378,7 +403,7 @@ public class PGRUtils {
 
 		return requestInfoWrapper;
 	}
-	
+
 	public RequestInfoWrapper prepareRequestForLocalization(StringBuilder uri, RequestInfo requestInfo, String locale,
 			String tenantId, String module) {
 		RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
@@ -388,14 +413,15 @@ public class PGRUtils {
 
 		return requestInfoWrapper;
 	}
-	
+
 	public RequestInfoWrapper prepareRequestForLocation(StringBuilder uri, RequestInfo requestInfo, String boundaryType,
 			String tenantId, String hierarchyType, List<String> mohallaCodes) {
 		RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
 		requestInfoWrapper.setRequestInfo(requestInfo);
 		String codes = mohallaCodes.toString().substring(1, mohallaCodes.toString().length() - 1);
 		uri.append(locationHost).append(locationSearchEndpoint).append("?tenantId=" + tenantId)
-				.append("&hierarchyTypeCode=" + hierarchyType).append("&boundaryType=" + boundaryType).append("&codes=" + codes);
+				.append("&hierarchyTypeCode=" + hierarchyType).append("&boundaryType=" + boundaryType)
+				.append("&codes=" + codes);
 
 		return requestInfoWrapper;
 	}
@@ -487,10 +513,10 @@ public class PGRUtils {
 	 * the method will return null
 	 */
 	public String getPrecedentRole(List<String> roles) {
-		if(roles.contains(PGRConstants.ROLE_CITIZEN)) {
+		if (roles.contains(PGRConstants.ROLE_CITIZEN)) {
 			return PGRConstants.ROLE_CITIZEN;
 		}
-		if(roles.contains(PGRConstants.ROLE_SYSTEM)) {
+		if (roles.contains(PGRConstants.ROLE_SYSTEM)) {
 			return PGRConstants.ROLE_SYSTEM;
 		}
 		for (Entry<Integer, String> entry : PGRUtils.getEmployeeRolesPrecedenceMap().entrySet()) {
@@ -502,23 +528,27 @@ public class PGRUtils {
 	}
 
 	/**
-	 * Returns the roles that need to receive notification at this status and action.
+	 * Returns the roles that need to receive notification at this status and
+	 * action.
 	 * 
 	 * @param status
 	 * @param action
 	 * @return Set
 	 */
-	public Set<String> getReceptorsOfNotification(String status, String action){
+	public Set<String> getReceptorsOfNotification(String status, String action) {
 		Set<String> setOfRoles = new HashSet<>();
 		setOfRoles.addAll(WorkFlowConfigs.getMapOfStatusAndReceptors().get(status));
-		if(!StringUtils.isEmpty(action) && (action.equals(WorkFlowConfigs.ACTION_REASSIGN) || action.equals(WorkFlowConfigs.ACTION_REOPEN))) {
+		if (!StringUtils.isEmpty(action)
+				&& (action.equals(WorkFlowConfigs.ACTION_REASSIGN) || action.equals(WorkFlowConfigs.ACTION_REOPEN))) {
 			setOfRoles.clear();
 			setOfRoles.addAll(WorkFlowConfigs.getMapOfActionAndReceptors().get(action));
-		}		
+		}
 		return setOfRoles;
 	}
+
 	/**
 	 * Splits any camelCase to human readable string
+	 * 
 	 * @param String
 	 * @return String
 	 */
@@ -526,13 +556,13 @@ public class PGRUtils {
 		return s.replaceAll(String.format("%s|%s|%s", "(?<=[A-Z])(?=[A-Z][a-z])", "(?<=[^A-Z])(?=[A-Z])",
 				"(?<=[A-Za-z])(?=[^A-Za-z])"), " ");
 	}
-	
+
 	public Long convertToMilliSec(Integer hours) {
 		Long milliseconds = TimeUnit.SECONDS.toMillis(TimeUnit.HOURS.toSeconds(hours));
-		log.info("SLA in ms: "+milliseconds);
+		log.info("SLA in ms: " + milliseconds);
 		return milliseconds;
 	}
-	
+
 	/**
 	 * helper method which collects the service code from services obtained by
 	 * databse call
@@ -551,12 +581,12 @@ public class PGRUtils {
 			Object result = serviceRequestRepository.fetchResult(uri, criteriaReq);
 			return JsonPath.read(result, PGRConstants.JSONPATH_SERVICEDEFS);
 		} catch (Exception e) {
-			log.info("Exception while fetching serviceDefs: ",e);
+			log.info("Exception while fetching serviceDefs: ", e);
 			throw new CustomException(ErrorConstants.INVALID_TENANT_ID_MDMS_SERVICE_CODE_KEY,
 					ErrorConstants.INVALID_TENANT_ID_MDMS_SERVICE_CODE_MSG);
 		}
 	}
-	
+
 	/**
 	 * returns the current status of the service
 	 * 
@@ -567,7 +597,8 @@ public class PGRUtils {
 	 */
 	public String getCurrentStatus(ActionHistory history) {
 		List<ActionInfo> infos = history.getActions();
-		//FIXME pickup latest status another way which is not hardocoded, put query to searcher to pick latest status
+		// FIXME pickup latest status another way which is not hardocoded, put query to
+		// searcher to pick latest status
 		// or use status from service object
 		for (int i = 0; i <= infos.size() - 1; i++) {
 			String status = infos.get(i).getStatus();
@@ -577,7 +608,7 @@ public class PGRUtils {
 		}
 		return null;
 	}
-	
+
 	/**
 	 * helper method to add the errors to the error map
 	 * 
@@ -594,7 +625,7 @@ public class PGRUtils {
 		} else
 			errors.add(errorMsg);
 	}
-	
+
 	/**
 	 * Prepares request and uri for service request search
 	 * 
@@ -604,18 +635,16 @@ public class PGRUtils {
 	 * @return MdmsCriteriaReq
 	 * @author Tonmoy
 	 */
-	public MdmsCriteriaReq prepareAutoroutingEscalationMapSearchMdmsRequestByCategoryAndSector(StringBuilder uri, String tenantId, String category,
-			String sector, RequestInfo requestInfo) {
-	
+	public MdmsCriteriaReq prepareAutoroutingEscalationMapSearchMdmsRequestByCategoryAndSector(StringBuilder uri,
+			String tenantId, String category, String sector, RequestInfo requestInfo) {
+
 		uri.append(mdmsHost).append(mdmsEndpoint);
 		MasterDetail masterDetail = org.egov.mdms.model.MasterDetail.builder()
-				.name(PGRConstants.MDMS_AUTOROUTING_ESCALATION_MAP_MASTER_NAME)
-				.filter("[?(@.active == true)]")
-				.build();
-		
-		if(!StringUtils.isEmpty(category)) {
+				.name(PGRConstants.MDMS_AUTOROUTING_ESCALATION_MAP_MASTER_NAME).filter("[?(@.active == true)]").build();
+
+		if (!StringUtils.isEmpty(category)) {
 			masterDetail.setFilter("[?((@.category == '" + category + "') && (@.active == true))]");
-		}	
+		}
 		List<MasterDetail> masterDetails = new ArrayList<>();
 		masterDetails.add(masterDetail);
 		ModuleDetail moduleDetail = ModuleDetail.builder().moduleName(PGRConstants.MDMS_PGR_MOD_NAME)
@@ -634,7 +663,7 @@ public class PGRUtils {
 	 */
 	public boolean checkReopen2ndTime(ActionHistory history, String action) {
 		List<ActionInfo> infos = history.getActions();
-		
+
 		for (int i = 0; i <= infos.size() - 1; i++) {
 			String status = infos.get(i).getStatus();
 			if (WorkFlowConfigs.STATUS_ESCALATED_LEVEL1_PENDING.equalsIgnoreCase(status)
@@ -644,7 +673,7 @@ public class PGRUtils {
 		}
 		return false;
 	}
-	
+
 	/**
 	 * Check whether the escalated complaint is resolving/rejecting by any employee
 	 * 
@@ -653,19 +682,19 @@ public class PGRUtils {
 	 */
 	public boolean checkComplaintAlreadyEscalated(ActionHistory history, String action) {
 		List<ActionInfo> infos = history.getActions();
-		
+
 		for (int i = 0; i <= infos.size() - 1; i++) {
 			String status = infos.get(i).getStatus();
 			if ((WorkFlowConfigs.STATUS_ESCALATED_LEVEL1_PENDING.equalsIgnoreCase(status)
 					|| WorkFlowConfigs.STATUS_ESCALATED_LEVEL2_PENDING.equalsIgnoreCase(status))
-					&& (WorkFlowConfigs.ACTION_RESOLVE.equalsIgnoreCase(action) 
-						|| WorkFlowConfigs.ACTION_REJECT.equalsIgnoreCase(action))){
+					&& (WorkFlowConfigs.ACTION_RESOLVE.equalsIgnoreCase(action)
+							|| WorkFlowConfigs.ACTION_REJECT.equalsIgnoreCase(action))) {
 				return true;
 			}
 		}
 		return false;
 	}
-	
+
 	/**
 	 * Prepares request and uri for service request search
 	 * 
@@ -677,14 +706,13 @@ public class PGRUtils {
 	 * @return MdmsCriteriaReq
 	 * @author Tonmoy
 	 */
-	public MdmsCriteriaReq prepareCategoryMdmsRequestByEscalationOfficer(StringBuilder uri, String tenantId, RequestInfo requestInfo) {
-	
+	public MdmsCriteriaReq prepareCategoryMdmsRequestByEscalationOfficer(StringBuilder uri, String tenantId,
+			RequestInfo requestInfo) {
+
 		uri.append(mdmsHost).append(mdmsEndpoint);
 		MasterDetail masterDetail = org.egov.mdms.model.MasterDetail.builder()
-				.name(PGRConstants.MDMS_AUTOROUTING_ESCALATION_MAP_MASTER_NAME)
-				.filter("[?(@.active == true)]")
-				.build();
-			
+				.name(PGRConstants.MDMS_AUTOROUTING_ESCALATION_MAP_MASTER_NAME).filter("[?(@.active == true)]").build();
+
 		List<MasterDetail> masterDetails = new ArrayList<>();
 		masterDetails.add(masterDetail);
 		ModuleDetail moduleDetail = ModuleDetail.builder().moduleName(PGRConstants.MDMS_PGR_MOD_NAME)
@@ -694,7 +722,7 @@ public class PGRUtils {
 		MdmsCriteria mdmsCriteria = MdmsCriteria.builder().tenantId(tenantId).moduleDetails(moduleDetails).build();
 		return MdmsCriteriaReq.builder().requestInfo(requestInfo).mdmsCriteria(mdmsCriteria).build();
 	}
-	
+
 	/**
 	 * Prepares request and uri for PGR department search from MDMS
 	 * 
@@ -705,10 +733,10 @@ public class PGRUtils {
 	 * @return MdmsCriteriaReq
 	 * @author Tonmoy
 	 */
-	public MdmsCriteriaReq prepareSearchRequestForPgrDepartment(StringBuilder uri, String tenantId, String departmentCode,
-			RequestInfo requestInfo) {
+	public MdmsCriteriaReq prepareSearchRequestForPgrDepartment(StringBuilder uri, String tenantId,
+			String departmentCode, RequestInfo requestInfo) {
 		uri.append(mdmsHost).append(mdmsEndpoint);
-		
+
 		MasterDetail masterDetail = org.egov.mdms.model.MasterDetail.builder()
 				.name(PGRConstants.MDMS_PGR_DEPARTMENT_MASTER_NAME).build();
 		masterDetail.setFilter("[?((@.code == " + departmentCode + ") && (@.active == true))]");
@@ -721,7 +749,7 @@ public class PGRUtils {
 		MdmsCriteria mdmsCriteria = MdmsCriteria.builder().tenantId(tenantId).moduleDetails(moduleDetails).build();
 		return MdmsCriteriaReq.builder().requestInfo(requestInfo).mdmsCriteria(mdmsCriteria).build();
 	}
-	
+
 	/**
 	 * Check whether the complaint is auto escalated without resolved
 	 * 
@@ -729,34 +757,61 @@ public class PGRUtils {
 	 * @return boolean
 	 */
 	public boolean checkAutoEscalatedWithoutResolved(ActionHistory history) {
-		
+
 		List<String> status = history.getActions().stream().map(ActionInfo::getStatus).collect(Collectors.toList());
-		
-		if (status.contains(WorkFlowConfigs.STATUS_ESCALATED_LEVEL1_PENDING) && !status.contains(WorkFlowConfigs.STATUS_RESOLVED)) {
+
+		if (status.contains(WorkFlowConfigs.STATUS_ESCALATED_LEVEL1_PENDING)
+				&& !status.contains(WorkFlowConfigs.STATUS_RESOLVED)) {
 			return true;
 		}
 		return false;
 	}
-	
+
 	public long getLastDayTime(long time) {
-		log.info("Before sla end time set to midnight:"+time);
+		log.info("Before sla end time set to midnight:" + time);
 		Calendar calendar = Calendar.getInstance();
-		log.info("Calender time:"+calendar.getTimeInMillis());
+		log.info("Calender time:" + calendar.getTimeInMillis());
 		calendar.setTimeInMillis(time);
-		log.info("After setting time to Calender:"+calendar.getTimeInMillis());
+		log.info("After setting time to Calender:" + calendar.getTimeInMillis());
 		calendar.set(Calendar.HOUR_OF_DAY, 23);
 		calendar.set(Calendar.MINUTE, 59);
 		calendar.set(Calendar.SECOND, 59);
 		calendar.set(Calendar.MILLISECOND, 999);
-		log.info("After sla end time set to midnight:"+calendar.getTimeInMillis());
+		log.info("After sla end time set to midnight:" + calendar.getTimeInMillis());
 		return calendar.getTimeInMillis();
 	}
+
 	public long getLastDayTime(int slaDays) {
-		
+
 		LocalDate today = LocalDate.now(ZoneId.of("Asia/Kolkata"));
 		LocalDateTime todayMidnight = today.atTime(LocalTime.MAX);
 		LocalDateTime slaendMidnight = todayMidnight.plusDays(slaDays);
-		log.info("SLA end Date Midnight in IST="+slaendMidnight);
+		log.info("SLA end Date Midnight in IST=" + slaendMidnight);
 		return slaendMidnight.atZone(ZoneId.of("Asia/Kolkata")).toInstant().toEpochMilli();
+	}
+
+	public MdmsCriteriaReq prepareSearchRequestForAllServiceCodes(StringBuilder uri, String tenantId,
+			RequestInfo requestInfo) {
+		uri.append(mdmsHost).append(mdmsEndpoint);
+		MasterDetail masterDetail = org.egov.mdms.model.MasterDetail.builder()
+				.name(PGRConstants.MDMS_SERVICETYPE_MASTER_NAME).build();
+
+		List<MasterDetail> masterDetails = new ArrayList<>();
+		masterDetails.add(masterDetail);
+		ModuleDetail moduleDetail = ModuleDetail.builder().moduleName(PGRConstants.MDMS_PGR_MOD_NAME)
+				.masterDetails(masterDetails).build();
+		List<ModuleDetail> moduleDetails = new ArrayList<>();
+		moduleDetails.add(moduleDetail);
+		MdmsCriteria mdmsCriteria = MdmsCriteria.builder().tenantId(tenantId).moduleDetails(moduleDetails).build();
+		return MdmsCriteriaReq.builder().requestInfo(requestInfo).mdmsCriteria(mdmsCriteria).build();
+	}
+
+	public ReportRequest prepareSearchGrievancesSLAAchievement(StringBuilder uri, String tenantId, Long fromDate,
+			Long toDate, RequestInfo requestInfo) {
+		uri.append(reportHost).append(reportEndpoint);
+		List<ParamValue> searchParams = Arrays.asList(ParamValue.builder().name("fromDate").input(fromDate).build(),
+				ParamValue.builder().name("toDate").input(toDate).build());
+		return ReportRequest.builder().tenantId(tenantId).reportName("GrievancesSLAAchievement")
+				.requestInfo(requestInfo).searchParams(searchParams).build();
 	}
 }

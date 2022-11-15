@@ -5,6 +5,7 @@ import java.util.List;
 import javax.validation.constraints.NotNull;
 
 import org.egov.common.contract.request.RequestInfo;
+import org.egov.pgr.model.SearchParam;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
