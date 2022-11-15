@@ -1,5 +1,8 @@
 package org.egov.pgr.service;
 
+import java.math.BigDecimal;
+import java.math.MathContext;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -557,10 +560,11 @@ public class ReportService {
 			Integer closedComplaints1 = fetchGrievenceDetails.stream().mapToInt(Grievence::getClosedcomplaints).sum();
 			Integer totalComplaints = fetchGrievenceDetails.stream().mapToInt(Grievence::getTotalComplaints).sum();
 
-			grievenceReport.setCompletionRate(0.0);
-			if (totalComplaints != 0 && closedComplaints1 != 0) {
-				Double result = (double) (closedComplaints1 / totalComplaints);
-				grievenceReport.setCompletionRate(result);
+			grievenceReport.setCompletionRate(new BigDecimal(0.0));
+			if (totalComplaints > 0 && closedComplaints1 > 0) {
+				BigDecimal res1 = new BigDecimal(closedComplaints1);
+				BigDecimal res2 = new BigDecimal(totalComplaints);
+				grievenceReport.setCompletionRate(res1.divide(res2, 2, RoundingMode.HALF_EVEN));
 			}
 
 			ObjectMapper mapper = new ObjectMapper();
