@@ -7,8 +7,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.egov.pgr.contract.ServiceReqSearchCriteria;
-import org.egov.pgr.model.Grievence;
-import org.egov.pgr.repository.rowmapper.GrivenceDataRowMapper;
+import org.egov.pgr.model.Grievance;
+import org.egov.pgr.repository.rowmapper.GrievanceDataRowMapper;
 import org.egov.tracer.model.CustomException;
 import org.egov.tracer.model.ServiceCallException;
 import org.json.JSONArray;
@@ -39,13 +39,13 @@ public class ServiceRequestRepository {
 	private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
 	@Autowired
-	private GrivenceDataRowMapper grivenceDataRowMapper;
+	private GrievanceDataRowMapper grivenceDataRowMapper;
 
 	public static final String SERVICE_SEARCH_WITH_DETAILS = "select array_to_json(array_agg(row_to_json(serviceRequests))) from (select (select (select (row_to_json(services)) from ( select *, (select (select row_to_json(auditDetails) from (select createdtime, lastmodifiedtime, createdby, lastmodifiedby from eg_pgr_service where svc.serviceRequestId=eg_pgr_service.serviceRequestId) auditDetails) as auditDetails), (select (select (row_to_json(addressDetail)) from (select * from eg_pgr_address where eg_pgr_address.uuid=eg_pgr_service.addressid) addressDetail) as addressDetail) from eg_pgr_service svc where svc.serviceRequestId=eg_pgr_service.serviceRequestId order by createdtime desc) services) as services),(select (select array_to_json(array_agg(row_to_json(actionHistory))) from ( select * from eg_pgr_action where businessKey=eg_pgr_service.serviceRequestId order by \"when\" desc) actionHistory) as actionHistory) from eg_pgr_service WHERE ";
 
 	public static final String SERVICE_SEARCH_WITH_COUNT = "select array_to_json(array_agg(row_to_json(services))) from (select (row_to_json(services)) from ( select count(*) from eg_pgr_service where ";
 
-	public static final String GRIEVENCE_SEARCH = "select row_number() over(order by servicecode,category,status,\"source\") sequencenum, servicecode,category,status,\"source\",\r\n"
+	public static final String GRIEVANCE_SEARCH = "select row_number() over(order by servicecode,category,status,\"source\") sequencenum, servicecode,category,status,\"source\",\r\n"
 			+ "SUM(case when to_date(TO_CHAR(to_timestamp(lastmodifiedtime / 1000), 'DD/MM/YYYY'),'DD/MM/YYYY') = NOW()::date or to_date(TO_CHAR(to_timestamp(createdtime / 1000), 'DD/MM/YYYY'),'DD/MM/YYYY') = NOW()::date then 1 else 0 end)  allComplaints,\r\n"
 			+ "SUM(case when status = 'open' and to_date(TO_CHAR(to_timestamp(createdtime / 1000), 'DD/MM/YYYY'),'DD/MM/YYYY') = NOW()::date then 1 else 0 end)  open,\r\n"
 			+ "SUM(case when status = 'reopen' and to_date(TO_CHAR(to_timestamp(lastmodifiedtime / 1000), 'DD/MM/YYYY'),'DD/MM/YYYY') = NOW()::date then 1 else 0 end)  reopen,\r\n"
@@ -318,12 +318,12 @@ public class ServiceRequestRepository {
 		return query;
 	}
 
-	public List<Grievence> fetchGrievenceDetails(ServiceReqSearchCriteria serviceReqSearchCriteria) {
+	public List<Grievance> fetchGrievanceDetails(ServiceReqSearchCriteria serviceReqSearchCriteria) {
 		Map<String, Object> preparedStatementValues = new HashMap<>();
-		String query = getGrievenceDetailsQuery(serviceReqSearchCriteria);
-		List<Grievence> grivence = null;
+		String query = getGrievanceDetailsQuery(serviceReqSearchCriteria);
+		List<Grievance> grievance = null;
 		try {
-			grivence = namedParameterJdbcTemplate.query(query, preparedStatementValues, grivenceDataRowMapper);
+			grievance = namedParameterJdbcTemplate.query(query, preparedStatementValues, grivenceDataRowMapper);
 		} catch (DataAccessResourceFailureException ex) {
 			log.info("Query Execution Failed Due To Timeout: ", ex);
 			PSQLException cause = (PSQLException) ex.getCause();
@@ -336,12 +336,12 @@ public class ServiceRequestRepository {
 			log.info("Query Execution Failed: ", e);
 			throw e;
 		}
-		return grivence;
+		return grievance;
 
 	}
 
-	public String getGrievenceDetailsQuery(ServiceReqSearchCriteria serviceReqSearchCriteria) {
-		String query = GRIEVENCE_SEARCH;
+	public String getGrievanceDetailsQuery(ServiceReqSearchCriteria serviceReqSearchCriteria) {
+		String query = GRIEVANCE_SEARCH;
 		StringBuilder whereStr = new StringBuilder();
 
 		if (serviceReqSearchCriteria.getTenantId() != null && !serviceReqSearchCriteria.getTenantId().isEmpty()) {

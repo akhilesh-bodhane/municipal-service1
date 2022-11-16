@@ -18,7 +18,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class GrievenceReport {
+public class GrievanceReport {
 
 	@JsonProperty("ulb")
 	public String ulb;

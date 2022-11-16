@@ -4,7 +4,7 @@ import javax.validation.Valid;
 
 import org.egov.pgr.contract.ReportRequest;
 import org.egov.pgr.contract.ServiceReqSearchCriteria;
-import org.egov.pgr.model.GrievenceReport;
+import org.egov.pgr.model.GrievanceReport;
 import org.egov.pgr.model.RequestInfoWrapper;
 import org.egov.pgr.model.ResponseInfoWrapper;
 import org.egov.pgr.service.ReportService;
@@ -44,12 +44,12 @@ public class ReportController {
 		return service.process(request);
 	}
 
-	@PostMapping("_grivence")
+	@PostMapping("_grievance")
 	@ResponseBody
-	private ResponseEntity<?> getGrienceReport(@RequestBody @Valid RequestInfoWrapper requestInfoWrapper,
+	private ResponseEntity<?> getGrievanceReport(@RequestBody @Valid RequestInfoWrapper requestInfoWrapper,
 			@ModelAttribute @Valid ServiceReqSearchCriteria serviceReqSearchCriteria) {
 		pgrRequestValidator.validateSearch(serviceReqSearchCriteria, requestInfoWrapper.getRequestInfo());
-		GrievenceReport grievenceReport = service.getGrienceReport(requestInfoWrapper.getRequestInfo(),
+		GrievanceReport grievenceReport = service.getGrievanceReport(requestInfoWrapper.getRequestInfo(),
 				serviceReqSearchCriteria);
 		return new ResponseEntity<>(grievenceReport, HttpStatus.OK);
 	}
