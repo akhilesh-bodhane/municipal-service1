@@ -368,4 +368,26 @@ public class ServiceRequestRepository {
 		log.info("Grience Report query: " + query);
 		return query;
 	}
+
+	public String fetchUniqueCitizens() {
+		Map<String, Object> preparedStatementValues = new HashMap<>();
+		String query = "select sum(urs) as uniqueCitizens from (select count(a.createdby) as urs from eg_pgr_service a group by a.createdby having count(a.createdby)=1) as urscount";
+		String uniqueCitizens = null;
+		try {
+			uniqueCitizens = namedParameterJdbcTemplate.queryForObject(query, preparedStatementValues, String.class);
+		} catch (DataAccessResourceFailureException ex) {
+			log.info("Query Execution Failed Due To Timeout: ", ex);
+			PSQLException cause = (PSQLException) ex.getCause();
+			if (cause != null && cause.getSQLState().equals("57014")) {
+				throw new CustomException("QUERY_EXECUTION_TIMEOUT", "Query failed, as it took more than expected");
+			} else {
+				throw ex;
+			}
+		} catch (Exception e) {
+			log.info("Query Execution Failed: ", e);
+			throw e;
+		}
+		return uniqueCitizens;
+
+	}
 }
