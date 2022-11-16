@@ -456,6 +456,9 @@ public class ReportService {
 			grievenceReport.setClosedComplaints(closedComplaints);
 			grievenceReport.setResolvedComplaints(resolvedComplaints);
 
+			String fetchUniqueCitizens = serviceRequestRepository.fetchUniqueCitizens();
+			grievenceReport.setUniqueCitizens(Integer.parseInt(fetchUniqueCitizens));
+
 			List<Bucket> todaysComplaintByStatusBucket = fetchGrievenceDetails.stream().collect(
 					Collectors.groupingBy(Grievence::getStatus, Collectors.summingInt(Grievence::getAllcomplaints)))
 					.entrySet().stream().map(e -> {
