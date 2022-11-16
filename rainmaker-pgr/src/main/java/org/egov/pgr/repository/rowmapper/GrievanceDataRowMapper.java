@@ -7,23 +7,23 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import org.egov.pgr.model.Grievence;
+import org.egov.pgr.model.Grievance;
 import org.egov.tracer.model.CustomException;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.stereotype.Component;
 
 @Component
-public class GrivenceDataRowMapper implements ResultSetExtractor<List<Grievence>> {
+public class GrievanceDataRowMapper implements ResultSetExtractor<List<Grievance>> {
 
 	@Override
-	public List<Grievence> extractData(ResultSet rs) throws SQLException, DataAccessException {
-		Map<Integer, Grievence> map = new HashMap<>();
+	public List<Grievance> extractData(ResultSet rs) throws SQLException, DataAccessException {
+		Map<Integer, Grievance> map = new HashMap<>();
 		try {
 
 			while (rs.next()) {
 
-				Grievence grievence = new Grievence();
+				Grievance grievence = new Grievance();
 				grievence.setSequencenum(Integer.parseInt(rs.getString("sequencenum")));
 
 				grievence.setAllcomplaints(Integer.parseInt(rs.getString("allcomplaints")));

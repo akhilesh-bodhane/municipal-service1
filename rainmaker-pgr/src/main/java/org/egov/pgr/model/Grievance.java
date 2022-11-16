@@ -13,7 +13,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class Grievence {
+public class Grievance {
 
 	@JsonProperty("sequencenum")
 	public Integer sequencenum;

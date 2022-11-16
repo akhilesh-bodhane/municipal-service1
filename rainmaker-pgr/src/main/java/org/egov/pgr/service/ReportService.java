@@ -27,8 +27,8 @@ import org.egov.pgr.contract.ServiceReqSearchCriteria;
 import org.egov.pgr.model.Bucket;
 import org.egov.pgr.model.Department;
 import org.egov.pgr.model.DiscriptionReport;
-import org.egov.pgr.model.Grievence;
-import org.egov.pgr.model.GrievenceReport;
+import org.egov.pgr.model.Grievance;
+import org.egov.pgr.model.GrievanceReport;
 import org.egov.pgr.model.ReportServiceResponse;
 import org.egov.pgr.model.RequestInfoWrapper;
 import org.egov.pgr.model.ResponseInfoWrapper;
@@ -440,13 +440,13 @@ public class ReportService {
 				HttpStatus.OK);
 	}
 
-	public GrievenceReport getGrienceReport(RequestInfo requestInfo,
+	public GrievanceReport getGrievanceReport(RequestInfo requestInfo,
 			ServiceReqSearchCriteria serviceReqSearchCriteria) {
 		// TODO Auto-generated method stub
 
-		List<Grievence> fetchGrievenceDetails = serviceRequestRepository
-				.fetchGrievenceDetails(serviceReqSearchCriteria);
-		GrievenceReport grievenceReport = new GrievenceReport();
+		List<Grievance> fetchGrievenceDetails = serviceRequestRepository
+				.fetchGrievanceDetails(serviceReqSearchCriteria);
+		GrievanceReport grievenceReport = new GrievanceReport();
 
 		if (fetchGrievenceDetails != null && !fetchGrievenceDetails.isEmpty()) {
 
@@ -460,7 +460,7 @@ public class ReportService {
 			grievenceReport.setUniqueCitizens(Integer.parseInt(fetchUniqueCitizens));
 
 			List<Bucket> todaysComplaintByStatusBucket = fetchGrievenceDetails.stream().collect(
-					Collectors.groupingBy(Grievence::getStatus, Collectors.summingInt(Grievence::getAllcomplaints)))
+					Collectors.groupingBy(Grievance::getStatus, Collectors.summingInt(Grievance::getAllcomplaints)))
 					.entrySet().stream().map(e -> {
 						return new Bucket(e.getKey(), e.getValue());
 					}).collect(Collectors.toList());
@@ -469,7 +469,7 @@ public class ReportService {
 					.buckets(todaysComplaintByStatusBucket).build();
 
 			List<Bucket> todaysComplaintByChannelBucket = fetchGrievenceDetails.stream().collect(
-					Collectors.groupingBy(Grievence::getSource, Collectors.summingInt(Grievence::getAllcomplaints)))
+					Collectors.groupingBy(Grievance::getSource, Collectors.summingInt(Grievance::getAllcomplaints)))
 					.entrySet().stream().map(e -> {
 						return new Bucket(e.getKey(), e.getValue());
 					}).collect(Collectors.toList());
@@ -478,7 +478,7 @@ public class ReportService {
 					.buckets(todaysComplaintByChannelBucket).build();
 
 			List<Bucket> todaysComplaintByDepartmentBucket = fetchGrievenceDetails.stream().collect(Collectors
-					.groupingBy(Grievence::getServicecode, Collectors.summingInt(Grievence::getAllcomplaints)))
+					.groupingBy(Grievance::getServicecode, Collectors.summingInt(Grievance::getAllcomplaints)))
 					.entrySet().stream().map(e -> {
 						return new Bucket(e.getKey(), e.getValue());
 					}).collect(Collectors.toList());
@@ -487,7 +487,7 @@ public class ReportService {
 					.buckets(todaysComplaintByDepartmentBucket).build();
 
 			List<Bucket> todaysComplaintByCategoryBucket = fetchGrievenceDetails.stream().collect(
-					Collectors.groupingBy(Grievence::getCategory, Collectors.summingInt(Grievence::getAllcomplaints)))
+					Collectors.groupingBy(Grievance::getCategory, Collectors.summingInt(Grievance::getAllcomplaints)))
 					.entrySet().stream().map(e -> {
 						return new Bucket(e.getKey(), e.getValue());
 					}).collect(Collectors.toList());
@@ -501,7 +501,7 @@ public class ReportService {
 
 			// Re-Opened
 			List<Bucket> todaysComplaintByDepartmentReopenBucket = fetchGrievenceDetails.stream().collect(
-					Collectors.groupingBy(Grievence::getServicecode, Collectors.summingInt(Grievence::getReopen)))
+					Collectors.groupingBy(Grievance::getServicecode, Collectors.summingInt(Grievance::getReopen)))
 					.entrySet().stream().map(e -> {
 						return new Bucket(e.getKey(), e.getValue());
 					}).collect(Collectors.toList());
@@ -514,7 +514,7 @@ public class ReportService {
 			// Opened
 			List<Bucket> todaysComplaintByDepartmentOpenBucket = fetchGrievenceDetails.stream()
 					.collect(
-							Collectors.groupingBy(Grievence::getServicecode, Collectors.summingInt(Grievence::getOpen)))
+							Collectors.groupingBy(Grievance::getServicecode, Collectors.summingInt(Grievance::getOpen)))
 					.entrySet().stream().map(e -> {
 						return new Bucket(e.getKey(), e.getValue());
 					}).collect(Collectors.toList());
@@ -526,7 +526,7 @@ public class ReportService {
 
 			// Assigned
 			List<Bucket> todaysComplaintByDepartmentAssignedBucket = fetchGrievenceDetails.stream().collect(
-					Collectors.groupingBy(Grievence::getServicecode, Collectors.summingInt(Grievence::getAssigned)))
+					Collectors.groupingBy(Grievance::getServicecode, Collectors.summingInt(Grievance::getAssigned)))
 					.entrySet().stream().map(e -> {
 						return new Bucket(e.getKey(), e.getValue());
 					}).collect(Collectors.toList());
@@ -538,7 +538,7 @@ public class ReportService {
 
 			// Rejected
 			List<Bucket> todaysComplaintByDepartmentRejectedBucket = fetchGrievenceDetails.stream().collect(
-					Collectors.groupingBy(Grievence::getServicecode, Collectors.summingInt(Grievence::getRejected)))
+					Collectors.groupingBy(Grievance::getServicecode, Collectors.summingInt(Grievance::getRejected)))
 					.entrySet().stream().map(e -> {
 						return new Bucket(e.getKey(), e.getValue());
 					}).collect(Collectors.toList());
@@ -550,7 +550,7 @@ public class ReportService {
 
 			// Reassigned
 			List<Bucket> todaysComplaintByDepartmentReassignedBucket = fetchGrievenceDetails.stream().collect(Collectors
-					.groupingBy(Grievence::getServicecode, Collectors.summingInt(Grievence::getReassignrequested)))
+					.groupingBy(Grievance::getServicecode, Collectors.summingInt(Grievance::getReassignrequested)))
 					.entrySet().stream().map(e -> {
 						return new Bucket(e.getKey(), e.getValue());
 					}).collect(Collectors.toList());
@@ -560,8 +560,8 @@ public class ReportService {
 
 			grievenceReport.setTodaysReassignedComplaints(Arrays.asList(todaysReassignedComplaint));
 
-			Integer closedComplaints1 = fetchGrievenceDetails.stream().mapToInt(Grievence::getClosedcomplaints).sum();
-			Integer totalComplaints = fetchGrievenceDetails.stream().mapToInt(Grievence::getTotalComplaints).sum();
+			Integer closedComplaints1 = fetchGrievenceDetails.stream().mapToInt(Grievance::getClosedcomplaints).sum();
+			Integer totalComplaints = fetchGrievenceDetails.stream().mapToInt(Grievance::getTotalComplaints).sum();
 
 			grievenceReport.setCompletionRate(new BigDecimal(0.0));
 			if (totalComplaints > 0 && closedComplaints1 > 0) {
