@@ -10,6 +10,7 @@ import org.egov.waterconnection.model.WaterConnection;
 import org.egov.waterconnection.model.WaterConnectionCount;
 import org.egov.waterconnection.model.WaterConnectionRequest;
 import org.egov.waterconnection.model.WaterTotalCollections;
+import org.egov.waterconnection.model.metrics;
 import org.egov.waterconnection.model.collection.PaymentRequest;
 
 public interface WaterDao {
@@ -27,4 +28,8 @@ public interface WaterDao {
 	public void updatebillingstatus(BillGeneration bill);
 	
 	public List<WaterTotalCollections> getWaterConnectionTotalCollectionListCount(SearchTotalCollectionCriteria SearchTotalCollectionCriteria,RequestInfo requestInfo);
+
+	public metrics getWaterConnectionTotalCollectionListCountNIUA(SearchTotalCollectionCriteria SearchTotalCollectionCriteria,RequestInfo requestInfo);
+
+
 }
