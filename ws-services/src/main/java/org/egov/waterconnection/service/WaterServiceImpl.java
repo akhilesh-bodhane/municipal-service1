@@ -25,6 +25,7 @@ import org.egov.waterconnection.model.WaterConnectionRequest;
 import org.egov.waterconnection.model.WaterNotication;
 import org.egov.waterconnection.model.WaterNotificationRequest;
 import org.egov.waterconnection.model.WaterTotalCollections;
+import org.egov.waterconnection.model.metrics;
 import org.egov.waterconnection.model.workflow.BusinessService;
 import org.egov.waterconnection.producer.WaterConnectionProducer;
 import org.egov.waterconnection.repository.WaterDao;
@@ -355,5 +356,30 @@ public class WaterServiceImpl implements WaterService {
 	public List<WaterTotalCollections> getWaterConnectionsTotalCollectionListCount(SearchTotalCollectionCriteria SearchTotalCollectionCriteria,
 			RequestInfo requestInfo) {
 		return waterDao.getWaterConnectionTotalCollectionListCount(SearchTotalCollectionCriteria, requestInfo);
+	}
+	
+	//Digamabr Digambar Digamabr Digambar Digamabr Digambar Digamabr Digambar Digamabr Digambar Digamabr Digambar
+	
+	/**
+	 * 
+	 * @param criteria WaterConnectionSearchCriteria contains search criteria on water connection
+	 * @param requestInfo 
+	 * @return List(Count) of matching water connection
+	 */
+	public metrics searchTotalCollectionCountNIUA(SearchTotalCollectionCriteria SearchTotalCollectionCriteria, RequestInfo requestInfo) {
+		metrics waterConnectionList;
+		waterConnectionList = getWaterConnectionsTotalCollectionListCountNIUA(SearchTotalCollectionCriteria, requestInfo);
+		return waterConnectionList;
+	}
+	
+	/**
+	 * 
+	 * @param criteria WaterConnectionSearchCriteria contains search criteria on water connection
+	 * @param requestInfo 
+	 * @return List(Count) of matching water connection
+	 */
+	public metrics getWaterConnectionsTotalCollectionListCountNIUA(SearchTotalCollectionCriteria SearchTotalCollectionCriteria,
+			RequestInfo requestInfo) {
+		return waterDao.getWaterConnectionTotalCollectionListCountNIUA(SearchTotalCollectionCriteria, requestInfo);
 	}
 }

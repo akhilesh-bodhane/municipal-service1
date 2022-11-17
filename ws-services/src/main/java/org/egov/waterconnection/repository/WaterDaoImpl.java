@@ -2,6 +2,7 @@ package org.egov.waterconnection.repository;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 
 import org.egov.common.contract.request.RequestInfo;
@@ -15,14 +16,25 @@ import org.egov.waterconnection.model.WaterConnection;
 import org.egov.waterconnection.model.WaterConnectionCount;
 import org.egov.waterconnection.model.WaterConnectionRequest;
 import org.egov.waterconnection.model.WaterTotalCollections;
+import org.egov.waterconnection.model.buckets;
+import org.egov.waterconnection.model.connectionsCreated;
+import org.egov.waterconnection.model.metrics;
+import org.egov.waterconnection.model.pendingConnections;
+import org.egov.waterconnection.model.sewerageConnections;
+import org.egov.waterconnection.model.todaysCollection;
+import org.egov.waterconnection.model.waterConnections;
 import org.egov.waterconnection.producer.WaterConnectionProducer;
 import org.egov.waterconnection.repository.builder.WsQueryBuilder;
+import org.egov.waterconnection.repository.rowmapper.WaterNIUARowMapper;
 import org.egov.waterconnection.repository.rowmapper.WaterRowMapper;
 import org.egov.waterconnection.repository.rowmapper.WaterRowMapperCount;
+import org.javers.common.collections.Arrays;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
+
+import com.google.gson.Gson;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -42,6 +54,8 @@ public class WaterDaoImpl implements WaterDao {
 	@Autowired
 	private WaterRowMapper waterRowMapper;
 
+	@Autowired
+	private WaterNIUARowMapper waterNIUARowMapper ;
 	
 	@Autowired
 	private WaterRowMapperCount waterRowMapperCount;
@@ -61,6 +75,8 @@ public class WaterDaoImpl implements WaterDao {
 	
 	@Value("${egov.waterservice.createwatersubactivity}")
 	private String createWaterSubActivity;
+
+	
 	
 	@Override
 	public void saveWaterConnection(WaterConnectionRequest waterConnectionRequest) {
@@ -217,6 +233,170 @@ public class WaterDaoImpl implements WaterDao {
 		}
 
 		return waterConnectionList;
+	}
+	
+	
+	//Digambar
+	
+	
+	@Override
+	public  metrics getWaterConnectionTotalCollectionListCountNIUA(SearchTotalCollectionCriteria SearchTotalCollectionCriteria,
+			RequestInfo requestInfo) {
+		List<Object> preparedStatement = new ArrayList<>();
+		
+	
+		List<String> myList = new ArrayList<>();
+		
+		List<String> connectionsCreated = new ArrayList<>();
+		connectionsCreated.add("channelType");
+		connectionsCreated.add("connectionType");
+		myList.addAll(connectionsCreated);
+		
+		
+		List<String> todaysCollection = new ArrayList<String>();
+		todaysCollection.add("usageType");
+		todaysCollection.add("paymentChannelType");
+		todaysCollection.add("taxHeads");
+		todaysCollection.add("connectionType");
+		myList.addAll(todaysCollection);
+		
+		List<String> sewerageConnections = new ArrayList<String>();
+		sewerageConnections.add("channelType");
+		sewerageConnections.add("usageType");
+		myList.addAll(sewerageConnections);
+		
+		List<String> waterConnections = new ArrayList<String>();
+		waterConnections.add("channelType");
+		waterConnections.add("usageType");
+		waterConnections.add("meterType");
+		myList.addAll(waterConnections);
+		
+		List<String> pendingConnections = new ArrayList<String>();
+		pendingConnections.add("duration");
+		myList.addAll(pendingConnections);
+		
+		
+		List<List<String>> seprate = new ArrayList<List<String>>();
+		seprate.add(connectionsCreated);
+		seprate.add(todaysCollection);
+		seprate.add(sewerageConnections);
+		seprate.add(waterConnections);
+		seprate.add(pendingConnections);
+		
+		List<String> sepratee = new ArrayList<String>();
+		sepratee.add("connectionsCreated");
+		sepratee.add("todaysCollection");
+		sepratee.add("sewerageConnections");
+		sepratee.add("waterConnections");
+		sepratee.add("pendingConnections");
+		
+		metrics buildd = new metrics();
+		
+		List<connectionsCreated> build3 = new ArrayList<>();
+		List<todaysCollection> build4 = new ArrayList<>();
+		List<sewerageConnections> build5 = new ArrayList<>();
+		List<waterConnections> build6 = new ArrayList<>();
+		List<pendingConnections> build7 = new ArrayList<>();
+		
+		
+		for (int i = 0; i < seprate.size(); i++) {
+			String string2 = sepratee.get(i); 
+			
+			 			
+			List<String> list2 = seprate.get(i);
+			
+			
+			for (String string : list2) {
+				
+				if (string2.equalsIgnoreCase("connectionsCreated")) {
+					
+				connectionsCreated connection = new connectionsCreated();
+				String groupByName = "connectionsCreated";
+					
+					List<buckets> query2 = data(string, groupByName,  SearchTotalCollectionCriteria, preparedStatement, requestInfo);
+					
+				connection.setGroupBy(string);
+				connection.setBuckets(query2);
+				build3.add(connection);
+				
+			}
+				
+				else if (string2.equalsIgnoreCase("todaysCollection")) {
+					
+					todaysCollection connection = new todaysCollection();
+					String groupByName = "todaysCollection";
+
+					List<buckets> query2 = data(string, groupByName , SearchTotalCollectionCriteria, preparedStatement, requestInfo);
+					
+				connection.setGroupBy(string);
+				connection.setBuckets(query2);
+				build4.add(connection);
+				
+			}
+				
+				else if (string2.equalsIgnoreCase("sewerageConnections")) {
+					
+					sewerageConnections connection = new sewerageConnections();
+					String groupByName = "sewerageConnections";
+						
+						List<buckets> query2 = data(string, groupByName , SearchTotalCollectionCriteria, preparedStatement, requestInfo);
+						
+					connection.setGroupBy(string);
+					connection.setBuckets(query2);
+					build5.add(connection);
+					
+				}
+				
+				else if (string2.equalsIgnoreCase("waterConnections")) {
+					
+					waterConnections connection = new waterConnections();
+					String groupByName = "waterConnections";
+						
+						List<buckets> query2 = data(string, groupByName,  SearchTotalCollectionCriteria, preparedStatement, requestInfo);
+						
+					connection.setGroupBy(string);
+					connection.setBuckets(query2);
+					build6.add(connection);
+					
+				}
+				
+				else if (string2.equalsIgnoreCase("pendingConnections")) {
+					
+					pendingConnections connection = new pendingConnections();
+					String groupByName = "pendingConnections";
+						
+						List<buckets> query2 = data(string, groupByName , SearchTotalCollectionCriteria, preparedStatement, requestInfo);
+						
+					connection.setGroupBy(string);
+					connection.setBuckets(query2);
+					build7.add(connection);
+					
+				}
+
+			}
+		}
+
+		metrics build = metrics.builder().connectionsCreated(build3).todaysCollection(build4).sewerageConnections(build5)
+				.waterConnections(build6).pendingConnections(build7).build();
+		
+		Gson gson = new Gson();
+        String json = gson.toJson(build);
+		
+
+
+		return build;
+	}
+
+	private List<buckets> data(String string, String groupByName, SearchTotalCollectionCriteria searchTotalCollectionCriteria,
+			List<Object> preparedStatement, RequestInfo requestInfo) {
+		
+		String query = wsQueryBuilder.getSearchQueryStringTotalCollectionCountNIUA(string , groupByName , searchTotalCollectionCriteria , preparedStatement, requestInfo);
+//		
+			List<buckets> query2 = jdbcTemplate.query(query, preparedStatement.toArray(),waterNIUARowMapper);
+		
+		
+		
+		return query2;
 	}
 	
 	

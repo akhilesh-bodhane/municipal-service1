@@ -14,6 +14,8 @@ import org.egov.waterconnection.model.WaterConnectionCountResponse;
 import org.egov.waterconnection.model.WaterConnectionRequest;
 import org.egov.waterconnection.model.WaterConnectionResponse;
 import org.egov.waterconnection.model.WaterTotalCollections;
+import org.egov.waterconnection.model.metrics;
+import org.egov.waterconnection.model.metricsResponse;
 import org.egov.waterconnection.service.WaterService;
 import org.egov.waterconnection.util.ResponseInfoFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -133,6 +135,22 @@ public class WaterController {
 						true))
 				.build();
 		return new ResponseEntity<>(response, HttpStatus.OK);
+	}
+	
+	
+	@RequestMapping(value = "/_searchTotalcollectionCountNIUA", method = RequestMethod.POST)
+	public ResponseEntity<metricsResponse> searchTotalCollectionCountNIUA(@Valid @RequestBody RequestInfoWrapper requestInfoWrapper,
+			@Valid @ModelAttribute SearchTotalCollectionCriteria SearchTotalCollectionCriteria) {
+//		metricsResponse searchTotalCollectionCountNIUA = metricsResponse.builder().metrics(null).build();
+			metrics searchTotalCollectionCountNIUA = waterService.searchTotalCollectionCountNIUA(SearchTotalCollectionCriteria, requestInfoWrapper.getRequestInfo());
+//		WaterCollectionCountResponse response = WaterCollectionCountResponse.builder().waterConnection(waterConnectionList)
+//				.responseInfo(responseInfoFactory.createResponseInfoFromRequestInfo(requestInfoWrapper.getRequestInfo(),
+//						true))
+//				.build();
+			
+			metricsResponse vvv = metricsResponse.builder().metrics(searchTotalCollectionCountNIUA).build();
+
+         return new ResponseEntity<>( vvv , HttpStatus.OK);
 	}
 	
 	
