@@ -678,6 +678,7 @@ List jsonOutput1 = JsonPath.read(mdmsData, CommonConstants.MDMS_TAXHEAD_STALL_CO
 								.businessService("TEMPORARY_STALL_CHARGES_BOOKING")
 								.taxPeriodFrom(StallApplication.getAuditDetails().getLastModifiedTime())
 								.taxPeriodTo(StallApplication.getAuditDetails().getLastModifiedTime())
+							        .billExpiryTime(System.currentTimeMillis())
 								.demandDetails(dema1).auditDetails(StallApplication.getAuditDetails())
 								.minimumAmountPayable(BigDecimal.ZERO).status(StatusEnum.ACTIVE).payer(user)
 								.build();
