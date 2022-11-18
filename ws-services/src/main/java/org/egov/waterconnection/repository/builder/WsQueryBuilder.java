@@ -248,6 +248,141 @@ public class WsQueryBuilder {
 			+ "where py.createdtime  >=    ? AND py.createdtime  <= ?  \r\n"
 			+ "and bill.consumercode  like 'WS_AP/%' and py.totaldue != '0')and txn_status = 'SUCCESS'\r\n"
 			+ " group by     gateway )" ;
+
+	private static final String WATER_SEARCH_QUERY_NIUA5 = "SELECT  distinct\r\n"
+			+ "    sum(taxamount) as cccc,\r\n"
+			+ "    pt.usagecategory as usagecategory \r\n"
+			+ "    FROM eg_ws_connection conn  \r\n"
+			+ "      LEFT OUTER JOIN egcl_bill bl  on  conn.applicationno = bl.consumercode\r\n"
+			+ "            LEFT OUTER JOIN egbs_demand_v1 edv on edv.consumercode =  bl.consumercode\r\n"
+			+ "      LEFT OUTER JOIN egbs_demanddetail_v1 edvv on edvv.demandid = edv.id \r\n"
+			+ "      LEFT  OUTER JOIN EG_PT_PROPERTY pt ON pt.id  = conn.property_id\r\n"
+			+ "where bl.consumercode in\r\n"
+			+ "(select bill.consumercode   from \r\n"
+			+ "egcl_payment py   \r\n"
+			+ "INNER JOIN egcl_paymentdetail pyd ON pyd.paymentid = py.id  \r\n"
+			+ "INNER JOIN egcl_bill bill ON bill.id = pyd.billid   \r\n"
+			+ "where py.createdtime  >=    ? AND py.createdtime  <=  ?  \r\n"
+			+ "and bill.consumercode  like 'SW_AP/%' and py.totaldue != '0'\r\n"
+			+ "\r\n"
+			+ "union \r\n"
+			+ "\r\n"
+			+ "select bill.consumercode   from \r\n"
+			+ "egcl_payment py   \r\n"
+			+ "INNER JOIN egcl_paymentdetail pyd ON pyd.paymentid = py.id  \r\n"
+			+ "INNER JOIN egcl_bill bill ON bill.id = pyd.billid   \r\n"
+			+ "where py.createdtime  >=    ? AND py.createdtime  <=  ?  \r\n"
+			+ "and bill.consumercode  like 'WS_AP/%' and py.totaldue != '0')\r\n"
+			+ " group by   pt.usagecategory" ;
+
+	private static final String WATER_SEARCH_QUERY_NIUA6 = "SELECT  distinct\r\n"
+			+ "    sum(taxamount) as cccc ,\r\n"
+			+ "    edvv.taxheadcode  as usagecategory\r\n"
+			+ "    FROM eg_ws_connection conn  \r\n"
+			+ "      LEFT OUTER JOIN egcl_bill bl  on  conn.applicationno = bl.consumercode\r\n"
+			+ "            LEFT OUTER JOIN egbs_demand_v1 edv on edv.consumercode =  bl.consumercode\r\n"
+			+ "      LEFT OUTER JOIN egbs_demanddetail_v1 edvv on edvv.demandid = edv.id \r\n"
+			+ "      LEFT  OUTER JOIN EG_PT_PROPERTY pt ON pt.id  = conn.property_id\r\n"
+			+ "where bl.consumercode in\r\n"
+			+ "(select bill.consumercode   from \r\n"
+			+ "egcl_payment py   \r\n"
+			+ "INNER JOIN egcl_paymentdetail pyd ON pyd.paymentid = py.id  \r\n"
+			+ "INNER JOIN egcl_bill bill ON bill.id = pyd.billid   \r\n"
+			+ "where py.createdtime  >=    ? AND py.createdtime  <=  ?  \r\n"
+			+ "and bill.consumercode  like 'SW_AP/%' and py.totaldue != '0'\r\n"
+			+ "\r\n"
+			+ "union \r\n"
+			+ "\r\n"
+			+ "select bill.consumercode   from \r\n"
+			+ "egcl_payment py   \r\n"
+			+ "INNER JOIN egcl_paymentdetail pyd ON pyd.paymentid = py.id  \r\n"
+			+ "INNER JOIN egcl_bill bill ON bill.id = pyd.billid   \r\n"
+			+ "where py.createdtime  >=    ? AND py.createdtime  <=  ?  \r\n"
+			+ "and bill.consumercode  like 'WS_AP/%' and py.totaldue != '0')\r\n"
+			+ " group by   edvv.taxheadcode" ;
+
+	private static final String WATER_SEARCH_QUERY_NIUA7 = "(SELECT  distinct\r\n"
+			+ "   sc.connectiontype as usagecategory,\r\n"
+			+ "      SUM(py.totaldue) as cccc \r\n"
+			+ "    FROM eg_ws_connection conn  \r\n"
+			+ "      LEFT OUTER JOIN egcl_bill bl  on  conn.applicationno = bl.consumercode\r\n"
+			+ "--      LEFT OUTER JOIN egcl_bill bl  on  conn.applicationno = bl.consumercode\r\n"
+			+ "      LEFT OUTER JOIN egcl_paymentdetail pyd on pyd.billid = bl.id\r\n"
+			+ "      LEFT OUTER JOIN egcl_payment py on py.id= pyd.paymentid\r\n"
+			+ "            LEFT OUTER JOIN egbs_demand_v1 edv on edv.consumercode =  bl.consumercode\r\n"
+			+ "      LEFT OUTER JOIN egbs_demanddetail_v1 edvv on edvv.demandid = edv.id \r\n"
+			+ "      LEFT  OUTER JOIN EG_PT_PROPERTY pt ON pt.id  = conn.property_id\r\n"
+			+ "      INNER JOIN  eg_sw_service sc ON sc.connection_id = conn.id \r\n"
+			+ "      INNER JOIN eg_ws_application application ON application.wsid = conn.id\r\n"
+			+ "where bl.consumercode in\r\n"
+			+ "(select bill.consumercode   from \r\n"
+			+ "egcl_payment py   \r\n"
+			+ "INNER JOIN egcl_paymentdetail pyd ON pyd.paymentid = py.id  \r\n"
+			+ "INNER JOIN egcl_bill bill ON bill.id = pyd.billid   \r\n"
+			+ "where py.createdtime  >=    ? AND py.createdtime  <=  ?  \r\n"
+			+ "and bill.consumercode  like 'SW_AP/%' and py.totaldue != '0') group by   sc.connectiontype)\r\n"
+			+ "\r\n"
+			+ "union \r\n"
+			+ "\r\n"
+			+ "(SELECT  distinct\r\n"
+			+ " wc.connectiontype,\r\n"
+			+ "      SUM(py.totaldue) \r\n"
+			+ "      FROM eg_ws_connection conn\r\n"
+			+ "      LEFT OUTER JOIN egcl_bill bl  on  conn.applicationno = bl.consumercode\r\n"
+			+ "      LEFT OUTER JOIN egcl_paymentdetail pyd on pyd.billid = bl.id\r\n"
+			+ "      LEFT OUTER JOIN egcl_payment py on py.id= pyd.paymentid\r\n"
+			+ "      INNER JOIN eg_ws_service wc ON wc.connection_id = conn.id\r\n"
+			+ "--      INNER JOIN eg_ws_application application ON application.wsid = conn.id\r\n"
+			+ "      where bl.consumercode in\r\n"
+			+ "(select bill.consumercode   from \r\n"
+			+ "egcl_payment py   \r\n"
+			+ "INNER JOIN egcl_paymentdetail pyd ON pyd.paymentid = py.id  \r\n"
+			+ "INNER JOIN egcl_bill bill ON bill.id = pyd.billid   \r\n"
+			+ "where py.createdtime  >=    ? AND py.createdtime  <=  ?  \r\n"
+			+ "and bill.consumercode  like 'WS_AP/%' and py.totaldue != '0') group by   wc.connectiontype)" ;
+
+	private static final String WATER_SEARCH_QUERY_NIUA8 = "(select count(connectionType) as cccc , 'ONLINE' as usagecategory \r\n"
+			+ "from eg_sw_connection py \r\n"
+			+ "INNER JOIN  eg_sw_service sc ON sc.connection_id = py.id\r\n"
+			+ "WHERE py.createdtime  >= ? AND py.createdtime <= ? and connectionType is not null\r\n"
+			+ "group by	connectionType)" ;
+
+	private static final String WATER_SEARCH_QUERY_NIUA9 = "(select count(pt.usagecategory) as cccc , pt.usagecategory as usagecategory\r\n"
+			+ "from eg_sw_connection py\r\n"
+			+ " LEFT  OUTER JOIN EG_PT_PROPERTY pt ON pt.id  = py.property_id\r\n"
+			+ " WHERE py.createdtime  >= ? AND py.createdtime <= ? \r\n"
+			+ "group by	pt.usagecategory)" ;
+
+	private static final String WATER_SEARCH_QUERY_NIUA10 = "SELECT  distinct\r\n"
+			+ "wc.connectiontype as usagecategory,\r\n"
+			+ "count(wc.connectiontype) as cccc \r\n"
+			+ "FROM eg_ws_connection conn\r\n"
+			+ "INNER JOIN eg_ws_service wc ON wc.connection_id = conn.id\r\n"
+			+ "INNER JOIN eg_ws_application application ON application.wsid = conn.id\r\n"
+			+ "WHERE  conn.tenantid  LIKE 'ch.chandigarh'\r\n"
+			+ "     and application.createdtime  >= ? AND application.createdtime <= ? \r\n"
+			+ "     group by wc.connectiontype" ;
+
+	private static final String WATER_SEARCH_QUERY_NIUA11 = "SELECT  distinct\r\n"
+			+ "    count(pt.usagecategory) as cccc ,\r\n"
+			+ "    pt.usagecategory as usagecategory \r\n"
+			+ "    FROM eg_ws_connection py  \r\n"
+			+ "--      LEFT OUTER JOIN egcl_bill bl  on  conn.applicationno = bl.consumercode\r\n"
+			+ "--      LEFT OUTER JOIN egbs_demand_v1 edv on edv.consumercode =  bl.consumercode\r\n"
+			+ "--      LEFT OUTER JOIN egbs_demanddetail_v1 edvv on edvv.demandid = edv.id \r\n"
+			+ "      LEFT  OUTER JOIN EG_PT_PROPERTY pt ON pt.id  = py.property_id\r\n"
+			+ "WHERE py.createdtime  >= ? AND py.createdtime <= ? \r\n"
+			+ "group by	pt.usagecategory" ;
+
+	private static final String WATER_SEARCH_QUERY_NIUA12 = "(SELECT  distinct\r\n"
+			+ "wc.connectiontype as  usagecategory,\r\n"
+			+ "count(wc.connectiontype) as cccc\r\n"
+			+ "FROM eg_ws_connection conn\r\n"
+			+ "INNER JOIN eg_ws_service wc ON wc.connection_id = conn.id\r\n"
+			+ "INNER JOIN eg_ws_application application ON application.wsid = conn.id\r\n"
+			+ "WHERE  conn.tenantid  LIKE 'ch.chandigarh'\r\n"
+			+ "     and application.createdtime  >= ? AND application.createdtime <= ? \r\n"
+			+ "     group by wc.connectiontype)" ;
 	/**
 	 * 
 	 * @param criteria
@@ -617,28 +752,50 @@ public class WsQueryBuilder {
 			preparedStatement.add(searchTotalCollectionCriteria.getToDate());
 			}
 			else if ("usageType".equalsIgnoreCase(string) && groupByName.equalsIgnoreCase("todaysCollection")) {
-				query = new StringBuilder(WATER_SEARCH_QUERY_NIUA);
+				query = new StringBuilder(WATER_SEARCH_QUERY_NIUA5);
+				preparedStatement.add(searchTotalCollectionCriteria.getFromDate());
+				preparedStatement.add(searchTotalCollectionCriteria.getToDate());
+				preparedStatement.add(searchTotalCollectionCriteria.getFromDate());
+				preparedStatement.add(searchTotalCollectionCriteria.getToDate());
 			}
 			else if("taxHeads".equalsIgnoreCase(string) && groupByName.equalsIgnoreCase("todaysCollection")) {
-				query = new StringBuilder(WATER_SEARCH_QUERY_NIUA);
+				query = new StringBuilder(WATER_SEARCH_QUERY_NIUA6);
+				preparedStatement.add(searchTotalCollectionCriteria.getFromDate());
+				preparedStatement.add(searchTotalCollectionCriteria.getToDate());
+				preparedStatement.add(searchTotalCollectionCriteria.getFromDate());
+				preparedStatement.add(searchTotalCollectionCriteria.getToDate());
 				}
 				else if ("connectionType".equalsIgnoreCase(string) && groupByName.equalsIgnoreCase("todaysCollection")) {
-					query = new StringBuilder(WATER_SEARCH_QUERY_NIUA);
+					query = new StringBuilder(WATER_SEARCH_QUERY_NIUA7);
+					preparedStatement.add(searchTotalCollectionCriteria.getFromDate());
+					preparedStatement.add(searchTotalCollectionCriteria.getToDate());
+					preparedStatement.add(searchTotalCollectionCriteria.getFromDate());
+					preparedStatement.add(searchTotalCollectionCriteria.getToDate());
 				}
 				else if("channelType".equalsIgnoreCase(string) && groupByName.equalsIgnoreCase("sewerageConnections")) {
-					query = new StringBuilder(WATER_SEARCH_QUERY_NIUA);
+					query = new StringBuilder(WATER_SEARCH_QUERY_NIUA8);
+					preparedStatement.add(searchTotalCollectionCriteria.getFromDate());
+					preparedStatement.add(searchTotalCollectionCriteria.getToDate());
 					}
 					else if ("usageType".equalsIgnoreCase(string) && groupByName.equalsIgnoreCase("sewerageConnections")) {
-						query = new StringBuilder(WATER_SEARCH_QUERY_NIUA);
+						query = new StringBuilder(WATER_SEARCH_QUERY_NIUA9);
+						preparedStatement.add(searchTotalCollectionCriteria.getFromDate());
+						preparedStatement.add(searchTotalCollectionCriteria.getToDate());
 					}
 					else if("channelType".equalsIgnoreCase(string) && groupByName.equalsIgnoreCase("waterConnections")) {
-						query = new StringBuilder(WATER_SEARCH_QUERY_NIUA);
+						query = new StringBuilder(WATER_SEARCH_QUERY_NIUA10);
+						preparedStatement.add(searchTotalCollectionCriteria.getFromDate());
+						preparedStatement.add(searchTotalCollectionCriteria.getToDate());
 						}
 						else if ("usageType".equalsIgnoreCase(string) && groupByName.equalsIgnoreCase("waterConnections")) {
-							query = new StringBuilder(WATER_SEARCH_QUERY_NIUA);
+							query = new StringBuilder(WATER_SEARCH_QUERY_NIUA11);
+							preparedStatement.add(searchTotalCollectionCriteria.getFromDate());
+							preparedStatement.add(searchTotalCollectionCriteria.getToDate());
 						}
 		else if ("meterType".equalsIgnoreCase(string) && groupByName.equalsIgnoreCase("waterConnections")) {
-				query = new StringBuilder(WATER_SEARCH_QUERY_NIUA);
+				query = new StringBuilder(WATER_SEARCH_QUERY_NIUA12);
+				preparedStatement.add(searchTotalCollectionCriteria.getFromDate());
+				preparedStatement.add(searchTotalCollectionCriteria.getToDate());
 			}
 		
 			else if ("duration".equalsIgnoreCase(string)  && groupByName.equalsIgnoreCase("pendingConnections")) {
