@@ -1,0 +1,55 @@
+package org.egov.integration.web.controller;
+
+import javax.validation.Valid;
+
+import org.egov.integration.model.EawasRequestInfoWrapper;
+import org.egov.integration.model.RequestData;
+import org.egov.integration.model.ResponseInfoWrapper;
+import org.egov.integration.service.EawasService;
+//import org.egov.tl.web.models.RequestInfoWrapper;
+//import org.egov.tl.web.models.TradeLicenseSearchCriteria;
+import org.egov.integration.model.metrics;
+import org.egov.integration.model.metricsResponse;
+import org.json.JSONException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+@RequestMapping("/eawas/v1")
+public class TLniuaController {
+
+
+	private final EawasService service;
+	
+	@Autowired
+	public TLniuaController(EawasService service) {
+		this.service = service;
+	} 
+	
+	
+//	@PostMapping(value = "/_get")
+//	public ResponseEntity<ResponseInfoWrapper> get(@Valid @RequestBody  EawasRequestInfoWrapper request) throws JSONException {		 
+//		return service.get(request);		
+//	}
+	
+	 @RequestMapping(value = {"/_searchNIUA"}, method = RequestMethod.POST)
+	    public ResponseEntity<metricsResponse> searchNIUA(@Valid @RequestBody EawasRequestInfoWrapper requestInfoWrapper,
+	                                                       @Valid @ModelAttribute RequestData criteria,
+	                                                       @PathVariable(required = false) String servicename) {
+	       metrics licenses = service.searchNIUA(criteria, requestInfoWrapper.getRequestInfo(), servicename);
+
+	       metricsResponse vvv = metricsResponse.builder().metrics(licenses).build();
+
+	       return new ResponseEntity<>( vvv , HttpStatus.OK);
+	    
+
+	}
+}
