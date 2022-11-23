@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/eawas/v1")
+@RequestMapping("/TL/v1")
 public class TLniuaController {
 
 
