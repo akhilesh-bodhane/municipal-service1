@@ -41,8 +41,8 @@ public class FireServiceDataImportScheduler {
 	@Autowired
 	private RestTemplate restTemplate;
 
-//	@Scheduled(cron="0 1 1 * * *") // Every day at 01:01 AM
-	@Scheduled(cron = "0 0 0 * * *", zone = "Asia/Calcutta") // Every day at 01:01 AM
+	@Scheduled(fixedDelay = 1000) //(cron="1 0 0 * * *") // Every day at 01:01 AM
+//	@Scheduled(cron = "0 0 0 * * *", zone = "Asia/Calcutta") // Every day at 01:01 AM
 	public void importServiceData() {
 		System.out.println("Cro Started ");
 		StringBuilder uri = new StringBuilder(apiConfiguration.getFireHost());
