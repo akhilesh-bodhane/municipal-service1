@@ -32,28 +32,25 @@ import lombok.Builder;
 @NoArgsConstructor
 @Builder
 public class metrics   {
-        @JsonProperty("ResponseInfo")
-        private ResponseInfo responseInfo = null;
-
-        @JsonProperty("transactions")
-        @Valid
-        private String transactions = null;
-        
-        @JsonProperty("todaysApplications")
-        @Valid
-        private String todaysApplications = null;
-        
-        @JsonProperty("tlTax")
-        @Valid
-        private String tlTax = null;
-        
-        @JsonProperty("adhocPenalty")
-        @Valid
-        private String adhocPenalty = null;
-        
-        @JsonProperty("adhocRebate")
-        @Valid
-        private String adhocRebate = null;
+	 @JsonProperty("transactions")
+     @Valid
+     private int transactions ;
+     
+     @JsonProperty("todaysApplications")
+     @Valid
+     private int todaysApplications;
+     
+     @JsonProperty("tlTax")
+     @Valid
+     private int tlTax ;
+     
+     @JsonProperty("adhocPenalty")
+     @Valid
+     private int adhocPenalty ;
+     
+     @JsonProperty("adhocRebate")
+     @Valid
+     private int adhocRebate ;
         
         @JsonProperty("todaysLicenseIssuedWithinSLA")
         @Valid

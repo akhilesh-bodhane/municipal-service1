@@ -63,7 +63,7 @@ public class TLRowMapperNIUA  implements ResultSetExtractor<metrics> {
     	while (rs.next()) {
     		String ccc = rs.getString("ccc");
         	String name = rs.getString("name");
-        	String value = rs.getString("value");
+        	int value = rs.getInt("value");
         	buckets bckt = new buckets();
             if(ccc.equalsIgnoreCase("todaysTradeLicenses")) {
             	
