@@ -1,7 +1,5 @@
 package org.egov.integration.service;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
@@ -10,36 +8,18 @@ import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
-import org.apache.poi.ss.usermodel.ErrorConstants;
-import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ResponseInfo;
 import org.egov.integration.PreApplicationRunnerImpl;
 import org.egov.integration.common.CommonConstants;
 import org.egov.integration.common.ModuleNameConstants;
 import org.egov.integration.config.ApiConfiguration;
-import org.egov.integration.model.Bucket;
 import org.egov.integration.model.DisplayColumns;
 import org.egov.integration.model.ReportModel;
 import org.egov.integration.model.ReportRequest;
 import org.egov.integration.model.RequestData;
 import org.egov.integration.model.ResponseInfoWrapper;
-import org.egov.integration.model.ServiceReqSearchCriteria;
-import org.egov.integration.model.TodaysCollection;
-import org.egov.integration.model.UserCharges;
-import org.egov.integration.model.UserChargesReport;
-import org.egov.integration.repository.ReportRepository;
-import org.egov.pgr.model.Grievance;
-import org.egov.pgr.model.ReportServiceResponse;
-import org.egov.pgr.model.TodaysAssignedComplaint;
-import org.egov.pgr.model.TodaysOpenComplaint;
-import org.egov.pgr.model.TodaysReassignedComplaint;
-import org.egov.pgr.model.TodaysRejectedComplaint;
-import org.egov.pgr.model.TodaysReopenedComplaint;
-import org.egov.tracer.model.CustomException;
 import org.egov.tracer.model.ServiceCallException;
 import org.json.JSONException;
 import org.json.simple.JSONObject;
@@ -67,9 +47,6 @@ public class ReportService {
 	@Autowired
 	private ApiConfiguration config;
 
-	@Autowired
-	private ReportRepository reportRepository;
-
 	@SuppressWarnings("unchecked")
 	public ResponseEntity<ResponseInfoWrapper> getData(ReportRequest request) throws JSONException, ParseException {
 
@@ -80,8 +57,8 @@ public class ReportService {
 		Gson gson = new Gson();
 		long fromdate = 0;
 		long todate = 0;
-		List<ReportModel> responseArray = new ArrayList<>();
-		// JSONArray responseArray = new JSONArray();
+		List<ReportModel> responseArray=new ArrayList<>();
+	//	JSONArray responseArray = new JSONArray();
 		RequestData requests = new RequestData();
 		if (redata.getParameter1Format().equalsIgnoreCase("Long")) {
 			ZonedDateTime zdt = LocalDate.now(ZoneId.of("Etc/UTC")).atTime(LocalTime.MIDNIGHT)
@@ -111,10 +88,9 @@ public class ReportService {
 				for (JsonNode userInfo : result.get("nocApplicationDetail")) {
 					LocalDate date = Instant.ofEpochMilli(userInfo.get("createdTime").asLong())
 							.atZone(ZoneId.systemDefault()).toLocalDate();
-					ReportModel response = ReportModel.builder().applicantId(userInfo.get("applicationId"))
-							.applicantSector(userInfo.get("sector")).applicantSubmissionDate(date.toString())
-							.serviceName(ModuleNameConstants.PETNOC).build();
-					responseArray.add(response);
+					ReportModel response=ReportModel.builder().applicantId(userInfo.get("applicationId")).applicantSector(userInfo.get("sector"))
+							.applicantSubmissionDate(date.toString()).serviceName( ModuleNameConstants.PETNOC).build();
+				responseArray.add(response);
 				}
 			}
 			requests = new RequestData(request.getRequestInfo(), ModuleNameConstants.SELLMEATNOC, null, null,
@@ -125,25 +101,23 @@ public class ReportService {
 				for (JsonNode userInfo : resultSellMeat.get("nocApplicationDetail")) {
 					LocalDate date = Instant.ofEpochMilli(userInfo.get("createdTime").asLong())
 							.atZone(ZoneId.systemDefault()).toLocalDate();
-					ReportModel response = ReportModel.builder().applicantId(userInfo.get("applicationId"))
-							.applicantSector(userInfo.get("sector")).applicantSubmissionDate(date.toString())
-							.serviceName(ModuleNameConstants.SELLMEATNOC).build();
-
+					ReportModel response=ReportModel.builder().applicantId(userInfo.get("applicationId")).applicantSector(userInfo.get("sector"))
+							.applicantSubmissionDate(date.toString()).serviceName( ModuleNameConstants.SELLMEATNOC).build();
+					
 					responseArray.add(response);
 				}
 			}
 			requests = new RequestData(request.getRequestInfo(), ModuleNameConstants.ADVERTISEMENTNOC, null, null,
 					dataPayload, null);
 			log.info("req" + requests);
-			JsonNode resultAdv = fetchResult(url, requests);
+			JsonNode resultAdv= fetchResult(url, requests);
 			if (resultAdv != null) {
 				for (JsonNode userInfo : resultAdv.get("nocApplicationDetail")) {
 					LocalDate date = Instant.ofEpochMilli(userInfo.get("createdTime").asLong())
 							.atZone(ZoneId.systemDefault()).toLocalDate();
-					ReportModel response = ReportModel.builder().applicantId(userInfo.get("applicationId"))
-							.applicantSector(userInfo.get("sector")).applicantSubmissionDate(date.toString())
-							.serviceName(ModuleNameConstants.ADVERTISEMENTNOC).build();
-
+					ReportModel response=ReportModel.builder().applicantId(userInfo.get("applicationId")).applicantSector(userInfo.get("sector"))
+							.applicantSubmissionDate(date.toString()).serviceName( ModuleNameConstants.ADVERTISEMENTNOC).build();
+					
 					responseArray.add(response);
 				}
 			}
@@ -160,11 +134,9 @@ public class ReportService {
 					String startDateString = userInfo.get("createdtime").toString().replaceAll("\"", "");
 					SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 					SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd");
-					ReportModel response = ReportModel.builder().applicantId(userInfo.get("service_request_id"))
-							.applicantSector(userInfo.get("locality"))
-							.applicantSubmissionDate(sdf2.format(sdf.parse(startDateString)))
-							.serviceName(ModuleNameConstants.HORTICULTURE).build();
-
+					ReportModel response=ReportModel.builder().applicantId(userInfo.get("service_request_id")).applicantSector(userInfo.get("locality"))
+							.applicantSubmissionDate(sdf2.format(sdf.parse(startDateString))).serviceName( ModuleNameConstants.HORTICULTURE).build();
+				
 					responseArray.add(response);
 				}
 			}
@@ -188,9 +160,8 @@ public class ReportService {
 				for (JsonNode userInfo : result.get("ResponseBody")) {
 					LocalDate date = Instant.ofEpochMilli(userInfo.get("createdTime").longValue())
 							.atZone(ZoneId.systemDefault()).toLocalDate();
-					ReportModel response = ReportModel.builder().applicantId(userInfo.get("challanId"))
-							.applicantSector(userInfo.get("sector")).applicantSubmissionDate(date.toString())
-							.serviceName(ModuleNameConstants.ECHALLAN).build();
+					ReportModel response=ReportModel.builder().applicantId(userInfo.get("challanId")).applicantSector(userInfo.get("sector"))
+							.applicantSubmissionDate(date.toString()).serviceName( ModuleNameConstants.ECHALLAN).build();
 					responseArray.add(response);
 				}
 			}
@@ -219,156 +190,5 @@ public class ReportService {
 
 		return response;
 
-	}
-
-	public UserChargesReport getUserChangesReport(RequestInfo requestInfo,
-			ServiceReqSearchCriteria serviceReqSearchCriteria) {
-		// TODO Auto-generated method stub
-
-		List<UserCharges> fetchUserChangesDetails = reportRepository.fetchUserChangesDetails(serviceReqSearchCriteria);
-		UserChargesReport userChargesReport = new UserChargesReport();
-
-		if (fetchUserChangesDetails != null && !fetchUserChangesDetails.isEmpty()) {
-
-			Integer allRecords = fetchUserChangesDetails.stream().mapToInt(e -> e.allRecords).sum();
-			Integer numberOfCategories = fetchUserChangesDetails.stream().mapToInt(e -> e.numberOfCategories).sum();
-
-			List<Bucket> todaysComplaintByStatusBucket = fetchUserChangesDetails.stream().collect(
-					Collectors.groupingBy(Grievance::getStatus, Collectors.summingInt(UserCharges::getAllcomplaints)))
-					.entrySet().stream().map(e -> {
-						return new Bucket(e.getKey(), e.getValue());
-					}).collect(Collectors.toList());
-
-			TodaysCollection todaysComplaintByStatus = TodaysCollection.builder().groupBy("Status")
-					.buckets(todaysComplaintByStatusBucket).build();
-
-			List<Bucket> todaysComplaintByChannelBucket = fetchGrievenceDetails.stream().collect(
-					Collectors.groupingBy(Grievance::getSource, Collectors.summingInt(Grievance::getAllcomplaints)))
-					.entrySet().stream().map(e -> {
-						return new Bucket(e.getKey(), e.getValue());
-					}).collect(Collectors.toList());
-
-			TodaysCollection todaysComplaintByChannel = TodaysCollection.builder().groupBy("Channel")
-					.buckets(todaysComplaintByChannelBucket).build();
-
-			List<Bucket> todaysComplaintByDepartmentBucket = fetchGrievenceDetails.stream().collect(Collectors
-					.groupingBy(Grievance::getServicecode, Collectors.summingInt(Grievance::getAllcomplaints)))
-					.entrySet().stream().map(e -> {
-						return new Bucket(e.getKey(), e.getValue());
-					}).collect(Collectors.toList());
-
-			TodaysCollection todaysComplaintByDepartment = TodaysCollection.builder().groupBy("Department")
-					.buckets(todaysComplaintByDepartmentBucket).build();
-
-			List<Bucket> todaysComplaintByCategoryBucket = fetchGrievenceDetails.stream().collect(
-					Collectors.groupingBy(Grievance::getCategory, Collectors.summingInt(Grievance::getAllcomplaints)))
-					.entrySet().stream().map(e -> {
-						return new Bucket(e.getKey(), e.getValue());
-					}).collect(Collectors.toList());
-
-			TodaysCollection todaysComplaintByCategory = TodaysCollection.builder().groupBy("Category")
-					.buckets(todaysComplaintByCategoryBucket).build();
-
-			List<TodaysCollection> todaysComplaint = Arrays.asList(todaysComplaintByStatus, todaysComplaintByChannel,
-					todaysComplaintByDepartment, todaysComplaintByCategory);
-			grievenceReport.setTodaysComplaints(todaysComplaint);
-
-			// Re-Opened
-			List<Bucket> todaysComplaintByDepartmentReopenBucket = fetchGrievenceDetails.stream().collect(
-					Collectors.groupingBy(Grievance::getServicecode, Collectors.summingInt(Grievance::getReopen)))
-					.entrySet().stream().map(e -> {
-						return new Bucket(e.getKey(), e.getValue());
-					}).collect(Collectors.toList());
-
-			TodaysReopenedComplaint todaysReopenedComplaint = TodaysReopenedComplaint.builder().groupBy("Department")
-					.buckets(todaysComplaintByDepartmentReopenBucket).build();
-
-			grievenceReport.setTodaysReopenedComplaints(Arrays.asList(todaysReopenedComplaint));
-
-			// Opened
-			List<Bucket> todaysComplaintByDepartmentOpenBucket = fetchGrievenceDetails.stream()
-					.collect(
-							Collectors.groupingBy(Grievance::getServicecode, Collectors.summingInt(Grievance::getOpen)))
-					.entrySet().stream().map(e -> {
-						return new Bucket(e.getKey(), e.getValue());
-					}).collect(Collectors.toList());
-
-			TodaysOpenComplaint todaysOpenComplaint = TodaysOpenComplaint.builder().groupBy("Department")
-					.buckets(todaysComplaintByDepartmentOpenBucket).build();
-
-			grievenceReport.setTodaysOpenComplaints(Arrays.asList(todaysOpenComplaint));
-
-			// Assigned
-			List<Bucket> todaysComplaintByDepartmentAssignedBucket = fetchGrievenceDetails.stream().collect(
-					Collectors.groupingBy(Grievance::getServicecode, Collectors.summingInt(Grievance::getAssigned)))
-					.entrySet().stream().map(e -> {
-						return new Bucket(e.getKey(), e.getValue());
-					}).collect(Collectors.toList());
-
-			TodaysAssignedComplaint todaysAssignedComplaint = TodaysAssignedComplaint.builder().groupBy("Department")
-					.buckets(todaysComplaintByDepartmentAssignedBucket).build();
-
-			grievenceReport.setTodaysAssignedComplaints(Arrays.asList(todaysAssignedComplaint));
-
-			// Rejected
-			List<Bucket> todaysComplaintByDepartmentRejectedBucket = fetchGrievenceDetails.stream().collect(
-					Collectors.groupingBy(Grievance::getServicecode, Collectors.summingInt(Grievance::getRejected)))
-					.entrySet().stream().map(e -> {
-						return new Bucket(e.getKey(), e.getValue());
-					}).collect(Collectors.toList());
-
-			TodaysRejectedComplaint todaysRejectedComplaint = TodaysRejectedComplaint.builder().groupBy("Department")
-					.buckets(todaysComplaintByDepartmentRejectedBucket).build();
-
-			grievenceReport.setTodaysRejectedComplaints(Arrays.asList(todaysRejectedComplaint));
-
-			// Reassigned
-			List<Bucket> todaysComplaintByDepartmentReassignedBucket = fetchGrievenceDetails.stream().collect(Collectors
-					.groupingBy(Grievance::getServicecode, Collectors.summingInt(Grievance::getReassignrequested)))
-					.entrySet().stream().map(e -> {
-						return new Bucket(e.getKey(), e.getValue());
-					}).collect(Collectors.toList());
-
-			TodaysReassignedComplaint todaysReassignedComplaint = TodaysReassignedComplaint.builder()
-					.groupBy("Department").buckets(todaysComplaintByDepartmentReassignedBucket).build();
-
-			grievenceReport.setTodaysReassignedComplaints(Arrays.asList(todaysReassignedComplaint));
-
-			Integer closedComplaints1 = fetchGrievenceDetails.stream().mapToInt(Grievance::getClosedcomplaints).sum();
-			Integer totalComplaints = fetchGrievenceDetails.stream().mapToInt(Grievance::getTotalComplaints).sum();
-
-			grievenceReport.setCompletionRate(new BigDecimal(0.0));
-			if (totalComplaints > 0 && closedComplaints1 > 0) {
-				BigDecimal res1 = new BigDecimal(closedComplaints1);
-				BigDecimal res2 = new BigDecimal(totalComplaints);
-				grievenceReport.setCompletionRate(res1.divide(res2, 2, RoundingMode.HALF_EVEN));
-			}
-
-			ObjectMapper mapper = new ObjectMapper();
-			Object response = fetchGrievancesSLAAchievement(requestInfo, serviceReqSearchCriteria);
-
-			try {
-				ReportServiceResponse resultCast = mapper.convertValue(response, ReportServiceResponse.class);
-
-				String resolvedComplaints1 = "0";
-				if (resultCast.getReportResponses() != null && !resultCast.getReportResponses().isEmpty()) {
-					if (resultCast.getReportResponses().get(0).getReportData() != null
-							&& !resultCast.getReportResponses().get(0).getReportData().isEmpty()) {
-						resolvedComplaints1 = resultCast.getReportResponses().get(0).getReportData().get(0)
-								.get(1) != null
-										? resultCast.getReportResponses().get(0).getReportData().get(0).get(1)
-												.toString()
-										: "0";
-					}
-				}
-				grievenceReport.setSlaAchievement(resolvedComplaints1);
-
-			} catch (Exception e) {
-				throw new CustomException(ErrorConstants.ERROR_CODE_GRIVENCE, e.getMessage());
-			}
-			return userChargesReport;
-		}
-
-		throw new CustomException(ErrorConstants.ERROR_CODE_GRIVENCE, ErrorConstants.ERROR_MESSAGE_GRIVENCE);
 	}
 }
