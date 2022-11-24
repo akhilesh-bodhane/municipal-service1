@@ -32,8 +32,6 @@ import lombok.Builder;
 @NoArgsConstructor
 @Builder
 public class metrics   {
-        @JsonProperty("ResponseInfo")
-        private ResponseInfo responseInfo = null;
 
         @JsonProperty("transactions")
         @Valid
