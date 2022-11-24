@@ -604,6 +604,16 @@ public class ReportService {
 		ReportRequest reportRequest = pGRUtils.prepareSearchGrievancesSLAAchievement(uri,
 				serviceReqSearchCriteria.getTenantId(), serviceReqSearchCriteria.getStartDate(),
 				serviceReqSearchCriteria.getEndDate(), requestInfo);
+		ObjectMapper mapper = new ObjectMapper();
+
+		try {
+			System.out.println("Grievance Request URL : " + uri);
+			System.out.println("Grievance Request Body : " + mapper.writeValueAsString(reportRequest));
+		} catch (JsonProcessingException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+
 		Object response = null;
 		try {
 			response = serviceRequestRepository.fetchResult(uri, reportRequest);
