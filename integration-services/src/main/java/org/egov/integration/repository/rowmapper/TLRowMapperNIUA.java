@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 
-import org.egov.integration.model.todaysCollection;
 import org.egov.integration.model.applicationsMovedToday;
 import org.egov.integration.model.buckets;
 import org.egov.integration.model.metrics;
@@ -53,11 +52,8 @@ public class TLRowMapperNIUA  implements ResultSetExtractor<metrics> {
     	List<applicationsMovedToday> listAMT = new ArrayList<applicationsMovedToday>();
     	
     	todaysTradeLicenses ttl = new todaysTradeLicenses();
-    	ttl.setGroupBy("status");
     	todaysCollection TC = new todaysCollection();
-    	TC.setGroupBy("tradeType");
     	applicationsMovedToday amt = new applicationsMovedToday();
-    	amt.setGroupBy("status");
 //    	buckets bckt = new buckets();
     	
     	while (rs.next()) {
@@ -66,28 +62,27 @@ public class TLRowMapperNIUA  implements ResultSetExtractor<metrics> {
         	String value = rs.getString("value");
         	buckets bckt = new buckets();
             if(ccc.equalsIgnoreCase("todaysTradeLicenses")) {
-            	
+            	ttl.setGroupBy(ccc);
             	bckt.setName(name);
             	bckt.setValue(value);
             	listBCKTttl.add(bckt);
-            	
-            	
+            	ttl.setBuckets(listBCKTttl);
             }
             
             else if(ccc.equalsIgnoreCase("todaysCollection")) {
-            	
+            	TC.setGroupBy(ccc);
             	bckt.setName(name);
             	bckt.setValue(value);
             	listBCKTtc.add(bckt);
-            	
+            	TC.setBuckets(listBCKTtc);
             }
             
             else  if(ccc.equalsIgnoreCase("applicationsMovedToday")) {
-            	
+            	amt.setGroupBy(ccc);
             	bckt.setName(name);
             	bckt.setValue(value);
             	listBCKTamt.add(bckt);
-            	
+            	amt.setBuckets(listBCKTamt);
             }
             
             else  if(ccc.equalsIgnoreCase("transactions")) {
@@ -108,34 +103,23 @@ public class TLRowMapperNIUA  implements ResultSetExtractor<metrics> {
 			}
             
             
-            if(ccc.equalsIgnoreCase("todaysTradeLicenses")) {
-            	ttl.setBuckets(listBCKTttl);
-            	
-            	
-            }
+            listTTL.add(ttl);
+            listTC.add(TC);
+            listAMT.add(amt);
             
-            else if(ccc.equalsIgnoreCase("todaysCollection")) {
-            	TC.setBuckets(listBCKTtc);
-            	
-            	
-            }
             
-            else  if(ccc.equalsIgnoreCase("applicationsMovedToday")) {
-            	amt.setBuckets(listBCKTamt);
-            	
-            }
-                
+            mtrcs.setTodaysTradeLicenses(listTTL);
+            mtrcs.setTodaysCollection(listTC);
+            mtrcs.setApplicationsMovedToday(listAMT);
     	}
-    	listTTL.add(ttl);
-    	mtrcs.setTodaysTradeLicenses(listTTL);
-    	listTC.add(TC);
-    	 mtrcs.setTodaysCollection(listTC);
-    	 listAMT.add(amt);
-    	 mtrcs.setApplicationsMovedToday(listAMT);
+    	
+    	Gson gson = new Gson();
+        String json = gson.toJson(mtrcs);
     	
     	return mtrcs ;
 
     }
+
 
 
 
