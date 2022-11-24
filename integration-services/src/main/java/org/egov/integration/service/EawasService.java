@@ -1,10 +1,20 @@
 package org.egov.integration.service;
 
+import java.util.LinkedList;
+import java.util.List;
+
+import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ResponseInfo;
 import org.egov.integration.common.CommonConstants;
+import org.egov.integration.model.RequestData;
 import org.egov.integration.config.EawasConfiguration;
 import org.egov.integration.model.EawasRequestInfoWrapper;
+import org.egov.integration.model.RequestData;
 import org.egov.integration.model.ResponseInfoWrapper;
+import org.egov.integration.repository.TLniuaRepository;
+//import org.egov.tl.web.models.TradeLicense;
+//import org.egov.tl.web.models.TradeLicenseSearchCriteria;
+import org.egov.integration.model.metrics;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.XML;
@@ -29,6 +39,10 @@ public class EawasService {
 
 	@Autowired
 	private RequestFactory requestFactory;
+	
+	
+	@Autowired
+	private TLniuaRepository tLniuaRepository ;
 
 	@Autowired
 	private EawasConfiguration config;
@@ -77,5 +91,19 @@ public class EawasService {
 				.responseInfo(ResponseInfo.builder().status(CommonConstants.SUCCESS).build()).responseBody(organisation)
 				.build(), HttpStatus.OK);
 	}
+	
+	
+	 public metrics searchNIUA(RequestData criteria, RequestInfo requestInfo, String serviceFromPath){
+//	        List<TradeLicense> licenses;
+	              metrics licensesForNIUA = getLicensesForNIUA(criteria,requestInfo);
+
+	       return licensesForNIUA;
+	    }
+	    
+	    public metrics getLicensesForNIUA(RequestData criteria, RequestInfo requestInfo){
+//	        enrichmentService.enrichTLCriteriaWithOwnerids(criteria,userDetailResponse);
+	         metrics licensesNIUA = tLniuaRepository.getLicensesNIUA(criteria);
+return licensesNIUA ;
+	    }
 
 }

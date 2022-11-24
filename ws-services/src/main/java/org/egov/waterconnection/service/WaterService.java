@@ -10,6 +10,7 @@ import org.egov.waterconnection.model.WaterConnectionCount;
 import org.egov.waterconnection.model.WaterConnectionRequest;
 import org.egov.waterconnection.model.WaterNotificationRequest;
 import org.egov.waterconnection.model.WaterTotalCollections;
+import org.egov.waterconnection.model.metrics;
 
 public interface WaterService {
 
@@ -30,5 +31,8 @@ public interface WaterService {
 	public void sendSms(WaterNotificationRequest waterNotificationRequest);
 	
 	public List<WaterTotalCollections> searchTotalCollectionCount(SearchTotalCollectionCriteria SearchTotalCollectionCriteria, RequestInfo requestInfo);
+
+	public metrics searchTotalCollectionCountNIUA(
+			SearchTotalCollectionCriteria searchTotalCollectionCriteria, RequestInfo requestInfo);
 
 }
