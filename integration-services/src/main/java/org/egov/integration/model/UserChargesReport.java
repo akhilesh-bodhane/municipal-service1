@@ -1,8 +1,5 @@
 package org.egov.integration.model;
 
-import java.math.BigDecimal;
-import java.util.List;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
@@ -32,28 +29,7 @@ public class UserChargesReport {
 	@JsonProperty("region")
 	public String region;
 
-	@JsonProperty("numberOfCategories")
-	public Integer numberOfCategories;
-
-	@JsonProperty("slaAchievement")
-	public String slaAchievement;
-
-	@JsonProperty("completionRate")
-	public BigDecimal completionRate;
-
-	@JsonProperty("uniqueCitizens")
-	public Integer uniqueCitizens;
-
-	@JsonProperty("resolvedComplaints")
-	public Integer resolvedComplaints;
-
-	@JsonProperty("todaysCollection")
-	public List<TodaysCollections> todaysCollection;
-
-	@JsonProperty("numberOfReceipts")
-	public List<NumberOfReceipts> numberOfReceipts;
-
-	@JsonProperty("numberOfChallans")
-	public List<NumberOfChallans> numberOfChallans;
+	@JsonProperty("metrics")
+	public Metric metrics;
 
 }

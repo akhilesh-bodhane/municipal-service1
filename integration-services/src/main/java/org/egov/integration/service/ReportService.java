@@ -21,6 +21,7 @@ import org.egov.integration.common.ModuleNameConstants;
 import org.egov.integration.config.ApiConfiguration;
 import org.egov.integration.model.Bucket;
 import org.egov.integration.model.DisplayColumns;
+import org.egov.integration.model.Metric;
 import org.egov.integration.model.NumberOfChallans;
 import org.egov.integration.model.NumberOfReceipts;
 import org.egov.integration.model.ReportModel;
@@ -222,11 +223,12 @@ public class ReportService {
 		UserChargesReport userChargesReport = new UserChargesReport();
 
 		if (fetchUserChangesDetails != null && !fetchUserChangesDetails.isEmpty()) {
+			Metric metrics = Metric.builder().build();
 
 			Set<String> categories = fetchUserChangesDetails.stream().map(e -> e.getCategory())
 					.collect(Collectors.toSet());
 
-			userChargesReport.setNumberOfCategories(categories.size());
+			metrics.setNumberOfCategories(categories.size());
 
 			List<Bucket> todaysCollectionPaymentModeBucket = fetchUserChangesDetails.stream().collect(Collectors
 					.groupingBy(UserCharges::getPaymentMode, Collectors.summingInt(UserCharges::getTodaysCollections)))
@@ -256,7 +258,7 @@ public class ReportService {
 			TodaysCollections todaysComplaintByCategory = TodaysCollections.builder().groupBy("Category")
 					.buckets(todaysComplaintByCategoryBucket).build();
 
-			userChargesReport.setTodaysCollection(
+			metrics.setTodaysCollection(
 					Arrays.asList(todaysCollectionPaymentMode, todaysComplaintByStatus, todaysComplaintByCategory));
 
 			List<Bucket> numberOfReceiptsPaymentModeBucket = fetchUserChangesDetails.stream().collect(Collectors
@@ -277,7 +279,7 @@ public class ReportService {
 			NumberOfReceipts numberOfReceiptsByStatus = NumberOfReceipts.builder().groupBy("Status")
 					.buckets(numberOfReceiptsByStatusBucket).build();
 
-			userChargesReport.setNumberOfReceipts(Arrays.asList(numberOfReceiptsPaymentMode, numberOfReceiptsByStatus));
+			metrics.setNumberOfReceipts(Arrays.asList(numberOfReceiptsPaymentMode, numberOfReceiptsByStatus));
 
 			List<Bucket> numberOfChallansByStatusBucket = fetchUserChangesDetails.stream().collect(Collectors
 					.groupingBy(UserCharges::getPaymentStatus, Collectors.summingInt(UserCharges::getAllRecords)))
@@ -288,8 +290,9 @@ public class ReportService {
 			NumberOfChallans numberOfChallansByStatus = NumberOfChallans.builder().groupBy("Status")
 					.buckets(numberOfChallansByStatusBucket).build();
 
-			userChargesReport.setNumberOfChallans(Arrays.asList(numberOfChallansByStatus));
+			metrics.setNumberOfChallans(Arrays.asList(numberOfChallansByStatus));
 
+			userChargesReport.setMetrics(metrics);
 			return userChargesReport;
 		}
 		return userChargesReport;
