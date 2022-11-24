@@ -1,7 +1,5 @@
 package org.egov.integration.service;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
@@ -12,9 +10,9 @@ import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
-import org.apache.poi.ss.usermodel.ErrorConstants;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ResponseInfo;
 import org.egov.integration.PreApplicationRunnerImpl;
@@ -23,23 +21,18 @@ import org.egov.integration.common.ModuleNameConstants;
 import org.egov.integration.config.ApiConfiguration;
 import org.egov.integration.model.Bucket;
 import org.egov.integration.model.DisplayColumns;
+import org.egov.integration.model.NumberOfChallans;
+import org.egov.integration.model.NumberOfReceipts;
 import org.egov.integration.model.ReportModel;
 import org.egov.integration.model.ReportRequest;
 import org.egov.integration.model.RequestData;
 import org.egov.integration.model.ResponseInfoWrapper;
 import org.egov.integration.model.ServiceReqSearchCriteria;
-import org.egov.integration.model.TodaysCollection;
+import org.egov.integration.model.TodaysCollections;
+import org.egov.integration.model.todaysCollection;
 import org.egov.integration.model.UserCharges;
 import org.egov.integration.model.UserChargesReport;
 import org.egov.integration.repository.ReportRepository;
-import org.egov.pgr.model.Grievance;
-import org.egov.pgr.model.ReportServiceResponse;
-import org.egov.pgr.model.TodaysAssignedComplaint;
-import org.egov.pgr.model.TodaysOpenComplaint;
-import org.egov.pgr.model.TodaysReassignedComplaint;
-import org.egov.pgr.model.TodaysRejectedComplaint;
-import org.egov.pgr.model.TodaysReopenedComplaint;
-import org.egov.tracer.model.CustomException;
 import org.egov.tracer.model.ServiceCallException;
 import org.json.JSONException;
 import org.json.simple.JSONObject;
@@ -230,145 +223,75 @@ public class ReportService {
 
 		if (fetchUserChangesDetails != null && !fetchUserChangesDetails.isEmpty()) {
 
-			Integer allRecords = fetchUserChangesDetails.stream().mapToInt(e -> e.allRecords).sum();
-			Integer numberOfCategories = fetchUserChangesDetails.stream().mapToInt(e -> e.numberOfCategories).sum();
+			Set<String> categories = fetchUserChangesDetails.stream().map(e -> e.getCategory())
+					.collect(Collectors.toSet());
 
-			List<Bucket> todaysComplaintByStatusBucket = fetchUserChangesDetails.stream().collect(
-					Collectors.groupingBy(Grievance::getStatus, Collectors.summingInt(UserCharges::getAllcomplaints)))
+			userChargesReport.setNumberOfCategories(categories.size());
+
+			List<Bucket> todaysCollectionPaymentModeBucket = fetchUserChangesDetails.stream().collect(Collectors
+					.groupingBy(UserCharges::getPaymentMode, Collectors.summingInt(UserCharges::getTodaysCollections)))
 					.entrySet().stream().map(e -> {
 						return new Bucket(e.getKey(), e.getValue());
 					}).collect(Collectors.toList());
 
-			TodaysCollection todaysComplaintByStatus = TodaysCollection.builder().groupBy("Status")
+			TodaysCollections todaysCollectionPaymentMode = TodaysCollections.builder().groupBy("PaymentMode")
+					.buckets(todaysCollectionPaymentModeBucket).build();
+
+			List<Bucket> todaysComplaintByStatusBucket = fetchUserChangesDetails.stream()
+					.collect(Collectors.groupingBy(UserCharges::getPaymentStatus,
+							Collectors.summingInt(UserCharges::getTodaysCollections)))
+					.entrySet().stream().map(e -> {
+						return new Bucket(e.getKey(), e.getValue());
+					}).collect(Collectors.toList());
+
+			TodaysCollections todaysComplaintByStatus = TodaysCollections.builder().groupBy("Status")
 					.buckets(todaysComplaintByStatusBucket).build();
 
-			List<Bucket> todaysComplaintByChannelBucket = fetchGrievenceDetails.stream().collect(
-					Collectors.groupingBy(Grievance::getSource, Collectors.summingInt(Grievance::getAllcomplaints)))
+			List<Bucket> todaysComplaintByCategoryBucket = fetchUserChangesDetails.stream().collect(Collectors
+					.groupingBy(UserCharges::getCategory, Collectors.summingInt(UserCharges::getTodaysCollections)))
 					.entrySet().stream().map(e -> {
 						return new Bucket(e.getKey(), e.getValue());
 					}).collect(Collectors.toList());
 
-			TodaysCollection todaysComplaintByChannel = TodaysCollection.builder().groupBy("Channel")
-					.buckets(todaysComplaintByChannelBucket).build();
-
-			List<Bucket> todaysComplaintByDepartmentBucket = fetchGrievenceDetails.stream().collect(Collectors
-					.groupingBy(Grievance::getServicecode, Collectors.summingInt(Grievance::getAllcomplaints)))
-					.entrySet().stream().map(e -> {
-						return new Bucket(e.getKey(), e.getValue());
-					}).collect(Collectors.toList());
-
-			TodaysCollection todaysComplaintByDepartment = TodaysCollection.builder().groupBy("Department")
-					.buckets(todaysComplaintByDepartmentBucket).build();
-
-			List<Bucket> todaysComplaintByCategoryBucket = fetchGrievenceDetails.stream().collect(
-					Collectors.groupingBy(Grievance::getCategory, Collectors.summingInt(Grievance::getAllcomplaints)))
-					.entrySet().stream().map(e -> {
-						return new Bucket(e.getKey(), e.getValue());
-					}).collect(Collectors.toList());
-
-			TodaysCollection todaysComplaintByCategory = TodaysCollection.builder().groupBy("Category")
+			TodaysCollections todaysComplaintByCategory = TodaysCollections.builder().groupBy("Category")
 					.buckets(todaysComplaintByCategoryBucket).build();
 
-			List<TodaysCollection> todaysComplaint = Arrays.asList(todaysComplaintByStatus, todaysComplaintByChannel,
-					todaysComplaintByDepartment, todaysComplaintByCategory);
-			grievenceReport.setTodaysComplaints(todaysComplaint);
+			userChargesReport.setTodaysCollection(
+					Arrays.asList(todaysCollectionPaymentMode, todaysComplaintByStatus, todaysComplaintByCategory));
 
-			// Re-Opened
-			List<Bucket> todaysComplaintByDepartmentReopenBucket = fetchGrievenceDetails.stream().collect(
-					Collectors.groupingBy(Grievance::getServicecode, Collectors.summingInt(Grievance::getReopen)))
+			List<Bucket> numberOfReceiptsPaymentModeBucket = fetchUserChangesDetails.stream().collect(Collectors
+					.groupingBy(UserCharges::getPaymentMode, Collectors.summingInt(UserCharges::getAllRecords)))
 					.entrySet().stream().map(e -> {
 						return new Bucket(e.getKey(), e.getValue());
 					}).collect(Collectors.toList());
 
-			TodaysReopenedComplaint todaysReopenedComplaint = TodaysReopenedComplaint.builder().groupBy("Department")
-					.buckets(todaysComplaintByDepartmentReopenBucket).build();
+			NumberOfReceipts numberOfReceiptsPaymentMode = NumberOfReceipts.builder().groupBy("PaymentMode")
+					.buckets(numberOfReceiptsPaymentModeBucket).build();
 
-			grievenceReport.setTodaysReopenedComplaints(Arrays.asList(todaysReopenedComplaint));
-
-			// Opened
-			List<Bucket> todaysComplaintByDepartmentOpenBucket = fetchGrievenceDetails.stream()
-					.collect(
-							Collectors.groupingBy(Grievance::getServicecode, Collectors.summingInt(Grievance::getOpen)))
+			List<Bucket> numberOfReceiptsByStatusBucket = fetchUserChangesDetails.stream().collect(Collectors
+					.groupingBy(UserCharges::getPaymentStatus, Collectors.summingInt(UserCharges::getAllRecords)))
 					.entrySet().stream().map(e -> {
 						return new Bucket(e.getKey(), e.getValue());
 					}).collect(Collectors.toList());
 
-			TodaysOpenComplaint todaysOpenComplaint = TodaysOpenComplaint.builder().groupBy("Department")
-					.buckets(todaysComplaintByDepartmentOpenBucket).build();
+			NumberOfReceipts numberOfReceiptsByStatus = NumberOfReceipts.builder().groupBy("Status")
+					.buckets(numberOfReceiptsByStatusBucket).build();
 
-			grievenceReport.setTodaysOpenComplaints(Arrays.asList(todaysOpenComplaint));
+			userChargesReport.setNumberOfReceipts(Arrays.asList(numberOfReceiptsPaymentMode, numberOfReceiptsByStatus));
 
-			// Assigned
-			List<Bucket> todaysComplaintByDepartmentAssignedBucket = fetchGrievenceDetails.stream().collect(
-					Collectors.groupingBy(Grievance::getServicecode, Collectors.summingInt(Grievance::getAssigned)))
+			List<Bucket> numberOfChallansByStatusBucket = fetchUserChangesDetails.stream().collect(Collectors
+					.groupingBy(UserCharges::getPaymentStatus, Collectors.summingInt(UserCharges::getAllRecords)))
 					.entrySet().stream().map(e -> {
 						return new Bucket(e.getKey(), e.getValue());
 					}).collect(Collectors.toList());
 
-			TodaysAssignedComplaint todaysAssignedComplaint = TodaysAssignedComplaint.builder().groupBy("Department")
-					.buckets(todaysComplaintByDepartmentAssignedBucket).build();
+			NumberOfChallans numberOfChallansByStatus = NumberOfChallans.builder().groupBy("Status")
+					.buckets(numberOfChallansByStatusBucket).build();
 
-			grievenceReport.setTodaysAssignedComplaints(Arrays.asList(todaysAssignedComplaint));
+			userChargesReport.setNumberOfChallans(Arrays.asList(numberOfChallansByStatus));
 
-			// Rejected
-			List<Bucket> todaysComplaintByDepartmentRejectedBucket = fetchGrievenceDetails.stream().collect(
-					Collectors.groupingBy(Grievance::getServicecode, Collectors.summingInt(Grievance::getRejected)))
-					.entrySet().stream().map(e -> {
-						return new Bucket(e.getKey(), e.getValue());
-					}).collect(Collectors.toList());
-
-			TodaysRejectedComplaint todaysRejectedComplaint = TodaysRejectedComplaint.builder().groupBy("Department")
-					.buckets(todaysComplaintByDepartmentRejectedBucket).build();
-
-			grievenceReport.setTodaysRejectedComplaints(Arrays.asList(todaysRejectedComplaint));
-
-			// Reassigned
-			List<Bucket> todaysComplaintByDepartmentReassignedBucket = fetchGrievenceDetails.stream().collect(Collectors
-					.groupingBy(Grievance::getServicecode, Collectors.summingInt(Grievance::getReassignrequested)))
-					.entrySet().stream().map(e -> {
-						return new Bucket(e.getKey(), e.getValue());
-					}).collect(Collectors.toList());
-
-			TodaysReassignedComplaint todaysReassignedComplaint = TodaysReassignedComplaint.builder()
-					.groupBy("Department").buckets(todaysComplaintByDepartmentReassignedBucket).build();
-
-			grievenceReport.setTodaysReassignedComplaints(Arrays.asList(todaysReassignedComplaint));
-
-			Integer closedComplaints1 = fetchGrievenceDetails.stream().mapToInt(Grievance::getClosedcomplaints).sum();
-			Integer totalComplaints = fetchGrievenceDetails.stream().mapToInt(Grievance::getTotalComplaints).sum();
-
-			grievenceReport.setCompletionRate(new BigDecimal(0.0));
-			if (totalComplaints > 0 && closedComplaints1 > 0) {
-				BigDecimal res1 = new BigDecimal(closedComplaints1);
-				BigDecimal res2 = new BigDecimal(totalComplaints);
-				grievenceReport.setCompletionRate(res1.divide(res2, 2, RoundingMode.HALF_EVEN));
-			}
-
-			ObjectMapper mapper = new ObjectMapper();
-			Object response = fetchGrievancesSLAAchievement(requestInfo, serviceReqSearchCriteria);
-
-			try {
-				ReportServiceResponse resultCast = mapper.convertValue(response, ReportServiceResponse.class);
-
-				String resolvedComplaints1 = "0";
-				if (resultCast.getReportResponses() != null && !resultCast.getReportResponses().isEmpty()) {
-					if (resultCast.getReportResponses().get(0).getReportData() != null
-							&& !resultCast.getReportResponses().get(0).getReportData().isEmpty()) {
-						resolvedComplaints1 = resultCast.getReportResponses().get(0).getReportData().get(0)
-								.get(1) != null
-										? resultCast.getReportResponses().get(0).getReportData().get(0).get(1)
-												.toString()
-										: "0";
-					}
-				}
-				grievenceReport.setSlaAchievement(resolvedComplaints1);
-
-			} catch (Exception e) {
-				throw new CustomException(ErrorConstants.ERROR_CODE_GRIVENCE, e.getMessage());
-			}
 			return userChargesReport;
 		}
-
-		throw new CustomException(ErrorConstants.ERROR_CODE_GRIVENCE, ErrorConstants.ERROR_MESSAGE_GRIVENCE);
+		return userChargesReport;
 	}
 }

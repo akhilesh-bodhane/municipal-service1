@@ -48,7 +48,7 @@ public class UserChargesReport {
 	public Integer resolvedComplaints;
 
 	@JsonProperty("todaysCollection")
-	public List<TodaysCollection> todaysCollection;
+	public List<TodaysCollections> todaysCollection;
 
 	@JsonProperty("numberOfReceipts")
 	public List<NumberOfReceipts> numberOfReceipts;

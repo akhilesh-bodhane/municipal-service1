@@ -35,8 +35,8 @@ public class UserCharges {
 	@JsonProperty("allRecords")
 	public Integer allRecords;
 
-	@JsonProperty("numberOfCategories")
-	public Integer numberOfCategories;
+	@JsonProperty("todaysCollections")
+	public Integer todaysCollections;
 
 	@JsonProperty("isChallan")
 	public Boolean isChallan;

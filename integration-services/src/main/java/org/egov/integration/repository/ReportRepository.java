@@ -30,7 +30,7 @@ public class ReportRepository {
 	@Autowired
 	private UserChargesDataRowMapper userChargesDataRowMapper;
 
-	public static final String USER_CHARGES_SEARCH = "select row_number() over(order by category,paymentstatus,paymentmode) sequencenum, * from ( select violation.encroachment_type as category,case when payment.paymentstatus is null then 'PENDING' else payment.paymentstatus end as paymentstatus, case when payment.paymentmode is null then 'OTHERS' else payment.paymentmode end as paymentmode, count(1)  allrecords,SUM(case when to_date(TO_CHAR(to_timestamp(violation.created_time / 1000), 'DD/MM/YYYY'),'DD/MM/YYYY') = NOW()::date then 1 else 0 end)  numberofcategories, true ischallan from public.egec_violation_master violation JOIN public.egec_challan_master challan on violation.violation_uuid=challan.violation_uuid JOIN public.egcl_payment payment on challan.challan_id = payment.instrumentnumber group by violation.encroachment_type,payment.paymentstatus,payment.paymentmode $where1 union select 'Adertisement NOC' as category, t.txn_status as paymentstatus,case when t.gateway_payment_mode is null then 'OTHERS' else t.gateway_payment_mode end as paymentmode, count(1)  allrecords, SUM(case when to_date(TO_CHAR(to_timestamp(n.created_time / 1000), 'DD/MM/YYYY'),'DD/MM/YYYY') = NOW()::date then 1 else 0 end)  numberOfCategories, false ischallan from egpm_noc_application n left join eg_pg_transactions t on n.noc_number = t.consumer_code $where2 group by n.application_status,t.txn_status,t.gateway_payment_mode) as usercharges";
+	public static final String USER_CHARGES_SEARCH = "select row_number() over(order by category,paymentstatus,paymentmode) sequencenum, * from ( select violation.encroachment_type as category,case when payment.paymentstatus is null then 'PENDING' else payment.paymentstatus end as paymentstatus, case when payment.paymentmode is null then 'OTHERS' else payment.paymentmode end as paymentmode, count(1)  allrecords,SUM(case when to_date(TO_CHAR(to_timestamp(violation.created_time / 1000), 'DD/MM/YYYY'),'DD/MM/YYYY') = NOW()::date then 1 else 0 end)  todayscollections, true ischallan from public.egec_violation_master violation JOIN public.egec_challan_master challan on violation.violation_uuid=challan.violation_uuid JOIN public.egcl_payment payment on challan.challan_id = payment.instrumentnumber where1 group by violation.encroachment_type,payment.paymentstatus,payment.paymentmode  union select 'Adertisement NOC' as category, case when t.txn_status is null then 'PENDING' else t.txn_status end as paymentstatus,case when t.gateway_payment_mode is null then 'OTHERS' else t.gateway_payment_mode end as paymentmode, count(1)  allrecords, SUM(case when to_date(TO_CHAR(to_timestamp(n.created_time / 1000), 'DD/MM/YYYY'),'DD/MM/YYYY') = NOW()::date then 1 else 0 end)  todayscollections, false ischallan from egpm_noc_application n left join eg_pg_transactions t on n.noc_number = t.consumer_code where2 group by n.application_status,t.txn_status,t.gateway_payment_mode) as usercharges";
 
 	public List<UserCharges> fetchUserChangesDetails(ServiceReqSearchCriteria serviceReqSearchCriteria) {
 		Map<String, Object> preparedStatementValues = new HashMap<>();
@@ -84,8 +84,8 @@ public class ReportRepository {
 		}
 
 		String query = USER_CHARGES_SEARCH;
-		query.replace("$where1", whereStr1);
-		query.replace("$where2", whereStr2);
+		query = query.replace("where1", "where " + whereStr1.toString());
+		query = query.replace("where2", "where " + whereStr2.toString());
 
 		log.info("User Charges Report query: " + query);
 		return query.toString();

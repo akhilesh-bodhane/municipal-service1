@@ -26,13 +26,12 @@ public class UserChargesDataRowMapper implements ResultSetExtractor<List<UserCha
 				UserCharges userCharges = new UserCharges();
 				userCharges.setSequencenum(Integer.parseInt(rs.getString("sequencenum")));
 
-				userCharges.setAllRecords(Integer.parseInt(rs.getString("closed")));
-				userCharges.setNumberOfCategories(Integer.parseInt(rs.getString("closed")));
-				userCharges.setIsChallan(Boolean.valueOf(rs.getString("closed").toString()));
-				userCharges.setPaymentStatus(rs.getString("status"));
+				userCharges.setAllRecords(Integer.parseInt(rs.getString("allrecords")));
+				userCharges.setTodaysCollections(Integer.parseInt(rs.getString("todayscollections")));
+				userCharges.setIsChallan(Boolean.valueOf(rs.getString("ischallan").toString()));
+				userCharges.setPaymentStatus(rs.getString("paymentstatus"));
 				userCharges.setCategory(rs.getString("category"));
-				userCharges.setPaymentMode(rs.getString("status"));
-				userCharges.setStatus(rs.getString("status"));
+				userCharges.setPaymentMode(rs.getString("paymentmode"));
 
 				map.put(userCharges.getSequencenum(), userCharges);
 
