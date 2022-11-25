@@ -30,7 +30,6 @@ import org.egov.integration.model.RequestData;
 import org.egov.integration.model.ResponseInfoWrapper;
 import org.egov.integration.model.ServiceReqSearchCriteria;
 import org.egov.integration.model.TodaysCollections;
-import org.egov.integration.model.todaysCollection;
 import org.egov.integration.model.UserCharges;
 import org.egov.integration.model.UserChargesReport;
 import org.egov.integration.repository.ReportRepository;
@@ -60,7 +59,7 @@ public class ReportService {
 
 	@Autowired
 	private ApiConfiguration config;
-
+	
 	@Autowired
 	private ReportRepository reportRepository;
 
@@ -74,8 +73,8 @@ public class ReportService {
 		Gson gson = new Gson();
 		long fromdate = 0;
 		long todate = 0;
-		List<ReportModel> responseArray = new ArrayList<>();
-		// JSONArray responseArray = new JSONArray();
+		List<ReportModel> responseArray=new ArrayList<>();
+	//	JSONArray responseArray = new JSONArray();
 		RequestData requests = new RequestData();
 		if (redata.getParameter1Format().equalsIgnoreCase("Long")) {
 			ZonedDateTime zdt = LocalDate.now(ZoneId.of("Etc/UTC")).atTime(LocalTime.MIDNIGHT)
@@ -105,10 +104,9 @@ public class ReportService {
 				for (JsonNode userInfo : result.get("nocApplicationDetail")) {
 					LocalDate date = Instant.ofEpochMilli(userInfo.get("createdTime").asLong())
 							.atZone(ZoneId.systemDefault()).toLocalDate();
-					ReportModel response = ReportModel.builder().applicantId(userInfo.get("applicationId"))
-							.applicantSector(userInfo.get("sector")).applicantSubmissionDate(date.toString())
-							.serviceName(ModuleNameConstants.PETNOC).build();
-					responseArray.add(response);
+					ReportModel response=ReportModel.builder().applicantId(userInfo.get("applicationId")).applicantSector(userInfo.get("sector"))
+							.applicantSubmissionDate(date.toString()).serviceName( ModuleNameConstants.PETNOC).build();
+				responseArray.add(response);
 				}
 			}
 			requests = new RequestData(request.getRequestInfo(), ModuleNameConstants.SELLMEATNOC, null, null,
@@ -119,25 +117,23 @@ public class ReportService {
 				for (JsonNode userInfo : resultSellMeat.get("nocApplicationDetail")) {
 					LocalDate date = Instant.ofEpochMilli(userInfo.get("createdTime").asLong())
 							.atZone(ZoneId.systemDefault()).toLocalDate();
-					ReportModel response = ReportModel.builder().applicantId(userInfo.get("applicationId"))
-							.applicantSector(userInfo.get("sector")).applicantSubmissionDate(date.toString())
-							.serviceName(ModuleNameConstants.SELLMEATNOC).build();
-
+					ReportModel response=ReportModel.builder().applicantId(userInfo.get("applicationId")).applicantSector(userInfo.get("sector"))
+							.applicantSubmissionDate(date.toString()).serviceName( ModuleNameConstants.SELLMEATNOC).build();
+					
 					responseArray.add(response);
 				}
 			}
 			requests = new RequestData(request.getRequestInfo(), ModuleNameConstants.ADVERTISEMENTNOC, null, null,
 					dataPayload, null);
 			log.info("req" + requests);
-			JsonNode resultAdv = fetchResult(url, requests);
+			JsonNode resultAdv= fetchResult(url, requests);
 			if (resultAdv != null) {
 				for (JsonNode userInfo : resultAdv.get("nocApplicationDetail")) {
 					LocalDate date = Instant.ofEpochMilli(userInfo.get("createdTime").asLong())
 							.atZone(ZoneId.systemDefault()).toLocalDate();
-					ReportModel response = ReportModel.builder().applicantId(userInfo.get("applicationId"))
-							.applicantSector(userInfo.get("sector")).applicantSubmissionDate(date.toString())
-							.serviceName(ModuleNameConstants.ADVERTISEMENTNOC).build();
-
+					ReportModel response=ReportModel.builder().applicantId(userInfo.get("applicationId")).applicantSector(userInfo.get("sector"))
+							.applicantSubmissionDate(date.toString()).serviceName( ModuleNameConstants.ADVERTISEMENTNOC).build();
+					
 					responseArray.add(response);
 				}
 			}
@@ -154,11 +150,9 @@ public class ReportService {
 					String startDateString = userInfo.get("createdtime").toString().replaceAll("\"", "");
 					SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 					SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd");
-					ReportModel response = ReportModel.builder().applicantId(userInfo.get("service_request_id"))
-							.applicantSector(userInfo.get("locality"))
-							.applicantSubmissionDate(sdf2.format(sdf.parse(startDateString)))
-							.serviceName(ModuleNameConstants.HORTICULTURE).build();
-
+					ReportModel response=ReportModel.builder().applicantId(userInfo.get("service_request_id")).applicantSector(userInfo.get("locality"))
+							.applicantSubmissionDate(sdf2.format(sdf.parse(startDateString))).serviceName( ModuleNameConstants.HORTICULTURE).build();
+				
 					responseArray.add(response);
 				}
 			}
@@ -182,9 +176,8 @@ public class ReportService {
 				for (JsonNode userInfo : result.get("ResponseBody")) {
 					LocalDate date = Instant.ofEpochMilli(userInfo.get("createdTime").longValue())
 							.atZone(ZoneId.systemDefault()).toLocalDate();
-					ReportModel response = ReportModel.builder().applicantId(userInfo.get("challanId"))
-							.applicantSector(userInfo.get("sector")).applicantSubmissionDate(date.toString())
-							.serviceName(ModuleNameConstants.ECHALLAN).build();
+					ReportModel response=ReportModel.builder().applicantId(userInfo.get("challanId")).applicantSector(userInfo.get("sector"))
+							.applicantSubmissionDate(date.toString()).serviceName( ModuleNameConstants.ECHALLAN).build();
 					responseArray.add(response);
 				}
 			}
@@ -215,6 +208,7 @@ public class ReportService {
 
 	}
 
+
 	public UserChargesReport getUserChangesReport(RequestInfo requestInfo,
 			ServiceReqSearchCriteria serviceReqSearchCriteria) {
 		// TODO Auto-generated method stub
@@ -236,7 +230,7 @@ public class ReportService {
 						return new Bucket(e.getKey(), e.getValue());
 					}).collect(Collectors.toList());
 
-			TodaysCollections todaysCollectionPaymentMode = TodaysCollections.builder().groupBy("PaymentMode")
+			TodaysCollections todaysCollectionPaymentMode = TodaysCollections.builder().groupBy("paymentMode")
 					.buckets(todaysCollectionPaymentModeBucket).build();
 
 			List<Bucket> todaysComplaintByStatusBucket = fetchUserChangesDetails.stream()
@@ -246,7 +240,7 @@ public class ReportService {
 						return new Bucket(e.getKey(), e.getValue());
 					}).collect(Collectors.toList());
 
-			TodaysCollections todaysComplaintByStatus = TodaysCollections.builder().groupBy("Status")
+			TodaysCollections todaysComplaintByStatus = TodaysCollections.builder().groupBy("status")
 					.buckets(todaysComplaintByStatusBucket).build();
 
 			List<Bucket> todaysComplaintByCategoryBucket = fetchUserChangesDetails.stream().collect(Collectors
@@ -255,7 +249,7 @@ public class ReportService {
 						return new Bucket(e.getKey(), e.getValue());
 					}).collect(Collectors.toList());
 
-			TodaysCollections todaysComplaintByCategory = TodaysCollections.builder().groupBy("Category")
+			TodaysCollections todaysComplaintByCategory = TodaysCollections.builder().groupBy("category")
 					.buckets(todaysComplaintByCategoryBucket).build();
 
 			metrics.setTodaysCollection(
@@ -267,7 +261,7 @@ public class ReportService {
 						return new Bucket(e.getKey(), e.getValue());
 					}).collect(Collectors.toList());
 
-			NumberOfReceipts numberOfReceiptsPaymentMode = NumberOfReceipts.builder().groupBy("PaymentMode")
+			NumberOfReceipts numberOfReceiptsPaymentMode = NumberOfReceipts.builder().groupBy("paymentMode")
 					.buckets(numberOfReceiptsPaymentModeBucket).build();
 
 			List<Bucket> numberOfReceiptsByStatusBucket = fetchUserChangesDetails.stream().collect(Collectors
@@ -276,7 +270,7 @@ public class ReportService {
 						return new Bucket(e.getKey(), e.getValue());
 					}).collect(Collectors.toList());
 
-			NumberOfReceipts numberOfReceiptsByStatus = NumberOfReceipts.builder().groupBy("Status")
+			NumberOfReceipts numberOfReceiptsByStatus = NumberOfReceipts.builder().groupBy("status")
 					.buckets(numberOfReceiptsByStatusBucket).build();
 
 			metrics.setNumberOfReceipts(Arrays.asList(numberOfReceiptsPaymentMode, numberOfReceiptsByStatus));
@@ -287,7 +281,7 @@ public class ReportService {
 						return new Bucket(e.getKey(), e.getValue());
 					}).collect(Collectors.toList());
 
-			NumberOfChallans numberOfChallansByStatus = NumberOfChallans.builder().groupBy("Status")
+			NumberOfChallans numberOfChallansByStatus = NumberOfChallans.builder().groupBy("status")
 					.buckets(numberOfChallansByStatusBucket).build();
 
 			metrics.setNumberOfChallans(Arrays.asList(numberOfChallansByStatus));
@@ -297,4 +291,5 @@ public class ReportService {
 		}
 		return userChargesReport;
 	}
+
 }
