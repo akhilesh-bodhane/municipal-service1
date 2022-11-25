@@ -54,7 +54,7 @@ public class metrics   {
         
         @JsonProperty("todaysLicenseIssuedWithinSLA")
         @Valid
-        private String todaysLicenseIssuedWithinSLA = null;
+        private int todaysLicenseIssuedWithinSLA ;
         
         @JsonProperty("todaysCollection")
     	@Valid
