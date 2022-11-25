@@ -2,8 +2,6 @@ package org.egov.integration.model;
 
 import java.util.List;
 
-import org.egov.common.contract.response.ResponseInfo;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
@@ -19,15 +17,15 @@ import lombok.Setter;
 @Builder
 public class Metric {
 
-	@JsonProperty("todaysCollection")
+	@JsonProperty("numberOfCategories")
 	public Integer numberOfCategories;
 
 	@JsonProperty("todaysCollection")
 	public List<TodaysCollections> todaysCollection;
 
-	@JsonProperty("todaysCollection")
+	@JsonProperty("numberOfReceipts")
 	public List<NumberOfReceipts> numberOfReceipts;
 
-	@JsonProperty("todaysCollection")
+	@JsonProperty("numberOfChallans")
 	public List<NumberOfChallans> numberOfChallans;
 }

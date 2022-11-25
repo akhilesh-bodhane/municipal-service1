@@ -17,11 +17,17 @@ import lombok.ToString;
 @ToString
 public class UserChargesReport {
 
-	@JsonProperty("ulb")
-	public String ulb;
+	@JsonProperty("date")
+	public String date;
+
+	@JsonProperty("module")
+	public String module;
 
 	@JsonProperty("ward")
 	public String ward;
+
+	@JsonProperty("ulb")
+	public String ulb;
 
 	@JsonProperty("state")
 	public String state;

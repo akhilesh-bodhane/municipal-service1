@@ -1,8 +1,5 @@
 package org.egov.pgr.model;
 
-import java.math.BigDecimal;
-import java.util.List;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
@@ -20,6 +17,12 @@ import lombok.ToString;
 @ToString
 public class GrievanceReport {
 
+	@JsonProperty("date")
+	public String date;
+
+	@JsonProperty("module")
+	public String module;
+
 	@JsonProperty("ulb")
 	public String ulb;
 
@@ -31,37 +34,8 @@ public class GrievanceReport {
 
 	@JsonProperty("region")
 	public String region;
+	
+	@JsonProperty("metrics")
+	public Metric metrics;
 
-	@JsonProperty("closedComplaints")
-	public Integer closedComplaints;
-
-	@JsonProperty("slaAchievement")
-	public String slaAchievement;
-
-	@JsonProperty("completionRate")
-	public BigDecimal completionRate;
-
-	@JsonProperty("uniqueCitizens")
-	public Integer uniqueCitizens;
-
-	@JsonProperty("resolvedComplaints")
-	public Integer resolvedComplaints;
-
-	@JsonProperty("todaysComplaints")
-	public List<TodaysComplaint> todaysComplaints;
-
-	@JsonProperty("todaysReopenedComplaints")
-	public List<TodaysReopenedComplaint> todaysReopenedComplaints;
-
-	@JsonProperty("todaysOpenComplaints")
-	public List<TodaysOpenComplaint> todaysOpenComplaints;
-
-	@JsonProperty("todaysAssignedComplaints")
-	public List<TodaysAssignedComplaint> todaysAssignedComplaints;
-
-	@JsonProperty("todaysRejectedComplaints")
-	public List<TodaysRejectedComplaint> todaysRejectedComplaints;
-
-	@JsonProperty("todaysReassignedComplaints")
-	public List<TodaysReassignedComplaint> todaysReassignedComplaints;
 }

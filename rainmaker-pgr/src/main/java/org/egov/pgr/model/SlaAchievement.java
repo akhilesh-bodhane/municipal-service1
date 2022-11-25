@@ -1,6 +1,6 @@
 package org.egov.pgr.model;
 
-import java.math.BigDecimal;
+import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -17,11 +17,10 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class Bucket {
+public class SlaAchievement {
 
-	@JsonProperty("name")
-	public String name;
-	
-	@JsonProperty("value")
-	public BigDecimal value;
+	@JsonProperty("groupBy")
+	public String groupBy;
+	@JsonProperty("buckets")
+	public List<Bucket> buckets;
 }
