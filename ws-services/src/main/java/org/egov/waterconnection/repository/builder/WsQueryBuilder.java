@@ -181,13 +181,44 @@ public class WsQueryBuilder {
 			+ "     and application.createdtime  >= ? AND application.createdtime <= ? \r\n"
 			+ "     group by wc.connectiontype) as sss " ;
 	
-	private static final String WATER_SEARCH_QUERY_NIUA = "	select distinct  property.usagecategory as usagecategory , count(usagecategory) as cccc \r\n"
-			+ "from eg_ws_connection conn left outer join egcl_bill bl on conn.applicationno = bl.consumercode left outer join egcl_paymentdetail pyd \r\n"
-			+ "on pyd.billid = bl.id left outer join egcl_payment py on	py.id = pyd.paymentid inner join eg_ws_service wc on 	wc.connection_id = conn.id \r\n"
-			+ "inner join eg_pt_address pta on 	conn.property_id = pta.propertyid inner join eg_ws_application application on 	application.wsid = conn.id \r\n"
-			+ "inner join eg_ws_property property on property.wsid = conn.id left outer join eg_ws_plumberinfo plumber on plumber.wsid = conn.id \r\n"
-			+ "left outer join eg_ws_connectionholder connectionholder on 	connectionholder.ws_application_id = application.id where 	conn.tenantid like 'ch.chandigarh' 	and application.createdTime \r\n"
-			+ "between 1623695400000 and 1625077799000 group by	usagecategory" ;
+	private static final String WATER_SEARCH_QUERY_NIUA = "select '0to3Days' as usagecategory , count(vvvv.applicationno) as cccc from  	(select applicationno ,  vvv.days from 	(select applicationno ,  \r\n"
+			+ "	            CURRENT_DATE  - to_date(to_char(to_timestamp(createdtime/1000),'YYYY-MM-DD'),'YYYY-MM-DD') AS days  from eg_ws_application application  where \r\n"
+			+ "				application.action not in ('ACTIVATE_REGULAR_CONNECTION' , 'CLOSED_CONNECTION_FROM_SUPERINTENDENT' , 'CANCEL_APPLICATION' , 'REJECT' , 'INITIATE' )\r\n"
+			+ "				and application.activitytype in ('TT_WATER_CONNECTION' , 'NEW_WS_CONNECTION' )\r\n"
+			+ "				and application.createdtime  >= ? \r\n"
+			+ "				AND application.createdtime <=  ? ) vvv\r\n"
+			+ "				where  vvv.days  <= 3   and vvv.days  >= 0 ) vvvv\r\n"
+			+ "				\r\n"
+			+ "				union \r\n"
+			+ "				\r\n"
+			+ "				\r\n"
+			+ "				select '3to7Days' as usagecategory , count(vvvv.applicationno) as cccc from  	(select applicationno ,  vvv.days from 	(select applicationno ,  \r\n"
+			+ "	            CURRENT_DATE  - to_date(to_char(to_timestamp(createdtime/1000),'YYYY-MM-DD'),'YYYY-MM-DD') AS days  from eg_ws_application application  where \r\n"
+			+ "				application.action not in ('ACTIVATE_REGULAR_CONNECTION' , 'CLOSED_CONNECTION_FROM_SUPERINTENDENT' , 'CANCEL_APPLICATION' , 'REJECT' , 'INITIATE' )\r\n"
+			+ "				and application.activitytype in ('TT_WATER_CONNECTION' , 'NEW_WS_CONNECTION' )\r\n"
+			+ "				and application.createdtime  >= ? \r\n"
+			+ "				AND application.createdtime <=  ? ) vvv\r\n"
+			+ "				where  vvv.days <= 7  and vvv.days  >= 3 ) vvvv\r\n"
+			+ "				\r\n"
+			+ "				union\r\n"
+			+ "				\r\n"
+			+ "				select '7to15Days' as usagecategory , count(vvvv.applicationno) as cccc from  	(select applicationno ,  vvv.days from 	(select applicationno ,  \r\n"
+			+ "	            CURRENT_DATE  - to_date(to_char(to_timestamp(createdtime/1000),'YYYY-MM-DD'),'YYYY-MM-DD') AS days  from eg_ws_application application  where \r\n"
+			+ "				application.action not in ('ACTIVATE_REGULAR_CONNECTION' , 'CLOSED_CONNECTION_FROM_SUPERINTENDENT' , 'CANCEL_APPLICATION' , 'REJECT' , 'INITIATE' )\r\n"
+			+ "				and application.activitytype in ('TT_WATER_CONNECTION' , 'NEW_WS_CONNECTION' )\r\n"
+			+ "				and application.createdtime  >= ? \r\n"
+			+ "				AND application.createdtime <=  ? ) vvv\r\n"
+			+ "				where  vvv.days <= 15  and vvv.days  >= 7 ) vvvv\r\n"
+			+ "				\r\n"
+			+ "				union\r\n"
+			+ "				\r\n"
+			+ "				select 'MoreThan15Days' as usagecategory , count(vvvv.applicationno) as cccc from  	(select applicationno ,  vvv.days from 	(select applicationno ,  \r\n"
+			+ "	            CURRENT_DATE  - to_date(to_char(to_timestamp(createdtime/1000),'YYYY-MM-DD'),'YYYY-MM-DD') AS days  from eg_ws_application application  where \r\n"
+			+ "				application.action not in ('ACTIVATE_REGULAR_CONNECTION' , 'CLOSED_CONNECTION_FROM_SUPERINTENDENT' , 'CANCEL_APPLICATION' , 'REJECT' , 'INITIATE' )\r\n"
+			+ "				and application.activitytype in ('TT_WATER_CONNECTION' , 'NEW_WS_CONNECTION' )\r\n"
+			+ "				and application.createdtime  >= ? \r\n"
+			+ "				AND application.createdtime <=  ? ) vvv\r\n"
+			+ "				where   vvv.days  >= 15 ) vvvv" ;
 	
 	private static final String WATER_SEARCH_QUERY_NIUA2 =  "((SELECT  distinct\r\n"
 			+ "			'WATER.METERED' as usagecategory,\r\n"
@@ -832,6 +863,14 @@ public class WsQueryBuilder {
 		
 			else if ("duration".equalsIgnoreCase(string)  && groupByName.equalsIgnoreCase("pendingConnections")) {
 				query = new StringBuilder(WATER_SEARCH_QUERY_NIUA);
+				preparedStatement.add(searchTotalCollectionCriteria.getFromDate());
+				preparedStatement.add(searchTotalCollectionCriteria.getToDate());
+				preparedStatement.add(searchTotalCollectionCriteria.getFromDate());
+				preparedStatement.add(searchTotalCollectionCriteria.getToDate());
+				preparedStatement.add(searchTotalCollectionCriteria.getFromDate());
+				preparedStatement.add(searchTotalCollectionCriteria.getToDate());
+				preparedStatement.add(searchTotalCollectionCriteria.getFromDate());
+				preparedStatement.add(searchTotalCollectionCriteria.getToDate());
 			}
 		
 			else if ("transactions".equalsIgnoreCase(string)  && groupByName.equalsIgnoreCase("transactions")) {

@@ -376,8 +376,12 @@ public class WaterDaoImpl implements WaterDao {
 			}
 		}
 
+		int transactions1 = 0;
 		metrics build = metrics.builder().connectionsCreated(build3).todaysCollection(build4).sewerageConnections(build5)
-				.waterConnections(build6).pendingConnections(build7).transactions(trsa(SearchTotalCollectionCriteria, preparedStatement, requestInfo)).build();
+				.waterConnections(build6).pendingConnections(build7).transactions(trsa(SearchTotalCollectionCriteria, preparedStatement, requestInfo))
+				.slaCompliance(transactions1).todaysTotalApplications(trsa(SearchTotalCollectionCriteria, preparedStatement, requestInfo)).todaysClosedApplications(trsa(SearchTotalCollectionCriteria, preparedStatement, requestInfo))
+				.todaysCompletedApplicationsWithinSLA(transactions1)
+				.build();
 		
 		Gson gson = new Gson();
         String json = gson.toJson(build);
