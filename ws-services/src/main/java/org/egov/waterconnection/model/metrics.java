@@ -35,6 +35,10 @@ import lombok.ToString;
 @ToString
 @javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2020-03-11T12:10:14.583+05:30[Asia/Kolkata]")
 public class metrics {
+	
+	@JsonProperty("transactions")
+    @Valid
+    private int transactions ;
 
 	
 	@JsonProperty("connectionsCreated")

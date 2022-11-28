@@ -377,7 +377,7 @@ public class WaterDaoImpl implements WaterDao {
 		}
 
 		metrics build = metrics.builder().connectionsCreated(build3).todaysCollection(build4).sewerageConnections(build5)
-				.waterConnections(build6).pendingConnections(build7).build();
+				.waterConnections(build6).pendingConnections(build7).transactions(trsa(SearchTotalCollectionCriteria, preparedStatement, requestInfo)).build();
 		
 		Gson gson = new Gson();
         String json = gson.toJson(build);
@@ -387,6 +387,19 @@ public class WaterDaoImpl implements WaterDao {
 		return build;
 	}
 
+	private int  trsa(SearchTotalCollectionCriteria searchTotalCollectionCriteria,
+			List<Object> preparedStatement, RequestInfo requestInfo) {
+		
+		String groupByName = "transactions";
+		String string = "transactions";
+		
+		List<buckets> query2 = data(string, groupByName , searchTotalCollectionCriteria, preparedStatement, requestInfo);
+		  int value = query2.get(0).getValue();
+		  
+		
+		return value;
+	}
+	
 	private List<buckets> data(String string, String groupByName, SearchTotalCollectionCriteria searchTotalCollectionCriteria,
 			List<Object> preparedStatement, RequestInfo requestInfo) {
 		

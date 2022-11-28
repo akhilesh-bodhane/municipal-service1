@@ -158,9 +158,12 @@ public class WsQueryBuilder {
 			+ "			 WHERE  application.applicationno  LIKE 'WS_AP%'  \r\n"
 			+ "			 AND bl.consumercode  LIKE 'WS_AP%' and py.totaldue  !=0 ";
 	
-	private static final String PAYMODE = "and py.paymentmode ";
+		private static final String PAYMODE = "and py.paymentmode ";
 
-	private static final String WATER_SEARCH_QUERY_NIUA3 = "select sum(sss.ccccc) as cccc, 'ONLINE' usagecategory  from  ((select count(connectionType) as ccccc , 'ONLINE' ccc \r\n"
+	
+
+	
+	private static final String WATER_SEARCH_QUERY_NIUA3 = "select  'ONLINE' usagecategory ,sum(sss.ccccc) as cccc  from  ((select count(connectionType) as ccccc , 'ONLINE' ccc \r\n"
 			+ "from eg_sw_connection py \r\n"
 			+ "INNER JOIN  eg_sw_service sc ON sc.connection_id = py.id\r\n"
 			+ "WHERE py.createdtime  >= ? AND py.createdtime <= ? and connectionType is not null\r\n"
@@ -176,7 +179,7 @@ public class WsQueryBuilder {
 			+ "INNER JOIN eg_ws_application application ON application.wsid = conn.id\r\n"
 			+ "WHERE  conn.tenantid  LIKE 'ch.chandigarh'\r\n"
 			+ "     and application.createdtime  >= ? AND application.createdtime <= ? \r\n"
-			+ "     group by wc.connectiontype)  sss " ;
+			+ "     group by wc.connectiontype) as sss " ;
 	
 	private static final String WATER_SEARCH_QUERY_NIUA = "	select distinct  property.usagecategory as usagecategory , count(usagecategory) as cccc \r\n"
 			+ "from eg_ws_connection conn left outer join egcl_bill bl on conn.applicationno = bl.consumercode left outer join egcl_paymentdetail pyd \r\n"
@@ -186,23 +189,30 @@ public class WsQueryBuilder {
 			+ "left outer join eg_ws_connectionholder connectionholder on 	connectionholder.ws_application_id = application.id where 	conn.tenantid like 'ch.chandigarh' 	and application.createdTime \r\n"
 			+ "between 1623695400000 and 1625077799000 group by	usagecategory" ;
 	
-	private static final String WATER_SEARCH_QUERY_NIUA2 = "(SELECT  distinct\r\n"
-			+ "wc.connectiontype as usagecategory,\r\n"
-			+ "count(wc.connectiontype) as cccc\r\n"
-			+ "FROM eg_ws_connection conn\r\n"
-			+ "INNER JOIN eg_ws_service wc ON wc.connection_id = conn.id\r\n"
-			+ "INNER JOIN eg_ws_application application ON application.wsid = conn.id\r\n"
-			+ "WHERE  conn.tenantid  LIKE 'ch.chandigarh'\r\n"
-			+ "     and application.createdtime  >= ? AND application.createdtime <= ? \r\n"
-			+ "     group by wc.connectiontype)\r\n"
-			+ "     \r\n"
-			+ "     union\r\n"
-			+ "     \r\n"
-			+ "     (select  'SEWERAGE' usagecategory , count(connectionType) as cccc \r\n"
-			+ "from eg_sw_connection py \r\n"
-			+ "INNER JOIN  eg_sw_service sc ON sc.connection_id = py.id\r\n"
-			+ "WHERE connectionType is not null and py.createdtime  >= ? AND py.createdtime <= ?  \r\n"
-			+ "group by	connectionType)" ;
+	private static final String WATER_SEARCH_QUERY_NIUA2 =  "((SELECT  distinct\r\n"
+			+ "			'WATER.METERED' as usagecategory,\r\n"
+			+ "			count(wc.connectiontype) as cccc\r\n"
+			+ "			FROM eg_ws_connection conn\r\n"
+			+ "			INNER JOIN eg_ws_service wc ON wc.connection_id = conn.id\r\n"
+			+ "			INNER JOIN eg_ws_application application ON application.wsid = conn.id\r\n"
+			+ "			where application.applicationno in (select sss.businessid from (select  ewpv.businessid   from eg_wf_processinstance_v2 ewpv where \r\n"
+			+ "	ewpv.businessservice in ( 'REGULARWSCONNECTION' , 'TT_WATER_WORKFLOW')\r\n"
+			+ "	and  ewpv.action in ('ACTIVATE_REGULAR_CONNECTION' , 'CLOSED_CONNECTION_FROM_SUPERINTENDENT')\r\n"
+			+ "	and ewpv.createdtime >= ? \r\n"
+			+ "	AND ewpv.createdtime <=  ?  )sss)\r\n"
+			+ "	group by wc.connectiontype)\r\n"
+			+ "	\r\n"
+			+ "	union\r\n"
+			+ "	\r\n"
+			+ "		(select  'SEWERAGE' usagecategory , count(applicationno) as cccc  \r\n"
+			+ "			from eg_sw_connection py \r\n"
+			+ "			left JOIN  eg_sw_service sc ON sc.connection_id = py.id\r\n"
+			+ "			where py.applicationno in\r\n"
+			+ "	(select  businessid from eg_wf_processinstance_v2 ewpv where \r\n"
+			+ "	businessservice = 'SW_SEWERAGE'\r\n"
+			+ "	and  ewpv.action ='ACTIVATE_SEWERAGE_CONNECTION'\r\n"
+			+ "	and ewpv.createdtime >= ? \r\n"
+			+ "	AND ewpv.createdtime <=  ? )))" ;
 
 	private static final String WATER_SEARCH_QUERY_NIUA4 = "( select paymentmode as usagecategory , SUM(totaldue) as cccc  from \r\n"
 			+ "egcl_payment py   \r\n"
@@ -341,48 +351,70 @@ public class WsQueryBuilder {
 			+ "where py.createdtime  >=    ? AND py.createdtime  <=  ?  \r\n"
 			+ "and bill.consumercode  like 'WS_AP/%' and py.totaldue != '0') group by   wc.connectiontype)" ;
 
-	private static final String WATER_SEARCH_QUERY_NIUA8 = "(select count(connectionType) as cccc , 'ONLINE' as usagecategory \r\n"
-			+ "from eg_sw_connection py \r\n"
-			+ "INNER JOIN  eg_sw_service sc ON sc.connection_id = py.id\r\n"
-			+ "WHERE py.createdtime  >= ? AND py.createdtime <= ? and connectionType is not null\r\n"
-			+ "group by	connectionType)" ;
+	private static final String WATER_SEARCH_QUERY_NIUA8 = "select  'ONLINE' usagecategory ,sum(sss.cccc) as cccc  from\r\n"
+			+ "		(select  'SEWERAGE' usagecategory , count(applicationno) as cccc  \r\n"
+			+ "			from eg_sw_connection py \r\n"
+			+ "			left JOIN  eg_sw_service sc ON sc.connection_id = py.id\r\n"
+			+ "			where py.applicationno in\r\n"
+			+ "	(select  businessid from eg_wf_processinstance_v2 ewpv where \r\n"
+			+ "	businessservice = 'SW_SEWERAGE'\r\n"
+			+ "	and  ewpv.action ='ACTIVATE_SEWERAGE_CONNECTION'\r\n"
+			+ "	and ewpv.createdtime >= ? \r\n"
+			+ "	AND ewpv.createdtime <=  ? ))sss" ;
 
-	private static final String WATER_SEARCH_QUERY_NIUA9 = "(select count(pt.usagecategory) as cccc , pt.usagecategory as usagecategory\r\n"
-			+ "from eg_sw_connection py\r\n"
-			+ " LEFT  OUTER JOIN EG_PT_PROPERTY pt ON pt.id  = py.property_id\r\n"
-			+ " WHERE py.createdtime  >= ? AND py.createdtime <= ? \r\n"
-			+ "group by	pt.usagecategory)" ;
+	private static final String WATER_SEARCH_QUERY_NIUA9 = "select count(pt.usagecategory) as cccc , pt.usagecategory as usagecategory\r\n"
+			+ "			from eg_sw_connection py\r\n"
+			+ "			 LEFT  OUTER JOIN EG_PT_PROPERTY pt ON pt.id  = py.property_id\r\n"
+			+ "			 where py.applicationno in (select  businessid from eg_wf_processinstance_v2 ewpv where \r\n"
+			+ "	businessservice = 'SW_SEWERAGE'\r\n"
+			+ "	and  ewpv.action ='ACTIVATE_SEWERAGE_CONNECTION'\r\n"
+			+ "	and ewpv.createdtime >= ?  \r\n"
+			+ "	AND ewpv.createdtime <=  ? )group by	pt.usagecategory" ;
 
-	private static final String WATER_SEARCH_QUERY_NIUA10 = "SELECT  distinct\r\n"
-			+ "wc.connectiontype as usagecategory,\r\n"
-			+ "count(wc.connectiontype) as cccc \r\n"
-			+ "FROM eg_ws_connection conn\r\n"
-			+ "INNER JOIN eg_ws_service wc ON wc.connection_id = conn.id\r\n"
-			+ "INNER JOIN eg_ws_application application ON application.wsid = conn.id\r\n"
-			+ "WHERE  conn.tenantid  LIKE 'ch.chandigarh'\r\n"
-			+ "     and application.createdtime  >= ? AND application.createdtime <= ? \r\n"
-			+ "     group by wc.connectiontype" ;
+	private static final String WATER_SEARCH_QUERY_NIUA10 = "select  count(businessid) as cccc , 'ONLINE' usagecategory   from eg_wf_processinstance_v2 ewpv where \r\n"
+			+ "	ewpv.businessservice in ( 'REGULARWSCONNECTION' , 'TT_WATER_WORKFLOW')\r\n"
+			+ "	and  ewpv.action in ('ACTIVATE_REGULAR_CONNECTION' , 'CLOSED_CONNECTION_FROM_SUPERINTENDENT')\r\n"
+			+ "	and ewpv.createdtime >= ? \r\n"
+			+ "	AND ewpv.createdtime <=  ? " ;
 
 	private static final String WATER_SEARCH_QUERY_NIUA11 = "SELECT  distinct\r\n"
-			+ "    count(pt.usagecategory) as cccc ,\r\n"
-			+ "    pt.usagecategory as usagecategory \r\n"
-			+ "    FROM eg_ws_connection py  \r\n"
-			+ "--      LEFT OUTER JOIN egcl_bill bl  on  conn.applicationno = bl.consumercode\r\n"
-			+ "--      LEFT OUTER JOIN egbs_demand_v1 edv on edv.consumercode =  bl.consumercode\r\n"
-			+ "--      LEFT OUTER JOIN egbs_demanddetail_v1 edvv on edvv.demandid = edv.id \r\n"
-			+ "      LEFT  OUTER JOIN EG_PT_PROPERTY pt ON pt.id  = py.property_id\r\n"
-			+ "WHERE py.createdtime  >= ? AND py.createdtime <= ? \r\n"
-			+ "group by	pt.usagecategory" ;
+			+ "			   count(pt.usagecategory) as cccc ,\r\n"
+			+ "			   pt.usagecategory as usagecategory \r\n"
+			+ "			   FROM eg_ws_connection py \r\n"
+			+ "			   LEFT  OUTER JOIN EG_PT_PROPERTY pt ON pt.id  = py.property_id\r\n"
+			+ "			   where py.applicationno in (select  businessid \r\n"
+			+ "			   from eg_wf_processinstance_v2 ewpv where \r\n"
+			+ "	ewpv.businessservice in ( 'REGULARWSCONNECTION' , 'TT_WATER_WORKFLOW')\r\n"
+			+ "	and  ewpv.action in ('ACTIVATE_REGULAR_CONNECTION' , 'CLOSED_CONNECTION_FROM_SUPERINTENDENT')\r\n"
+			+ "	and ewpv.createdtime >= ? \r\n"
+			+ "	AND ewpv.createdtime <=  ? )\r\n"
+			+ "	group by	pt.usagecategory" ;
 
-	private static final String WATER_SEARCH_QUERY_NIUA12 = "(SELECT  distinct\r\n"
-			+ "wc.connectiontype as  usagecategory,\r\n"
-			+ "count(wc.connectiontype) as cccc\r\n"
-			+ "FROM eg_ws_connection conn\r\n"
-			+ "INNER JOIN eg_ws_service wc ON wc.connection_id = conn.id\r\n"
-			+ "INNER JOIN eg_ws_application application ON application.wsid = conn.id\r\n"
-			+ "WHERE  conn.tenantid  LIKE 'ch.chandigarh'\r\n"
-			+ "     and application.createdtime  >= ? AND application.createdtime <= ? \r\n"
-			+ "     group by wc.connectiontype)" ;
+	private static final String WATER_SEARCH_QUERY_NIUA12 = "  SELECT  distinct\r\n"
+			+ "			'WATER.METERED' as usagecategory,\r\n"
+			+ "			count(wc.connectiontype) as cccc\r\n"
+			+ "			FROM eg_ws_connection conn\r\n"
+			+ "			INNER JOIN eg_ws_service wc ON wc.connection_id = conn.id\r\n"
+			+ "			INNER JOIN eg_ws_application application ON application.wsid = conn.id\r\n"
+			+ "			where application.applicationno in (select sss.businessid from (select  ewpv.businessid   from eg_wf_processinstance_v2 ewpv where \r\n"
+			+ "	ewpv.businessservice in ( 'REGULARWSCONNECTION' , 'TT_WATER_WORKFLOW')\r\n"
+			+ "	and  ewpv.action in ('ACTIVATE_REGULAR_CONNECTION' , 'CLOSED_CONNECTION_FROM_SUPERINTENDENT')\r\n"
+			+ "	and ewpv.createdtime >= ? \r\n"
+			+ "	AND ewpv.createdtime <=  ? )sss)" ;
+
+	private static final String WATER_SEARCH_QUERY_NIUA13 = "select  'SEWERAGE' usagecategory , count(sss.businessid) as cccc from\r\n"
+			+ "	\r\n"
+			+ "	((select distinct  ewpv.businessid   from eg_wf_processinstance_v2 ewpv where \r\n"
+			+ "	ewpv.businessservice in ( 'REGULARWSCONNECTION' , 'TT_WATER_WORKFLOW')\r\n"
+			+ "	and  ewpv.action not in ('ACTIVATE_REGULAR_CONNECTION' , 'CLOSED_CONNECTION_FROM_SUPERINTENDENT')\r\n"
+			+ "	and ewpv.createdtime >= ? \r\n"
+			+ "	AND ewpv.createdtime <=  ? )\r\n"
+			+ "	union\r\n"
+			+ "	(select distinct  businessid from eg_wf_processinstance_v2 ewpv where \r\n"
+			+ "	businessservice = 'SW_SEWERAGE'\r\n"
+			+ "	and  ewpv.action not in ( 'ACTIVATE_SEWERAGE_CONNECTION')\r\n"
+			+ "	and ewpv.createdtime >= ? \r\n"
+			+ "	AND ewpv.createdtime <=  ? )) sss";
 	/**
 	 * 
 	 * @param criteria
@@ -802,6 +834,13 @@ public class WsQueryBuilder {
 				query = new StringBuilder(WATER_SEARCH_QUERY_NIUA);
 			}
 		
+			else if ("transactions".equalsIgnoreCase(string)  && groupByName.equalsIgnoreCase("transactions")) {
+				query = new StringBuilder(WATER_SEARCH_QUERY_NIUA13);
+				preparedStatement.add(searchTotalCollectionCriteria.getFromDate());
+				preparedStatement.add(searchTotalCollectionCriteria.getToDate());
+				preparedStatement.add(searchTotalCollectionCriteria.getFromDate());
+				preparedStatement.add(searchTotalCollectionCriteria.getToDate());
+			}
 		
 		
 		return query.toString();

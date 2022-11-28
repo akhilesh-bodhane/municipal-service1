@@ -42,7 +42,7 @@ public class buckets {
 	
 	
 	@JsonProperty("value")
-	private String value = null;
+	private int value ;
 	
 	
 
