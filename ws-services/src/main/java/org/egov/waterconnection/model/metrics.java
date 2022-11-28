@@ -61,6 +61,25 @@ public class metrics {
 	@Valid
 	private List<pendingConnections> pendingConnections = null;
 	
+	
+	@JsonProperty("slaCompliance")
+    @Valid
+    private int slaCompliance ;
+	
+	@JsonProperty("todaysTotalApplications")
+    @Valid
+    private int todaysTotalApplications ;
+	
+	@JsonProperty("todaysClosedApplications")
+    @Valid
+    private int todaysClosedApplications ;
+	
+	@JsonProperty("todaysCompletedApplicationsWithinSLA")
+    @Valid
+    private int todaysCompletedApplicationsWithinSLA ;
+	
+	
+	
 
 	
 	
