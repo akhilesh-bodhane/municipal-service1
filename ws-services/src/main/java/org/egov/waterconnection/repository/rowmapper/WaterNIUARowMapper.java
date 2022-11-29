@@ -34,7 +34,7 @@ public class WaterNIUARowMapper implements ResultSetExtractor<List<buckets>> {
 			
 			watertotalcollections.setName(rs.getString("usagecategory"));
 			
-			watertotalcollections.setValue(rs.getString("cccc"));
+			watertotalcollections.setValue(rs.getInt("cccc"));
 				
 			/*
 			 * AuditDetails auditdetails = AuditDetails.builder()
