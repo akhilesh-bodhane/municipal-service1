@@ -32,8 +32,17 @@ public class Metric {
 	@JsonProperty("uniqueCitizens")
 	public Integer uniqueCitizens;
 
-	@JsonProperty("resolvedComplaints")
-	public Integer resolvedComplaints;
+	@JsonProperty("averageSolutionTime")
+	public List<AverageSolutionTime> averageSolutionTime;
+
+	@JsonProperty("todaysReassignRequestedComplaints")
+	public List<TodaysReassignRequestedComplaints> todaysReassignRequestedComplaints;
+
+	@JsonProperty("todaysClosedComplaints")
+	public List<TodaysClosedComplaints> todaysClosedComplaints;
+
+	@JsonProperty("todaysResolvedComplaints")
+	public List<TodaysResolvedComplaints> todaysResolvedComplaints;
 
 	@JsonProperty("todaysComplaints")
 	public List<TodaysComplaint> todaysComplaints;

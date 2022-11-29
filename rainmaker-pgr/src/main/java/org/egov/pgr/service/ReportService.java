@@ -39,11 +39,14 @@ import org.egov.pgr.model.Sector;
 import org.egov.pgr.model.ServiceDefMdms;
 import org.egov.pgr.model.SlaAchievement;
 import org.egov.pgr.model.TodaysAssignedComplaint;
+import org.egov.pgr.model.TodaysClosedComplaints;
 import org.egov.pgr.model.TodaysComplaint;
 import org.egov.pgr.model.TodaysOpenComplaint;
+import org.egov.pgr.model.TodaysReassignRequestedComplaints;
 import org.egov.pgr.model.TodaysReassignedComplaint;
 import org.egov.pgr.model.TodaysRejectedComplaint;
 import org.egov.pgr.model.TodaysReopenedComplaint;
+import org.egov.pgr.model.TodaysResolvedComplaints;
 import org.egov.pgr.repository.ReportQueryBuilder;
 import org.egov.pgr.repository.ReportRepository;
 import org.egov.pgr.repository.ServiceRequestRepository;
@@ -457,10 +460,7 @@ public class ReportService {
 			Metric metrics = Metric.builder().build();
 
 			Integer closedComplaints = fetchGrievenceDetails.stream().mapToInt(e -> e.closedcomplaints).sum();
-			Integer resolvedComplaints = fetchGrievenceDetails.stream().mapToInt(e -> e.resolvedcomplaints).sum();
-
 			metrics.setClosedComplaints(closedComplaints);
-			metrics.setResolvedComplaints(resolvedComplaints);
 
 			String fetchUniqueCitizens = serviceRequestRepository.fetchUniqueCitizens();
 			metrics.setUniqueCitizens(Integer.parseInt(fetchUniqueCitizens));
@@ -565,6 +565,44 @@ public class ReportService {
 					.groupBy("department").buckets(todaysComplaintByDepartmentReassignedBucket).build();
 
 			metrics.setTodaysReassignedComplaints(Arrays.asList(todaysReassignedComplaint));
+
+			// Resolved
+			List<Bucket> todaysResolvedComplaintsByDepartmentBucket = fetchGrievenceDetails.stream().collect(
+					Collectors.groupingBy(Grievance::getServicecode, Collectors.summingInt(Grievance::getResolved)))
+					.entrySet().stream().map(e -> {
+						return new Bucket(e.getKey(), new BigDecimal(e.getValue()));
+					}).collect(Collectors.toList());
+
+			TodaysResolvedComplaints todaysResolvedComplaintsByDepartment = TodaysResolvedComplaints.builder()
+					.groupBy("department").buckets(todaysComplaintByDepartmentBucket).build();
+
+			metrics.setTodaysResolvedComplaints(Arrays.asList(todaysResolvedComplaintsByDepartment));
+
+			// ReassignRequested
+			List<Bucket> todaysReassignRequestedComplaintsByDepartmentBucket = fetchGrievenceDetails.stream()
+					.collect(Collectors.groupingBy(Grievance::getServicecode,
+							Collectors.summingInt(Grievance::getReassignrequested)))
+					.entrySet().stream().map(e -> {
+						return new Bucket(e.getKey(), new BigDecimal(e.getValue()));
+					}).collect(Collectors.toList());
+
+			TodaysReassignRequestedComplaints todaysReassignRequestedComplaintsByDepartment = TodaysReassignRequestedComplaints
+					.builder().groupBy("department").buckets(todaysReassignRequestedComplaintsByDepartmentBucket)
+					.build();
+
+			metrics.setTodaysReassignRequestedComplaints(Arrays.asList(todaysReassignRequestedComplaintsByDepartment));
+
+			// Closed
+			List<Bucket> todaysClosedComplaintsByDepartmentBucket = fetchGrievenceDetails.stream().collect(
+					Collectors.groupingBy(Grievance::getServicecode, Collectors.summingInt(Grievance::getClosed)))
+					.entrySet().stream().map(e -> {
+						return new Bucket(e.getKey(), new BigDecimal(e.getValue()));
+					}).collect(Collectors.toList());
+
+			TodaysClosedComplaints todaysClosedComplaintsByDepartment = TodaysClosedComplaints.builder()
+					.groupBy("department").buckets(todaysReassignRequestedComplaintsByDepartmentBucket).build();
+
+			metrics.setTodaysClosedComplaints(Arrays.asList(todaysClosedComplaintsByDepartment));
 
 			List<Bucket> departmentsClosedBucket = fetchGrievenceDetails.stream().collect(Collectors
 					.groupingBy(Grievance::getServicecode, Collectors.summingInt(Grievance::getClosedcomplaints)))
