@@ -811,7 +811,7 @@ public class PGRUtils {
 		uri.append(reportHost).append(reportEndpoint);
 		List<ParamValue> searchParams = Arrays.asList(ParamValue.builder().name("fromDate").input(fromDate).build(),
 				ParamValue.builder().name("toDate").input(toDate).build());
-		return ReportRequest.builder().tenantId(tenantId).reportName("GrievancesSLAAchievement")
+		return ReportRequest.builder().tenantId(tenantId).reportName("SLAAchievementDepartmentWise")
 				.requestInfo(requestInfo).searchParams(searchParams).build();
 	}
 }
