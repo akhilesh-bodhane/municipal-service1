@@ -134,36 +134,9 @@ public class WsQueryBuilder {
 			+ "LEFT OUTER JOIN egcl_payment py on py.id= pyd.paymentid ";
 	
 	
-	private static final String WATER_SEARCH_QUERY_EG_PG_TOTAL_COLLECTION_COUNT = " SELECT distinct  \r\n"
-			+ "      count(application.applicationno) as totatconnections,       \r\n"
-			+ "      COALESCE(SUM(ept.txn_amount),0) as totalcollections \r\n"
-			+ "	  FROM \r\n"
-			+ "			eg_ws_connection conn \r\n"
-			+ "			INNER JOIN eg_ws_application application ON application.wsid = conn.id \r\n"
-			+ "			INNER JOIN eg_pg_transactions ept on application.applicationno = ept.consumer_code\r\n"
-			+ "			INNER JOIN eg_ws_property property ON property.wsid = conn.id\r\n"
-			+ "			 WHERE ept.consumer_code  LIKE 'WS_AP%' \r\n"
-			+ "			 and application.applicationno  LIKE 'WS_AP%' and ept.txn_status = 'SUCCESS' and ept.txn_status_msg  = 'Transaction successful' ";
 	
-	private static final String WATER_SEARCH_QUERY_EG_CL_TOTAL_COLLECTION_COUNT = " SELECT  distinct    \r\n"
-			+ "     count(application.applicationno)  as totatconnections,  \r\n"
-			+ "     COALESCE(SUM(py.totaldue),0) as totalcollections \r\n"
-			+ "	  FROM \r\n"
-			+ "			eg_ws_connection conn \r\n"
-			+ "			INNER JOIN eg_ws_application application ON application.wsid = conn.id \r\n"
-			+ "			INNER JOIN egcl_bill bl  on  application.applicationno  = bl.consumercode \r\n"
-			+ "			INNER JOIN egcl_paymentdetail pyd on pyd.billid = bl.id\r\n"
-			+ "			INNER JOIN egcl_payment py on py.id= pyd.paymentid\r\n"
-			+ "			INNER JOIN eg_ws_property property ON property.wsid = conn.id\r\n"
-			+ "			 WHERE  application.applicationno  LIKE 'WS_AP%'  \r\n"
-			+ "			 AND bl.consumercode  LIKE 'WS_AP%' and py.totaldue  !=0 ";
 	
-		private static final String PAYMODE = "and py.paymentmode ";
-
-	
-
-	
-	private static final String WATER_SEARCH_QUERY_NIUA3 = "select  'ONLINE' usagecategory ,sum(sss.ccccc) as cccc  from  ((select count(connectionType) as ccccc , 'ONLINE' ccc \r\n"
+	private static final String WATER_SEARCH_QUERY_NIUA3 = "select  'ONLINE' as name , sum(sss.ccccc) as value  from  ((select count(connectionType) as ccccc , 'ONLINE' ccc \r\n"
 			+ "from eg_sw_connection py \r\n"
 			+ "INNER JOIN  eg_sw_service sc ON sc.connection_id = py.id\r\n"
 			+ "WHERE py.createdtime  >= ? AND py.createdtime <= ? and connectionType is not null\r\n"
@@ -181,7 +154,7 @@ public class WsQueryBuilder {
 			+ "     and application.createdtime  >= ? AND application.createdtime <= ? \r\n"
 			+ "     group by wc.connectiontype) as sss " ;
 	
-	private static final String WATER_SEARCH_QUERY_NIUA = "select '0to3Days' as usagecategory , count(vvvv.applicationno) as cccc from  	(select applicationno ,  vvv.days from 	(select applicationno ,  \r\n"
+	private static final String WATER_SEARCH_QUERY_NIUA = "select '0to3Days' as name , count(vvvv.applicationno) as value from  	(select applicationno ,  vvv.days from 	(select applicationno ,  \r\n"
 			+ "	            CURRENT_DATE  - to_date(to_char(to_timestamp(createdtime/1000),'YYYY-MM-DD'),'YYYY-MM-DD') AS days  from eg_ws_application application  where \r\n"
 			+ "				application.action not in ('ACTIVATE_REGULAR_CONNECTION' , 'CLOSED_CONNECTION_FROM_SUPERINTENDENT' , 'CANCEL_APPLICATION' , 'REJECT' , 'INITIATE' )\r\n"
 			+ "				and application.activitytype in ('TT_WATER_CONNECTION' , 'NEW_WS_CONNECTION' )\r\n"
@@ -221,8 +194,8 @@ public class WsQueryBuilder {
 			+ "				where   vvv.days  >= 15 ) vvvv" ;
 	
 	private static final String WATER_SEARCH_QUERY_NIUA2 =  "((SELECT  distinct\r\n"
-			+ "			'WATER.METERED' as usagecategory,\r\n"
-			+ "			count(wc.connectiontype) as cccc\r\n"
+			+ "			'WATER.METERED' as name,\r\n"
+			+ "			count(wc.connectiontype) as value\r\n"
 			+ "			FROM eg_ws_connection conn\r\n"
 			+ "			INNER JOIN eg_ws_service wc ON wc.connection_id = conn.id\r\n"
 			+ "			INNER JOIN eg_ws_application application ON application.wsid = conn.id\r\n"
@@ -245,7 +218,7 @@ public class WsQueryBuilder {
 			+ "	and ewpv.createdtime >= ? \r\n"
 			+ "	AND ewpv.createdtime <=  ? )))" ;
 
-	private static final String WATER_SEARCH_QUERY_NIUA4 = "( select paymentmode as usagecategory , SUM(totaldue) as cccc  from \r\n"
+	private static final String WATER_SEARCH_QUERY_NIUA4 = "( select paymentmode as name , SUM(totaldue) as value  from \r\n"
 			+ "egcl_payment py   \r\n"
 			+ "INNER JOIN egcl_paymentdetail pyd ON pyd.paymentid = py.id  \r\n"
 			+ "INNER JOIN egcl_bill bill ON bill.id = pyd.billid  \r\n"
@@ -291,8 +264,8 @@ public class WsQueryBuilder {
 			+ " group by     gateway )" ;
 
 	private static final String WATER_SEARCH_QUERY_NIUA5 = "SELECT  distinct\r\n"
-			+ "    sum(taxamount) as cccc,\r\n"
-			+ "    pt.usagecategory as usagecategory \r\n"
+			+ "    sum(taxamount) as value,\r\n"
+			+ "    pt.usagecategory as name \r\n"
 			+ "    FROM eg_ws_connection conn  \r\n"
 			+ "      LEFT OUTER JOIN egcl_bill bl  on  conn.applicationno = bl.consumercode\r\n"
 			+ "            LEFT OUTER JOIN egbs_demand_v1 edv on edv.consumercode =  bl.consumercode\r\n"
@@ -317,8 +290,8 @@ public class WsQueryBuilder {
 			+ " group by   pt.usagecategory" ;
 
 	private static final String WATER_SEARCH_QUERY_NIUA6 = "SELECT  distinct\r\n"
-			+ "    sum(taxamount) as cccc ,\r\n"
-			+ "    edvv.taxheadcode  as usagecategory\r\n"
+			+ "    sum(taxamount) as value ,\r\n"
+			+ "    edvv.taxheadcode  as name\r\n"
 			+ "    FROM eg_ws_connection conn  \r\n"
 			+ "      LEFT OUTER JOIN egcl_bill bl  on  conn.applicationno = bl.consumercode\r\n"
 			+ "            LEFT OUTER JOIN egbs_demand_v1 edv on edv.consumercode =  bl.consumercode\r\n"
@@ -343,8 +316,8 @@ public class WsQueryBuilder {
 			+ " group by   edvv.taxheadcode" ;
 
 	private static final String WATER_SEARCH_QUERY_NIUA7 = "(SELECT  distinct\r\n"
-			+ "   sc.connectiontype as usagecategory,\r\n"
-			+ "      SUM(py.totaldue) as cccc \r\n"
+			+ "   sc.connectiontype as name,\r\n"
+			+ "      SUM(py.totaldue) as value \r\n"
 			+ "    FROM eg_ws_connection conn  \r\n"
 			+ "      LEFT OUTER JOIN egcl_bill bl  on  conn.applicationno = bl.consumercode\r\n"
 			+ "--      LEFT OUTER JOIN egcl_bill bl  on  conn.applicationno = bl.consumercode\r\n"
@@ -382,7 +355,7 @@ public class WsQueryBuilder {
 			+ "where py.createdtime  >=    ? AND py.createdtime  <=  ?  \r\n"
 			+ "and bill.consumercode  like 'WS_AP/%' and py.totaldue != '0') group by   wc.connectiontype)" ;
 
-	private static final String WATER_SEARCH_QUERY_NIUA8 = "select  'ONLINE' usagecategory ,sum(sss.cccc) as cccc  from\r\n"
+	private static final String WATER_SEARCH_QUERY_NIUA8 = "select  'ONLINE' as name ,sum(sss.cccc) as value  from\r\n"
 			+ "		(select  'SEWERAGE' usagecategory , count(applicationno) as cccc  \r\n"
 			+ "			from eg_sw_connection py \r\n"
 			+ "			left JOIN  eg_sw_service sc ON sc.connection_id = py.id\r\n"
@@ -393,7 +366,7 @@ public class WsQueryBuilder {
 			+ "	and ewpv.createdtime >= ? \r\n"
 			+ "	AND ewpv.createdtime <=  ? ))sss" ;
 
-	private static final String WATER_SEARCH_QUERY_NIUA9 = "select count(pt.usagecategory) as cccc , pt.usagecategory as usagecategory\r\n"
+	private static final String WATER_SEARCH_QUERY_NIUA9 = "select count(pt.usagecategory) as value , pt.usagecategory as name\r\n"
 			+ "			from eg_sw_connection py\r\n"
 			+ "			 LEFT  OUTER JOIN EG_PT_PROPERTY pt ON pt.id  = py.property_id\r\n"
 			+ "			 where py.applicationno in (select  businessid from eg_wf_processinstance_v2 ewpv where \r\n"
@@ -402,15 +375,15 @@ public class WsQueryBuilder {
 			+ "	and ewpv.createdtime >= ?  \r\n"
 			+ "	AND ewpv.createdtime <=  ? )group by	pt.usagecategory" ;
 
-	private static final String WATER_SEARCH_QUERY_NIUA10 = "select  count(businessid) as cccc , 'ONLINE' usagecategory   from eg_wf_processinstance_v2 ewpv where \r\n"
+	private static final String WATER_SEARCH_QUERY_NIUA10 = "select  count(businessid) as value , 'ONLINE' as name   from eg_wf_processinstance_v2 ewpv where \r\n"
 			+ "	ewpv.businessservice in ( 'REGULARWSCONNECTION' , 'TT_WATER_WORKFLOW')\r\n"
 			+ "	and  ewpv.action in ('ACTIVATE_REGULAR_CONNECTION' , 'CLOSED_CONNECTION_FROM_SUPERINTENDENT')\r\n"
 			+ "	and ewpv.createdtime >= ? \r\n"
 			+ "	AND ewpv.createdtime <=  ? " ;
 
 	private static final String WATER_SEARCH_QUERY_NIUA11 = "SELECT  distinct\r\n"
-			+ "			   count(pt.usagecategory) as cccc ,\r\n"
-			+ "			   pt.usagecategory as usagecategory \r\n"
+			+ "			   count(pt.usagecategory) as value ,\r\n"
+			+ "			   pt.usagecategory as name \r\n"
 			+ "			   FROM eg_ws_connection py \r\n"
 			+ "			   LEFT  OUTER JOIN EG_PT_PROPERTY pt ON pt.id  = py.property_id\r\n"
 			+ "			   where py.applicationno in (select  businessid \r\n"
@@ -422,8 +395,8 @@ public class WsQueryBuilder {
 			+ "	group by	pt.usagecategory" ;
 
 	private static final String WATER_SEARCH_QUERY_NIUA12 = "  SELECT  distinct\r\n"
-			+ "			'WATER.METERED' as usagecategory,\r\n"
-			+ "			count(wc.connectiontype) as cccc\r\n"
+			+ "			'WATER.METERED' as name,\r\n"
+			+ "			count(wc.connectiontype) as value\r\n"
 			+ "			FROM eg_ws_connection conn\r\n"
 			+ "			INNER JOIN eg_ws_service wc ON wc.connection_id = conn.id\r\n"
 			+ "			INNER JOIN eg_ws_application application ON application.wsid = conn.id\r\n"
@@ -433,7 +406,7 @@ public class WsQueryBuilder {
 			+ "	and ewpv.createdtime >= ? \r\n"
 			+ "	AND ewpv.createdtime <=  ? )sss)" ;
 
-	private static final String WATER_SEARCH_QUERY_NIUA13 = "select  'SEWERAGE' usagecategory , count(sss.businessid) as cccc from\r\n"
+	private static final String WATER_SEARCH_QUERY_NIUA13 = "select  'SEWERAGE' as name , count(sss.businessid) as value from\r\n"
 			+ "	\r\n"
 			+ "	((select distinct  ewpv.businessid   from eg_wf_processinstance_v2 ewpv where \r\n"
 			+ "	ewpv.businessservice in ( 'REGULARWSCONNECTION' , 'TT_WATER_WORKFLOW')\r\n"
@@ -446,6 +419,40 @@ public class WsQueryBuilder {
 			+ "	and  ewpv.action not in ( 'ACTIVATE_SEWERAGE_CONNECTION')\r\n"
 			+ "	and ewpv.createdtime >= ? \r\n"
 			+ "	AND ewpv.createdtime <=  ? )) sss";
+
+	private static final String WATER_SEARCH_QUERY_NIUA14 = "select 'todaysTotalApplicationscount' as name ,"
+			+ " count(sss.dd) as value from (select application.applicationno as dd from \r\n"
+			+ "      eg_ws_connection conn  \r\n"
+			+ "INNER JOIN eg_ws_service wc ON wc.connection_id = conn.id \r\n"
+			+ "INNER JOIN eg_pt_address pta ON conn.property_id = pta.propertyid \r\n"
+			+ "INNER JOIN eg_ws_application application ON application.wsid = conn.id \r\n"
+			+ "where application.createdtime >= ? \r\n"
+			+ "and application.createdtime <= ? \r\n"
+			+ "union \r\n"
+			+ "select distinct py.applicationno as dd \r\n"
+			+ "from eg_sw_connection py \r\n"
+			+ "left JOIN  eg_sw_service sc ON sc.connection_id = py.id\r\n"
+			+ "where py.createdtime   >= ? and py.createdtime <= ? ) sss";
+
+	private static final String WATER_SEARCH_QUERY_NIUA15 = "select 'todaysClosedApplications' as name ,"
+			+ " count(businessid) as value from eg_wf_processinstance_v2 ewpv where  action in ('UPDATE_METER_INFORMATION',\r\n"
+			+ "'CONVERT_INTO_REGULAR_CONNECTION',\r\n"
+			+ "'ACTIVATE_TUBEWELL_CONNECTION',\r\n"
+			+ "'ACTIVATE_TEMPORARY_CONNECTION',\r\n"
+			+ "'REACTIVATE_CONNECTION',\r\n"
+			+ "'EXTEND_TEMPORARY_CONNECTION',\r\n"
+			+ "'CHANGE_CONNECTION_HOLDER',\r\n"
+			+ "'CLOSE_CONNECTION',\r\n"
+			+ "'TEMPORARY_CLOSE_CONNECTION',\r\n"
+			+ "'METER_TESTING_STARTED',\r\n"
+			+ "'CHANGE_TARIFF',\r\n"
+			+ "'CHANGE_ACCOUNT_NUMBER',\r\n"
+			+ "'ACTIVATE_REGULAR_CONNECTION',\r\n"
+			+ "'ACTIVATE_TEMPORARY_CONNECTION',\r\n"
+			+ "'CLOSED_CONNECTION_FROM_SUPERINTENDENT',\r\n"
+			+ "'ACTIVATE_SEWERAGE_CONNECTION')\r\n"
+			+ "and\r\n"
+			+ "createdtime  >= ? and createdtime <= ? ";
 	/**
 	 * 
 	 * @param criteria
@@ -723,66 +730,6 @@ public class WsQueryBuilder {
 	 *            The Request Info
 	 * @return query as a string
 	 */
-	public String getSearchQueryStringTotalCollectionCount(SearchTotalCollectionCriteria SearchTotalCollectionCriteria, List<Object> preparedStatement,
-			RequestInfo requestInfo) {
-		StringBuilder query;
-		if (SearchTotalCollectionCriteria.isEmpty())
-				return null;
-		
-		if((SearchTotalCollectionCriteria.getPaymentchannel() != null || SearchTotalCollectionCriteria.getPaymentchannel() != "") 
-		 && ("ONLINE".equals(SearchTotalCollectionCriteria.getConnectionchannel())) ) {
-		 query = new StringBuilder(WATER_SEARCH_QUERY_EG_PG_TOTAL_COLLECTION_COUNT);	
-		}
-		else {
-		 query = new StringBuilder(WATER_SEARCH_QUERY_EG_CL_TOTAL_COLLECTION_COUNT);	
-		}
-		
-		//boolean propertyIdsPresent = false;	
-		
-		if (!StringUtils.isEmpty(SearchTotalCollectionCriteria.getTenantId())) {
-			//addClauseIfRequired(preparedStatement, query);
-			query.append(" AND conn.tenantid = ? ");
-			preparedStatement.add(SearchTotalCollectionCriteria.getTenantId());
-		}
-		
-		if (!StringUtils.isEmpty(SearchTotalCollectionCriteria.getPaymentchannel())) {
-			//addClauseIfRequired(preparedStatement, query);
-			query.append(" ept.gateway = ? ");
-			preparedStatement.add(SearchTotalCollectionCriteria.getPaymentchannel());
-		}
-		
-		if (SearchTotalCollectionCriteria.getUsagetype() != null) {
-			addClauseIfRequired(preparedStatement, query);
-			query.append(" property.usagecategory = ? ");
-			preparedStatement.add(SearchTotalCollectionCriteria.getUsagetype());
-		}
-		if(!"ONLINE".equals(SearchTotalCollectionCriteria.getConnectionchannel()) &&
-				!StringUtils.isEmpty(SearchTotalCollectionCriteria.getConnectionchannel())) {
-			addClauseIfRequired(preparedStatement, query);
-			query.append(" py.paymentmode = ? ");
-			preparedStatement.add(SearchTotalCollectionCriteria.getConnectionchannel());
-		}
-		if (SearchTotalCollectionCriteria.getFromDate() != null) {
-			addClauseIfRequired(preparedStatement, query);
-			query.append(" application.lastmodifiedtime >= ? ");
-			preparedStatement.add(SearchTotalCollectionCriteria.getFromDate());
-		}
-		if (SearchTotalCollectionCriteria.getToDate() != null) {
-			addClauseIfRequired(preparedStatement, query);
-			query.append(" application.lastmodifiedtime <= ? ");
-			preparedStatement.add(SearchTotalCollectionCriteria.getToDate());
-		}
-		/*
-		 * if(SearchTotalCollectionCriteria.getConnectionchannel().equals("CASH")) {
-		 * addClauseIfRequired(preparedStatement, query);
-		 * query.append(" py.paymentmode = 'CASH' ");
-		 * preparedStatement.add(SearchTotalCollectionCriteria.getConnectionchannel());
-		 * }
-		 */
-		
-		//query.append(ORDER_BY_CLAUSE);
-		return query.toString() ;
-	}
 
 	public String getSearchQueryStringTotalCollectionCountNIUA( String string ,
 			String groupByName, SearchTotalCollectionCriteria searchTotalCollectionCriteria, List<Object> preparedStatement,
@@ -880,6 +827,24 @@ public class WsQueryBuilder {
 				preparedStatement.add(searchTotalCollectionCriteria.getFromDate());
 				preparedStatement.add(searchTotalCollectionCriteria.getToDate());
 			}
+		
+			else if ("todaysTotalApplications".equalsIgnoreCase(string)  && groupByName.equalsIgnoreCase("todaysTotalApplications")) {
+				query = new StringBuilder(WATER_SEARCH_QUERY_NIUA14);
+				preparedStatement.add(searchTotalCollectionCriteria.getFromDate());
+				preparedStatement.add(searchTotalCollectionCriteria.getToDate());
+				preparedStatement.add(searchTotalCollectionCriteria.getFromDate());
+				preparedStatement.add(searchTotalCollectionCriteria.getToDate());
+			}
+		
+			else if ("todaysClosedApplications".equalsIgnoreCase(string)  && groupByName.equalsIgnoreCase("todaysClosedApplications")) {
+				query = new StringBuilder(WATER_SEARCH_QUERY_NIUA15);
+				preparedStatement.add(searchTotalCollectionCriteria.getFromDate());
+				preparedStatement.add(searchTotalCollectionCriteria.getToDate());
+			}
+		 
+		   
+		
+		
 		
 		
 		return query.toString();
