@@ -8,18 +8,31 @@ import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
+import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ResponseInfo;
 import org.egov.integration.PreApplicationRunnerImpl;
 import org.egov.integration.common.CommonConstants;
 import org.egov.integration.common.ModuleNameConstants;
 import org.egov.integration.config.ApiConfiguration;
+import org.egov.integration.model.Bucket;
 import org.egov.integration.model.DisplayColumns;
+import org.egov.integration.model.Metric;
+import org.egov.integration.model.NumberOfChallans;
+import org.egov.integration.model.NumberOfReceipts;
 import org.egov.integration.model.ReportModel;
 import org.egov.integration.model.ReportRequest;
 import org.egov.integration.model.RequestData;
 import org.egov.integration.model.ResponseInfoWrapper;
+import org.egov.integration.model.ServiceReqSearchCriteria;
+import org.egov.integration.model.TodaysCollections;
+import org.egov.integration.model.UserCharges;
+import org.egov.integration.model.UserChargesReport;
+import org.egov.integration.repository.ReportRepository;
 import org.egov.tracer.model.ServiceCallException;
 import org.json.JSONException;
 import org.json.simple.JSONObject;
@@ -46,6 +59,9 @@ public class ReportService {
 
 	@Autowired
 	private ApiConfiguration config;
+	
+	@Autowired
+	private ReportRepository reportRepository;
 
 	@SuppressWarnings("unchecked")
 	public ResponseEntity<ResponseInfoWrapper> getData(ReportRequest request) throws JSONException, ParseException {
@@ -191,4 +207,89 @@ public class ReportService {
 		return response;
 
 	}
+
+
+	public UserChargesReport getUserChangesReport(RequestInfo requestInfo,
+			ServiceReqSearchCriteria serviceReqSearchCriteria) {
+		// TODO Auto-generated method stub
+
+		List<UserCharges> fetchUserChangesDetails = reportRepository.fetchUserChangesDetails(serviceReqSearchCriteria);
+		UserChargesReport userChargesReport = new UserChargesReport();
+
+		if (fetchUserChangesDetails != null && !fetchUserChangesDetails.isEmpty()) {
+			Metric metrics = Metric.builder().build();
+
+			Set<String> categories = fetchUserChangesDetails.stream().map(e -> e.getCategory())
+					.collect(Collectors.toSet());
+
+			metrics.setNumberOfCategories(categories.size());
+
+			List<Bucket> todaysCollectionPaymentModeBucket = fetchUserChangesDetails.stream().collect(Collectors
+					.groupingBy(UserCharges::getPaymentMode, Collectors.summingInt(UserCharges::getTodaysCollections)))
+					.entrySet().stream().map(e -> {
+						return new Bucket(e.getKey(), e.getValue());
+					}).collect(Collectors.toList());
+
+			TodaysCollections todaysCollectionPaymentMode = TodaysCollections.builder().groupBy("paymentMode")
+					.buckets(todaysCollectionPaymentModeBucket).build();
+
+			List<Bucket> todaysComplaintByStatusBucket = fetchUserChangesDetails.stream()
+					.collect(Collectors.groupingBy(UserCharges::getPaymentStatus,
+							Collectors.summingInt(UserCharges::getTodaysCollections)))
+					.entrySet().stream().map(e -> {
+						return new Bucket(e.getKey(), e.getValue());
+					}).collect(Collectors.toList());
+
+			TodaysCollections todaysComplaintByStatus = TodaysCollections.builder().groupBy("status")
+					.buckets(todaysComplaintByStatusBucket).build();
+
+			List<Bucket> todaysComplaintByCategoryBucket = fetchUserChangesDetails.stream().collect(Collectors
+					.groupingBy(UserCharges::getCategory, Collectors.summingInt(UserCharges::getTodaysCollections)))
+					.entrySet().stream().map(e -> {
+						return new Bucket(e.getKey(), e.getValue());
+					}).collect(Collectors.toList());
+
+			TodaysCollections todaysComplaintByCategory = TodaysCollections.builder().groupBy("category")
+					.buckets(todaysComplaintByCategoryBucket).build();
+
+			metrics.setTodaysCollection(
+					Arrays.asList(todaysCollectionPaymentMode, todaysComplaintByStatus, todaysComplaintByCategory));
+
+			List<Bucket> numberOfReceiptsPaymentModeBucket = fetchUserChangesDetails.stream().collect(Collectors
+					.groupingBy(UserCharges::getPaymentMode, Collectors.summingInt(UserCharges::getAllRecords)))
+					.entrySet().stream().map(e -> {
+						return new Bucket(e.getKey(), e.getValue());
+					}).collect(Collectors.toList());
+
+			NumberOfReceipts numberOfReceiptsPaymentMode = NumberOfReceipts.builder().groupBy("paymentMode")
+					.buckets(numberOfReceiptsPaymentModeBucket).build();
+
+			List<Bucket> numberOfReceiptsByStatusBucket = fetchUserChangesDetails.stream().collect(Collectors
+					.groupingBy(UserCharges::getPaymentStatus, Collectors.summingInt(UserCharges::getAllRecords)))
+					.entrySet().stream().map(e -> {
+						return new Bucket(e.getKey(), e.getValue());
+					}).collect(Collectors.toList());
+
+			NumberOfReceipts numberOfReceiptsByStatus = NumberOfReceipts.builder().groupBy("status")
+					.buckets(numberOfReceiptsByStatusBucket).build();
+
+			metrics.setNumberOfReceipts(Arrays.asList(numberOfReceiptsPaymentMode, numberOfReceiptsByStatus));
+
+			List<Bucket> numberOfChallansByStatusBucket = fetchUserChangesDetails.stream().collect(Collectors
+					.groupingBy(UserCharges::getPaymentStatus, Collectors.summingInt(UserCharges::getAllRecords)))
+					.entrySet().stream().map(e -> {
+						return new Bucket(e.getKey(), e.getValue());
+					}).collect(Collectors.toList());
+
+			NumberOfChallans numberOfChallansByStatus = NumberOfChallans.builder().groupBy("status")
+					.buckets(numberOfChallansByStatusBucket).build();
+
+			metrics.setNumberOfChallans(Arrays.asList(numberOfChallansByStatus));
+
+			userChargesReport.setMetrics(metrics);
+			return userChargesReport;
+		}
+		return userChargesReport;
+	}
+
 }

@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.apache.commons.collections.CollectionUtils;
@@ -25,15 +26,18 @@ import org.egov.pgr.contract.ReportRequest;
 import org.egov.pgr.contract.ReportResponse;
 import org.egov.pgr.contract.ServiceReqSearchCriteria;
 import org.egov.pgr.model.Bucket;
+import org.egov.pgr.model.CompletionRate;
 import org.egov.pgr.model.Department;
 import org.egov.pgr.model.DiscriptionReport;
 import org.egov.pgr.model.Grievance;
 import org.egov.pgr.model.GrievanceReport;
+import org.egov.pgr.model.Metric;
 import org.egov.pgr.model.ReportServiceResponse;
 import org.egov.pgr.model.RequestInfoWrapper;
 import org.egov.pgr.model.ResponseInfoWrapper;
 import org.egov.pgr.model.Sector;
 import org.egov.pgr.model.ServiceDefMdms;
+import org.egov.pgr.model.SlaAchievement;
 import org.egov.pgr.model.TodaysAssignedComplaint;
 import org.egov.pgr.model.TodaysComplaint;
 import org.egov.pgr.model.TodaysOpenComplaint;
@@ -450,145 +454,174 @@ public class ReportService {
 
 		if (fetchGrievenceDetails != null && !fetchGrievenceDetails.isEmpty()) {
 
+			Metric metrics = Metric.builder().build();
+
 			Integer closedComplaints = fetchGrievenceDetails.stream().mapToInt(e -> e.closedcomplaints).sum();
 			Integer resolvedComplaints = fetchGrievenceDetails.stream().mapToInt(e -> e.resolvedcomplaints).sum();
 
-			grievenceReport.setClosedComplaints(closedComplaints);
-			grievenceReport.setResolvedComplaints(resolvedComplaints);
+			metrics.setClosedComplaints(closedComplaints);
+			metrics.setResolvedComplaints(resolvedComplaints);
 
 			String fetchUniqueCitizens = serviceRequestRepository.fetchUniqueCitizens();
-			grievenceReport.setUniqueCitizens(Integer.parseInt(fetchUniqueCitizens));
+			metrics.setUniqueCitizens(Integer.parseInt(fetchUniqueCitizens));
 
 			List<Bucket> todaysComplaintByStatusBucket = fetchGrievenceDetails.stream().collect(
 					Collectors.groupingBy(Grievance::getStatus, Collectors.summingInt(Grievance::getAllcomplaints)))
 					.entrySet().stream().map(e -> {
-						return new Bucket(e.getKey(), e.getValue());
+						return new Bucket(e.getKey(), new BigDecimal(e.getValue()));
 					}).collect(Collectors.toList());
 
-			TodaysComplaint todaysComplaintByStatus = TodaysComplaint.builder().groupBy("Status")
+			TodaysComplaint todaysComplaintByStatus = TodaysComplaint.builder().groupBy("status")
 					.buckets(todaysComplaintByStatusBucket).build();
 
 			List<Bucket> todaysComplaintByChannelBucket = fetchGrievenceDetails.stream().collect(
 					Collectors.groupingBy(Grievance::getSource, Collectors.summingInt(Grievance::getAllcomplaints)))
 					.entrySet().stream().map(e -> {
-						return new Bucket(e.getKey(), e.getValue());
+						return new Bucket(e.getKey(), new BigDecimal(e.getValue()));
 					}).collect(Collectors.toList());
 
-			TodaysComplaint todaysComplaintByChannel = TodaysComplaint.builder().groupBy("Channel")
+			TodaysComplaint todaysComplaintByChannel = TodaysComplaint.builder().groupBy("channel")
 					.buckets(todaysComplaintByChannelBucket).build();
 
 			List<Bucket> todaysComplaintByDepartmentBucket = fetchGrievenceDetails.stream().collect(Collectors
 					.groupingBy(Grievance::getServicecode, Collectors.summingInt(Grievance::getAllcomplaints)))
 					.entrySet().stream().map(e -> {
-						return new Bucket(e.getKey(), e.getValue());
+						return new Bucket(e.getKey(), new BigDecimal(e.getValue()));
 					}).collect(Collectors.toList());
 
-			TodaysComplaint todaysComplaintByDepartment = TodaysComplaint.builder().groupBy("Department")
+			TodaysComplaint todaysComplaintByDepartment = TodaysComplaint.builder().groupBy("department")
 					.buckets(todaysComplaintByDepartmentBucket).build();
 
 			List<Bucket> todaysComplaintByCategoryBucket = fetchGrievenceDetails.stream().collect(
 					Collectors.groupingBy(Grievance::getCategory, Collectors.summingInt(Grievance::getAllcomplaints)))
 					.entrySet().stream().map(e -> {
-						return new Bucket(e.getKey(), e.getValue());
+						return new Bucket(e.getKey(), new BigDecimal(e.getValue()));
 					}).collect(Collectors.toList());
 
-			TodaysComplaint todaysComplaintByCategory = TodaysComplaint.builder().groupBy("Category")
+			TodaysComplaint todaysComplaintByCategory = TodaysComplaint.builder().groupBy("category")
 					.buckets(todaysComplaintByCategoryBucket).build();
 
 			List<TodaysComplaint> todaysComplaint = Arrays.asList(todaysComplaintByStatus, todaysComplaintByChannel,
 					todaysComplaintByDepartment, todaysComplaintByCategory);
-			grievenceReport.setTodaysComplaints(todaysComplaint);
+			metrics.setTodaysComplaints(todaysComplaint);
 
 			// Re-Opened
 			List<Bucket> todaysComplaintByDepartmentReopenBucket = fetchGrievenceDetails.stream().collect(
 					Collectors.groupingBy(Grievance::getServicecode, Collectors.summingInt(Grievance::getReopen)))
 					.entrySet().stream().map(e -> {
-						return new Bucket(e.getKey(), e.getValue());
+						return new Bucket(e.getKey(), new BigDecimal(e.getValue()));
 					}).collect(Collectors.toList());
 
-			TodaysReopenedComplaint todaysReopenedComplaint = TodaysReopenedComplaint.builder().groupBy("Department")
+			TodaysReopenedComplaint todaysReopenedComplaint = TodaysReopenedComplaint.builder().groupBy("department")
 					.buckets(todaysComplaintByDepartmentReopenBucket).build();
 
-			grievenceReport.setTodaysReopenedComplaints(Arrays.asList(todaysReopenedComplaint));
+			metrics.setTodaysReopenedComplaints(Arrays.asList(todaysReopenedComplaint));
 
 			// Opened
 			List<Bucket> todaysComplaintByDepartmentOpenBucket = fetchGrievenceDetails.stream()
 					.collect(
 							Collectors.groupingBy(Grievance::getServicecode, Collectors.summingInt(Grievance::getOpen)))
 					.entrySet().stream().map(e -> {
-						return new Bucket(e.getKey(), e.getValue());
+						return new Bucket(e.getKey(), new BigDecimal(e.getValue()));
 					}).collect(Collectors.toList());
 
-			TodaysOpenComplaint todaysOpenComplaint = TodaysOpenComplaint.builder().groupBy("Department")
+			TodaysOpenComplaint todaysOpenComplaint = TodaysOpenComplaint.builder().groupBy("department")
 					.buckets(todaysComplaintByDepartmentOpenBucket).build();
 
-			grievenceReport.setTodaysOpenComplaints(Arrays.asList(todaysOpenComplaint));
+			metrics.setTodaysOpenComplaints(Arrays.asList(todaysOpenComplaint));
 
 			// Assigned
 			List<Bucket> todaysComplaintByDepartmentAssignedBucket = fetchGrievenceDetails.stream().collect(
 					Collectors.groupingBy(Grievance::getServicecode, Collectors.summingInt(Grievance::getAssigned)))
 					.entrySet().stream().map(e -> {
-						return new Bucket(e.getKey(), e.getValue());
+						return new Bucket(e.getKey(), new BigDecimal(e.getValue()));
 					}).collect(Collectors.toList());
 
-			TodaysAssignedComplaint todaysAssignedComplaint = TodaysAssignedComplaint.builder().groupBy("Department")
+			TodaysAssignedComplaint todaysAssignedComplaint = TodaysAssignedComplaint.builder().groupBy("department")
 					.buckets(todaysComplaintByDepartmentAssignedBucket).build();
 
-			grievenceReport.setTodaysAssignedComplaints(Arrays.asList(todaysAssignedComplaint));
+			metrics.setTodaysAssignedComplaints(Arrays.asList(todaysAssignedComplaint));
 
 			// Rejected
 			List<Bucket> todaysComplaintByDepartmentRejectedBucket = fetchGrievenceDetails.stream().collect(
 					Collectors.groupingBy(Grievance::getServicecode, Collectors.summingInt(Grievance::getRejected)))
 					.entrySet().stream().map(e -> {
-						return new Bucket(e.getKey(), e.getValue());
+						return new Bucket(e.getKey(), new BigDecimal(e.getValue()));
 					}).collect(Collectors.toList());
 
-			TodaysRejectedComplaint todaysRejectedComplaint = TodaysRejectedComplaint.builder().groupBy("Department")
+			TodaysRejectedComplaint todaysRejectedComplaint = TodaysRejectedComplaint.builder().groupBy("department")
 					.buckets(todaysComplaintByDepartmentRejectedBucket).build();
 
-			grievenceReport.setTodaysRejectedComplaints(Arrays.asList(todaysRejectedComplaint));
+			metrics.setTodaysRejectedComplaints(Arrays.asList(todaysRejectedComplaint));
 
 			// Reassigned
 			List<Bucket> todaysComplaintByDepartmentReassignedBucket = fetchGrievenceDetails.stream().collect(Collectors
 					.groupingBy(Grievance::getServicecode, Collectors.summingInt(Grievance::getReassignrequested)))
 					.entrySet().stream().map(e -> {
-						return new Bucket(e.getKey(), e.getValue());
+						return new Bucket(e.getKey(), new BigDecimal(e.getValue()));
 					}).collect(Collectors.toList());
 
 			TodaysReassignedComplaint todaysReassignedComplaint = TodaysReassignedComplaint.builder()
-					.groupBy("Department").buckets(todaysComplaintByDepartmentReassignedBucket).build();
+					.groupBy("department").buckets(todaysComplaintByDepartmentReassignedBucket).build();
 
-			grievenceReport.setTodaysReassignedComplaints(Arrays.asList(todaysReassignedComplaint));
+			metrics.setTodaysReassignedComplaints(Arrays.asList(todaysReassignedComplaint));
 
-			Integer closedComplaints1 = fetchGrievenceDetails.stream().mapToInt(Grievance::getClosedcomplaints).sum();
-			Integer totalComplaints = fetchGrievenceDetails.stream().mapToInt(Grievance::getTotalComplaints).sum();
+			List<Bucket> departmentsClosedBucket = fetchGrievenceDetails.stream().collect(Collectors
+					.groupingBy(Grievance::getServicecode, Collectors.summingInt(Grievance::getClosedcomplaints)))
+					.entrySet().stream().map(e -> {
+						return new Bucket(e.getKey(), new BigDecimal(e.getValue()));
+					}).collect(Collectors.toList());
 
-			grievenceReport.setCompletionRate(new BigDecimal(0.0));
-			if (totalComplaints > 0 && closedComplaints1 > 0) {
-				BigDecimal res1 = new BigDecimal(closedComplaints1);
-				BigDecimal res2 = new BigDecimal(totalComplaints);
-				grievenceReport.setCompletionRate(res1.divide(res2, 2, RoundingMode.HALF_EVEN));
+			List<Bucket> departmentsTotalBucket = fetchGrievenceDetails.stream().collect(Collectors
+					.groupingBy(Grievance::getServicecode, Collectors.summingInt(Grievance::getTotalComplaints)))
+					.entrySet().stream().map(e -> {
+						return new Bucket(e.getKey(), new BigDecimal(e.getValue()));
+					}).collect(Collectors.toList());
+
+			List<Bucket> listCompletionRate = new ArrayList<Bucket>();
+			if (!departmentsClosedBucket.isEmpty() && !departmentsTotalBucket.isEmpty()) {
+				for (Bucket b : departmentsTotalBucket) {
+					Optional<Bucket> findAny = departmentsClosedBucket.stream()
+							.filter(e -> e.getName().equals(b.getName())).findAny();
+					if (findAny.isPresent()) {
+						Bucket bucket = Bucket.builder().name(b.getName()).value(new BigDecimal(0.0)).build();
+						if (findAny.get().getValue().compareTo(BigDecimal.ZERO) > 0
+								&& b.getValue().compareTo(BigDecimal.ZERO) > 0) {
+							BigDecimal res1 = new BigDecimal(findAny.get().getValue().toBigInteger());
+							BigDecimal res2 = new BigDecimal(b.getValue().toBigInteger());
+							bucket.setValue(res1.divide(res2, 2, RoundingMode.HALF_EVEN));
+							listCompletionRate.add(bucket);
+						}
+					}
+				}
 			}
 
+			CompletionRate completionRate = CompletionRate.builder().groupBy("department").buckets(listCompletionRate)
+					.build();
+			metrics.setCompletionRate(Arrays.asList(completionRate));
+
+			List<Bucket> listSLAAchievement = new ArrayList<Bucket>();
 			ObjectMapper mapper = new ObjectMapper();
 			Object response = fetchGrievancesSLAAchievement(requestInfo, serviceReqSearchCriteria);
 
 			try {
 				ReportServiceResponse resultCast = mapper.convertValue(response, ReportServiceResponse.class);
-
-				String resolvedComplaints1 = "0";
 				if (resultCast.getReportResponses() != null && !resultCast.getReportResponses().isEmpty()) {
 					if (resultCast.getReportResponses().get(0).getReportData() != null
 							&& !resultCast.getReportResponses().get(0).getReportData().isEmpty()) {
-						resolvedComplaints1 = resultCast.getReportResponses().get(0).getReportData().get(0)
-								.get(1) != null
-										? resultCast.getReportResponses().get(0).getReportData().get(0).get(1)
-												.toString()
-										: "0";
+						for (List<Object> list : resultCast.getReportResponses().get(0).getReportData()) {
+							Bucket bucket = Bucket.builder().name(list.get(0).toString())
+									.value(new BigDecimal(list.get(1).toString())).build();
+							listSLAAchievement.add(bucket);
+						}
 					}
 				}
-				grievenceReport.setSlaAchievement(resolvedComplaints1);
 
+				SlaAchievement slaAchievement = SlaAchievement.builder().groupBy("department")
+						.buckets(listSLAAchievement).build();
+				metrics.setSlaAchievement(Arrays.asList(slaAchievement));
+
+				grievenceReport.setMetrics(metrics);
 			} catch (Exception e) {
 				throw new CustomException(ErrorConstants.ERROR_CODE_GRIVENCE, e.getMessage());
 			}

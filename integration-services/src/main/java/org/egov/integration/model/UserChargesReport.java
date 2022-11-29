@@ -1,4 +1,4 @@
-package org.egov.pgr.model;
+package org.egov.integration.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -15,7 +15,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class GrievanceReport {
+public class UserChargesReport {
 
 	@JsonProperty("date")
 	public String date;
@@ -23,18 +23,18 @@ public class GrievanceReport {
 	@JsonProperty("module")
 	public String module;
 
-	@JsonProperty("ulb")
-	public String ulb;
-
 	@JsonProperty("ward")
 	public String ward;
+
+	@JsonProperty("ulb")
+	public String ulb;
 
 	@JsonProperty("state")
 	public String state;
 
 	@JsonProperty("region")
 	public String region;
-	
+
 	@JsonProperty("metrics")
 	public Metric metrics;
 
