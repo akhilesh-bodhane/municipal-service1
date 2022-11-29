@@ -638,16 +638,6 @@ public class ReportService {
 				serviceReqSearchCriteria.getTenantId(), serviceReqSearchCriteria.getStartDate(),
 				serviceReqSearchCriteria.getEndDate(), requestInfo);
 		Object response = null;
-
-		ObjectMapper mapper = new ObjectMapper();
-
-		try {
-			System.out.println(mapper.writeValueAsString(reportRequest));
-		} catch (JsonProcessingException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-
 		try {
 			response = serviceRequestRepository.fetchResult(uri, reportRequest);
 		} catch (Exception e) {
