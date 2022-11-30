@@ -460,9 +460,6 @@ public class ReportService {
 
 			Metric metrics = Metric.builder().build();
 
-			Integer closedComplaints = fetchGrievenceDetails.stream().mapToInt(e -> e.closedcomplaints).sum();
-			metrics.setClosedComplaints(closedComplaints);
-
 			String fetchUniqueCitizens = serviceRequestRepository.fetchUniqueCitizens();
 			metrics.setUniqueCitizens(Integer.parseInt(fetchUniqueCitizens));
 

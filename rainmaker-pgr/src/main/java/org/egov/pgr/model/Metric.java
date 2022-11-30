@@ -20,9 +20,6 @@ import lombok.ToString;
 @ToString
 public class Metric {
 
-	@JsonProperty("closedComplaints")
-	public Integer closedComplaints;
-
 	@JsonProperty("slaAchievement")
 	public List<SlaAchievement> slaAchievement;
 
