@@ -30,8 +30,6 @@ public interface WaterService {
 	
 	public void sendSms(WaterNotificationRequest waterNotificationRequest);
 	
-	public List<WaterTotalCollections> searchTotalCollectionCount(SearchTotalCollectionCriteria SearchTotalCollectionCriteria, RequestInfo requestInfo);
-
 	public metrics searchTotalCollectionCountNIUA(
 			SearchTotalCollectionCriteria searchTotalCollectionCriteria, RequestInfo requestInfo);
 
