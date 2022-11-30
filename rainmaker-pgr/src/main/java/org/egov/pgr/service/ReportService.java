@@ -25,6 +25,7 @@ import org.egov.mdms.model.ModuleDetail;
 import org.egov.pgr.contract.ReportRequest;
 import org.egov.pgr.contract.ReportResponse;
 import org.egov.pgr.contract.ServiceReqSearchCriteria;
+import org.egov.pgr.model.AverageSolutionTime;
 import org.egov.pgr.model.Bucket;
 import org.egov.pgr.model.CompletionRate;
 import org.egov.pgr.model.Department;
@@ -574,7 +575,7 @@ public class ReportService {
 					}).collect(Collectors.toList());
 
 			TodaysResolvedComplaints todaysResolvedComplaintsByDepartment = TodaysResolvedComplaints.builder()
-					.groupBy("department").buckets(todaysComplaintByDepartmentBucket).build();
+					.groupBy("department").buckets(todaysResolvedComplaintsByDepartmentBucket).build();
 
 			metrics.setTodaysResolvedComplaints(Arrays.asList(todaysResolvedComplaintsByDepartment));
 
@@ -600,7 +601,7 @@ public class ReportService {
 					}).collect(Collectors.toList());
 
 			TodaysClosedComplaints todaysClosedComplaintsByDepartment = TodaysClosedComplaints.builder()
-					.groupBy("department").buckets(todaysReassignRequestedComplaintsByDepartmentBucket).build();
+					.groupBy("department").buckets(todaysClosedComplaintsByDepartmentBucket).build();
 
 			metrics.setTodaysClosedComplaints(Arrays.asList(todaysClosedComplaintsByDepartment));
 
@@ -639,6 +640,7 @@ public class ReportService {
 			metrics.setCompletionRate(Arrays.asList(completionRate));
 
 			List<Bucket> listSLAAchievement = new ArrayList<Bucket>();
+			List<Bucket> listAverageSolutionTime = new ArrayList<Bucket>();
 			ObjectMapper mapper = new ObjectMapper();
 			Object response = fetchGrievancesSLAAchievement(requestInfo, serviceReqSearchCriteria);
 
@@ -651,6 +653,9 @@ public class ReportService {
 							Bucket bucket = Bucket.builder().name(list.get(0).toString())
 									.value(new BigDecimal(list.get(1).toString())).build();
 							listSLAAchievement.add(bucket);
+							Bucket bucketAt = Bucket.builder().name(list.get(0).toString())
+									.value(new BigDecimal(list.get(2).toString())).build();
+							listAverageSolutionTime.add(bucketAt);
 						}
 					}
 				}
@@ -659,6 +664,9 @@ public class ReportService {
 						.buckets(listSLAAchievement).build();
 				metrics.setSlaAchievement(Arrays.asList(slaAchievement));
 
+				AverageSolutionTime averageSolutionTime = AverageSolutionTime.builder().groupBy("department")
+						.buckets(listAverageSolutionTime).build();
+				metrics.setAverageSolutionTime(Arrays.asList(averageSolutionTime));
 				grievenceReport.setMetrics(metrics);
 			} catch (Exception e) {
 				throw new CustomException(ErrorConstants.ERROR_CODE_GRIVENCE, e.getMessage());
