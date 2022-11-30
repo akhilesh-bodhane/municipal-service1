@@ -335,36 +335,13 @@ public class WaterServiceImpl implements WaterService {
 		return template;
 	}
 	
-	/**
-	 * 
-	 * @param criteria WaterConnectionSearchCriteria contains search criteria on water connection
-	 * @param requestInfo 
-	 * @return List(Count) of matching water connection
-	 */
-	public List<WaterTotalCollections> searchTotalCollectionCount(SearchTotalCollectionCriteria SearchTotalCollectionCriteria, RequestInfo requestInfo) {
-		List<WaterTotalCollections> waterConnectionList;
-		waterConnectionList = getWaterConnectionsTotalCollectionListCount(SearchTotalCollectionCriteria, requestInfo);
-		return waterConnectionList;
-	}
+
 	
 	/**
 	 * 
-	 * @param criteria WaterConnectionSearchCriteria contains search criteria on water connection
+	 * @param criteria WaterConnectionSearchCriteria contains search criteria on water & sewerage connection
 	 * @param requestInfo 
-	 * @return List(Count) of matching water connection
-	 */
-	public List<WaterTotalCollections> getWaterConnectionsTotalCollectionListCount(SearchTotalCollectionCriteria SearchTotalCollectionCriteria,
-			RequestInfo requestInfo) {
-		return waterDao.getWaterConnectionTotalCollectionListCount(SearchTotalCollectionCriteria, requestInfo);
-	}
-	
-	//Digamabr Digambar Digamabr Digambar Digamabr Digambar Digamabr Digambar Digamabr Digambar Digamabr Digambar
-	
-	/**
-	 * 
-	 * @param criteria WaterConnectionSearchCriteria contains search criteria on water connection
-	 * @param requestInfo 
-	 * @return List(Count) of matching water connection
+	 * @return List(Count) of matching water & sewerage connection
 	 */
 	public metrics searchTotalCollectionCountNIUA(SearchTotalCollectionCriteria SearchTotalCollectionCriteria, RequestInfo requestInfo) {
 		metrics waterConnectionList;
@@ -374,9 +351,9 @@ public class WaterServiceImpl implements WaterService {
 	
 	/**
 	 * 
-	 * @param criteria WaterConnectionSearchCriteria contains search criteria on water connection
+	 * @param criteria WaterConnectionSearchCriteria contains search criteria on water & sewerage connection
 	 * @param requestInfo 
-	 * @return List(Count) of matching water connection
+	 * @return List(Count) of matching water & sewerage connection
 	 */
 	public metrics getWaterConnectionsTotalCollectionListCountNIUA(SearchTotalCollectionCriteria SearchTotalCollectionCriteria,
 			RequestInfo requestInfo) {

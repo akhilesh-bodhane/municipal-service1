@@ -126,16 +126,7 @@ public class WaterController {
 
 	}
 	
-	@RequestMapping(value = "/_searchTotalcollectionCount", method = RequestMethod.POST)
-	public ResponseEntity<WaterCollectionCountResponse> searchTotalCollectionCount(@Valid @RequestBody RequestInfoWrapper requestInfoWrapper,
-			@Valid @ModelAttribute SearchTotalCollectionCriteria SearchTotalCollectionCriteria) {
-		List<WaterTotalCollections> waterConnectionList = waterService.searchTotalCollectionCount(SearchTotalCollectionCriteria, requestInfoWrapper.getRequestInfo());
-		WaterCollectionCountResponse response = WaterCollectionCountResponse.builder().waterConnection(waterConnectionList)
-				.responseInfo(responseInfoFactory.createResponseInfoFromRequestInfo(requestInfoWrapper.getRequestInfo(),
-						true))
-				.build();
-		return new ResponseEntity<>(response, HttpStatus.OK);
-	}
+	
 	
 	
 	@RequestMapping(value = "/_searchTotalcollectionCountNIUA", method = RequestMethod.POST)
@@ -144,9 +135,9 @@ public class WaterController {
 			metrics searchTotalCollectionCountNIUA = waterService.searchTotalCollectionCountNIUA(SearchTotalCollectionCriteria, requestInfoWrapper.getRequestInfo());
 
 			
-			metricsResponse vvv = metricsResponse.builder().metrics(searchTotalCollectionCountNIUA).build();
+			metricsResponse metricsResponsebody = metricsResponse.builder().metrics(searchTotalCollectionCountNIUA).build();
 
-         return new ResponseEntity<>( vvv , HttpStatus.OK);
+         return new ResponseEntity<>( metricsResponsebody , HttpStatus.OK);
 	}
 	
 	

@@ -64,8 +64,6 @@ public class WaterDaoImpl implements WaterDao {
 	private WSConfiguration wsConfiguration;
 	
 	
-	@Autowired
-	private org.egov.waterconnection.repository.rowmapper.WaterTotalCollectionsRowMapper WaterTotalCollectionsRowMapper;
 
 	@Value("${egov.waterservice.createwaterconnection}")
 	private String createWaterConnection;
@@ -211,32 +209,8 @@ public class WaterDaoImpl implements WaterDao {
 		
 	}
 	
-	@Override
-	public List<WaterTotalCollections> getWaterConnectionTotalCollectionListCount(SearchTotalCollectionCriteria SearchTotalCollectionCriteria,
-			RequestInfo requestInfo) {
-		List<Object> preparedStatement = new ArrayList<>();
-		String query = wsQueryBuilder.getSearchQueryStringTotalCollectionCount(SearchTotalCollectionCriteria, preparedStatement, requestInfo);
-		
-		
-		StringBuilder str = new StringBuilder("Water query: ").append(query);
-		
-		if (query == null)
-			return Collections.emptyList();
 
-		
-		List<WaterTotalCollections> waterConnectionList = jdbcTemplate.query(query, preparedStatement.toArray(),
-				WaterTotalCollectionsRowMapper);
-		
-		
-		if (waterConnectionList == null) {
-			return Collections.emptyList();
-		}
-
-		return waterConnectionList;
-	}
 	
-	
-	//Digambar
 	
 	
 	@Override
@@ -377,9 +351,13 @@ public class WaterDaoImpl implements WaterDao {
 		}
 
 		int transactions1 = 0;
+		String transactions = "transactions";
+		String todaysTotalApplications = "todaysTotalApplications";
+		String todaysClosedApplications = "todaysClosedApplications";
 		metrics build = metrics.builder().connectionsCreated(build3).todaysCollection(build4).sewerageConnections(build5)
-				.waterConnections(build6).pendingConnections(build7).transactions(trsa(SearchTotalCollectionCriteria, preparedStatement, requestInfo))
-				.slaCompliance(transactions1).todaysTotalApplications(trsa(SearchTotalCollectionCriteria, preparedStatement, requestInfo)).todaysClosedApplications(trsa(SearchTotalCollectionCriteria, preparedStatement, requestInfo))
+				.waterConnections(build6).pendingConnections(build7).transactions(trsa(transactions ,SearchTotalCollectionCriteria, preparedStatement, requestInfo))
+				.slaCompliance(transactions1).todaysTotalApplications(trsa(todaysTotalApplications ,SearchTotalCollectionCriteria, preparedStatement, requestInfo))
+				.todaysClosedApplications(trsa(todaysClosedApplications ,SearchTotalCollectionCriteria, preparedStatement, requestInfo))
 				.todaysCompletedApplicationsWithinSLA(transactions1)
 				.build();
 		
@@ -391,13 +369,12 @@ public class WaterDaoImpl implements WaterDao {
 		return build;
 	}
 
-	private int  trsa(SearchTotalCollectionCriteria searchTotalCollectionCriteria,
+	private int  trsa(String str , SearchTotalCollectionCriteria searchTotalCollectionCriteria,
 			List<Object> preparedStatement, RequestInfo requestInfo) {
 		
-		String groupByName = "transactions";
-		String string = "transactions";
 		
-		List<buckets> query2 = data(string, groupByName , searchTotalCollectionCriteria, preparedStatement, requestInfo);
+		
+		List<buckets> query2 = data(str, str , searchTotalCollectionCriteria, preparedStatement, requestInfo);
 		  int value = query2.get(0).getValue();
 		  
 		
