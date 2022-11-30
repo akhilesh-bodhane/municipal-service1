@@ -10,60 +10,89 @@ public class TLQueryBuilderNIUA {
 	 
 
 	
-	public static final String QUERY_NIUA = "  (( select 'todaysCollection' ccc ,\r\n"
-			+ "      ett.businessservice as name ,\r\n"
-			+ "      SUM(py.totaldue) as value \r\n"
-			+ "      from eg_tl_tradelicense ett \r\n"
-			+ "      LEFT OUTER join eg_tl_tradelicensedetail ett2 on ett.id = ett2.tradelicenseid\r\n"
-			+ "      LEFT OUTER JOIN egcl_bill bl  on  ett.applicationnumber  = bl.consumercode \r\n"
-			+ "      LEFT OUTER JOIN egcl_paymentdetail pyd on pyd.billid = bl.id \r\n"
-			+ "      LEFT OUTER JOIN egcl_payment py on py.id= pyd.paymentid \r\n"
-			+ "      where ett.tenantid = 'ch.chandigarh'\r\n"
-			+ "      and ett.createdtime >= ? \r\n"
-			+ "      and  ett.createdtime <= ? \r\n"
-			+ "      group by ett.businessservice)\r\n"
-			+ "      \r\n"
-			+ "      union \r\n"
-			+ "      \r\n"
-			+ "      ( select 'todaysTradeLicenses' ccc ,\r\n"
-			+ "      status as name ,\r\n"
-			+ "      count(businessservice) as value\r\n"
-			+ "      \r\n"
-			+ "      from eg_tl_tradelicense ett \r\n"
-			+ "      LEFT OUTER join eg_tl_tradelicensedetail ett2 on ett.id = ett2.tradelicenseid \r\n"
-			+ "      where ett.tenantid = 'ch.chandigarh'\r\n"
-			+ "      and ett.createdtime >= ? \r\n"
-			+ "      and  ett.createdtime <= ? \r\n"
-			+ "      group by ett.status)\r\n"
-			+ "      \r\n"
-			+ "      union \r\n"
-			+ "      \r\n"
-			+ "      ( select 'applicationsMovedToday' ccc , status as name,\r\n"
-			+ "      count(status) as value from eg_tl_tradelicense ett where applicationnumber in (select  distinct businessid \r\n"
-			+ "      from eg_wf_processinstance_v2 ewpv where  businessid in \r\n"
-			+ "     ( select ett.applicationnumber  from eg_tl_tradelicense ett \r\n"
-			+ "      where ett.lastmodifiedtime >= ? \r\n"
-			+ "      and  ett.lastmodifiedtime  <=  ? )\r\n"
-			+ "      group by businessid )\r\n"
-			+ "      group by status))\r\n"
-			+ "      \r\n"
-			+ "      union \r\n"
-			+ "      \r\n"
-			+ "      ( select 'transactions' ccc  , 'transactions' as name,\r\n"
-			+ "      count(status) as value from eg_tl_tradelicense ett where applicationnumber in (select  distinct businessid \r\n"
-			+ "      from eg_wf_processinstance_v2 ewpv where  businessid in \r\n"
-			+ "     ( select ett.applicationnumber  from eg_tl_tradelicense ett \r\n"
-			+ "      where ett.lastmodifiedtime >= ? \r\n"
-			+ "      and  ett.lastmodifiedtime  <= ? )\r\n"
-			+ "      group by businessid ))\r\n"
-			+ "      \r\n"
-			+ "      \r\n"
-			+ "      union \r\n"
-			+ "      \r\n"
-			+ "      ( select 'todaysApplications' ccc  , 'todaysApplications' as name, count(ett.applicationnumber)  as value from eg_tl_tradelicense ett \r\n"
-			+ "      where  ett.tenantid = 'ch.chandigarh'\r\n"
-			+ "      and ett.createdtime >= ? \r\n"
-			+ "      and  ett.createdtime <= ? ) " ;
+	public static final String QUERY_NIUA = "(( select 'todaysCollection' ccc ,\r\n"
+			+ "			      ett.businessservice as name ,\r\n"
+			+ "			      SUM(py.totaldue) as value \r\n"
+			+ "			      from eg_tl_tradelicense ett \r\n"
+			+ "			      LEFT OUTER join eg_tl_tradelicensedetail ett2 on ett.id = ett2.tradelicenseid\r\n"
+			+ "			      LEFT OUTER JOIN egcl_bill bl  on  ett.applicationnumber  = bl.consumercode \r\n"
+			+ "			      LEFT OUTER JOIN egcl_paymentdetail pyd on pyd.billid = bl.id \r\n"
+			+ "			      LEFT OUTER JOIN egcl_payment py on py.id= pyd.paymentid \r\n"
+			+ "			      where ett.tenantid = 'ch.chandigarh'\r\n"
+			+ "			      and ett.createdtime >= ? \r\n"
+			+ "			      and  ett.createdtime <= ? \r\n"
+			+ "			      group by ett.businessservice)\r\n"
+			+ "			      \r\n"
+			+ "			      union \r\n"
+			+ "			      \r\n"
+			+ "			      ( select 'todaysTradeLicenses' ccc ,\r\n"
+			+ "			      status as name ,\r\n"
+			+ "			      count(businessservice) as value\r\n"
+			+ "			      \r\n"
+			+ "			      from eg_tl_tradelicense ett \r\n"
+			+ "			      LEFT OUTER join eg_tl_tradelicensedetail ett2 on ett.id = ett2.tradelicenseid \r\n"
+			+ "			      where ett.tenantid = 'ch.chandigarh'\r\n"
+			+ "			      and ett.createdtime >= ? \r\n"
+			+ "			      and  ett.createdtime <= ? \r\n"
+			+ "			      group by ett.status)\r\n"
+			+ "			      \r\n"
+			+ "			      union \r\n"
+			+ "			      \r\n"
+			+ "			      ( select 'applicationsMovedToday' ccc , status as name,\r\n"
+			+ "			      count(status) as value from eg_tl_tradelicense ett where applicationnumber in (select  distinct businessid \r\n"
+			+ "			      from eg_wf_processinstance_v2 ewpv where  businessid in \r\n"
+			+ "			     ( select ett.applicationnumber  from eg_tl_tradelicense ett \r\n"
+			+ "			      where ett.lastmodifiedtime >= ? \r\n"
+			+ "			      and  ett.lastmodifiedtime  <=  ? )\r\n"
+			+ "			      group by businessid )\r\n"
+			+ "			      group by status))\r\n"
+			+ "			      \r\n"
+			+ "			      union \r\n"
+			+ "			      \r\n"
+			+ "			      ( select 'transactions' ccc  , 'transactions' as name,\r\n"
+			+ "			      count(status) as value from eg_tl_tradelicense ett where applicationnumber in (select  distinct businessid \r\n"
+			+ "			      from eg_wf_processinstance_v2 ewpv where  businessid in \r\n"
+			+ "			     ( select ett.applicationnumber  from eg_tl_tradelicense ett \r\n"
+			+ "			      where ett.lastmodifiedtime >= ? \r\n"
+			+ "			      and  ett.lastmodifiedtime  <= ? )\r\n"
+			+ "			      group by businessid ))\r\n"
+			+ "			      \r\n"
+			+ "			      \r\n"
+			+ "			      union \r\n"
+			+ "			      \r\n"
+			+ "			      ( select 'todaysApplications' ccc  , 'todaysApplications' as name, count(ett.applicationnumber)  as value from eg_tl_tradelicense ett \r\n"
+			+ "			      where  ett.tenantid = 'ch.chandigarh'\r\n"
+			+ "			      and ett.createdtime >= ? \r\n"
+			+ "			      and  ett.createdtime <= ? )\r\n"
+			+ "			union \r\n"
+			+ "			select 'adhocPenalty' ccc  , 'adhocPenalty' as name, \r\n"
+			+ "			      sum(taxamount) as value  \r\n"
+			+ "			from egbs_demanddetail_v1 edv \r\n"
+			+ "			where demandid  in (select id  from egbs_demand_v1 edv where consumercode in (select ett.applicationnumber \r\n"
+			+ "			      from eg_tl_tradelicense ett \r\n"
+			+ "			      LEFT OUTER join eg_tl_tradelicensedetail ett2 on ett.id = ett2.tradelicenseid\r\n"
+			+ "			      LEFT OUTER JOIN egcl_bill bl  on  ett.applicationnumber  = bl.consumercode \r\n"
+			+ "			      LEFT OUTER JOIN egcl_paymentdetail pyd on pyd.billid = bl.id \r\n"
+			+ "			      LEFT OUTER JOIN egcl_payment py on py.id= pyd.paymentid \r\n"
+			+ "			      where ett.tenantid = 'ch.chandigarh'\r\n"
+			+ "			      and ett.createdtime >= ? \r\n"
+			+ "			      and  ett.createdtime <= ?)) and taxheadcode  in ('CTL.OLD_BOOK_MARKET_PENALTY' , 'CTL.DHOBI_GHAT_PENALTY' , 'CTL.REHRI_DRIVING_LICENSE_PENALTY','CTL.REHRI_REGISTRATION_PENALTY')\r\n"
+			+ "			     \r\n"
+			+ "			union \r\n"
+			+ "			 select  'tlTax' ccc  , 'tlTax' as name,\r\n"
+			+ "			      sum(taxamount) \r\n"
+			+ "			from egbs_demanddetail_v1 edv \r\n"
+			+ "			where demandid  in (select id  from egbs_demand_v1 edv where consumercode in (select ett.applicationnumber \r\n"
+			+ "			      from eg_tl_tradelicense ett \r\n"
+			+ "			      LEFT OUTER join eg_tl_tradelicensedetail ett2 on ett.id = ett2.tradelicenseid\r\n"
+			+ "			      LEFT OUTER JOIN egcl_bill bl  on  ett.applicationnumber  = bl.consumercode \r\n"
+			+ "			      LEFT OUTER JOIN egcl_paymentdetail pyd on pyd.billid = bl.id \r\n"
+			+ "			      LEFT OUTER JOIN egcl_payment py on py.id= pyd.paymentid \r\n"
+			+ "			      where ett.tenantid = 'ch.chandigarh'\r\n"
+			+ "			      and ett.createdtime >= ? \r\n"
+			+ "			      and  ett.createdtime <= ?)) and taxheadcode not in \r\n"
+			+ "			('CTL.OLD_BOOK_MARKET_PENALTY' , 'CTL.DHOBI_GHAT_PENALTY' , 'CTL.REHRI_DRIVING_LICENSE_PENALTY',\r\n"
+			+ "			'CTL.REHRI_REGISTRATION_PENALTY')" ;
 	
 	
     public String getTLSearchQuery(RequestData criteria, List<Object> preparedStmtList) {
@@ -71,16 +100,20 @@ public class TLQueryBuilderNIUA {
         StringBuilder builder = new StringBuilder(QUERY_NIUA);
 
 
-            preparedStmtList.add(criteria.getFromDate());
-            preparedStmtList.add(criteria.getToDate());
-            preparedStmtList.add(criteria.getFromDate());
-            preparedStmtList.add(criteria.getToDate());
-            preparedStmtList.add(criteria.getFromDate());
-            preparedStmtList.add(criteria.getToDate());
-            preparedStmtList.add(criteria.getFromDate());
-            preparedStmtList.add(criteria.getToDate());
-            preparedStmtList.add(criteria.getFromDate());
-            preparedStmtList.add(criteria.getToDate());
+        preparedStmtList.add(criteria.getFromDate());
+        preparedStmtList.add(criteria.getToDate());
+        preparedStmtList.add(criteria.getFromDate());
+        preparedStmtList.add(criteria.getToDate());
+        preparedStmtList.add(criteria.getFromDate());
+        preparedStmtList.add(criteria.getToDate());
+        preparedStmtList.add(criteria.getFromDate());
+        preparedStmtList.add(criteria.getToDate());
+        preparedStmtList.add(criteria.getFromDate());
+        preparedStmtList.add(criteria.getToDate());
+        preparedStmtList.add(criteria.getFromDate());
+        preparedStmtList.add(criteria.getToDate());
+        preparedStmtList.add(criteria.getFromDate());
+        preparedStmtList.add(criteria.getToDate());
 
 
 
