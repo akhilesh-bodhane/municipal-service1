@@ -19,33 +19,21 @@ public class WaterNIUARowMapper implements ResultSetExtractor<List<buckets>> {
 
 	@Override
 	public List<buckets> extractData(ResultSet rs) throws SQLException, DataAccessException {
-		//Map<String, WaterTotalCollections> connectionListMap = new HashMap<>();
 		
 		
 		List<buckets> currentWaterConnection = new ArrayList<>();
 		
 		while (rs.next()) {
-			//String applicationNo = rs.getString("connection_Id");
 			
 			buckets watertotalcollections = new buckets();
 			
 			watertotalcollections = watertotalcollections.builder().build();
 			
 			
-			watertotalcollections.setName(rs.getString("usagecategory"));
+			watertotalcollections.setName(rs.getString("name"));
 			
-			watertotalcollections.setValue(rs.getInt("cccc"));
-				
-			/*
-			 * AuditDetails auditdetails = AuditDetails.builder()
-			 * .createdBy(rs.getString("ws_createdBy"))
-			 * .createdTime(rs.getLong("ws_createdTime"))
-			 * .lastModifiedBy(rs.getString("ws_lastModifiedBy"))
-			 * .lastModifiedTime(rs.getLong("ws_lastModifiedTime")) .build();
-			 * watertotalcollections.setAuditDetails(auditdetails);
-			 */
-							 
-				//connectionListMap.put(applicationNo, watertotalcollections);
+			watertotalcollections.setValue(rs.getInt("value"));
+			
 				currentWaterConnection.add(watertotalcollections);
 		
 		}

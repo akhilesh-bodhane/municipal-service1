@@ -27,8 +27,6 @@ public interface WaterDao {
 
 	public void updatebillingstatus(BillGeneration bill);
 	
-	public List<WaterTotalCollections> getWaterConnectionTotalCollectionListCount(SearchTotalCollectionCriteria SearchTotalCollectionCriteria,RequestInfo requestInfo);
-
 	public metrics getWaterConnectionTotalCollectionListCountNIUA(SearchTotalCollectionCriteria SearchTotalCollectionCriteria,RequestInfo requestInfo);
 
 
