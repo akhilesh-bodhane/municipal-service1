@@ -11,11 +11,13 @@ import org.egov.common.contract.request.RequestInfo;
 import org.egov.integration.model.CommonBuckets;
 import org.egov.integration.model.CommonMetrics;
 import org.egov.integration.model.CommonReportRequest;
+import org.egov.integration.model.CommonReportServiceResponse;
 import org.egov.integration.model.CommonServiceReqSearchCriteria;
 import org.egov.integration.model.LiveUlbsCount;
 import org.egov.integration.model.ParamValue;
 import org.egov.integration.repository.builder.CommonQueryBuilder;
 import org.egov.integration.repository.rowmapper.TotalCitizenCountRowMapper;
+import org.egov.tracer.model.CustomException;
 import org.egov.tracer.model.ServiceCallException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -61,11 +63,7 @@ public class CommonDaoImpl implements CommonDao{
 		List<LiveUlbsCount> build3 = new ArrayList<>();
 		
 	    LiveUlbsCount connection = new LiveUlbsCount();
-	    
-	    Object response = fetchGrievancesSLAAchievement(requestInfo, serviceReqSearchCriteria);
-	    
-	    System.out.println("Report Response" + response);
-				
+	    				
 		String groupby="serviceModuleCode";
 					
 		List<CommonBuckets> query2 = null;
@@ -94,6 +92,30 @@ public class CommonDaoImpl implements CommonDao{
 		build.setTotalCitizensCount(totalCitizensCount.get(0).getTotalCitizensCount());
 		build.setTotalLiveUlbsCount(01);
 		build.setTotalUlbCount(01);
+		
+		
+      Object response = fetchGrievancesSLAAchievement(requestInfo, serviceReqSearchCriteria);
+	    
+	    System.out.println("Report Response" + response);
+	    ObjectMapper mapper = new ObjectMapper();
+	    int slasize=0;
+	    try {
+			CommonReportServiceResponse resultCast = mapper.convertValue(response, CommonReportServiceResponse.class);
+			if (resultCast.getReportResponses() != null && !resultCast.getReportResponses().isEmpty()) {
+				if (resultCast.getReportResponses().get(0).getReportData() != null
+						&& !resultCast.getReportResponses().get(0).getReportData().isEmpty()) {
+					for (List<Object> list : resultCast.getReportResponses().get(0).getReportData()) {					
+						slasize = list.size();						
+						System.out.print("reportdata size :" + slasize);						
+					}
+					build.setSlaAchievement(slasize);
+				}
+			}
+
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		
 		
 		Gson gson = new Gson();
