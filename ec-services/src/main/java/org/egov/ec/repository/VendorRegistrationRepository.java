@@ -54,7 +54,7 @@ public class VendorRegistrationRepository {
 		log.info("VendorRegistration Repository - getVendor Method");
 		List<VendorRegistration> vendor;
 		Map<String, Object> paramValues = new HashMap<>();
-		String parameter = "%" + searchCriteria.getSearchText() + "%";
+		String parameter = "" + searchCriteria.getSearchText() + "%";
 
 		if (null != searchCriteria.getSearchText() && !searchCriteria.getSearchText().isEmpty() ) {
 

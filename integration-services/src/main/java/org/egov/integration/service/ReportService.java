@@ -284,7 +284,16 @@ public class ReportService {
 			NumberOfChallans numberOfChallansByStatus = NumberOfChallans.builder().groupBy("status")
 					.buckets(numberOfChallansByStatusBucket).build();
 
-			metrics.setNumberOfChallans(Arrays.asList(numberOfChallansByStatus));
+			List<Bucket> numberOfChallansByCategoryBucket = fetchUserChangesDetails.stream().collect(Collectors
+					.groupingBy(UserCharges::getCategory, Collectors.summingInt(UserCharges::getAllRecords)))
+					.entrySet().stream().map(e -> {
+						return new Bucket(e.getKey(), e.getValue());
+					}).collect(Collectors.toList());
+
+			NumberOfChallans numberOfChallansByCategory = NumberOfChallans.builder().groupBy("category")
+					.buckets(numberOfChallansByCategoryBucket).build();
+			
+			metrics.setNumberOfChallans(Arrays.asList(numberOfChallansByStatus,numberOfChallansByCategory));
 
 			userChargesReport.setMetrics(metrics);
 			return userChargesReport;
