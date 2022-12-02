@@ -59,7 +59,7 @@ public class ReportService {
 
 	@Autowired
 	private ApiConfiguration config;
-	
+
 	@Autowired
 	private ReportRepository reportRepository;
 
@@ -73,8 +73,8 @@ public class ReportService {
 		Gson gson = new Gson();
 		long fromdate = 0;
 		long todate = 0;
-		List<ReportModel> responseArray=new ArrayList<>();
-	//	JSONArray responseArray = new JSONArray();
+		List<ReportModel> responseArray = new ArrayList<>();
+		// JSONArray responseArray = new JSONArray();
 		RequestData requests = new RequestData();
 		if (redata.getParameter1Format().equalsIgnoreCase("Long")) {
 			ZonedDateTime zdt = LocalDate.now(ZoneId.of("Etc/UTC")).atTime(LocalTime.MIDNIGHT)
@@ -104,9 +104,10 @@ public class ReportService {
 				for (JsonNode userInfo : result.get("nocApplicationDetail")) {
 					LocalDate date = Instant.ofEpochMilli(userInfo.get("createdTime").asLong())
 							.atZone(ZoneId.systemDefault()).toLocalDate();
-					ReportModel response=ReportModel.builder().applicantId(userInfo.get("applicationId")).applicantSector(userInfo.get("sector"))
-							.applicantSubmissionDate(date.toString()).serviceName( ModuleNameConstants.PETNOC).build();
-				responseArray.add(response);
+					ReportModel response = ReportModel.builder().applicantId(userInfo.get("applicationId"))
+							.applicantSector(userInfo.get("sector")).applicantSubmissionDate(date.toString())
+							.serviceName(ModuleNameConstants.PETNOC).build();
+					responseArray.add(response);
 				}
 			}
 			requests = new RequestData(request.getRequestInfo(), ModuleNameConstants.SELLMEATNOC, null, null,
@@ -117,23 +118,25 @@ public class ReportService {
 				for (JsonNode userInfo : resultSellMeat.get("nocApplicationDetail")) {
 					LocalDate date = Instant.ofEpochMilli(userInfo.get("createdTime").asLong())
 							.atZone(ZoneId.systemDefault()).toLocalDate();
-					ReportModel response=ReportModel.builder().applicantId(userInfo.get("applicationId")).applicantSector(userInfo.get("sector"))
-							.applicantSubmissionDate(date.toString()).serviceName( ModuleNameConstants.SELLMEATNOC).build();
-					
+					ReportModel response = ReportModel.builder().applicantId(userInfo.get("applicationId"))
+							.applicantSector(userInfo.get("sector")).applicantSubmissionDate(date.toString())
+							.serviceName(ModuleNameConstants.SELLMEATNOC).build();
+
 					responseArray.add(response);
 				}
 			}
 			requests = new RequestData(request.getRequestInfo(), ModuleNameConstants.ADVERTISEMENTNOC, null, null,
 					dataPayload, null);
 			log.info("req" + requests);
-			JsonNode resultAdv= fetchResult(url, requests);
+			JsonNode resultAdv = fetchResult(url, requests);
 			if (resultAdv != null) {
 				for (JsonNode userInfo : resultAdv.get("nocApplicationDetail")) {
 					LocalDate date = Instant.ofEpochMilli(userInfo.get("createdTime").asLong())
 							.atZone(ZoneId.systemDefault()).toLocalDate();
-					ReportModel response=ReportModel.builder().applicantId(userInfo.get("applicationId")).applicantSector(userInfo.get("sector"))
-							.applicantSubmissionDate(date.toString()).serviceName( ModuleNameConstants.ADVERTISEMENTNOC).build();
-					
+					ReportModel response = ReportModel.builder().applicantId(userInfo.get("applicationId"))
+							.applicantSector(userInfo.get("sector")).applicantSubmissionDate(date.toString())
+							.serviceName(ModuleNameConstants.ADVERTISEMENTNOC).build();
+
 					responseArray.add(response);
 				}
 			}
@@ -150,9 +153,11 @@ public class ReportService {
 					String startDateString = userInfo.get("createdtime").toString().replaceAll("\"", "");
 					SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 					SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd");
-					ReportModel response=ReportModel.builder().applicantId(userInfo.get("service_request_id")).applicantSector(userInfo.get("locality"))
-							.applicantSubmissionDate(sdf2.format(sdf.parse(startDateString))).serviceName( ModuleNameConstants.HORTICULTURE).build();
-				
+					ReportModel response = ReportModel.builder().applicantId(userInfo.get("service_request_id"))
+							.applicantSector(userInfo.get("locality"))
+							.applicantSubmissionDate(sdf2.format(sdf.parse(startDateString)))
+							.serviceName(ModuleNameConstants.HORTICULTURE).build();
+
 					responseArray.add(response);
 				}
 			}
@@ -176,8 +181,9 @@ public class ReportService {
 				for (JsonNode userInfo : result.get("ResponseBody")) {
 					LocalDate date = Instant.ofEpochMilli(userInfo.get("createdTime").longValue())
 							.atZone(ZoneId.systemDefault()).toLocalDate();
-					ReportModel response=ReportModel.builder().applicantId(userInfo.get("challanId")).applicantSector(userInfo.get("sector"))
-							.applicantSubmissionDate(date.toString()).serviceName( ModuleNameConstants.ECHALLAN).build();
+					ReportModel response = ReportModel.builder().applicantId(userInfo.get("challanId"))
+							.applicantSector(userInfo.get("sector")).applicantSubmissionDate(date.toString())
+							.serviceName(ModuleNameConstants.ECHALLAN).build();
 					responseArray.add(response);
 				}
 			}
@@ -207,7 +213,6 @@ public class ReportService {
 		return response;
 
 	}
-
 
 	public UserChargesReport getUserChangesReport(RequestInfo requestInfo,
 			ServiceReqSearchCriteria serviceReqSearchCriteria) {
@@ -273,7 +278,17 @@ public class ReportService {
 			NumberOfReceipts numberOfReceiptsByStatus = NumberOfReceipts.builder().groupBy("status")
 					.buckets(numberOfReceiptsByStatusBucket).build();
 
-			metrics.setNumberOfReceipts(Arrays.asList(numberOfReceiptsPaymentMode, numberOfReceiptsByStatus));
+			List<Bucket> numberOfReceiptsByCategoryBucket = fetchUserChangesDetails.stream().collect(
+					Collectors.groupingBy(UserCharges::getCategory, Collectors.summingInt(UserCharges::getAllRecords)))
+					.entrySet().stream().map(e -> {
+						return new Bucket(e.getKey(), e.getValue());
+					}).collect(Collectors.toList());
+
+			TodaysCollections numberOfReceiptsByCategory = TodaysCollections.builder().groupBy("category")
+					.buckets(numberOfReceiptsByCategoryBucket).build();
+
+			metrics.setNumberOfReceipts(
+					Arrays.asList(numberOfReceiptsPaymentMode, numberOfReceiptsByStatus, numberOfReceiptsByCategory));
 
 			List<Bucket> numberOfChallansByStatusBucket = fetchUserChangesDetails.stream().collect(Collectors
 					.groupingBy(UserCharges::getPaymentStatus, Collectors.summingInt(UserCharges::getAllRecords)))
@@ -281,19 +296,19 @@ public class ReportService {
 						return new Bucket(e.getKey(), e.getValue());
 					}).collect(Collectors.toList());
 
-			NumberOfChallans numberOfChallansByStatus = NumberOfChallans.builder().groupBy("status")
+			NumberOfChallans numberOfChallansByStatus = NumberOfChallans.builder().groupBy("challanStatus")
 					.buckets(numberOfChallansByStatusBucket).build();
 
-			List<Bucket> numberOfChallansByCategoryBucket = fetchUserChangesDetails.stream().collect(Collectors
-					.groupingBy(UserCharges::getCategory, Collectors.summingInt(UserCharges::getAllRecords)))
+			List<Bucket> numberOfChallansByCategoryBucket = fetchUserChangesDetails.stream().collect(
+					Collectors.groupingBy(UserCharges::getCategory, Collectors.summingInt(UserCharges::getAllRecords)))
 					.entrySet().stream().map(e -> {
 						return new Bucket(e.getKey(), e.getValue());
 					}).collect(Collectors.toList());
 
 			NumberOfChallans numberOfChallansByCategory = NumberOfChallans.builder().groupBy("category")
 					.buckets(numberOfChallansByCategoryBucket).build();
-			
-			metrics.setNumberOfChallans(Arrays.asList(numberOfChallansByStatus,numberOfChallansByCategory));
+
+			metrics.setNumberOfChallans(Arrays.asList(numberOfChallansByStatus, numberOfChallansByCategory));
 
 			userChargesReport.setMetrics(metrics);
 			return userChargesReport;
