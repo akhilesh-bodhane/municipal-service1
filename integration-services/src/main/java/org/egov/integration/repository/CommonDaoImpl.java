@@ -110,11 +110,13 @@ public class CommonDaoImpl implements CommonDao{
 						slaachiements = resultCast.getReportResponses().get(0).getReportData().size();
 						String servicecodes = list.get(0).toString();	
 						System.out.print("slaachiements size :" + slaachiements);	
-						System.out.print("object size :" + objectsize);		
-						System.out.print("servicecodes :" + servicecodes);	
+						//System.out.print("object size :" + objectsize);		
+						//System.out.print("servicecodes :" + servicecodes);	
 					}
 					build.setSlaAchievement(slaachiements);
 				}
+			}else {
+				    build.setSlaAchievement(0);	
 			}
 
 
