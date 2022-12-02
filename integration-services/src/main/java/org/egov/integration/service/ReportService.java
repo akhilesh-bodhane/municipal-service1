@@ -284,7 +284,7 @@ public class ReportService {
 						return new Bucket(e.getKey(), e.getValue());
 					}).collect(Collectors.toList());
 
-			TodaysCollections numberOfReceiptsByCategory = TodaysCollections.builder().groupBy("category")
+			NumberOfReceipts numberOfReceiptsByCategory = NumberOfReceipts.builder().groupBy("category")
 					.buckets(numberOfReceiptsByCategoryBucket).build();
 
 			metrics.setNumberOfReceipts(
