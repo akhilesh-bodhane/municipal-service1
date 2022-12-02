@@ -5,11 +5,13 @@ import javax.validation.Valid;
 
 import org.egov.integration.model.CommonMetrics;
 import org.egov.integration.model.CommonMetricsResponse;
+import org.egov.integration.model.CommonServiceReqSearchCriteria;
 import org.egov.integration.model.RequestInfoWrapper;
 import org.egov.integration.service.CommonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -31,8 +33,9 @@ public class CommonController {
 	
 	
 	@RequestMapping(value = "/_searchTotalcollectionCountNIUA", method = RequestMethod.POST)
-	public ResponseEntity<CommonMetricsResponse> searchTotalCollectionCountNIUA(@Valid @RequestBody RequestInfoWrapper requestInfoWrapper) {
-			CommonMetrics searchTotalCollectionCountNIUA = commonService.searchTotalCollectionCountNIUA(requestInfoWrapper.getRequestInfo());			
+	public ResponseEntity<CommonMetricsResponse> searchTotalCollectionCountNIUA(@Valid @RequestBody RequestInfoWrapper requestInfoWrapper,
+			@Valid @ModelAttribute CommonServiceReqSearchCriteria serviceReqSearchCriteria) {
+			CommonMetrics searchTotalCollectionCountNIUA = commonService.searchTotalCollectionCountNIUA(requestInfoWrapper.getRequestInfo(),serviceReqSearchCriteria);			
 			CommonMetricsResponse metricsresponse = CommonMetricsResponse.builder().metrics(searchTotalCollectionCountNIUA).build();
 
          return new ResponseEntity<>( metricsresponse , HttpStatus.OK);
