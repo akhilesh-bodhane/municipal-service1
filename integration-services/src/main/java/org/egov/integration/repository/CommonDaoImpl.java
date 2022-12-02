@@ -98,17 +98,22 @@ public class CommonDaoImpl implements CommonDao{
 	    
 	    System.out.println("Report Response" + response);
 	    ObjectMapper mapper = new ObjectMapper();
-	    int slasize=0;
+	    int objectsize=0;
+	    int slaachiements=0;
 	    try {
 			CommonReportServiceResponse resultCast = mapper.convertValue(response, CommonReportServiceResponse.class);
 			if (resultCast.getReportResponses() != null && !resultCast.getReportResponses().isEmpty()) {
 				if (resultCast.getReportResponses().get(0).getReportData() != null
 						&& !resultCast.getReportResponses().get(0).getReportData().isEmpty()) {
-					for (List<Object> list : resultCast.getReportResponses().get(0).getReportData()) {					
-						slasize = list.size();						
-						System.out.print("reportdata size :" + slasize);						
+					for (List<Object> list : resultCast.getReportResponses().get(0).getReportData()) {	
+						objectsize = list.size();
+						slaachiements = resultCast.getReportResponses().get(0).getReportData().size();
+						String servicecodes = list.get(0).toString();	
+						System.out.print("slaachiements size :" + slaachiements);	
+						System.out.print("object size :" + objectsize);		
+						System.out.print("servicecodes :" + servicecodes);	
 					}
-					build.setSlaAchievement(slasize);
+					build.setSlaAchievement(slaachiements);
 				}
 			}
 
