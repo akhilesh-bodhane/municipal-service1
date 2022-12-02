@@ -103,6 +103,7 @@ public class CommonDaoImpl implements CommonDao{
 	    try {
 			CommonReportServiceResponse resultCast = mapper.convertValue(response, CommonReportServiceResponse.class);
 			if (resultCast.getReportResponses() != null && !resultCast.getReportResponses().isEmpty()) {
+				System.out.println("if");
 				if (resultCast.getReportResponses().get(0).getReportData() != null
 						&& !resultCast.getReportResponses().get(0).getReportData().isEmpty()) {
 					for (List<Object> list : resultCast.getReportResponses().get(0).getReportData()) {	
@@ -114,9 +115,13 @@ public class CommonDaoImpl implements CommonDao{
 						//System.out.print("servicecodes :" + servicecodes);	
 					}
 					build.setSlaAchievement(slaachiements);
+				}else {
+					System.out.print("slaachiements first else:" + slaachiements);	
+					build.setSlaAchievement(slaachiements);	
 				}
 			}else {
-				    build.setSlaAchievement(0);	
+				System.out.print("slaachiements else:" + slaachiements);	
+				    build.setSlaAchievement(slaachiements);	
 			}
 
 
