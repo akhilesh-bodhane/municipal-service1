@@ -96,31 +96,31 @@ public class CommonDaoImpl implements CommonDao{
 		
       Object response = fetchGrievancesSLAAchievement(requestInfo, serviceReqSearchCriteria);
 	    
-	    System.out.println("Report Response" + response);
+	    //System.out.println("Report Response" + response);
 	    ObjectMapper mapper = new ObjectMapper();
 	    int objectsize=0;
 	    int slaachiements=0;
 	    try {
 			CommonReportServiceResponse resultCast = mapper.convertValue(response, CommonReportServiceResponse.class);
 			if (resultCast.getReportResponses() != null && !resultCast.getReportResponses().isEmpty()) {
-				System.out.println("if");
+				//System.out.println("if");
 				if (resultCast.getReportResponses().get(0).getReportData() != null
 						&& !resultCast.getReportResponses().get(0).getReportData().isEmpty()) {
 					for (List<Object> list : resultCast.getReportResponses().get(0).getReportData()) {	
 						objectsize = list.size();
 						slaachiements = resultCast.getReportResponses().get(0).getReportData().size();
 						String servicecodes = list.get(0).toString();	
-						System.out.print("slaachiements size :" + slaachiements);	
+						//System.out.print("slaachiements size :" + slaachiements);	
 						//System.out.print("object size :" + objectsize);		
 						//System.out.print("servicecodes :" + servicecodes);	
 					}
 					build.setSlaAchievement(slaachiements);
 				}else {
-					System.out.print("slaachiements first else:" + slaachiements);	
+					//System.out.print("slaachiements first else:" + slaachiements);	
 					build.setSlaAchievement(slaachiements);	
 				}
 			}else {
-				System.out.print("slaachiements else:" + slaachiements);	
+				//System.out.print("slaachiements else:" + slaachiements);	
 				    build.setSlaAchievement(slaachiements);	
 			}
 
@@ -151,7 +151,7 @@ private List<CommonMetrics> totalCitizensCount(List<Object> preparedStatement, R
 public Object fetchGrievancesSLAAchievement(RequestInfo requestInfo,
 		CommonServiceReqSearchCriteria serviceReqSearchCriteria) {
 	
-	System.out.println("fetchGrievancesSLAAchievement method");
+	//System.out.println("fetchGrievancesSLAAchievement method");
 	StringBuilder uri = new StringBuilder();
 	CommonReportRequest reportRequest = prepareSearchGrievancesSLAAchievement(uri,
 			serviceReqSearchCriteria.getTenantId(), serviceReqSearchCriteria.getStartDate(),
@@ -162,7 +162,7 @@ public Object fetchGrievancesSLAAchievement(RequestInfo requestInfo,
 	} catch (Exception e) {
 		log.error("Exception while fetching serviceCodes: " + e);
 	}
-	System.out.println("fetchGrievancesSLAAchievement method response :"+ response);
+	//System.out.println("fetchGrievancesSLAAchievement method response :"+ response);
 	return response;
 
 }
@@ -170,7 +170,7 @@ public Object fetchGrievancesSLAAchievement(RequestInfo requestInfo,
 public CommonReportRequest prepareSearchGrievancesSLAAchievement(StringBuilder uri, String tenantId, Long fromDate,
 		Long toDate, RequestInfo requestInfo) {
 	uri.append(reportHost).append(reportEndpoint);
-	System.out.println("URI :"+uri);
+	//System.out.println("URI :"+uri);
 	List<ParamValue> searchParams = Arrays.asList(ParamValue.builder().name("fromDate").input(fromDate).build(),
 			ParamValue.builder().name("toDate").input(toDate).build());
 	return CommonReportRequest.builder().tenantId(tenantId).reportName("SLAAchievementDepartmentWise")
@@ -183,7 +183,7 @@ public Object fetchResult(StringBuilder uri, Object request) {
 	Object response = null;
 	try {
 		response = restTemplate.postForObject(uri.toString(), request, Map.class);
-		System.out.println("fetchResult method response :"+response);
+		//System.out.println("fetchResult method response :"+response);
 	} catch (HttpClientErrorException e) {
 		log.error("External Service threw an Exception: ", e);
 		throw new ServiceCallException(e.getResponseBodyAsString());
