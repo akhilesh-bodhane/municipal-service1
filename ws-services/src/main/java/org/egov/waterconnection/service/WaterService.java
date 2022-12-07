@@ -18,6 +18,8 @@ public interface WaterService {
 
 	public List<WaterConnection> search(SearchCriteria criteria, RequestInfo requestInfo);
 	
+	public List<WaterConnection> searchDashboard(SearchCriteria criteria, RequestInfo requestInfo);
+	
 	public List<WaterConnectionCount> searchCount(SearchCriteria criteria, RequestInfo requestInfo);
 	
 	public List<WaterConnection> updateWaterConnection(WaterConnectionRequest waterConnectionRequest);
