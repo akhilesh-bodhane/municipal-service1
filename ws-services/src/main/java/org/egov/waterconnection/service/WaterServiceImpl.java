@@ -359,4 +359,29 @@ public class WaterServiceImpl implements WaterService {
 			RequestInfo requestInfo) {
 		return waterDao.getWaterConnectionTotalCollectionListCountNIUA(SearchTotalCollectionCriteria, requestInfo);
 	}
+	
+	
+	/**
+	 * 
+	 * @param criteria WaterConnectionSearchCriteria contains search criteria on water connection
+	 * @param requestInfo 
+	 * @return List of matching water connection
+	 */
+	public List<WaterConnection> searchDashboard(SearchCriteria criteria, RequestInfo requestInfo) {
+		List<WaterConnection> waterConnectionList;
+		waterConnectionList = getWaterConnectionsListForDashboard(criteria, requestInfo);
+		waterConnectionValidator.validatePropertyForConnection(waterConnectionList);
+		enrichmentService.enrichConnectionHolderDeatils(waterConnectionList, criteria, requestInfo);
+		return waterConnectionList;
+	}
+	/**
+	 * 
+	 * @param criteria WaterConnectionSearchCriteria contains search criteria on water connection
+	 * @param requestInfo 
+	 * @return List of matching water connection
+	 */
+	public List<WaterConnection> getWaterConnectionsListForDashboard(SearchCriteria criteria,
+			RequestInfo requestInfo) {
+		return waterDao.getWaterConnectionListDashboard(criteria, requestInfo);
+	}
 }

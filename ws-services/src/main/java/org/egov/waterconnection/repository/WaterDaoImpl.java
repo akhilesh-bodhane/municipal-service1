@@ -25,6 +25,7 @@ import org.egov.waterconnection.model.todaysCollection;
 import org.egov.waterconnection.model.waterConnections;
 import org.egov.waterconnection.producer.WaterConnectionProducer;
 import org.egov.waterconnection.repository.builder.WsQueryBuilder;
+import org.egov.waterconnection.repository.rowmapper.WaterDashboardRowMapper;
 import org.egov.waterconnection.repository.rowmapper.WaterNIUARowMapper;
 import org.egov.waterconnection.repository.rowmapper.WaterRowMapper;
 import org.egov.waterconnection.repository.rowmapper.WaterRowMapperCount;
@@ -56,6 +57,11 @@ public class WaterDaoImpl implements WaterDao {
 
 	@Autowired
 	private WaterNIUARowMapper waterNIUARowMapper ;
+	
+
+	@Autowired
+	private WaterDashboardRowMapper waterDashboardRowMapper ;
+	
 	
 	@Autowired
 	private WaterRowMapperCount waterRowMapperCount;
@@ -394,6 +400,38 @@ public class WaterDaoImpl implements WaterDao {
 	}
 	
 	
+	@Override
+	public List<WaterConnection> getWaterConnectionListDashboard(SearchCriteria criteria,
+			RequestInfo requestInfo) {
+		List<Object> preparedStatement = new ArrayList<>();
+		String query = wsQueryBuilder.getSearchQueryStringDashborad(criteria, preparedStatement, requestInfo);
+		
+	//	log.info("Query-->"+query);
+	//	log.info("preparedStatement-->"+preparedStatement);
+		
+		StringBuilder str = new StringBuilder("Water query: ").append(query);
+		//log.info(str.toString());
+		if (query == null)
+			return Collections.emptyList();
+//		if (log.isDebugEnabled()) {
+	//		StringBuilder str = new StringBuilder("Water query: ").append(query);
+//			log.info(str.toString());
+//		}
+		
+	//	log.info(jdbcTemplate.query(query, preparedStatement.toArray(),waterRowMapper).toString());
+		
+		List<WaterConnection> waterConnectionList = jdbcTemplate.query(query, preparedStatement.toArray(),
+				waterDashboardRowMapper);
+		
+		//System.out.println(preparedStatement.toArray());
+		//System.out.println(preparedStatement);
+		//System.out.println(waterRowMapper.toString());
+		if (waterConnectionList == null) {
+			return Collections.emptyList();
+		}
+
+		return waterConnectionList;
+	}
 	
 
 }

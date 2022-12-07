@@ -66,6 +66,17 @@ public class WaterController {
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 	
+	@RequestMapping(value = "/_searchDashboard", method = RequestMethod.POST)
+	public ResponseEntity<WaterConnectionResponse> searchDashboard(@Valid @RequestBody RequestInfoWrapper requestInfoWrapper,
+			@Valid @ModelAttribute SearchCriteria criteria) {
+		List<WaterConnection> waterConnectionList = waterService.searchDashboard(criteria, requestInfoWrapper.getRequestInfo());
+		WaterConnectionResponse response = WaterConnectionResponse.builder().waterConnection(waterConnectionList)
+				.responseInfo(responseInfoFactory.createResponseInfoFromRequestInfo(requestInfoWrapper.getRequestInfo(),
+						true))
+				.build();
+		return new ResponseEntity<>(response, HttpStatus.OK);
+	}
+	
 	
 	@RequestMapping(value = "/_searchCount", method = RequestMethod.POST)
 	public ResponseEntity<WaterConnectionCountResponse> searchCount(@Valid @RequestBody RequestInfoWrapper requestInfoWrapper,

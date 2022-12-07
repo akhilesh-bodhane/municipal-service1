@@ -263,31 +263,38 @@ public class WsQueryBuilder {
 			+ "and bill.consumercode  like 'WS_AP/%' and py.totaldue != '0')and txn_status = 'SUCCESS'\r\n"
 			+ " group by     gateway )" ;
 
-	private static final String WATER_SEARCH_QUERY_NIUA5 = "SELECT  distinct\r\n"
-			+ "    sum(taxamount) as value,\r\n"
-			+ "    pt.usagecategory as name \r\n"
-			+ "    FROM eg_ws_connection conn  \r\n"
-			+ "      LEFT OUTER JOIN egcl_bill bl  on  conn.applicationno = bl.consumercode\r\n"
-			+ "            LEFT OUTER JOIN egbs_demand_v1 edv on edv.consumercode =  bl.consumercode\r\n"
-			+ "      LEFT OUTER JOIN egbs_demanddetail_v1 edvv on edvv.demandid = edv.id \r\n"
-			+ "      LEFT  OUTER JOIN EG_PT_PROPERTY pt ON pt.id  = conn.property_id\r\n"
-			+ "where bl.consumercode in\r\n"
-			+ "(select bill.consumercode   from \r\n"
-			+ "egcl_payment py   \r\n"
-			+ "INNER JOIN egcl_paymentdetail pyd ON pyd.paymentid = py.id  \r\n"
-			+ "INNER JOIN egcl_bill bill ON bill.id = pyd.billid   \r\n"
-			+ "where py.createdtime  >=    ? AND py.createdtime  <=  ?  \r\n"
-			+ "and bill.consumercode  like 'SW_AP/%' and py.totaldue != '0'\r\n"
-			+ "\r\n"
-			+ "union \r\n"
-			+ "\r\n"
-			+ "select bill.consumercode   from \r\n"
-			+ "egcl_payment py   \r\n"
-			+ "INNER JOIN egcl_paymentdetail pyd ON pyd.paymentid = py.id  \r\n"
-			+ "INNER JOIN egcl_bill bill ON bill.id = pyd.billid   \r\n"
-			+ "where py.createdtime  >=    ? AND py.createdtime  <=  ?  \r\n"
-			+ "and bill.consumercode  like 'WS_AP/%' and py.totaldue != '0')\r\n"
-			+ " group by   pt.usagecategory" ;
+	private static final String WATER_SEARCH_QUERY_NIUA5 = "select \r\n"
+			+ "  left(\r\n"
+			+ "      ffff.namee, \r\n"
+			+ "      case \r\n"
+			+ "        when strpos( ffff.namee, '.') = 0 then strpos( ffff.namee, '.') \r\n"
+			+ "        else strpos( ffff.namee, '.') -1 \r\n"
+			+ "      end\r\n"
+			+ "  ) as name , sum(ffff.value) as value from (	SELECT  distinct\r\n"
+			+ "			    sum(taxamount) as value,\r\n"
+			+ "			    pt.usagecategory as namee \r\n"
+			+ "			    FROM eg_ws_connection conn  \r\n"
+			+ "			      LEFT OUTER JOIN egcl_bill bl  on  conn.applicationno = bl.consumercode\r\n"
+			+ "			            LEFT OUTER JOIN egbs_demand_v1 edv on edv.consumercode =  bl.consumercode\r\n"
+			+ "			      LEFT OUTER JOIN egbs_demanddetail_v1 edvv on edvv.demandid = edv.id \r\n"
+			+ "			      LEFT  OUTER JOIN EG_PT_PROPERTY pt ON pt.id  = conn.property_id\r\n"
+			+ "			where bl.consumercode in\r\n"
+			+ "			(select bill.consumercode   from \r\n"
+			+ "			egcl_payment py   \r\n"
+			+ "			INNER JOIN egcl_paymentdetail pyd ON pyd.paymentid = py.id  \r\n"
+			+ "			INNER JOIN egcl_bill bill ON bill.id = pyd.billid   \r\n"
+			+ "			where py.createdtime  >=   ?  AND py.createdtime  <= ? \r\n"
+			+ "			and bill.consumercode  like 'SW_AP/%' and py.totaldue != '0'\r\n"
+			+ "			\r\n"
+			+ "			union \r\n"
+			+ "			\r\n"
+			+ "			select bill.consumercode   from \r\n"
+			+ "			egcl_payment py   \r\n"
+			+ "			INNER JOIN egcl_paymentdetail pyd ON pyd.paymentid = py.id  \r\n"
+			+ "			INNER JOIN egcl_bill bill ON bill.id = pyd.billid   \r\n"
+			+ "			where py.createdtime  >=   ? AND py.createdtime  <=  ? \r\n"
+			+ "			and bill.consumercode  like 'WS_AP/%' and py.totaldue != '0')\r\n"
+			+ "			 group by   pt.usagecategory )ffff  group by name" ;
 
 	private static final String WATER_SEARCH_QUERY_NIUA6 = "SELECT  distinct\r\n"
 			+ "    sum(taxamount) as value ,\r\n"
@@ -366,14 +373,22 @@ public class WsQueryBuilder {
 			+ "	and ewpv.createdtime >= ? \r\n"
 			+ "	AND ewpv.createdtime <=  ? ))sss" ;
 
-	private static final String WATER_SEARCH_QUERY_NIUA9 = "select count(pt.usagecategory) as value , pt.usagecategory as name\r\n"
-			+ "			from eg_sw_connection py\r\n"
-			+ "			 LEFT  OUTER JOIN EG_PT_PROPERTY pt ON pt.id  = py.property_id\r\n"
-			+ "			 where py.applicationno in (select  businessid from eg_wf_processinstance_v2 ewpv where \r\n"
-			+ "	businessservice = 'SW_SEWERAGE'\r\n"
-			+ "	and  ewpv.action ='ACTIVATE_SEWERAGE_CONNECTION'\r\n"
-			+ "	and ewpv.createdtime >= ?  \r\n"
-			+ "	AND ewpv.createdtime <=  ? )group by	pt.usagecategory" ;
+	private static final String WATER_SEARCH_QUERY_NIUA9 = " select \r\n"
+			+ "  left(\r\n"
+			+ "      ffff.namee, \r\n"
+			+ "      case \r\n"
+			+ "        when strpos( ffff.namee, '.') = 0 then strpos( ffff.namee, '.') \r\n"
+			+ "        else strpos( ffff.namee, '.') -1 \r\n"
+			+ "      end\r\n"
+			+ "  ) as name , sum(ffff.value) as value\r\n"
+			+ "from(select count(pt.usagecategory) as value , pt.usagecategory as namee\r\n"
+			+ "						from eg_sw_connection py\r\n"
+			+ "						 LEFT  OUTER JOIN EG_PT_PROPERTY pt ON pt.id  = py.property_id\r\n"
+			+ "						 where py.applicationno in (select  businessid from eg_wf_processinstance_v2 ewpv where \r\n"
+			+ "				businessservice = 'SW_SEWERAGE'\r\n"
+			+ "				and  ewpv.action ='ACTIVATE_SEWERAGE_CONNECTION'\r\n"
+			+ "				and ewpv.createdtime >= ?  \r\n"
+			+ "				AND ewpv.createdtime <=  ? )group by	pt.usagecategory)ffff  group  by name" ;
 
 	private static final String WATER_SEARCH_QUERY_NIUA10 = "select  count(businessid) as value , 'ONLINE' as name   from eg_wf_processinstance_v2 ewpv where \r\n"
 			+ "	ewpv.businessservice in ( 'REGULARWSCONNECTION' , 'TT_WATER_WORKFLOW')\r\n"
@@ -381,18 +396,26 @@ public class WsQueryBuilder {
 			+ "	and ewpv.createdtime >= ? \r\n"
 			+ "	AND ewpv.createdtime <=  ? " ;
 
-	private static final String WATER_SEARCH_QUERY_NIUA11 = "SELECT  distinct\r\n"
-			+ "			   count(pt.usagecategory) as value ,\r\n"
-			+ "			   pt.usagecategory as name \r\n"
-			+ "			   FROM eg_ws_connection py \r\n"
-			+ "			   LEFT  OUTER JOIN EG_PT_PROPERTY pt ON pt.id  = py.property_id\r\n"
-			+ "			   where py.applicationno in (select  businessid \r\n"
-			+ "			   from eg_wf_processinstance_v2 ewpv where \r\n"
-			+ "	ewpv.businessservice in ( 'REGULARWSCONNECTION' , 'TT_WATER_WORKFLOW')\r\n"
-			+ "	and  ewpv.action in ('ACTIVATE_REGULAR_CONNECTION' , 'CLOSED_CONNECTION_FROM_SUPERINTENDENT')\r\n"
-			+ "	and ewpv.createdtime >= ? \r\n"
-			+ "	AND ewpv.createdtime <=  ? )\r\n"
-			+ "	group by	pt.usagecategory" ;
+	private static final String WATER_SEARCH_QUERY_NIUA11 = "select \r\n"
+			+ "  left(\r\n"
+			+ "      ffff.namee, \r\n"
+			+ "      case \r\n"
+			+ "        when strpos( ffff.namee, '.') = 0 then strpos( ffff.namee, '.') \r\n"
+			+ "        else strpos( ffff.namee, '.') -1 \r\n"
+			+ "      end\r\n"
+			+ "  ) as name , sum(ffff.value) as value\r\n"
+			+ "from (SELECT  distinct\r\n"
+			+ "					   count(pt.usagecategory) as value ,\r\n"
+			+ "					   pt.usagecategory as namee \r\n"
+			+ "					   FROM eg_ws_connection py \r\n"
+			+ "					   LEFT  OUTER JOIN EG_PT_PROPERTY pt ON pt.id  = py.property_id\r\n"
+			+ "					   where py.applicationno in (select  businessid \r\n"
+			+ "					   from eg_wf_processinstance_v2 ewpv where \r\n"
+			+ "			ewpv.businessservice in ( 'REGULARWSCONNECTION' , 'TT_WATER_WORKFLOW')\r\n"
+			+ "			and  ewpv.action in ('ACTIVATE_REGULAR_CONNECTION' , 'CLOSED_CONNECTION_FROM_SUPERINTENDENT')\r\n"
+			+ "			and ewpv.createdtime >= ? \r\n"
+			+ "			AND ewpv.createdtime <= ? )\r\n"
+			+ "			group by	pt.usagecategory)ffff group  by name" ;
 
 	private static final String WATER_SEARCH_QUERY_NIUA12 = "  SELECT  distinct\r\n"
 			+ "			'WATER.METERED' as name,\r\n"
@@ -453,6 +476,60 @@ public class WsQueryBuilder {
 			+ "'ACTIVATE_SEWERAGE_CONNECTION')\r\n"
 			+ "and\r\n"
 			+ "createdtime  >= ? and createdtime <= ? ";
+
+	private static final String WATER_SEARCH_QUERY_DASHBOARD = " select wc.connectionType,conn.tenantid,\r\n"
+			+ "wc.connection_id as connection_Id,application.applicationno as app_applicationno,conn.applicationStatus ,conn.status,\r\n"
+			+ "		conn.connectionNo,\r\n"
+			+ "		wc.proposedPipeSize,\r\n"
+			+ "		conn.waterApplicationType,\r\n"
+			+ "		conn.inworkflow,\r\n"
+			+ "		application.activitytype as app_activitytype,\r\n"
+			+ "		conn.property_id,\r\n"
+			+ "		conn.applicationType,\r\n"
+			+ "		conn.id as conn_id,\r\n"
+			+ "		conn.subdiv,\r\n"
+			+ "		application.id as application_id,\r\n"
+			+ "		application.applicationstatus as app_applicationstatus,\r\n"
+			+ "		application.action as app_action,\r\n"
+			+ "		application.comments as app_comments,\r\n"
+			+ "		property.id as waterpropertyid,\r\n"
+			+ "	    property.usagecategory,\r\n"
+			+ "		property.usagesubcategory,\r\n"
+			+ "		pta.doorno as propertyplotno,\r\n"
+			+ "		property.plotareatt as ploatAreaTT,\r\n"
+			+ "		pta.locality as propertysectorno,\r\n"
+			+ "		application.createdBy as app_createdBy,\r\n"
+			+ "			application.lastModifiedBy as app_lastModifiedBy,\r\n"
+			+ "			application.createdTime as app_createdTime,\r\n"
+			+ "			application.lastModifiedTime as app_lastModifiedTime,\r\n"
+			+ "			userid,\r\n"
+			+ "		connectionholder.ws_application_id,\r\n"
+			+ "		holdershippercentage,\r\n"
+			+ "		isprimaryholder,\r\n"
+			+ "		connectionholder.relationship as holderrelationship,\r\n"
+			+ "		connectionholder.status as holderstatus,\r\n"
+			+ "		connectionholdertype,\r\n"
+			+ "		connectionholder.tenantid as holdertenantid,\r\n"
+			+ "		connectionholder.name as holdername,\r\n"
+			+ "		connectionholder.correspondance_address as holdercorrepondanceaddress,\r\n"
+			+ "		connectionholder.proposed_correspondance_address as proposedCorrespondanceAddress ,\r\n"
+			+ "		connectionholder.proposed_gender as proposedGender ,\r\n"
+			+ "		connectionholder.proposed_guardian_name as proposedGuardianName ,\r\n"
+			+ "		connectionholder.proposed_mobile_no as proposedMobileNo ,\r\n"
+			+ "		connectionholder.proposed_name as proposedName,\r\n"
+			+ "		connectionholder.lastmodifiedtime as holderlastmodifiedtime\r\n"
+			+ "		from\r\n"
+			+ "			eg_ws_connection conn\r\n"
+			+ "		inner join eg_ws_service wc on\r\n"
+			+ "			wc.connection_id = conn.id\r\n"
+			+ "		inner join eg_pt_address pta on\r\n"
+			+ "			conn.property_id = pta.propertyid\r\n"
+			+ "		inner join eg_ws_application application on\r\n"
+			+ "			application.wsid = conn.id\r\n"
+			+ "		inner join eg_ws_property property on\r\n"
+			+ "			property.wsid = conn.id\r\n"
+			+ "		left outer join eg_ws_connectionholder connectionholder on\r\n"
+			+ "			connectionholder.connectionid = conn.id";
 	/**
 	 * 
 	 * @param criteria
@@ -851,6 +928,160 @@ public class WsQueryBuilder {
 		
 		
 		
+	}
+	
+	
+	/**
+	 * 
+	 * @param criteria
+	 *            The WaterCriteria
+	 * @param preparedStatement
+	 *            The Array Of Object
+	 * @param requestInfo
+	 *            The Request Info
+	 * @return query as a string
+	 */
+	public String getSearchQueryStringDashborad(SearchCriteria criteria, List<Object> preparedStatement,
+			RequestInfo requestInfo) {
+		if (criteria.isEmpty())
+				return null;
+		StringBuilder query = new StringBuilder(WATER_SEARCH_QUERY_DASHBOARD);
+		boolean propertyIdsPresent = false;
+		/*
+		 * if (!StringUtils.isEmpty(criteria.getMobileNumber())) { Set<String>
+		 * propertyIds = new HashSet<>(); List<Property> propertyList =
+		 * waterServicesUtil.propertySearchOnCriteria(criteria, requestInfo);
+		 * propertyList.forEach(property -> propertyIds.add(property.getId())); if
+		 * (!propertyIds.isEmpty()) { addClauseIfRequired(preparedStatement, query);
+		 * query.append(" (conn.property_id in (").append(createQuery(propertyIds)).
+		 * append(" )"); addToPreparedStatement(preparedStatement, propertyIds);
+		 * propertyIdsPresent = true; } }
+		 */
+		if(!StringUtils.isEmpty(criteria.getMobileNumber())) {
+			Set<String> uuids = userService.getUUIDForUsers(criteria.getMobileNumber(), criteria.getTenantId(), requestInfo);
+			boolean userIdsPresent = false;
+			if (!CollectionUtils.isEmpty(uuids)) {
+				addORClauseIfRequired(preparedStatement, query);
+				if(!propertyIdsPresent)
+					query.append("(");
+				query.append(" connectionholder.userid in (").append(createQuery(uuids)).append(" ))");
+				addToPreparedStatement(preparedStatement, uuids);
+				userIdsPresent = true;
+			}
+			/*
+			 * if(propertyIdsPresent && !userIdsPresent){ query.append(")"); }
+			 */
+		}
+		if (!StringUtils.isEmpty(criteria.getTenantId())) {
+			addClauseIfRequired(preparedStatement, query);
+			query.append(" conn.tenantid = ? ");
+			preparedStatement.add(criteria.getTenantId());
+		}
+
+		if (!CollectionUtils.isEmpty(criteria.getIds())) {
+			addClauseIfRequired(preparedStatement, query);
+			query.append(" application.id in (").append(createQuery(criteria.getIds())).append(" )");
+			addToPreparedStatement(preparedStatement, criteria.getIds());
+		}
+		if (!StringUtils.isEmpty(criteria.getOldConnectionNumber())) {
+			addClauseIfRequired(preparedStatement, query);
+			query.append(" conn.oldconnectionno = ? ");
+			preparedStatement.add(criteria.getOldConnectionNumber());
+		}
+		if (!StringUtils.isEmpty(criteria.getPlotNo())) {
+			addClauseIfRequired(preparedStatement, query);
+			query.append(" pta.doorno = ? ");
+			preparedStatement.add(criteria.getPlotNo());
+		}
+		if (!StringUtils.isEmpty(criteria.getSectorNo())) {
+			addClauseIfRequired(preparedStatement, query);
+			query.append(" pta.locality = ? ");
+			preparedStatement.add(criteria.getSectorNo());
+		}
+		if (!StringUtils.isEmpty(criteria.getGroupNo())) {
+			addClauseIfRequired(preparedStatement, query);
+			query.append(" conn.billgroup = ? ");
+			preparedStatement.add(criteria.getGroupNo());
+		}
+		if (!StringUtils.isEmpty(criteria.getLedgerGroup())) {
+			addClauseIfRequired(preparedStatement, query);
+			query.append(" conn.ledgergroup = ? ");
+			preparedStatement.add(criteria.getLedgerGroup());
+		}
+		if (!StringUtils.isEmpty(criteria.getSubDivision())) {
+			addClauseIfRequired(preparedStatement, query);
+			query.append(" conn.subdiv = ? ");
+			preparedStatement.add(criteria.getSubDivision());
+		}
+		if (!StringUtils.isEmpty(criteria.getDivision())) {
+			addClauseIfRequired(preparedStatement, query);
+			query.append(" conn.div = ? ");
+			preparedStatement.add(criteria.getDivision());
+		}
+
+		if (!StringUtils.isEmpty(criteria.getConnectionNumber())) {
+			addClauseIfRequired(preparedStatement, query);
+			query.append(" conn.connectionno = ? ");
+			preparedStatement.add(criteria.getConnectionNumber());
+		}
+		if (!StringUtils.isEmpty(criteria.getStatus())) {
+			addClauseIfRequired(preparedStatement, query);
+			query.append(" conn.status = ? ");
+			preparedStatement.add(criteria.getStatus());
+		}
+		if (!StringUtils.isEmpty(criteria.getApplicationNumber())) {
+			addClauseIfRequired(preparedStatement, query);
+			query.append(" application.applicationno = ? ");
+			preparedStatement.add(criteria.getApplicationNumber());
+		}
+		if (!StringUtils.isEmpty(criteria.getApplicationNumberSearch())) {
+			addClauseIfRequired(preparedStatement, query);
+			query.append(" application.applicationno ilike ? ");
+			preparedStatement.add("%"+criteria.getApplicationNumberSearch());
+		}
+		if (!StringUtils.isEmpty(criteria.getApplicationStatus())) {
+			addClauseIfRequired(preparedStatement, query);
+			query.append(" application.applicationStatus = ? ");
+			preparedStatement.add(criteria.getApplicationStatus());
+		}
+		if (criteria.getFromDate() != null) {
+			addClauseIfRequired(preparedStatement, query);
+			query.append("  application.createdTime >= ? ");
+			preparedStatement.add(criteria.getFromDate());
+		}
+		if (criteria.getToDate() != null) {
+			addClauseIfRequired(preparedStatement, query);
+			query.append("  application.createdTime <= ? ");
+			preparedStatement.add(criteria.getToDate());
+		}
+		if (criteria.getAppFromDate() != null) {
+			addClauseIfRequired(preparedStatement, query);
+			query.append("  application.lastModifiedTime >= ?  ");
+			preparedStatement.add(criteria.getAppFromDate());
+		}
+		if (criteria.getAppToDate() != null) {
+			addClauseIfRequired(preparedStatement, query);
+			query.append("  application.lastModifiedTime <= ? ");
+			preparedStatement.add(criteria.getAppToDate());
+		}
+		if (criteria.getAppFromDate() != null || criteria.getAppToDate() != null) {
+			addClauseIfRequired(preparedStatement, query);
+			query.append("  application.applicationStatus in (" ).append(createQuery(WCConstants.APPROVED_ACTIONS)).append(" )");
+			addToPreparedStatement(preparedStatement, WCConstants.APPROVED_ACTIONS);
+		}
+		if(!StringUtils.isEmpty(criteria.getApplicationType())) {
+			addClauseIfRequired(preparedStatement, query);
+			query.append(" application.activitytype = ? ");
+			preparedStatement.add(criteria.getApplicationType());
+		}
+		/*
+		 * if (!StringUtils.isEmpty(criteria.getConnectionUserId())) {
+		 * addORClauseIfRequired(preparedStatement, query);
+		 * query.append(" cm.user_id = ? ");
+		 * preparedStatement.add(criteria.getConnectionUserId()); }
+		 */
+		query.append(ORDER_BY_CLAUSE);
+		return addPaginationWrapper(query.toString(), preparedStatement, criteria);
 	}
 	
 }
