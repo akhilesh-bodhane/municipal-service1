@@ -66,10 +66,10 @@ public class WaterController {
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 	
-	@RequestMapping(value = "/_get", method = RequestMethod.POST)
+	@RequestMapping(value = "/_searchDashboard", method = RequestMethod.POST)
 	public ResponseEntity<WaterConnectionResponse> searchDashboard(@Valid @RequestBody RequestInfoWrapper requestInfoWrapper,
 			@Valid @ModelAttribute SearchCriteria criteria) {
-		List<WaterConnection> waterConnectionList = waterService.getAPI(criteria, requestInfoWrapper.getRequestInfo());
+		List<WaterConnection> waterConnectionList = waterService.searchDashboard(criteria, requestInfoWrapper.getRequestInfo());
 		WaterConnectionResponse response = WaterConnectionResponse.builder().waterConnection(waterConnectionList)
 				.responseInfo(responseInfoFactory.createResponseInfoFromRequestInfo(requestInfoWrapper.getRequestInfo(),
 						true))

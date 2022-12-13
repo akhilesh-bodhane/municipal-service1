@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.Map;
 
 @Component
-public class WaterGetAPIRowMapper implements ResultSetExtractor<List<WaterConnection>> {
+public class WaterDashboardRowMapper implements ResultSetExtractor<List<WaterConnection>> {
 
 	@Override
 	public List<WaterConnection> extractData(ResultSet rs) throws SQLException, DataAccessException {
@@ -34,7 +34,6 @@ public class WaterGetAPIRowMapper implements ResultSetExtractor<List<WaterConnec
 				currentWaterConnection.setTenantId(rs.getString("tenantid"));
 				currentWaterConnection.setConnectionType(rs.getString("connectionType"));
 				currentWaterConnection.setId(rs.getString("connection_Id"));
-				currentWaterConnection.setWaterSource(rs.getString("waterSource"));
 //				
 				currentWaterConnection.setApplicationNo(rs.getString("app_applicationno"));
 				currentWaterConnection.setApplicationStatus(rs.getString("applicationstatus"));

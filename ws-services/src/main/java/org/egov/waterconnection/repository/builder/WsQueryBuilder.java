@@ -477,10 +477,10 @@ public class WsQueryBuilder {
 			+ "and\r\n"
 			+ "createdtime  >= ? and createdtime <= ? ";
 
-	private static final String WATER_GET_API = " select wc.connectionType,conn.tenantid,\r\n"
+	private static final String WATER_SEARCH_QUERY_DASHBOARD = " select wc.connectionType,conn.tenantid,\r\n"
 			+ "wc.connection_id as connection_Id,application.applicationno as app_applicationno,conn.applicationStatus ,conn.status,\r\n"
 			+ "		conn.connectionNo,\r\n"
-			+ "		wc.proposedPipeSize, wc.waterSource,\r\n"
+			+ "		wc.proposedPipeSize,\r\n"
 			+ "		conn.waterApplicationType,\r\n"
 			+ "		conn.inworkflow,\r\n"
 			+ "		application.activitytype as app_activitytype,\r\n"
@@ -941,11 +941,11 @@ public class WsQueryBuilder {
 	 *            The Request Info
 	 * @return query as a string
 	 */
-	public String getAPI(SearchCriteria criteria, List<Object> preparedStatement,
+	public String getSearchQueryStringDashborad(SearchCriteria criteria, List<Object> preparedStatement,
 			RequestInfo requestInfo) {
 		if (criteria.isEmpty())
 				return null;
-		StringBuilder query = new StringBuilder(WATER_GET_API);
+		StringBuilder query = new StringBuilder(WATER_SEARCH_QUERY_DASHBOARD);
 		boolean propertyIdsPresent = false;
 		/*
 		 * if (!StringUtils.isEmpty(criteria.getMobileNumber())) { Set<String>

@@ -18,7 +18,7 @@ public interface WaterDao {
 
 	public List<WaterConnection> getWaterConnectionList(SearchCriteria criteria,RequestInfo requestInfo);
 	
-	public List<WaterConnection> getAPI(SearchCriteria criteria,RequestInfo requestInfo);
+	public List<WaterConnection> getWaterConnectionListDashboard(SearchCriteria criteria,RequestInfo requestInfo);
 	
 	public List<WaterConnectionCount> getWaterConnectionListCount(SearchCriteria criteria,RequestInfo requestInfo);
 	public void updateWaterConnection(WaterConnectionRequest waterConnectionRequest, boolean isStateUpdatable);
