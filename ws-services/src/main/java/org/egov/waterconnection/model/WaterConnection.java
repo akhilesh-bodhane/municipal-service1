@@ -31,7 +31,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @Builder
 @ToString
-@JsonInclude(JsonInclude.Include.NON_NULL)
+
 @javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2020-03-11T12:10:14.583+05:30[Asia/Kolkata]")
 public class WaterConnection extends Connection {
 
