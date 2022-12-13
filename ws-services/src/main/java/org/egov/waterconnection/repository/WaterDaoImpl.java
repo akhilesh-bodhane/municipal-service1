@@ -25,7 +25,7 @@ import org.egov.waterconnection.model.todaysCollection;
 import org.egov.waterconnection.model.waterConnections;
 import org.egov.waterconnection.producer.WaterConnectionProducer;
 import org.egov.waterconnection.repository.builder.WsQueryBuilder;
-import org.egov.waterconnection.repository.rowmapper.WaterGetAPIRowMapper;
+import org.egov.waterconnection.repository.rowmapper.WaterDashboardRowMapper;
 import org.egov.waterconnection.repository.rowmapper.WaterNIUARowMapper;
 import org.egov.waterconnection.repository.rowmapper.WaterRowMapper;
 import org.egov.waterconnection.repository.rowmapper.WaterRowMapperCount;
@@ -60,7 +60,7 @@ public class WaterDaoImpl implements WaterDao {
 	
 
 	@Autowired
-	private WaterGetAPIRowMapper waterGetAPIRowMapper ;
+	private WaterDashboardRowMapper waterDashboardRowMapper ;
 	
 	
 	@Autowired
@@ -401,10 +401,10 @@ public class WaterDaoImpl implements WaterDao {
 	
 	
 	@Override
-	public List<WaterConnection> getAPI(SearchCriteria criteria,
+	public List<WaterConnection> getWaterConnectionListDashboard(SearchCriteria criteria,
 			RequestInfo requestInfo) {
 		List<Object> preparedStatement = new ArrayList<>();
-		String query = wsQueryBuilder.getAPI(criteria, preparedStatement, requestInfo);
+		String query = wsQueryBuilder.getSearchQueryStringDashborad(criteria, preparedStatement, requestInfo);
 		
 	//	log.info("Query-->"+query);
 	//	log.info("preparedStatement-->"+preparedStatement);
@@ -421,7 +421,7 @@ public class WaterDaoImpl implements WaterDao {
 	//	log.info(jdbcTemplate.query(query, preparedStatement.toArray(),waterRowMapper).toString());
 		
 		List<WaterConnection> waterConnectionList = jdbcTemplate.query(query, preparedStatement.toArray(),
-				waterGetAPIRowMapper);
+				waterDashboardRowMapper);
 		
 		//System.out.println(preparedStatement.toArray());
 		//System.out.println(preparedStatement);
