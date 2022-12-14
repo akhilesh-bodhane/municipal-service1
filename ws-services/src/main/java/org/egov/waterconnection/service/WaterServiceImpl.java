@@ -367,9 +367,9 @@ public class WaterServiceImpl implements WaterService {
 	 * @param requestInfo 
 	 * @return List of matching water connection
 	 */
-	public List<WaterConnection> searchDashboard(SearchCriteria criteria, RequestInfo requestInfo) {
+	public List<WaterConnection> getAPI(SearchCriteria criteria, RequestInfo requestInfo) {
 		List<WaterConnection> waterConnectionList;
-		waterConnectionList = getWaterConnectionsListForDashboard(criteria, requestInfo);
+		waterConnectionList = getWaterConnectionsListForGetAPI(criteria, requestInfo);
 		waterConnectionValidator.validatePropertyForConnection(waterConnectionList);
 		enrichmentService.enrichConnectionHolderDeatils(waterConnectionList, criteria, requestInfo);
 		return waterConnectionList;
@@ -380,8 +380,8 @@ public class WaterServiceImpl implements WaterService {
 	 * @param requestInfo 
 	 * @return List of matching water connection
 	 */
-	public List<WaterConnection> getWaterConnectionsListForDashboard(SearchCriteria criteria,
+	public List<WaterConnection> getWaterConnectionsListForGetAPI(SearchCriteria criteria,
 			RequestInfo requestInfo) {
-		return waterDao.getWaterConnectionListDashboard(criteria, requestInfo);
+		return waterDao.getAPI(criteria, requestInfo);
 	}
 }
