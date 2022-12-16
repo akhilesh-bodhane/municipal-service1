@@ -368,6 +368,10 @@ public class ViolationService {
 
 					violationPage = repository.getChallan(searchCriteria);
 				}
+				
+				String receiptNo = repository.getReceiptNo(searchCriteria);
+				
+				violationPage.get(0).setReceiptNo(receiptNo);
 
 				return new ResponseEntity<>(ResponseInfoWrapper.builder()
 						.responseInfo(ResponseInfo.builder().status(EcConstants.STATUS_SUCCESS).build())

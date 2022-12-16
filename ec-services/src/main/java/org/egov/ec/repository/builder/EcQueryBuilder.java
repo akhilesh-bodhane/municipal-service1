@@ -273,6 +273,15 @@ public class EcQueryBuilder {
 			"where not exists (select 1 from egec_challan_master ecm where ecm.violation_uuid =evd.violation_uuid ));";
 	public static final String SEARCH_VIOLATION_MASTER_DETAILS = "SELECT * from egec_violation_master evd\r\n" + 
 			"where not exists (select 1 from egec_challan_master ecm where ecm.violation_uuid =evd.violation_uuid );";
+	
+	
+	
+	public static final String GET_RECEIPT_NO = " select distinct pyd.receiptnumber  from \r\n"
+			+ "egec_challan_master ec   \r\n"
+			+ "INNER JOIN egcl_bill bill ON bill.consumercode  = ec.challan_id \r\n"
+			+ "INNER JOIN egcl_paymentdetail pyd ON pyd.billid  = bill.id  \r\n"
+			+ "INNER JOIN egcl_payment ep   ON ep.id = pyd.paymentid  \r\n"
+			+ "where bill.consumercode  =? AND ec.tenant_id  = 'ch.chandigarh' ";
 }
 
 

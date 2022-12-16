@@ -9,6 +9,7 @@ import org.egov.ec.config.EchallanConfiguration;
 import org.egov.ec.producer.Producer;
 import org.egov.ec.repository.builder.EcQueryBuilder;
 import org.egov.ec.repository.rowmapper.ColumnsRowMapper;
+import org.egov.ec.repository.rowmapper.ReceiptNoRowMapper;
 import org.egov.ec.repository.rowmapper.ViolationDetailCountRowMapper;
 import org.egov.ec.repository.rowmapper.ViolationDetailRowMapper;
 import org.egov.ec.web.models.ChallanDataBckUp;
@@ -18,6 +19,7 @@ import org.egov.ec.web.models.EcSearchCriteria;
 import org.egov.ec.web.models.RequestInfoWrapper;
 import org.egov.ec.web.models.Violation;
 import org.egov.ec.web.models.ViolationCount;
+import org.egov.tracer.model.CustomException;
 import org.json.simple.JSONArray;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -41,10 +43,12 @@ public class ViolationRepository {
 	private EchallanConfiguration config;
 
 	private EcQueryBuilder ecQueryBuilder;
+	
+	private ReceiptNoRowMapper receiptNoRowMapper;
 
 	public ViolationRepository(JdbcTemplate jdbcTemplate, Producer producer, EchallanConfiguration config,
 			ViolationDetailRowMapper rowMapper, ColumnsRowMapper columnsRowMapper,
-			ViolationDetailCountRowMapper rowCountMapper) {
+			ViolationDetailCountRowMapper rowCountMapper,ReceiptNoRowMapper receiptNoRowMapper) {
 		this.jdbcTemplate = jdbcTemplate;
 		this.rowMapper = rowMapper;
 		this.producer = producer;
@@ -52,6 +56,7 @@ public class ViolationRepository {
 		this.ecQueryBuilder = ecQueryBuilder;
 		this.columnsRowMapper = columnsRowMapper;
 		this.rowCountMapper = rowCountMapper;
+		this.receiptNoRowMapper=receiptNoRowMapper;
 	}
 
 	/**
@@ -295,5 +300,19 @@ public class ViolationRepository {
 	public void editChallan(Violation violationMaster) {
 		RequestInfoWrapper infoWrapper = RequestInfoWrapper.builder().requestBody(violationMaster).build();
 		producer.push(config.getEditChallanTopic(), infoWrapper);
+	}
+	
+	public String getReceiptNo(EcSearchCriteria searchCriteria) {
+		String receiptno ="";		
+		
+		try {
+			return receiptno = jdbcTemplate.query(EcQueryBuilder.GET_RECEIPT_NO,
+					new Object[] {  searchCriteria.getSearchText()		
+								 }, receiptNoRowMapper);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new CustomException("Exception",e.getMessage());
+		}
+
 	}
 }
