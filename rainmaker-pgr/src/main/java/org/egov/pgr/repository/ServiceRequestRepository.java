@@ -7,8 +7,11 @@ import java.util.List;
 import java.util.Map;
 
 import org.egov.pgr.contract.ServiceReqSearchCriteria;
+import org.egov.pgr.contract.ServiceRequest;
+import org.egov.pgr.contract.ServiceRequestComplaints;
 import org.egov.pgr.model.Grievance;
 import org.egov.pgr.repository.rowmapper.GrievanceDataRowMapper;
+import org.egov.pgr.repository.rowmapper.ServiceRequestDataRowMapper;
 import org.egov.tracer.model.CustomException;
 import org.egov.tracer.model.ServiceCallException;
 import org.json.JSONArray;
@@ -41,6 +44,9 @@ public class ServiceRequestRepository {
 	@Autowired
 	private GrievanceDataRowMapper grivenceDataRowMapper;
 
+	@Autowired
+	private ServiceRequestDataRowMapper serviceRequestDataRowMapper;
+
 	public static final String SERVICE_SEARCH_WITH_DETAILS = "select array_to_json(array_agg(row_to_json(serviceRequests))) from (select (select (select (row_to_json(services)) from ( select *, (select (select row_to_json(auditDetails) from (select createdtime, lastmodifiedtime, createdby, lastmodifiedby from eg_pgr_service where svc.serviceRequestId=eg_pgr_service.serviceRequestId) auditDetails) as auditDetails), (select (select (row_to_json(addressDetail)) from (select * from eg_pgr_address where eg_pgr_address.uuid=eg_pgr_service.addressid) addressDetail) as addressDetail) from eg_pgr_service svc where svc.serviceRequestId=eg_pgr_service.serviceRequestId order by createdtime desc) services) as services),(select (select array_to_json(array_agg(row_to_json(actionHistory))) from ( select * from eg_pgr_action where businessKey=eg_pgr_service.serviceRequestId order by \"when\" desc) actionHistory) as actionHistory) from eg_pgr_service WHERE ";
 
 	public static final String SERVICE_SEARCH_WITH_COUNT = "select array_to_json(array_agg(row_to_json(services))) from (select (row_to_json(services)) from ( select count(*) from eg_pgr_service where ";
@@ -57,6 +63,8 @@ public class ServiceRequestRepository {
 			+ "SUM(case when status = 'escalatedlevel1pending' and to_date(TO_CHAR(to_timestamp(lastmodifiedtime / 1000), 'DD/MM/YYYY'),'DD/MM/YYYY') = NOW()::date then 1 else 0 end)  escalatedlevel1pending,\r\n"
 			+ "SUM(case when status = 'resolved' and to_date(TO_CHAR(to_timestamp(lastmodifiedtime / 1000), 'DD/MM/YYYY'),'DD/MM/YYYY') = NOW()::date then 1 else 0 end)  resolved,\r\n"
 			+ "SUM(case when status = 'closed' then 1 else 0 end)  closedComplaints, SUM(case when status = 'resolved' then 1 else 0 end)  resolvedComplaints, count(1) totalComplaints, 0 slaAchievement from eg_pgr_service where ";
+
+	public static final String SERVICE_DASHBOARD_SEARCH_WITH_DETAILS = "select max(pg.serviceRequestId) serviceRequestId, max(pg.servicecode) servicecode, max(pg.category) category, max(pg.createdtime) createdtime, max(pg.createdby) createdby, max(pg.lastmodifiedtime) lastmodifiedtime, max(pg.lastmodifiedby) lastmodifiedby, max(ad.mohalla) mohalla, max(pg.status) status, max(pg.slaendtime) slaendtime, json_agg(json_build_object('uuid', ac.uuid, 'by', ac.by, 'status', ac.status,'when', ac.\"when\", 'tenantId', ac.tenantId, 'businessKey', ac.businessKey, 'action', ac.\"action\", 'media', ac.media)) actionHistory from eg_pgr_service pg left join eg_pgr_address ad on pg.addressid = ad.uuid left join eg_pgr_action ac on pg.serviceRequestId = ac.businesskey where ac.businesskey is not null and ac.status is not null and ";
 
 	/**
 	 * Fetches results from searcher framework based on the uri and request that
@@ -389,5 +397,50 @@ public class ServiceRequestRepository {
 		}
 		return uniqueCitizens;
 
+	}
+
+	public List<ServiceRequestComplaints> getServiceRequestDetailsForDashBoard(
+			ServiceReqSearchCriteria serviceReqSearchCriteria) {
+		Map<String, Object> preparedStatementValues = new HashMap<>();
+		String query = getServiceRequestDetailsForDashBoardQuery(serviceReqSearchCriteria);
+		List<ServiceRequestComplaints> serviceRequest = null;
+		try {
+			serviceRequest = namedParameterJdbcTemplate.query(query, preparedStatementValues,
+					serviceRequestDataRowMapper);
+		} catch (DataAccessResourceFailureException ex) {
+			log.info("Query Execution Failed Due To Timeout: ", ex);
+			PSQLException cause = (PSQLException) ex.getCause();
+			if (cause != null && cause.getSQLState().equals("57014")) {
+				throw new CustomException("QUERY_EXECUTION_TIMEOUT", "Query failed, as it took more than expected");
+			} else {
+				throw ex;
+			}
+		} catch (Exception e) {
+			log.info("Query Execution Failed: ", e);
+			throw e;
+		}
+		return serviceRequest;
+	}
+
+	public String getServiceRequestDetailsForDashBoardQuery(ServiceReqSearchCriteria serviceReqSearchCriteria) {
+		String query = SERVICE_DASHBOARD_SEARCH_WITH_DETAILS;
+		StringBuilder whereStr = new StringBuilder();
+
+		if (serviceReqSearchCriteria.getTenantId() != null && !serviceReqSearchCriteria.getTenantId().isEmpty()) {
+			whereStr.append(" pg.tenantid=").append("'" + serviceReqSearchCriteria.getTenantId() + "'");
+		}
+
+		if (serviceReqSearchCriteria.getStatus() != null && !serviceReqSearchCriteria.getStatus().isEmpty()) {
+			StringBuilder status = new StringBuilder("(");
+			serviceReqSearchCriteria.getStatus().stream().forEach(p -> status.append("'").append(p).append("',"));
+			status.deleteCharAt(status.length() - 1);
+			status.append(")");
+			whereStr.append(" and pg.status in ").append(status);
+		}
+
+		whereStr.append(" group by ac.businesskey ");
+		query = query + whereStr.toString();
+		log.info("ServiceRequestDetailsForDashBoard query: " + query);
+		return query;
 	}
 }

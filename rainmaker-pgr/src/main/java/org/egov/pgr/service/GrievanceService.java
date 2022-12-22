@@ -25,6 +25,7 @@ import org.egov.pgr.contract.RequestInfoWrapper;
 import org.egov.pgr.contract.SearcherRequest;
 import org.egov.pgr.contract.ServiceReqSearchCriteria;
 import org.egov.pgr.contract.ServiceRequest;
+import org.egov.pgr.contract.ServiceRequestComplaints;
 import org.egov.pgr.contract.ServiceRequestDetails;
 import org.egov.pgr.contract.ServiceResponse;
 import org.egov.pgr.model.ActionHistory;
@@ -151,7 +152,7 @@ public class GrievanceService {
 		enrichServiceRequestForUpdate(request);
 		if (null == request.getActionInfo())
 			request.setActionInfo(new ArrayList<ActionInfo>());
-		//enrichServiceRequestDepartment(request);
+		// enrichServiceRequestDepartment(request);
 		pGRProducer.push(updateTopic, request);
 		pGRProducer.push(updateIndexTopic, dataTranformationForIndexer(request, false));
 		return getServiceResponse(request);
@@ -1914,5 +1915,12 @@ public class GrievanceService {
 			log.error("Exception: ", e);
 		}
 		return employeeDetails;
+	}
+
+	public List<ServiceRequestComplaints> getServiceRequestDetailsForDashBoard(RequestInfo requestInfo,
+			ServiceReqSearchCriteria serviceReqSearchCriteria) {
+		List<ServiceRequestComplaints> serviceRequests = serviceRequestRepository
+				.getServiceRequestDetailsForDashBoard(serviceReqSearchCriteria);
+		return serviceRequests;
 	}
 }
