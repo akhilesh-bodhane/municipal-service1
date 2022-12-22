@@ -14,6 +14,7 @@ import org.egov.pgr.model.ActionInfo;
 import org.egov.pgr.model.AuditDetails;
 import org.egov.pgr.model.Service;
 import org.egov.pgr.model.Service.StatusEnum;
+import org.egov.pgr.model.user.Citizen;
 import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
@@ -44,6 +45,11 @@ public class ServiceRequestDataRowMapper implements ResultSetExtractor<List<Serv
 				service.setStatus(StatusEnum.fromValue(rs.getString("status")));
 				service.setSlaEndTime(
 						rs.getString("slaendtime") != null ? Long.parseLong(rs.getString("slaendtime")) : 0L);
+				service.setDescription(rs.getString("description"));
+				service.setRating(rs.getString("rating"));
+
+				service.setCitizen(Citizen.builder().name(rs.getString("name"))
+						.mobileNumber(rs.getString("mobilenumber")).build());
 
 				service.setAuditDetails(AuditDetails.builder().createdBy(rs.getString("createdby"))
 						.createdTime(
