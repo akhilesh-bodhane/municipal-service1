@@ -19,8 +19,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import antlr.collections.List;
-
 @Controller
 @RequestMapping(value = "/v1/requests/")
 public class ServiceController {
