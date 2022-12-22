@@ -5,6 +5,7 @@ import javax.validation.Valid;
 import org.egov.pgr.contract.RequestInfoWrapper;
 import org.egov.pgr.contract.ServiceReqSearchCriteria;
 import org.egov.pgr.contract.ServiceRequest;
+import org.egov.pgr.contract.ServiceRequestComplaints;
 import org.egov.pgr.contract.ServiceResponse;
 import org.egov.pgr.service.GrievanceService;
 import org.egov.pgr.validator.PGRRequestValidator;
@@ -17,6 +18,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import antlr.collections.List;
 
 @Controller
 @RequestMapping(value = "/v1/requests/")
@@ -159,5 +162,15 @@ public class ServiceController {
 		pgrRequestValidator.validateSearch(serviceReqSearchCriteria, requestInfoWrapper.getRequestInfo());
 		Object countResponse = service.getCountDB(requestInfoWrapper.getRequestInfo(), serviceReqSearchCriteria);
 		return new ResponseEntity<>(countResponse, HttpStatus.OK);
+	}
+
+	@PostMapping("dash/_search")
+	@ResponseBody
+	private ResponseEntity<?> searchForDashboard(@RequestBody @Valid RequestInfoWrapper requestInfoWrapper,
+			@ModelAttribute @Valid ServiceReqSearchCriteria serviceReqSearchCriteria) {
+		pgrRequestValidator.validateSearch(serviceReqSearchCriteria, requestInfoWrapper.getRequestInfo());
+		java.util.List<ServiceRequestComplaints> serviceReqResponse = service
+				.getServiceRequestDetailsForDashBoard(requestInfoWrapper.getRequestInfo(), serviceReqSearchCriteria);
+		return new ResponseEntity<>(serviceReqResponse, HttpStatus.OK);
 	}
 }
