@@ -14,6 +14,7 @@ import org.egov.pgr.model.ActionInfo;
 import org.egov.pgr.model.AuditDetails;
 import org.egov.pgr.model.Service;
 import org.egov.pgr.model.Service.StatusEnum;
+import org.egov.pgr.model.user.Citizen;
 import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
@@ -38,23 +39,31 @@ public class ServiceRequestDataRowMapper implements ResultSetExtractor<List<Serv
 				ServiceRequestComplaints serviceRequestComplaints = ServiceRequestComplaints.builder().build();
 
 				Service service = new Service();
-				service.setServiceRequestId(rs.getString("serviceRequestId"));
-				service.setCategory(rs.getString("category"));
-				service.setServiceCode(rs.getString("servicecode"));
+				service.setServiceRequestId(
+						rs.getString("serviceRequestId") != null ? rs.getString("serviceRequestId") : "");
+				service.setCategory(rs.getString("category") != null ? rs.getString("category") : "");
+				service.setServiceCode(rs.getString("servicecode") != null ? rs.getString("servicecode") : "");
 				service.setStatus(StatusEnum.fromValue(rs.getString("status")));
 				service.setSlaEndTime(
 						rs.getString("slaendtime") != null ? Long.parseLong(rs.getString("slaendtime")) : 0L);
+				service.setDescription(rs.getString("description") != null ? rs.getString("description") : "");
+				service.setRating(rs.getString("rating") != null ? rs.getString("rating") : "");
 
-				service.setAuditDetails(AuditDetails.builder().createdBy(rs.getString("createdby"))
+				service.setCitizen(Citizen.builder().name(rs.getString("name") != null ? rs.getString("name") : "")
+						.mobileNumber(rs.getString("mobilenumber") != null ? rs.getString("mobilenumber") : "")
+						.build());   
+				service.setAuditDetails(AuditDetails.builder()
+						.createdBy(rs.getString("createdby") != null ? rs.getString("createdby") : "")
 						.createdTime(
 								rs.getString("createdtime") != null ? Long.parseLong(rs.getString("createdtime")) : 0L)
-						.lastModifiedBy(rs.getString("lastmodifiedby"))
+						.lastModifiedBy(rs.getString("lastmodifiedby") != null ? rs.getString("lastmodifiedby") : "")
 						.lastModifiedTime(rs.getString("lastmodifiedtime") != null
 								? Long.parseLong(rs.getString("lastmodifiedtime"))
 								: 0L)
 						.build());
 
-				service.setAddressDetail(Address.builder().mohalla(rs.getString("mohalla")).build());
+				service.setAddressDetail(Address.builder()
+						.mohalla(rs.getString("mohalla") != null ? rs.getString("mohalla") : "").build());
 
 				// Action History
 				if (rs.getString("actionHistory") != null) {
