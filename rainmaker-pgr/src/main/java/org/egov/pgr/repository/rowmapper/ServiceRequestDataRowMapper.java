@@ -51,8 +51,7 @@ public class ServiceRequestDataRowMapper implements ResultSetExtractor<List<Serv
 
 				service.setCitizen(Citizen.builder().name(rs.getString("name") != null ? rs.getString("name") : "")
 						.mobileNumber(rs.getString("mobilenumber") != null ? rs.getString("mobilenumber") : "")
-						.build());
-
+						.build());   
 				service.setAuditDetails(AuditDetails.builder()
 						.createdBy(rs.getString("createdby") != null ? rs.getString("createdby") : "")
 						.createdTime(
