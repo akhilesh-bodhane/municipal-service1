@@ -51,7 +51,7 @@ public class ServiceRequestDataRowMapper implements ResultSetExtractor<List<Serv
 
 				service.setCitizen(Citizen.builder().name(rs.getString("name") != null ? rs.getString("name") : "")
 						.mobileNumber(rs.getString("mobilenumber") != null ? rs.getString("mobilenumber") : "")
-						.build());   
+						.build());
 				service.setAuditDetails(AuditDetails.builder()
 						.createdBy(rs.getString("createdby") != null ? rs.getString("createdby") : "")
 						.createdTime(
@@ -61,7 +61,7 @@ public class ServiceRequestDataRowMapper implements ResultSetExtractor<List<Serv
 								? Long.parseLong(rs.getString("lastmodifiedtime"))
 								: 0L)
 						.build());
-
+				service.setTenantId(rs.getString("tenantId"));
 				service.setAddressDetail(Address.builder()
 						.mohalla(rs.getString("mohalla") != null ? rs.getString("mohalla") : "").build());
 
@@ -82,7 +82,6 @@ public class ServiceRequestDataRowMapper implements ResultSetExtractor<List<Serv
 				serviceRequestComplaints.setService(service);
 				map.put(service.getServiceRequestId(), serviceRequestComplaints);
 			}
-
 			return map.entrySet().stream().map(Map.Entry::getValue).collect(Collectors.toList());
 
 		} catch (Exception e) {
