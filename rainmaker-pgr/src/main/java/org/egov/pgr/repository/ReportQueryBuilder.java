@@ -20,46 +20,43 @@ public class ReportQueryBuilder {
 
 	@Autowired
 	private NotificationService notificationService;
-	
-/*	public String createATempTable() {
-		String query = "create temporary table slaService (code varchar(265), sla numeric)";
-		return query;
-	}
-	
-	public String populateTempTable(ReportRequest reportRequest) {
-		Map<String, Long> slaHoursMap = notificationService.getSlaHours(reportRequest.getRequestInfo(),
-				reportRequest.getTenantId());
-		StringBuilder queryBuilder = new StringBuilder();
-		queryBuilder.append("insert into slaService(code, sla) VALUES ");
-		for(String key: slaHoursMap.keySet()) {
-			queryBuilder.append("(");
-			queryBuilder.append("'" + key + "'" + ", ");
-			queryBuilder.append(slaHoursMap.get(key));
-			queryBuilder.append("),");
-		}
-		String query = queryBuilder.toString();
-		query = query.substring(0, query.length() - 1);
-		return query.toString();
-	}
 
-	public String getCreateViewQuery() {
-		String 	query = "create view slaservicerequestidview as select businesskey, "
-				+ "case when (max(\"when\") - min(\"when\") > (SELECT sla from slaService JOIN eg_pgr_service ON slaService.code = eg_pgr_service.servicecode JOIN "
-				+ "eg_pgr_action ON eg_pgr_action.businesskey = eg_pgr_service.servicerequestid)) then 'Yes' else 'No' end as has_sla_crossed "
-				+ "from eg_pgr_action group by businesskey";
+	/*
+	 * public String createATempTable() { String query =
+	 * "create temporary table slaService (code varchar(265), sla numeric)"; return
+	 * query; }
+	 * 
+	 * public String populateTempTable(ReportRequest reportRequest) { Map<String,
+	 * Long> slaHoursMap =
+	 * notificationService.getSlaHours(reportRequest.getRequestInfo(),
+	 * reportRequest.getTenantId()); StringBuilder queryBuilder = new
+	 * StringBuilder();
+	 * queryBuilder.append("insert into slaService(code, sla) VALUES "); for(String
+	 * key: slaHoursMap.keySet()) { queryBuilder.append("(");
+	 * queryBuilder.append("'" + key + "'" + ", ");
+	 * queryBuilder.append(slaHoursMap.get(key)); queryBuilder.append("),"); }
+	 * String query = queryBuilder.toString(); query = query.substring(0,
+	 * query.length() - 1); return query.toString(); }
+	 * 
+	 * public String getCreateViewQuery() { String query =
+	 * "create view slaservicerequestidview as select businesskey, " +
+	 * "case when (max(\"when\") - min(\"when\") > (SELECT sla from slaService JOIN eg_pgr_service ON slaService.code = eg_pgr_service.servicecode JOIN "
+	 * +
+	 * "eg_pgr_action ON eg_pgr_action.businesskey = eg_pgr_service.servicerequestid)) then 'Yes' else 'No' end as has_sla_crossed "
+	 * + "from eg_pgr_action group by businesskey";
+	 * 
+	 * log.info("Create view query: " + query); return query;
+	 * 
+	 * }
+	 */
 
-		log.info("Create view query: " + query);
-		return query;
-
-	}*/
-	
 	public String getCreateViewQuery() {
 		Long slaHours = notificationService.getSlaHours();
 		String query = "create view slaservicerequestidview as select businesskey,\n"
 				+ "case when (max(\"when\") - min(\"when\") > $sla) then 'Yes' else 'No' end as has_sla_crossed \n"
 				+ "from eg_pgr_action                                                            \n"
 				+ "group by businesskey\n" + "";
-		
+
 		query = query.replace("$sla", slaHours.toString());
 		log.info("Create view query: " + query);
 		return query;
@@ -71,23 +68,25 @@ public class ReportQueryBuilder {
 		return query;
 
 	}
-	
-	public static final String GET_DISCRIPTION_REPORT_QUERY="SELECT   (     SELECT name     from eg_user eas     where eas.id :: varchar in (   select     assignee   from     eg_pgr_action epa1   where     epa1.businesskey = eg_pgr_service.servicerequestid     and epa1.action in ('assign', 'reassign')     and \"when\" = (       select   max(\"when\")       from   eg_pgr_action epa       where   epa.businesskey = eg_pgr_service.servicerequestid   and action in ('assign', 'reassign')       group by   epa.businesskey     )     and epa1.businesskey = eg_pgr_service.servicerequestid )   ) as lastassignedto, "
-			+ "    servicecode AS servicecode,   servicerequestid AS complaintNo,   to_char(     to_timestamp( TRUNC(   CAST(     eg_pgr_service.createdtime AS bigint   ) / 1000 )     ),     'DD/MM/YYYY'   ) AS date,   eg_user.name,   phone,   eg_pgr_address.landmark,   eg_pgr_address.housenoandstreetname as address,   description,   case when source = 'mobileapp' then 'Citizen Mobile App'"
-			+ " when source = 'web' then 'Citizen Web App' when source = 'ivr' then 'Customer Service Desk' else 'Customer Service Desk' end as source,   createuser.name as complaintraisedby,   to_char(     to_timestamp( TRUNC(   CAST(     eg_pgr_service.lastmodifiedtime AS bigint   ) / 1000 )     ),     'DD/MM/YYYY'   ) AS lastactiondate,   Initcap(status) as status,   (     CASE WHEN ( select   username from   eg_user where   eg_user.id :: VARCHAR = eg_pgr_service.lastmodifiedby   and eg_user.username = 'CRONJOB'     ) is not null then 'Y' else '' end   ) as autoescalated ,"
-			+ " eg_pgr_service.createdtime AS createdtime,eg_pgr_service.tenantid as tenantid,eg_pgr_service.slaendtime as slaendtime,eg_pgr_address.mohalla AS locality,'' AS slahours,eg_pgr_service.servicerequestid as servicerequestid,eg_pgr_service.servicerequestid as servicerequestid ,eg_pgr_service.feedback,eg_pgr_service.rating,(select comments from eg_pgr_action where businesskey=eg_pgr_service.servicerequestid and  eg_pgr_action.status in('closed','rejected') order by \"when\" desc limit 1\r\n" + 
-			") as comments FROM  eg_pgr_service   LEFT JOIN eg_user on eg_pgr_service.accountid = eg_user.id :: VARCHAR   LEFT JOIN eg_pgr_address on eg_pgr_address.uuid = eg_pgr_service.addressid   LEFT JOIN eg_user createuser on createuser.id :: varchar = eg_pgr_service.createdby WHERE    status IN (     'open', 'assigned', 'reassignrequested',     'rejected', 'escalatedlevel1pending',     'escalatedlevel2pending', 'closed',     'resolved'   ) \r\n" + 
-			"";
-	
-	public static final String GET_SLAHOURS_QUERY="SELECT (select (CASE WHEN status in('resolved','rejected','closed') or slaendtime is null then '' ELSE (CASE WHEN (((240)::integer / 24) - ((((select extract(epoch from now())) * 1000) - eg_pgr_service.createdtime)::bigint/86400000))\r\n" + 
-			"	< 1 THEN CONCAT('Overdue by ', ((((select extract(epoch from now())) * 1000) - eg_pgr_service.createdtime)::bigint/86400000) - \r\n" + 
-			"	((240)::integer / 24), ' days') ELSE CONCAT(((240)::integer / 24) - \r\n" + 
-			"	((((select extract(epoch from now())) * 1000) - eg_pgr_service.createdtime)::bigint/86400000), ' days remaining')END) END)) as slaHours FROM   eg_pgr_service   LEFT JOIN eg_user on eg_pgr_service.accountid = eg_user.id :: VARCHAR   LEFT JOIN eg_pgr_address on eg_pgr_address.uuid = eg_pgr_service.addressid   LEFT JOIN eg_user createuser on createuser.id :: varchar = eg_pgr_service.createdby WHERE    status IN (     'open', 'assigned', 'reassignrequested',     'rejected', 'escalatedlevel1pending',     'escalatedlevel2pending', 'closed',     'resolved'   )  and eg_pgr_service.servicerequestid=:servicerequestid";
-	
-/*	public String getDropTempTableQuery() {
-		String query = "DROP TABLE slaService";
-		return query;
-	}*/
+
+//	public static final String GET_DISCRIPTION_REPORT_QUERY="SELECT   (     SELECT name     from eg_user eas     where eas.id :: varchar in (   select     assignee   from     eg_pgr_action epa1   where     epa1.businesskey = eg_pgr_service.servicerequestid     and epa1.action in ('assign', 'reassign')     and \"when\" = (       select   max(\"when\")       from   eg_pgr_action epa       where   epa.businesskey = eg_pgr_service.servicerequestid   and action in ('assign', 'reassign')       group by   epa.businesskey     )     and epa1.businesskey = eg_pgr_service.servicerequestid )   ) as lastassignedto, "
+//			+ "    servicecode AS servicecode,   servicerequestid AS complaintNo,   to_char(     to_timestamp( TRUNC(   CAST(     eg_pgr_service.createdtime AS bigint   ) / 1000 )     ),     'DD/MM/YYYY'   ) AS date,   eg_user.name,   phone,   eg_pgr_address.landmark,   eg_pgr_address.housenoandstreetname as address,   description,   case when source = 'mobileapp' then 'Citizen Mobile App'"
+//			+ " when source = 'web' then 'Citizen Web App' when source = 'ivr' then 'Customer Service Desk' else 'Customer Service Desk' end as source,   createuser.name as complaintraisedby,   to_char(     to_timestamp( TRUNC(   CAST(     eg_pgr_service.lastmodifiedtime AS bigint   ) / 1000 )     ),     'DD/MM/YYYY'   ) AS lastactiondate,   Initcap(status) as status,   (     CASE WHEN ( select   username from   eg_user where   eg_user.id :: VARCHAR = eg_pgr_service.lastmodifiedby   and eg_user.username = 'CRONJOB'     ) is not null then 'Y' else '' end   ) as autoescalated ,"
+//			+ " eg_pgr_service.createdtime AS createdtime,eg_pgr_service.tenantid as tenantid,eg_pgr_service.slaendtime as slaendtime,eg_pgr_address.mohalla AS locality,'' AS slahours,eg_pgr_service.servicerequestid as servicerequestid,eg_pgr_service.servicerequestid as servicerequestid ,eg_pgr_service.feedback,eg_pgr_service.rating,(select comments from eg_pgr_action where businesskey=eg_pgr_service.servicerequestid and  eg_pgr_action.status in('closed','rejected') order by \"when\" desc limit 1\r\n" + 
+//			") as comments FROM  eg_pgr_service   LEFT JOIN eg_user on eg_pgr_service.accountid = eg_user.id :: VARCHAR   LEFT JOIN eg_pgr_address on eg_pgr_address.uuid = eg_pgr_service.addressid   LEFT JOIN eg_user createuser on createuser.id :: varchar = eg_pgr_service.createdby WHERE    status IN (     'open', 'assigned', 'reassignrequested',     'rejected', 'escalatedlevel1pending',     'escalatedlevel2pending', 'closed',     'resolved'   ) \r\n" + 
+//			"";
+
+	public static final String GET_DISCRIPTION_REPORT_QUERY = " select tr.name, servicecode as servicecode, servicerequestid as complaintNo, to_char( to_timestamp( TRUNC( cast( pg.createdtime as bigint ) / 1000 ) ), 'DD/MM/YYYY' ) as date, phone, ad.landmark, ad.housenoandstreetname as address, ad.mohalla as locality, description, case when source = 'mobileapp' then 'Citizen Mobile App' when source = 'web' then 'Citizen Web App' when source = 'ivr' then 'Customer Service Desk' else 'Customer Service Desk' end as source, createuser.name as complaintraisedby, to_char( to_timestamp( TRUNC( cast( pg.lastmodifiedtime as bigint ) / 1000 ) ), 'DD/MM/YYYY' ) as lastactiondate, Initcap(pg.status) as status, pg.createdtime as createdtime, pg.tenantid as tenantid, pg.slaendtime as slaendtime, '' as slahours, pg.servicerequestid as servicerequestid, pg.servicerequestid as servicerequestid , pg.feedback, pg.rating, comnt.comments, ac.name, case when cron.name is not null then 'Y' else '' end as autoescalated from eg_pgr_service pg left join (select distinct on (ac.businesskey) * from eg_pgr_action ac left join eg_user us on ac.assignee = us.id:: varchar where ac.action in ('assign', 'reassign') order by ac.businesskey, ac.\"when\" desc) tr on tr.businesskey = pg.servicerequestid left join eg_pgr_address ad on 	ad.uuid = pg.addressid left join eg_user createuser on createuser.id :: varchar = pg.createdby left join (select distinct on (cm.businesskey) * from 	eg_pgr_action cm where cm.status in('closed', 'rejected') order by cm.businesskey, cm.\"when\" desc) comnt on comnt.businesskey = pg.servicerequestid left join eg_user ac on pg.accountid = ac.id :: VARCHAR	left join eg_user cron on pg.lastmodifiedby = cron.id :: VARCHAR and cron.username = 'CRONJOB' where pg.status in ('open', 'assigned', 'reassignrequested', 'rejected', 'escalatedlevel1pending', 'escalatedlevel2pending', 'closed', 'resolved')";
+
+	public static final String GET_SLAHOURS_QUERY = "SELECT (select (CASE WHEN status in('resolved','rejected','closed') or slaendtime is null then '' ELSE (CASE WHEN (((240)::integer / 24) - ((((select extract(epoch from now())) * 1000) - eg_pgr_service.createdtime)::bigint/86400000))\r\n"
+			+ "	< 1 THEN CONCAT('Overdue by ', ((((select extract(epoch from now())) * 1000) - eg_pgr_service.createdtime)::bigint/86400000) - \r\n"
+			+ "	((240)::integer / 24), ' days') ELSE CONCAT(((240)::integer / 24) - \r\n"
+			+ "	((((select extract(epoch from now())) * 1000) - eg_pgr_service.createdtime)::bigint/86400000), ' days remaining')END) END)) as slaHours FROM   eg_pgr_service   LEFT JOIN eg_user on eg_pgr_service.accountid = eg_user.id :: VARCHAR   LEFT JOIN eg_pgr_address on eg_pgr_address.uuid = eg_pgr_service.addressid   LEFT JOIN eg_user createuser on createuser.id :: varchar = eg_pgr_service.createdby WHERE    status IN (     'open', 'assigned', 'reassignrequested',     'rejected', 'escalatedlevel1pending',     'escalatedlevel2pending', 'closed',     'resolved'   )  and eg_pgr_service.servicerequestid=:servicerequestid";
+
+	/*
+	 * public String getDropTempTableQuery() { String query =
+	 * "DROP TABLE slaService"; return query; }
+	 */
 
 	public String getComplaintWiseReportQuery(ReportRequest reportRequest) {
 		String query = "SELECT servicecode as complaint_type,          \n"
@@ -148,14 +147,14 @@ public class ReportQueryBuilder {
 	}
 
 	public String getFunctionaryWiseReportQuert(ReportRequest reportRequest) {
-		String query = "select \n" + 
-				"(SELECT (CASE WHEN assignee IN (select distinct assignee from eg_pgr_action where action = 'assign' and \"when\" = (select max(\"when\") from eg_pgr_action action where action.businesskey =  eg_pgr_action.businesskey and action = 'assign')) THEN CONCAT(assignee,'') END) as employee_name), \n" + 
-				"sum(case when eg_pgr_action.businesskey IN (select DISTINCT businesskey from eg_pgr_action where \"when\" IN (select max(\"when\") from eg_pgr_action where status = 'assigned' group by businesskey)) then 1 else 0 end) as total_complaints_received, \n" + 
-				"sum(case when eg_pgr_action.when IN (select max(\"when\") from eg_pgr_action where eg_pgr_action.status NOTNULL AND eg_pgr_action.status != 'resolved' group by businessKey) AND eg_pgr_action.status != 'resolved' then 1 else 0 end) as total_open_complaints,\n" + 
-				"sum(case when has_sla_crossed = 'Yes' then 1 else 0 end) as outside_sla,\n" + 
-				"avg(cast(rating as numeric)) as avg_citizen_rating\n" + 
-				"from eg_pgr_service INNER JOIN eg_pgr_action ON servicerequestid = eg_pgr_action.businesskey INNER JOIN slaservicerequestidview ON servicerequestid = slaservicerequestidview.businesskey \n" + 
-				"where eg_pgr_action.assignee NOTNULL $where group by eg_pgr_action.assignee";
+		String query = "select \n"
+				+ "(SELECT (CASE WHEN assignee IN (select distinct assignee from eg_pgr_action where action = 'assign' and \"when\" = (select max(\"when\") from eg_pgr_action action where action.businesskey =  eg_pgr_action.businesskey and action = 'assign')) THEN CONCAT(assignee,'') END) as employee_name), \n"
+				+ "sum(case when eg_pgr_action.businesskey IN (select DISTINCT businesskey from eg_pgr_action where \"when\" IN (select max(\"when\") from eg_pgr_action where status = 'assigned' group by businesskey)) then 1 else 0 end) as total_complaints_received, \n"
+				+ "sum(case when eg_pgr_action.when IN (select max(\"when\") from eg_pgr_action where eg_pgr_action.status NOTNULL AND eg_pgr_action.status != 'resolved' group by businessKey) AND eg_pgr_action.status != 'resolved' then 1 else 0 end) as total_open_complaints,\n"
+				+ "sum(case when has_sla_crossed = 'Yes' then 1 else 0 end) as outside_sla,\n"
+				+ "avg(cast(rating as numeric)) as avg_citizen_rating\n"
+				+ "from eg_pgr_service INNER JOIN eg_pgr_action ON servicerequestid = eg_pgr_action.businesskey INNER JOIN slaservicerequestidview ON servicerequestid = slaservicerequestidview.businesskey \n"
+				+ "where eg_pgr_action.assignee NOTNULL $where group by eg_pgr_action.assignee";
 
 		query = addWhereClause(query, reportRequest);
 		log.info("Functionary Wise report query: " + query);
