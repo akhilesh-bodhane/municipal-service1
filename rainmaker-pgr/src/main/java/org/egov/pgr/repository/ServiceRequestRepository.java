@@ -429,6 +429,13 @@ public class ServiceRequestRepository {
 		if (serviceReqSearchCriteria.getTenantId() != null && !serviceReqSearchCriteria.getTenantId().isEmpty()) {
 			whereStr.append(" pg.tenantid=").append("'" + serviceReqSearchCriteria.getTenantId() + "'");
 		}
+		if (serviceReqSearchCriteria.getServiceRequestId() != null && !serviceReqSearchCriteria.getServiceRequestId().isEmpty()) {
+			StringBuilder serviceIds = new StringBuilder("(");
+			serviceReqSearchCriteria.getServiceRequestId().stream().forEach(p -> serviceIds.append("'").append(p).append("',"));
+			serviceIds.deleteCharAt(serviceIds.length() - 1);
+			serviceIds.append(")");
+			whereStr.append(" and pg.serviceRequestId in ").append(serviceIds);
+		}
 		if (serviceReqSearchCriteria.getStartDate() != null && serviceReqSearchCriteria.getStartDate() != 0) {
 			whereStr.append(" and to_timestamp(cast(pg.createdtime/1000 as bigint))::date >=")
 					.append("to_timestamp(cast(" + serviceReqSearchCriteria.getStartDate() + "/1000 as bigint))::date");
