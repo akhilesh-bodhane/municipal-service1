@@ -431,10 +431,10 @@ public class ServiceRequestRepository {
 		}
 		if (serviceReqSearchCriteria.getServiceRequestId() != null && !serviceReqSearchCriteria.getServiceRequestId().isEmpty()) {
 			StringBuilder serviceIds = new StringBuilder("(");
-			serviceReqSearchCriteria.getServiceRequestId().stream().forEach(p -> serviceIds.append("'").append(p).append("',"));
+			serviceReqSearchCriteria.getServiceRequestId().stream().forEach(p -> serviceIds.append("'%").append(p).append("%',"));
 			serviceIds.deleteCharAt(serviceIds.length() - 1);
 			serviceIds.append(")");
-			whereStr.append(" and pg.serviceRequestId in ").append(serviceIds);
+			whereStr.append(" and pg.serviceRequestId LIKE ANY(ARRAY[").append(serviceIds).append("])");
 		}
 		if (serviceReqSearchCriteria.getStartDate() != null && serviceReqSearchCriteria.getStartDate() != 0) {
 			whereStr.append(" and to_timestamp(cast(pg.createdtime/1000 as bigint))::date >=")
