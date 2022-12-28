@@ -26,10 +26,10 @@ public class QueryBuilder {
 			+ "        application_name !~ '(?:psql)|(?:pgAdmin.+)'\r\n"
 			+ "    AND\r\n"
 			+ "        -- Include connections to the same database the thread is connected to\r\n"
-			+ "        datname = 'digit_dev_db'\r\n"
+			+ "        datname = 'digit'\r\n"
 			+ "    AND\r\n"
 			+ "        -- Include connections using the same thread username connection\r\n"
-			+ "        usename = 'postgres'\r\n"
+			+ "        usename = 'digit_prod'\r\n"
 			+ "    AND\r\n"
 			+ "        -- Include inactive connections only\r\n"
 			+ "        state in ('idle', 'idle in transaction', 'idle in transaction (aborted)', 'disabled')\r\n"
@@ -48,7 +48,7 @@ public class QueryBuilder {
 		StringBuilder query;
 		query = new StringBuilder(IDLE_KILL_CONNECTION_COUNT);
 		
-		System.out.println("Idle Connections Kill Count query :"+query);
+		//System.out.println("Idle Connections Kill Count query :"+query);
 		
 		return query.toString() ;
 
