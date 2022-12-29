@@ -457,7 +457,7 @@ public class ServiceRequestRepository {
 
 		if (serviceReqSearchCriteria.getCategory() != null && !serviceReqSearchCriteria.getCategory().isEmpty()) {
 			StringBuilder category = new StringBuilder("(");
-			serviceReqSearchCriteria.getStatus().stream().forEach(p -> category.append("'").append(p).append("',"));
+			serviceReqSearchCriteria.getCategory().stream().forEach(p -> category.append("'").append(p).append("',"));
 			category.deleteCharAt(category.length() - 1);
 			category.append(")");
 			whereStr.append(" and pg.category in ").append(category);
