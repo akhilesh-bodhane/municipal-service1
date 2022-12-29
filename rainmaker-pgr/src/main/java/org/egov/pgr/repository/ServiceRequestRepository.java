@@ -429,9 +429,11 @@ public class ServiceRequestRepository {
 		if (serviceReqSearchCriteria.getTenantId() != null && !serviceReqSearchCriteria.getTenantId().isEmpty()) {
 			whereStr.append(" pg.tenantid=").append("'" + serviceReqSearchCriteria.getTenantId() + "'");
 		}
-		if (serviceReqSearchCriteria.getServiceRequestId() != null && !serviceReqSearchCriteria.getServiceRequestId().isEmpty()) {
+		if (serviceReqSearchCriteria.getServiceRequestId() != null
+				&& !serviceReqSearchCriteria.getServiceRequestId().isEmpty()) {
 			StringBuilder serviceIds = new StringBuilder("(");
-			serviceReqSearchCriteria.getServiceRequestId().stream().forEach(p -> serviceIds.append("'%").append(p).append("%',"));
+			serviceReqSearchCriteria.getServiceRequestId().stream()
+					.forEach(p -> serviceIds.append("'%").append(p).append("%',"));
 			serviceIds.deleteCharAt(serviceIds.length() - 1);
 			serviceIds.append(")");
 			whereStr.append(" and pg.serviceRequestId LIKE ANY(ARRAY[").append(serviceIds).append("])");
@@ -451,6 +453,14 @@ public class ServiceRequestRepository {
 			status.deleteCharAt(status.length() - 1);
 			status.append(")");
 			whereStr.append(" and pg.status in ").append(status);
+		}
+
+		if (serviceReqSearchCriteria.getCategory() != null && !serviceReqSearchCriteria.getCategory().isEmpty()) {
+			StringBuilder category = new StringBuilder("(");
+			serviceReqSearchCriteria.getStatus().stream().forEach(p -> category.append("'").append(p).append("',"));
+			category.deleteCharAt(category.length() - 1);
+			category.append(")");
+			whereStr.append(" and pg.category in ").append(category);
 		}
 
 		whereStr.append(" group by ac.businesskey ");
