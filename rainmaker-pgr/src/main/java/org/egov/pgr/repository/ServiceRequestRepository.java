@@ -454,6 +454,14 @@ public class ServiceRequestRepository {
 			status.append(")");
 			whereStr.append(" and pg.status in ").append(status);
 		}
+		
+		if (serviceReqSearchCriteria.getMohalla() != null && !serviceReqSearchCriteria.getMohalla().isEmpty()) {
+			StringBuilder status = new StringBuilder("(");
+			serviceReqSearchCriteria.getMohalla().stream().forEach(p -> status.append("'").append(p).append("',"));
+			status.deleteCharAt(status.length() - 1);
+			status.append(")");
+			whereStr.append(" and ad.mohalla in ").append(status);
+		}
 
 		if (serviceReqSearchCriteria.getCategory() != null && !serviceReqSearchCriteria.getCategory().isEmpty()) {
 			StringBuilder category = new StringBuilder("(");
