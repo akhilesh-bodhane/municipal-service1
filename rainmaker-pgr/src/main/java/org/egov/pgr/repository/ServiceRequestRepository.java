@@ -464,7 +464,7 @@ public class ServiceRequestRepository {
 		}
 		
 		if (serviceReqSearchCriteria.getPhone() != null && !serviceReqSearchCriteria.getPhone().isEmpty()) {
-			whereStr.append(" pg.phone=").append("'" + serviceReqSearchCriteria.getPhone() + "'");
+			whereStr.append(" and pg.phone=").append("'" + serviceReqSearchCriteria.getPhone() + "'");
 		}
 
 		if (serviceReqSearchCriteria.getCategory() != null && !serviceReqSearchCriteria.getCategory().isEmpty()) {
