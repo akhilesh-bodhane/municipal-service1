@@ -464,11 +464,7 @@ public class ServiceRequestRepository {
 		}
 		
 		if (serviceReqSearchCriteria.getPhone() != null && !serviceReqSearchCriteria.getPhone().isEmpty()) {
-			StringBuilder phone = new StringBuilder("(");
-			serviceReqSearchCriteria.getMohalla().stream().forEach(p -> phone.append("'").append(p).append("',"));
-			phone.deleteCharAt(phone.length() - 1);
-			phone.append(")");
-			whereStr.append(" and pg.phone in ").append(phone);
+			whereStr.append(" pg.phone=").append("'" + serviceReqSearchCriteria.getPhone() + "'");
 		}
 
 		if (serviceReqSearchCriteria.getCategory() != null && !serviceReqSearchCriteria.getCategory().isEmpty()) {
