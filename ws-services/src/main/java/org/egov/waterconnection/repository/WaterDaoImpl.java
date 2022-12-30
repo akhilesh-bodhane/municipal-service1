@@ -109,9 +109,11 @@ public class WaterDaoImpl implements WaterDao {
 		List<WaterConnection> waterConnectionList = jdbcTemplate.query(query, preparedStatement.toArray(),
 				waterRowMapper);
 		
-		//System.out.println(preparedStatement.toArray());
-		//System.out.println(preparedStatement);
-		//System.out.println(waterRowMapper.toString());
+		System.out.println(preparedStatement.toArray());
+	    System.out.println(preparedStatement);
+		System.out.println(waterRowMapper.toString());
+		System.out.println("WaterConnectionList" + waterConnectionList.toString());
+		
 		if (waterConnectionList == null) {
 			return Collections.emptyList();
 		}
