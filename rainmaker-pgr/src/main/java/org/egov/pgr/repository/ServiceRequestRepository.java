@@ -456,11 +456,19 @@ public class ServiceRequestRepository {
 		}
 		
 		if (serviceReqSearchCriteria.getMohalla() != null && !serviceReqSearchCriteria.getMohalla().isEmpty()) {
-			StringBuilder status = new StringBuilder("(");
-			serviceReqSearchCriteria.getMohalla().stream().forEach(p -> status.append("'").append(p).append("',"));
-			status.deleteCharAt(status.length() - 1);
-			status.append(")");
-			whereStr.append(" and ad.mohalla in ").append(status);
+			StringBuilder mohalla = new StringBuilder("(");
+			serviceReqSearchCriteria.getMohalla().stream().forEach(p -> mohalla.append("'").append(p).append("',"));
+			mohalla.deleteCharAt(mohalla.length() - 1);
+			mohalla.append(")");
+			whereStr.append(" and ad.mohalla in ").append(mohalla);
+		}
+		
+		if (serviceReqSearchCriteria.getPhone() != null && !serviceReqSearchCriteria.getPhone().isEmpty()) {
+			StringBuilder phone = new StringBuilder("(");
+			serviceReqSearchCriteria.getMohalla().stream().forEach(p -> phone.append("'").append(p).append("',"));
+			phone.deleteCharAt(phone.length() - 1);
+			phone.append(")");
+			whereStr.append(" and pg.phone in ").append(phone);
 		}
 
 		if (serviceReqSearchCriteria.getCategory() != null && !serviceReqSearchCriteria.getCategory().isEmpty()) {
