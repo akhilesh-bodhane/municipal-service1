@@ -168,7 +168,8 @@ public class ConnectionHolderInfo extends User {
         this.setName(user.getName());
         this.setMobileNumber(user.getMobileNumber());
         this.setEmailId(user.getEmailId());        
-        this.setAadhaarNumber(user.getAadhaarNumber());        
+        this.setAadhaarNumber(user.getAadhaarNumber()); 
+        this.setFatherOrHusbandName(user.getFatherOrHusbandName());
         this.setActive(user.getActive());
         this.setDob(user.getDob());        
         this.setRoles(user.getRoles());
