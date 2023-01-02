@@ -97,9 +97,9 @@ public class UserService {
 	public void updateUser(WaterConnectionRequest request) {
 		if (!CollectionUtils.isEmpty(request.getWaterConnection().getConnectionHolders())) {
 			Role role = getCitizenRole();
-			request.getWaterConnection().getConnectionHoldersUpdate().forEach(holderInfo -> {
-				addUserDefaultFieldsUpdate(request.getWaterConnection().getTenantId(), role, holderInfo);
-				UserDetailResponseV2 userDetailResponse = updateUserExists(holderInfo, request.getRequestInfo());
+			request.getWaterConnection().getConnectionHolders().forEach(holderInfo -> {
+				addUserDefaultFields(request.getWaterConnection().getTenantId(), role, holderInfo);
+				UserDetailResponse userDetailResponse = updateUserExists(holderInfo, request.getRequestInfo());
 					holderInfo.setId(userDetailResponse.getUser().get(0).getId());
 					holderInfo.setUuid(userDetailResponse.getUser().get(0).getUuid());
 					//addUserDefaultFields(request.getWaterConnection().getTenantId(), role, holderInfo);
@@ -107,7 +107,7 @@ public class UserService {
 
 					StringBuilder uri = new StringBuilder(configuration.getUserHost())
 							.append(configuration.getUserContextPath()).append(configuration.getUserUpdateEndPoint());
-					userDetailResponse = updateUserCall(new ConnectionUserRequestV2(request.getRequestInfo(), holderInfo), uri);
+					userDetailResponse = updateUserCall(new ConnectionUserRequest(request.getRequestInfo(), holderInfo), uri);
 					if (userDetailResponse.getUser().get(0).getUuid() == null) {
 						throw new CustomException("INVALID USER RESPONSE", "The user updated has uuid as null");
 					}
@@ -207,7 +207,7 @@ public class UserService {
 	 * @return Response from user service as parsed as userDetailResponse
 	 */
 	@SuppressWarnings("unchecked")
-	private UserDetailResponseV2 updateUserCall(Object userRequest, StringBuilder uri) {
+	private UserDetailResponse updateUserCall(Object userRequest, StringBuilder uri) {
 		String dobFormat = null;
 		if (uri.toString().contains(configuration.getUserSearchEndpoint())
 				|| uri.toString().contains(configuration.getUserUpdateEndPoint()))
@@ -218,9 +218,9 @@ public class UserService {
 			LinkedHashMap<String, Object> responseMap = (LinkedHashMap<String, Object>) serviceRequestRepository.fetchResult(uri, userRequest);
 			if (!CollectionUtils.isEmpty(responseMap)) {
 				parseResponse(responseMap, dobFormat);
-				return mapper.convertValue(responseMap, UserDetailResponseV2.class);
+				return mapper.convertValue(responseMap, UserDetailResponse.class);
 			} else {
-				return new UserDetailResponseV2();
+				return new UserDetailResponse();
 			}
 		}
 		// Which Exception to throw?
@@ -303,7 +303,7 @@ public class UserService {
 	 * @param role      The role of the user set in this case to CITIZEN
 	 * @param holderInfo The user whose fields are to be set
 	 */
-	private void addUserDefaultFieldsUpdate(String tenantId, Role role, ConnectionHolderInfoV2 holderInfo) {
+	private void addUserDefaultFieldsUpdate(String tenantId, Role role, ConnectionHolderInfo holderInfo) {
 		holderInfo.setActive(true);
 		
 		if(null==holderInfo.getStatus()) {
@@ -349,7 +349,7 @@ public class UserService {
 	 * @return UserDetailResponse containing the user if present and the
 	 *         responseInfo
 	 */
-	private UserDetailResponseV2 updateUserExists(ConnectionHolderInfoV2 connectionHolderInfo, RequestInfo requestInfo) {
+	private UserDetailResponse updateUserExists(ConnectionHolderInfo connectionHolderInfo, RequestInfo requestInfo) {
 		UserSearchRequest userSearchRequest = getBaseUserSearchRequest(connectionHolderInfo.getTenantId(), requestInfo);
 		userSearchRequest.setMobileNumber(connectionHolderInfo.getMobileNumber());
 		userSearchRequest.setUserType(connectionHolderInfo.getType());
@@ -421,7 +421,7 @@ public class UserService {
 	 * @param userDetailResponse
 	 * @param requestInfo
 	 */
-	private void setOwnerFieldsUpdate(ConnectionHolderInfoV2 holderInfo, UserDetailResponseV2 userDetailResponse,
+	private void setOwnerFieldsUpdate(ConnectionHolderInfo holderInfo, UserDetailResponse userDetailResponse,
 			RequestInfo requestInfo) {
 
 		holderInfo.setUuid(userDetailResponse.getUser().get(0).getUuid());

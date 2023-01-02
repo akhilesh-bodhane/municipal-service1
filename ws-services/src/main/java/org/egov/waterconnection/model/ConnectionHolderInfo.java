@@ -128,40 +128,53 @@ public class ConnectionHolderInfo extends User {
      *
      * @param user User object obtained from user service
      */
+	/*
+	 * public void addUserDetail(User user) {
+	 * this.setLastModifiedDate(user.getLastModifiedDate());
+	 * this.setLastModifiedBy(user.getLastModifiedBy());
+	 * this.setCreatedBy(user.getCreatedBy());
+	 * this.setCreatedDate(user.getCreatedDate());
+	 * this.setUserName(user.getUserName()); this.setPassword(user.getPassword());
+	 * this.setSalutation(user.getSalutation()); this.setName(user.getName());
+	 * this.setGender(user.getGender());
+	 * this.setMobileNumber(user.getMobileNumber());
+	 * this.setEmailId(user.getEmailId());
+	 * this.setAltContactNumber(user.getAltContactNumber());
+	 * this.setPan(user.getPan()); this.setAadhaarNumber(user.getAadhaarNumber());
+	 * this.setPermanentAddress(user.getPermanentAddress());
+	 * this.setPermanentCity(user.getPermanentCity());
+	 * this.setPermanentPincode(user.getPermanentPincode());
+	 * this.setCorrespondenceAddress(user.getCorrespondenceAddress());
+	 * this.setCorrespondenceCity(user.getCorrespondenceCity());
+	 * this.setCorrespondencePincode(user.getCorrespondencePincode());
+	 * this.setActive(user.getActive()); this.setDob(user.getDob());
+	 * this.setPwdExpiryDate(user.getPwdExpiryDate());
+	 * this.setLocale(user.getLocale()); this.setType(user.getType());
+	 * this.setAccountLocked(user.getAccountLocked());
+	 * this.setRoles(user.getRoles());
+	 * this.setFatherOrHusbandName(user.getFatherOrHusbandName());
+	 * this.setBloodGroup(user.getBloodGroup());
+	 * this.setIdentificationMark(user.getIdentificationMark());
+	 * this.setPhoto(user.getPhoto()); this.setTenantId(user.getTenantId()); }
+	 */
+    
+    
     public void addUserDetail(User user) {
         this.setLastModifiedDate(user.getLastModifiedDate());
         this.setLastModifiedBy(user.getLastModifiedBy());
         this.setCreatedBy(user.getCreatedBy());
         this.setCreatedDate(user.getCreatedDate());
-        this.setUserName(user.getUserName());
-        this.setPassword(user.getPassword());
-        this.setSalutation(user.getSalutation());
+        this.setUserName(user.getUserName());        
         this.setName(user.getName());
-        this.setGender(user.getGender());
         this.setMobileNumber(user.getMobileNumber());
-        this.setEmailId(user.getEmailId());
-        this.setAltContactNumber(user.getAltContactNumber());
-        this.setPan(user.getPan());
-        this.setAadhaarNumber(user.getAadhaarNumber());
-        this.setPermanentAddress(user.getPermanentAddress());
-        this.setPermanentCity(user.getPermanentCity());
-        this.setPermanentPincode(user.getPermanentPincode());
-        this.setCorrespondenceAddress(user.getCorrespondenceAddress());
-        this.setCorrespondenceCity(user.getCorrespondenceCity());
-        this.setCorrespondencePincode(user.getCorrespondencePincode());
+        this.setEmailId(user.getEmailId());        
+        this.setAadhaarNumber(user.getAadhaarNumber());        
         this.setActive(user.getActive());
-        this.setDob(user.getDob());
-        this.setPwdExpiryDate(user.getPwdExpiryDate());
-        this.setLocale(user.getLocale());
-        this.setType(user.getType());
-        this.setAccountLocked(user.getAccountLocked());
+        this.setDob(user.getDob());        
         this.setRoles(user.getRoles());
-        this.setFatherOrHusbandName(user.getFatherOrHusbandName());
-        this.setBloodGroup(user.getBloodGroup());
-        this.setIdentificationMark(user.getIdentificationMark());
-        this.setPhoto(user.getPhoto());
         this.setTenantId(user.getTenantId());
     }
+    
     public org.egov.common.contract.request.User toCommonUser(){
         org.egov.common.contract.request.User commonUser = new org.egov.common.contract.request.User();
         commonUser.setId(this.getId());

@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.egov.common.contract.response.ResponseInfo;
 import org.egov.waterconnection.model.ConnectionHolderInfo;
+import org.egov.waterconnection.model.ConnectionHolderInfoV2;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
