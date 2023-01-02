@@ -17,11 +17,14 @@ import org.egov.common.contract.request.Role;
 import org.egov.tracer.model.CustomException;
 import org.egov.waterconnection.config.WSConfiguration;
 import org.egov.waterconnection.model.ConnectionHolderInfo;
+import org.egov.waterconnection.model.ConnectionHolderInfoV2;
 import org.egov.waterconnection.model.ConnectionUserRequest;
+import org.egov.waterconnection.model.ConnectionUserRequestV2;
 import org.egov.waterconnection.model.Status;
 import org.egov.waterconnection.model.WaterConnection;
 import org.egov.waterconnection.model.WaterConnectionRequest;
 import org.egov.waterconnection.model.users.UserDetailResponse;
+import org.egov.waterconnection.model.users.UserDetailResponseV2;
 import org.egov.waterconnection.model.users.UserSearchRequest;
 import org.egov.waterconnection.repository.ServiceRequestRepository;
 import org.slf4j.Logger;
@@ -82,23 +85,38 @@ public class UserService {
 					}
 
 				} else {
-
-					holderInfo.setId(userDetailResponse.getUser().get(0).getId());
-					holderInfo.setUuid(userDetailResponse.getUser().get(0).getUuid());
-					addUserDefaultFields(request.getWaterConnection().getTenantId(), role, holderInfo);
-
-					StringBuilder uri = new StringBuilder(configuration.getUserHost())
-							.append(configuration.getUserContextPath()).append(configuration.getUserUpdateEndPoint());
-					userDetailResponse = userCall(new ConnectionUserRequest(request.getRequestInfo(), holderInfo), uri);
-					if (userDetailResponse.getUser().get(0).getUuid() == null) {
-						throw new CustomException("INVALID USER RESPONSE", "The user updated has uuid as null");
-					}
+					updateUser(request);
 				}
 				// Assigns value of fields from user got from userDetailResponse to owner object
 				setOwnerFields(holderInfo, userDetailResponse, request.getRequestInfo());
 			});
 		}
 	}
+	
+	
+	public void updateUser(WaterConnectionRequest request) {
+		if (!CollectionUtils.isEmpty(request.getWaterConnection().getConnectionHolders())) {
+			Role role = getCitizenRole();
+			request.getWaterConnection().getConnectionHoldersUpdate().forEach(holderInfo -> {
+				addUserDefaultFieldsUpdate(request.getWaterConnection().getTenantId(), role, holderInfo);
+				UserDetailResponseV2 userDetailResponse = updateUserExists(holderInfo, request.getRequestInfo());
+					holderInfo.setId(userDetailResponse.getUser().get(0).getId());
+					holderInfo.setUuid(userDetailResponse.getUser().get(0).getUuid());
+					//addUserDefaultFields(request.getWaterConnection().getTenantId(), role, holderInfo);
+					addUserDefaultFieldsUpdate(request.getWaterConnection().getTenantId(), role, holderInfo);
+
+					StringBuilder uri = new StringBuilder(configuration.getUserHost())
+							.append(configuration.getUserContextPath()).append(configuration.getUserUpdateEndPoint());
+					userDetailResponse = updateUserCall(new ConnectionUserRequestV2(request.getRequestInfo(), holderInfo), uri);
+					if (userDetailResponse.getUser().get(0).getUuid() == null) {
+						throw new CustomException("INVALID USER RESPONSE", "The user updated has uuid as null");
+					}
+				// Assigns value of fields from user got from userDetailResponse to owner object
+					setOwnerFieldsUpdate(holderInfo, userDetailResponse, request.getRequestInfo());
+			});
+		}
+	}
+	
 
 	public void updateUser(WaterConnectionRequest request, WaterConnection existingWaterConnection) {
 		if(!CollectionUtils.isEmpty(existingWaterConnection.getConnectionHolders())) {
@@ -178,6 +196,38 @@ public class UserService {
 			throw new CustomException("IllegalArgumentException", "ObjectMapper not able to convertValue in userCall");
 		}
 	}
+	
+	
+	
+	/**
+	 * Returns UserDetailResponse by calling user service with given uri and object
+	 *
+	 * @param userRequest Request object for user service
+	 * @param uri         The address of the endpoint
+	 * @return Response from user service as parsed as userDetailResponse
+	 */
+	@SuppressWarnings("unchecked")
+	private UserDetailResponseV2 updateUserCall(Object userRequest, StringBuilder uri) {
+		String dobFormat = null;
+		if (uri.toString().contains(configuration.getUserSearchEndpoint())
+				|| uri.toString().contains(configuration.getUserUpdateEndPoint()))
+			dobFormat = "yyyy-MM-dd";
+		else if (uri.toString().contains(configuration.getUserCreateEndPoint()))
+			dobFormat = "dd/MM/yyyy";
+		try {
+			LinkedHashMap<String, Object> responseMap = (LinkedHashMap<String, Object>) serviceRequestRepository.fetchResult(uri, userRequest);
+			if (!CollectionUtils.isEmpty(responseMap)) {
+				parseResponse(responseMap, dobFormat);
+				return mapper.convertValue(responseMap, UserDetailResponseV2.class);
+			} else {
+				return new UserDetailResponseV2();
+			}
+		}
+		// Which Exception to throw?
+		catch (IllegalArgumentException e) {
+			throw new CustomException("IllegalArgumentException", "ObjectMapper not able to convertValue in userCall");
+		}
+	}
 
 	/**
 	 * Parses date formats to long for all users in responseMap
@@ -244,6 +294,31 @@ public class UserService {
 		holderInfo.setLastModifiedDate(null);
 		holderInfo.setLastModifiedBy(null);
 	}
+	
+	
+	/**
+	 * Sets the role,type,active and tenantId for a Citizen
+	 *
+	 * @param tenantId  TenantId of the water connection
+	 * @param role      The role of the user set in this case to CITIZEN
+	 * @param holderInfo The user whose fields are to be set
+	 */
+	private void addUserDefaultFieldsUpdate(String tenantId, Role role, ConnectionHolderInfoV2 holderInfo) {
+		holderInfo.setActive(true);
+		
+		if(null==holderInfo.getStatus()) {
+			holderInfo.setStatus(Status.ACTIVE);
+		}
+		
+		
+		holderInfo.setTenantId(tenantId);
+		holderInfo.setRoles(Collections.singletonList(role));
+		holderInfo.setType("CITIZEN");
+		holderInfo.setCreatedDate(null);
+		holderInfo.setCreatedBy(null);
+		holderInfo.setLastModifiedDate(null);
+		holderInfo.setLastModifiedBy(null);
+	}
 
 	/**
 	 * Searches if the connection holder is already created. Search is based on name
@@ -262,6 +337,26 @@ public class UserService {
 		StringBuilder uri = new StringBuilder(configuration.getUserHost())
 				.append(configuration.getUserSearchEndpoint());
 		return userCall(userSearchRequest, uri);
+	}
+	
+	
+	/**
+	 * Searches if the connection holder is already created. Search is based on name
+	 * of owner, uuid and mobileNumbe
+	 *
+	 * @param connectionHolderInfo ConnectionHolderInfo which is to be searched
+	 * @param requestInfo          RequestInfo from the waterConnectionRequest
+	 * @return UserDetailResponse containing the user if present and the
+	 *         responseInfo
+	 */
+	private UserDetailResponseV2 updateUserExists(ConnectionHolderInfoV2 connectionHolderInfo, RequestInfo requestInfo) {
+		UserSearchRequest userSearchRequest = getBaseUserSearchRequest(connectionHolderInfo.getTenantId(), requestInfo);
+		userSearchRequest.setMobileNumber(connectionHolderInfo.getMobileNumber());
+		userSearchRequest.setUserType(connectionHolderInfo.getType());
+		userSearchRequest.setName(connectionHolderInfo.getName());
+		StringBuilder uri = new StringBuilder(configuration.getUserHost())
+				.append(configuration.getUserSearchEndpoint());
+		return updateUserCall(userSearchRequest, uri);
 	}
 
 	/**
@@ -320,6 +415,24 @@ public class UserService {
 		holderInfo.setActive(userDetailResponse.getUser().get(0).getActive());
 	}
 
+	/**
+	 *
+	 * @param holderInfo
+	 * @param userDetailResponse
+	 * @param requestInfo
+	 */
+	private void setOwnerFieldsUpdate(ConnectionHolderInfoV2 holderInfo, UserDetailResponseV2 userDetailResponse,
+			RequestInfo requestInfo) {
+
+		holderInfo.setUuid(userDetailResponse.getUser().get(0).getUuid());
+		holderInfo.setId(userDetailResponse.getUser().get(0).getId());
+		holderInfo.setUserName((userDetailResponse.getUser().get(0).getUserName()));
+		holderInfo.setCreatedBy(requestInfo.getUserInfo().getUuid());
+		holderInfo.setCreatedDate(System.currentTimeMillis());
+		holderInfo.setLastModifiedBy(requestInfo.getUserInfo().getUuid());
+		holderInfo.setLastModifiedDate(System.currentTimeMillis());
+		holderInfo.setActive(userDetailResponse.getUser().get(0).getActive());
+	}
 	/**
 	 *
 	 * @param userSearchRequest

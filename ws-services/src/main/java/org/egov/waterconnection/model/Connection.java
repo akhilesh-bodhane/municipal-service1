@@ -144,6 +144,8 @@ public class Connection {
 	@JsonProperty("connectionHolders")
 	@Valid
 	private List<ConnectionHolderInfo> connectionHolders;
+	
+	private List<ConnectionHolderInfoV2> connectionHoldersUpdate;
 
 	public Connection id(String id) {
 		this.id = id;
@@ -546,6 +548,13 @@ public class Connection {
 	@Valid
 	public List<ConnectionHolderInfo> getConnectionHolders() {
 		return connectionHolders;
+	}
+	
+	
+	@ApiModelProperty(value = "The connection holder info will enter by employee or citizen")
+	@Valid
+	public List<ConnectionHolderInfoV2> getConnectionHoldersUpdate() {
+		return connectionHoldersUpdate;
 	}
 
 	public void setConnectionHolders(List<ConnectionHolderInfo> connectionHolders) {
