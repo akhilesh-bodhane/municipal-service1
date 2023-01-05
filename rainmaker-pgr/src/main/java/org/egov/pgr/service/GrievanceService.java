@@ -1917,10 +1917,113 @@ public class GrievanceService {
 		return employeeDetails;
 	}
 
-	public List<ServiceRequestComplaints> getServiceRequestDetailsForDashBoard(RequestInfo requestInfo,
+	public ServiceResponse getServiceRequestDetailsForDashBoard(RequestInfo requestInfo,
 			ServiceReqSearchCriteria serviceReqSearchCriteria) {
-		List<ServiceRequestComplaints> serviceRequests = serviceRequestRepository
-				.getServiceRequestDetailsForDashBoard(serviceReqSearchCriteria);
+//		List<ServiceRequestComplaints> serviceRequests = serviceRequestRepository
+//				.getServiceRequestDetailsForDashBoard(serviceReqSearchCriteria);
+//		return serviceRequests;
+
+		List<ServiceRequestComplaints> serviceRequests = null;
+		StringBuilder uri = new StringBuilder();
+		try {
+			enrichRequest(requestInfo, serviceReqSearchCriteria);
+		} catch (CustomException e) {
+			if (e.getMessage().equals(ErrorConstants.NO_DATA_MSG))
+				return pGRUtils.getDefaultServiceResponse(requestInfo);
+			else
+				throw e;
+		}
+
+		List<String> codes = requestInfo.getUserInfo().getRoles().stream().map(Role::getCode)
+				.collect(Collectors.toList());
+
+		if ((codes.contains(PGRConstants.ROLE_ESCALATION_OFFICER1)
+				|| codes.contains(PGRConstants.ROLE_ESCALATION_OFFICER2))
+				&& CollectionUtils.isEmpty(serviceReqSearchCriteria.getServiceRequestId())) {
+			List<ServiceRequestComplaints> response = getComplaintListForEscalationOfficerForDashBoard(requestInfo,
+					serviceReqSearchCriteria);
+
+			// if any complaint is assigned to an escalated officer via autorouting then
+			// fetch that complaints also.
+			try {
+				List<String> status = new ArrayList<String>();
+				status.add(WorkFlowConfigs.STATUS_ASSIGNED);
+				status.add(WorkFlowConfigs.STATUS_REASSIGN_REQUESTED);
+				serviceReqSearchCriteria.setStatus(status);
+				serviceReqSearchCriteria.setCategory(null);
+				uri = new StringBuilder();
+				enrichRequest(requestInfo, serviceReqSearchCriteria);
+				serviceRequests = serviceRequestRepository
+						.getServiceRequestDetailsForDashBoard(serviceReqSearchCriteria);
+
+				if (null != response && !response.isEmpty()) {
+					if (serviceRequests == null || response.isEmpty()) {
+						serviceRequests = new ArrayList<ServiceRequestComplaints>();
+					}
+					serviceRequests.addAll(response);
+				}
+			} catch (CustomException e) {
+				if (e.getMessage().equals(ErrorConstants.NO_DATA_MSG))
+					log.debug("No complaint is assigned to this escalated officer {}",
+							requestInfo.getUserInfo().getUserName());
+			}
+		} else {
+			serviceRequests = serviceRequestRepository.getServiceRequestDetailsForDashBoard(serviceReqSearchCriteria);
+		}
+
+		if (null == serviceRequests || serviceRequests.isEmpty())
+			return pGRUtils.getDefaultServiceResponse(requestInfo);
+
+		ServiceResponse serviceResponse = prepareResultForComplaints(serviceRequests, requestInfo);
+		return serviceResponse;
+
+	}
+
+	private ServiceResponse prepareResultForComplaints(List<ServiceRequestComplaints> serviceRequests,
+			RequestInfo requestInfo) {
+		return ServiceResponse.builder().responseInfo(factory.createResponseInfoFromRequestInfo(requestInfo, true))
+				.serviceRequestComplaints(serviceRequests).build();
+	}
+
+	private List<ServiceRequestComplaints> getComplaintListForEscalationOfficerForDashBoard(RequestInfo requestInfo,
+			ServiceReqSearchCriteria serviceReqSearchCriteria) {
+
+		// If the user is escalation officer then 1st get the pending complaint of 1st
+		// level & get the pending complaint of 2nd level
+		// & merge these two results in the response. Because same user can be the
+		// escalation officer at 1st
+		// level in one department & 2nd level officer in other department
+
+		List<ServiceRequestComplaints> serviceRequests = null;
+
+		try {
+			Map<String, List<String>> categoryList = fetchCategoriesForEscalationOfficer(requestInfo,
+					serviceReqSearchCriteria.getTenantId());
+			List<String> categoryListForEscalatingOfficer1 = categoryList
+					.get(PGRConstants.MDMS_AUTOROUTING_ESCALATION_OFFICER1_NAME);
+			List<String> categoryListForEscalatingOfficer2 = categoryList
+					.get(PGRConstants.MDMS_AUTOROUTING_ESCALATION_OFFICER2_NAME);
+
+			if (!CollectionUtils.isEmpty(categoryListForEscalatingOfficer1)) {
+				serviceReqSearchCriteria.setCategory(categoryListForEscalatingOfficer1);
+				List<String> status = new ArrayList<String>();
+				status.add(WorkFlowConfigs.STATUS_ESCALATED_LEVEL1_PENDING);
+				serviceReqSearchCriteria.setStatus(status);
+				serviceRequests = serviceRequestRepository
+						.getServiceRequestDetailsForDashBoard(serviceReqSearchCriteria);
+			}
+			if (!CollectionUtils.isEmpty(categoryListForEscalatingOfficer2)) {
+				serviceReqSearchCriteria.setCategory(categoryListForEscalatingOfficer2);
+				List<String> status = new ArrayList<String>();
+				status.add(WorkFlowConfigs.STATUS_ESCALATED_LEVEL2_PENDING);
+				serviceReqSearchCriteria.setStatus(status);
+				serviceRequests = serviceRequestRepository
+						.getServiceRequestDetailsForDashBoard(serviceReqSearchCriteria);
+			}
+		} catch (Exception e) {
+			log.error("Error in generating final response for escalation officer " + e);
+		}
 		return serviceRequests;
 	}
+
 }
