@@ -167,7 +167,7 @@ public class ServiceController {
 	private ResponseEntity<?> searchForDashboard(@RequestBody @Valid RequestInfoWrapper requestInfoWrapper,
 			@ModelAttribute @Valid ServiceReqSearchCriteria serviceReqSearchCriteria) {
 		pgrRequestValidator.validateSearch(serviceReqSearchCriteria, requestInfoWrapper.getRequestInfo());
-		java.util.List<ServiceRequestComplaints> serviceReqResponse = service
+		ServiceResponse serviceReqResponse = service
 				.getServiceRequestDetailsForDashBoard(requestInfoWrapper.getRequestInfo(), serviceReqSearchCriteria);
 		return new ResponseEntity<>(serviceReqResponse, HttpStatus.OK);
 	}

@@ -31,6 +31,7 @@ import org.egov.pgr.contract.ReportRequest;
 import org.egov.pgr.contract.RequestInfoWrapper;
 import org.egov.pgr.contract.SearcherRequest;
 import org.egov.pgr.contract.ServiceReqSearchCriteria;
+import org.egov.pgr.contract.ServiceRequestComplaints;
 import org.egov.pgr.contract.ServiceResponse;
 import org.egov.pgr.model.ActionHistory;
 import org.egov.pgr.model.ActionInfo;
@@ -448,7 +449,7 @@ public class PGRUtils {
 	 */
 	public ServiceResponse getDefaultServiceResponse(RequestInfo requestInfo) {
 		return new ServiceResponse(factory.createResponseInfoFromRequestInfo(requestInfo, false),
-				new ArrayList<Service>(), new ArrayList<ActionHistory>());
+				new ArrayList<Service>(), new ArrayList<ActionHistory>(), new ArrayList<ServiceRequestComplaints>());
 	}
 
 	/**
