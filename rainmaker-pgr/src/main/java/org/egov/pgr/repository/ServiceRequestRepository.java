@@ -431,11 +431,11 @@ public class ServiceRequestRepository {
 		}
 		if (serviceReqSearchCriteria.getServiceRequestId() != null
 				&& !serviceReqSearchCriteria.getServiceRequestId().isEmpty()) {
-			StringBuilder serviceIds = new StringBuilder("(");
+			StringBuilder serviceIds = new StringBuilder("");
 			serviceReqSearchCriteria.getServiceRequestId().stream()
 					.forEach(p -> serviceIds.append("'%").append(p).append("%',"));
 			serviceIds.deleteCharAt(serviceIds.length() - 1);
-			serviceIds.append(")");
+			serviceIds.append("");
 			whereStr.append(" and pg.serviceRequestId LIKE ANY(ARRAY[").append(serviceIds).append("])");
 		}
 		if (serviceReqSearchCriteria.getStartDate() != null && serviceReqSearchCriteria.getStartDate() != 0) {
