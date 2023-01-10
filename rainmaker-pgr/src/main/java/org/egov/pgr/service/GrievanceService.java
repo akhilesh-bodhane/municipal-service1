@@ -1941,7 +1941,7 @@ public class GrievanceService {
 				|| codes.contains(PGRConstants.ROLE_ESCALATION_OFFICER2))
 				&& CollectionUtils.isEmpty(serviceReqSearchCriteria.getServiceRequestId())) {
 			List<ServiceRequestComplaints> response = getComplaintListForEscalationOfficerForDashBoard(requestInfo,
-					serviceReqSearchCriteria);
+					serviceReqSearchCriteria, codes);
 
 			// if any complaint is assigned to an escalated officer via autorouting then
 			// fetch that complaints also.
@@ -1986,7 +1986,7 @@ public class GrievanceService {
 	}
 
 	private List<ServiceRequestComplaints> getComplaintListForEscalationOfficerForDashBoard(RequestInfo requestInfo,
-			ServiceReqSearchCriteria serviceReqSearchCriteria) {
+			ServiceReqSearchCriteria serviceReqSearchCriteria, List<String> codes) {
 
 		// If the user is escalation officer then 1st get the pending complaint of 1st
 		// level & get the pending complaint of 2nd level
@@ -2004,17 +2004,30 @@ public class GrievanceService {
 			List<String> categoryListForEscalatingOfficer2 = categoryList
 					.get(PGRConstants.MDMS_AUTOROUTING_ESCALATION_OFFICER2_NAME);
 
-			if (!CollectionUtils.isEmpty(categoryListForEscalatingOfficer1)) {
+			if (codes.size() == 1 && codes.contains(PGRConstants.ROLE_ESCALATION_OFFICER1)
+					&& !CollectionUtils.isEmpty(categoryListForEscalatingOfficer1)) {
 				serviceReqSearchCriteria.setCategory(categoryListForEscalatingOfficer1);
 				List<String> status = new ArrayList<String>();
 				status.add(WorkFlowConfigs.STATUS_ESCALATED_LEVEL1_PENDING);
 				serviceReqSearchCriteria.setStatus(status);
 				serviceRequests = serviceRequestRepository
 						.getServiceRequestDetailsForDashBoard(serviceReqSearchCriteria);
-			}
-			if (!CollectionUtils.isEmpty(categoryListForEscalatingOfficer2)) {
+			} else if (codes.size() == 1 && codes.contains(PGRConstants.ROLE_ESCALATION_OFFICER2)
+					&& !CollectionUtils.isEmpty(categoryListForEscalatingOfficer2)) {
 				serviceReqSearchCriteria.setCategory(categoryListForEscalatingOfficer2);
 				List<String> status = new ArrayList<String>();
+				status.add(WorkFlowConfigs.STATUS_ESCALATED_LEVEL2_PENDING);
+				serviceReqSearchCriteria.setStatus(status);
+				serviceRequests = serviceRequestRepository
+						.getServiceRequestDetailsForDashBoard(serviceReqSearchCriteria);
+			} else if (codes.contains(PGRConstants.ROLE_ESCALATION_OFFICER1)
+					&& codes.contains(PGRConstants.ROLE_ESCALATION_OFFICER2)
+					&& (!CollectionUtils.isEmpty(categoryListForEscalatingOfficer1)
+							|| !CollectionUtils.isEmpty(categoryListForEscalatingOfficer2))) {
+				serviceReqSearchCriteria.setCategory(categoryListForEscalatingOfficer1);
+				serviceReqSearchCriteria.setCategory(categoryListForEscalatingOfficer2);
+				List<String> status = new ArrayList<String>();
+				status.add(WorkFlowConfigs.STATUS_ESCALATED_LEVEL1_PENDING);
 				status.add(WorkFlowConfigs.STATUS_ESCALATED_LEVEL2_PENDING);
 				serviceReqSearchCriteria.setStatus(status);
 				serviceRequests = serviceRequestRepository
