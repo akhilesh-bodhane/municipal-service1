@@ -427,7 +427,7 @@ public class ServiceRequestRepository {
 		StringBuilder whereStr = new StringBuilder();
 
 		if (serviceReqSearchCriteria.getTenantId() != null && !serviceReqSearchCriteria.getTenantId().isEmpty()) {
-			whereStr.append(" pg.tenantid like ").append("'" + serviceReqSearchCriteria.getTenantId() + "%'");
+			whereStr.append(" pg.tenantid like ").append("'%" + serviceReqSearchCriteria.getTenantId() + "%'");
 		}
 		if (serviceReqSearchCriteria.getServiceRequestId() != null
 				&& !serviceReqSearchCriteria.getServiceRequestId().isEmpty()) {
