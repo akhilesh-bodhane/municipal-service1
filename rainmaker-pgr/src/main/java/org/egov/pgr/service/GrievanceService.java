@@ -2004,7 +2004,8 @@ public class GrievanceService {
 			List<String> categoryListForEscalatingOfficer2 = categoryList
 					.get(PGRConstants.MDMS_AUTOROUTING_ESCALATION_OFFICER2_NAME);
 
-			if (codes.size() == 1 && codes.contains(PGRConstants.ROLE_ESCALATION_OFFICER1)
+			if (codes.contains(PGRConstants.ROLE_ESCALATION_OFFICER1)
+					&& !codes.contains(PGRConstants.ROLE_ESCALATION_OFFICER2)
 					&& !CollectionUtils.isEmpty(categoryListForEscalatingOfficer1)) {
 				serviceReqSearchCriteria.setCategory(categoryListForEscalatingOfficer1);
 				List<String> status = new ArrayList<String>();
@@ -2012,7 +2013,8 @@ public class GrievanceService {
 				serviceReqSearchCriteria.setStatus(status);
 				serviceRequests = serviceRequestRepository
 						.getServiceRequestDetailsForDashBoard(serviceReqSearchCriteria);
-			} else if (codes.size() == 1 && codes.contains(PGRConstants.ROLE_ESCALATION_OFFICER2)
+			} else if (codes.contains(PGRConstants.ROLE_ESCALATION_OFFICER2)
+					&& !codes.contains(PGRConstants.ROLE_ESCALATION_OFFICER1)
 					&& !CollectionUtils.isEmpty(categoryListForEscalatingOfficer2)) {
 				serviceReqSearchCriteria.setCategory(categoryListForEscalatingOfficer2);
 				List<String> status = new ArrayList<String>();
