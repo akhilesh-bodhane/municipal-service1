@@ -2023,17 +2023,22 @@ public class GrievanceService {
 				serviceRequests = serviceRequestRepository
 						.getServiceRequestDetailsForDashBoard(serviceReqSearchCriteria);
 			} else if (codes.contains(PGRConstants.ROLE_ESCALATION_OFFICER1)
-					&& codes.contains(PGRConstants.ROLE_ESCALATION_OFFICER2)
-					&& (!CollectionUtils.isEmpty(categoryListForEscalatingOfficer1)
-							|| !CollectionUtils.isEmpty(categoryListForEscalatingOfficer2))) {
-				serviceReqSearchCriteria.setCategory(categoryListForEscalatingOfficer1);
-				serviceReqSearchCriteria.setCategory(categoryListForEscalatingOfficer2);
-				List<String> status = new ArrayList<String>();
-				status.add(WorkFlowConfigs.STATUS_ESCALATED_LEVEL1_PENDING);
-				status.add(WorkFlowConfigs.STATUS_ESCALATED_LEVEL2_PENDING);
-				serviceReqSearchCriteria.setStatus(status);
-				serviceRequests = serviceRequestRepository
-						.getServiceRequestDetailsForDashBoard(serviceReqSearchCriteria);
+					&& codes.contains(PGRConstants.ROLE_ESCALATION_OFFICER2)) {
+				List<String> category = new ArrayList<String>();
+				if (!CollectionUtils.isEmpty(categoryListForEscalatingOfficer1))
+					category.addAll(categoryListForEscalatingOfficer1);
+				if (!CollectionUtils.isEmpty(categoryListForEscalatingOfficer2))
+					category.addAll(categoryListForEscalatingOfficer2);
+
+				if (!category.isEmpty()) {
+					serviceReqSearchCriteria.setCategory(category);
+					List<String> status = new ArrayList<String>();
+					status.add(WorkFlowConfigs.STATUS_ESCALATED_LEVEL1_PENDING);
+					status.add(WorkFlowConfigs.STATUS_ESCALATED_LEVEL2_PENDING);
+					serviceReqSearchCriteria.setStatus(status);
+					serviceRequests = serviceRequestRepository
+							.getServiceRequestDetailsForDashBoard(serviceReqSearchCriteria);
+				}
 			}
 		} catch (Exception e) {
 			log.error("Error in generating final response for escalation officer " + e);
