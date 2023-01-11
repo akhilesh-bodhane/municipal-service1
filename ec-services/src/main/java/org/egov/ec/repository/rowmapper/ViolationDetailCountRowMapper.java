@@ -24,29 +24,26 @@ public class ViolationDetailCountRowMapper implements ResultSetExtractor<List<Vi
 	public List<ViolationCount> extractData(ResultSet rs) throws SQLException, DataAccessException {
 
 		Map<String, ViolationCount> ViolationCountMap = new LinkedHashMap<>();
-		EcPaymentCount ecPayment=new EcPaymentCount();
 
 		try {
 			while (rs.next()) {
 
 				String ViolationCountUuid = rs.getString("violation_uuid");
 
-					ViolationCount ViolationCount = org.egov.ec.web.models.ViolationCount.builder().violationUuid(ViolationCountUuid)
-							.encroachmentType((rs.getString("encroachment_type") == null ? ""
-									: rs.getString("encroachment_type")))
-							.violationDate(
-									(rs.getString("violation_date") == null ? "" : rs.getString("violation_date")))
-							.sector((rs.getString("sector") == null ? "" : rs.getString("sector")))
-							.siName((rs.getString("si_name") == null ? "" : rs.getString("si_name")))
-							.status((rs.getString("challan_status") == null ? "" : rs.getString("challan_status")))
-							.createdTime((rs.getLong("created_time")))
-							.build();
-					
-					
-					ecPayment.setPaymentStatus(rs.getString("payment_status"));
-					ecPayment.setPaymentMode(rs.getString("payment_mode"));
-					ViolationCount.setPaymentDetails(ecPayment);
-					ViolationCountMap.put(ViolationCountUuid, ViolationCount);
+				ViolationCount ViolationCount = org.egov.ec.web.models.ViolationCount.builder()
+						.violationUuid(ViolationCountUuid)
+						.encroachmentType(
+								(rs.getString("encroachment_type") == null ? "" : rs.getString("encroachment_type")))
+						.violationDate((rs.getString("violation_date") == null ? "" : rs.getString("violation_date")))
+						.sector((rs.getString("sector") == null ? "" : rs.getString("sector")))
+						.siName((rs.getString("si_name") == null ? "" : rs.getString("si_name")))
+						.status((rs.getString("challan_status") == null ? "" : rs.getString("challan_status")))
+						.createdTime((rs.getLong("created_time"))).build();
+
+				EcPaymentCount ecPayment = EcPaymentCount.builder().paymentMode(rs.getString("payment_mode"))
+						.paymentStatus(rs.getString("payment_status")).build();
+				ViolationCount.setPaymentDetails(ecPayment);
+				ViolationCountMap.put(ViolationCountUuid, ViolationCount);
 			}
 
 		} catch (Exception e) {

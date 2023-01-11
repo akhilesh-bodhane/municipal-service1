@@ -1957,7 +1957,7 @@ public class GrievanceService {
 						.getServiceRequestDetailsForDashBoard(serviceReqSearchCriteria);
 
 				if (null != response && !response.isEmpty()) {
-					if (serviceRequests == null || response.isEmpty()) {
+					if (serviceRequests == null || serviceRequests.isEmpty()) {
 						serviceRequests = new ArrayList<ServiceRequestComplaints>();
 					}
 					serviceRequests.addAll(response);
