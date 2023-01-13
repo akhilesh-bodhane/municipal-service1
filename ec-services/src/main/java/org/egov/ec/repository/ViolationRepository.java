@@ -12,6 +12,7 @@ import org.egov.ec.repository.rowmapper.ColumnsRowMapper;
 import org.egov.ec.repository.rowmapper.ReceiptNoRowMapper;
 import org.egov.ec.repository.rowmapper.ViolationDetailCountRowMapper;
 import org.egov.ec.repository.rowmapper.ViolationDetailRowMapper;
+import org.egov.ec.repository.rowmapper.ViolationDetailRowMapperV2;
 import org.egov.ec.web.models.ChallanDataBckUp;
 import org.egov.ec.web.models.EcPayment;
 import org.egov.ec.web.models.EcPaymentData;
@@ -34,6 +35,8 @@ public class ViolationRepository {
 
 	private ViolationDetailRowMapper rowMapper;
 
+	private ViolationDetailRowMapperV2 violationDetailRowMapperV2;
+
 	private ViolationDetailCountRowMapper rowCountMapper;
 
 	private ColumnsRowMapper columnsRowMapper;
@@ -43,12 +46,13 @@ public class ViolationRepository {
 	private EchallanConfiguration config;
 
 	private EcQueryBuilder ecQueryBuilder;
-	
+
 	private ReceiptNoRowMapper receiptNoRowMapper;
 
 	public ViolationRepository(JdbcTemplate jdbcTemplate, Producer producer, EchallanConfiguration config,
 			ViolationDetailRowMapper rowMapper, ColumnsRowMapper columnsRowMapper,
-			ViolationDetailCountRowMapper rowCountMapper,ReceiptNoRowMapper receiptNoRowMapper) {
+			ViolationDetailCountRowMapper rowCountMapper, ReceiptNoRowMapper receiptNoRowMapper,
+			EcQueryBuilder ecQueryBuilder, ViolationDetailRowMapperV2 violationDetailRowMapperV2) {
 		this.jdbcTemplate = jdbcTemplate;
 		this.rowMapper = rowMapper;
 		this.producer = producer;
@@ -56,7 +60,8 @@ public class ViolationRepository {
 		this.ecQueryBuilder = ecQueryBuilder;
 		this.columnsRowMapper = columnsRowMapper;
 		this.rowCountMapper = rowCountMapper;
-		this.receiptNoRowMapper=receiptNoRowMapper;
+		this.receiptNoRowMapper = receiptNoRowMapper;
+		this.violationDetailRowMapperV2 = violationDetailRowMapperV2;
 	}
 
 	/**
@@ -212,18 +217,35 @@ public class ViolationRepository {
 	 * @param searchCriteria EcSearchCriteria model
 	 * @return Returns the list of challans
 	 */
+//	public List<Violation> getSearchChallan(Violation violation) {
+//		log.info("Violation Repository - getSearchChallan Method");
+//
+//		List<Violation> violationDetailList;
+//
+//		violationDetailList = jdbcTemplate.query(EcQueryBuilder.SEARCH_VIOLATION_MASTER,
+//				new Object[] { violation.getFromDate(), violation.getFromDate(), violation.getToDate(),
+//						violation.getToDate(), violation.getSiName(), violation.getSiName(),
+//						violation.getEncroachmentType(), violation.getEncroachmentType(), violation.getSector(),
+//						violation.getSector(), violation.getStatus(), violation.getStatus(), violation.getTenantId(),
+//						violation.getChallanId(), violation.getChallanId() },
+//				rowMapper);
+//
+//		return violationDetailList;
+//
+//	}
+
 	public List<Violation> getSearchChallan(Violation violation) {
 		log.info("Violation Repository - getSearchChallan Method");
 
 		List<Violation> violationDetailList;
 
 		violationDetailList = jdbcTemplate.query(EcQueryBuilder.SEARCH_VIOLATION_MASTER,
-				new Object[] { violation.getFromDate(), violation.getFromDate(), violation.getToDate(),
-						violation.getToDate(), violation.getSiName(), violation.getSiName(),
-						violation.getEncroachmentType(), violation.getEncroachmentType(), violation.getSector(),
-						violation.getSector(), violation.getStatus(), violation.getStatus(), violation.getTenantId(),
-						violation.getChallanId(), violation.getChallanId() },
-				rowMapper);
+				new Object[] { violation.getStatus(), violation.getStatus(), violation.getFromDate(),
+						violation.getFromDate(), violation.getToDate(), violation.getToDate(),
+						violation.getEncroachmentType(), violation.getEncroachmentType(), violation.getSiName(),
+						violation.getSiName(), violation.getSector(), violation.getSector(), violation.getChallanId(),
+						violation.getChallanId() },
+				violationDetailRowMapperV2);
 
 		return violationDetailList;
 
@@ -301,17 +323,16 @@ public class ViolationRepository {
 		RequestInfoWrapper infoWrapper = RequestInfoWrapper.builder().requestBody(violationMaster).build();
 		producer.push(config.getEditChallanTopic(), infoWrapper);
 	}
-	
+
 	public String getReceiptNo(EcSearchCriteria searchCriteria) {
-		String receiptno ="";		
-		
+		String receiptno = "";
+
 		try {
 			return receiptno = jdbcTemplate.query(EcQueryBuilder.GET_RECEIPT_NO,
-					new Object[] {  searchCriteria.getSearchText()		
-								 }, receiptNoRowMapper);
+					new Object[] { searchCriteria.getSearchText() }, receiptNoRowMapper);
 		} catch (Exception e) {
 			e.printStackTrace();
-			throw new CustomException("Exception",e.getMessage());
+			throw new CustomException("Exception", e.getMessage());
 		}
 
 	}
