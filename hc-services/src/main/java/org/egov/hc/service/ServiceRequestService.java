@@ -1008,7 +1008,8 @@ public class ServiceRequestService {
 				request.getServices().get(0).setCreatedTime(request.getAuditDetails().getCreatedTime());
 				request.getServices().get(0).setLastModifiedBy(request.getAuditDetails().getLastModifiedBy());
 				request.getServices().get(0).setLastModifiedTime(request.getAuditDetails().getLastModifiedTime());
-
+				request.getServices().get(0).setLocality(request.getServices().get(0).getLocality());
+				
 				List<ServiceRequestData> applicatinFormList = new ArrayList<>();
 				applicatinFormList.add(request.getServices().get(0));
 
@@ -1213,7 +1214,8 @@ public class ServiceRequestService {
 			} else {
 				return new ResponseEntity(ServiceResponse.builder()
 						.responseInfo(ResponseInfo.builder().status(HCConstants.SUCCESS).build())
-						.totalRecords(recCount.isEmpty() ? "" : recCount.get(0)).services(serviceRequest).build(), HttpStatus.OK);
+						.totalRecords(recCount.isEmpty() ? "" : recCount.get(0)).services(serviceRequest).build(),
+						HttpStatus.OK);
 			}
 		} else {
 			return new ResponseEntity(ServiceResponse.builder()
@@ -2784,6 +2786,7 @@ public class ServiceRequestService {
 				request.getServices().get(0).setCreatedTime(request.getAuditDetails().getCreatedTime());
 				request.getServices().get(0).setLastModifiedBy(request.getAuditDetails().getLastModifiedBy());
 				request.getServices().get(0).setLastModifiedTime(request.getAuditDetails().getLastModifiedTime());
+				request.getServices().get(0).setLocality(request.getServices().get(0).getLocality());
 
 				List<ServiceRequestData> applicatinFormList = new ArrayList<>();
 				applicatinFormList.add(request.getServices().get(0));
