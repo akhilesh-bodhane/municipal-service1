@@ -1612,6 +1612,8 @@ public class ServiceRequestService {
 				request.getServices().get(0).setCreatedTime(request.getAuditDetails().getCreatedTime());
 				request.getServices().get(0).setLastModifiedBy(request.getAuditDetails().getLastModifiedBy());
 				request.getServices().get(0).setLastModifiedTime(request.getAuditDetails().getLastModifiedTime());
+				request.getServices().get(0).setLocality(request.getServices().get(0).getLocality());
+				
 				List<ServiceRequestData> applicatinFormList = new ArrayList<>();
 				applicatinFormList.add(request.getServices().get(0));
 
@@ -2776,7 +2778,8 @@ public class ServiceRequestService {
 				request.getServices().get(0).setCreatedTime(request.getAuditDetails().getCreatedTime());
 				request.getServices().get(0).setLastModifiedBy(request.getAuditDetails().getLastModifiedBy());
 				request.getServices().get(0).setLastModifiedTime(request.getAuditDetails().getLastModifiedTime());
-
+				request.getServices().get(0).setLocality(request.getServices().get(0).getLocality());
+				
 				List<ServiceRequestData> applicatinFormList = new ArrayList<>();
 				applicatinFormList.add(request.getServices().get(0));
 
