@@ -483,6 +483,45 @@ public class WorkflowIntegrator {
 		return status != null ? status.toString() : "";
 	}
 
+	public String parseBussinessServiceDataForEditStatus(BusinessServiceResponse bussinessServiceData, String action,
+			ServiceRequestData serviceRequestGet) throws JSONException {
+
+		StringBuilder status = null;
+		Boolean found = new Boolean(false);
+		for (BusinessService businessService : bussinessServiceData.getBusinessServices()) {
+			List<State> states = businessService.getStates();
+			for (State s : states) {
+				if (s.getApplicationStatus().trim()
+						.equalsIgnoreCase(serviceRequestGet.getService_request_status().trim())) {
+					for (Action a : s.getActions()) {
+						if (a.getAction().equals(action.trim())) {
+							for (State ss : states) {
+								if (ss.getUuid().equalsIgnoreCase(a.getNextState())) {
+									status = new StringBuilder(ss.getApplicationStatus());
+									found = true;
+									break;
+								}
+								if (found)
+									break;
+							}
+							if (found)
+								break;
+						}
+						if (found)
+							break;
+					}
+					if (found)
+						break;
+				}
+				if (found)
+					break;
+			}
+			if (found)
+				break;
+		}
+		return status != null ? status.toString() : "";
+	}
+
 	public BusinessServiceResponse getbussinessServiceDatafromprocesinstanceEdit(ServiceRequest serviceRequestGetData) {
 		BusinessServiceResponse bussinessServiceData = rest.postForObject(
 				hcConfiguration.getWfHost().concat(hcConfiguration.getWfBusinessServiceSearchPath()).concat("?")
