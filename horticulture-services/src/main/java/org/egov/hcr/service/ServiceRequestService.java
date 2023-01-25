@@ -19,6 +19,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.poi.ss.usermodel.ErrorConstants;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.request.Role;
 import org.egov.common.contract.request.User;
@@ -1300,7 +1301,7 @@ public class ServiceRequestService {
 					"Update HORTICULTURE - ServiceTypeName:true==true And ServiceType : true==true, Application Number : "
 							+ serviceRequestId);
 			responseBody = updateServiceRequest(serviceRequest, serviceRequestId, requestHeader, role, status,
-					serviceRequestUuid, existingServicetype);
+					serviceRequestUuid, existingServicetype, serviceRequestGet);
 
 			updateServiceRequestStatusEdit(serviceRequest, serviceRequestId, existingServicetype, role);
 		} else {
@@ -1576,10 +1577,19 @@ public class ServiceRequestService {
 	}
 
 	private ResponseEntity<ServiceRequest> updateServiceRequest(ServiceRequest request, String serviceRequestId,
-			String requestHeader, String role, String status, String serviceRequestUuid, String serviceType) {
+			String requestHeader, String role, String status, String serviceRequestUuid, String serviceType,
+			ServiceRequestData serviceRequestGet) {
 		RequestInfoWrapper infoWrapper = new RequestInfoWrapper();
 		try {
 
+			BusinessServiceResponse bussinessServiceDatafromprocesinstance = wfIntegrator
+					.getbussinessServiceDatafromprocesinstanceEdit(request);
+			String bussinessServiceDataForStatus = wfIntegrator.parseBussinessServiceDataForEditStatus(
+					bussinessServiceDatafromprocesinstance, "EDIT", serviceRequestGet);
+
+			if (bussinessServiceDataForStatus.isEmpty()) {
+				throw new CustomException("ERROR_VALUE", "Failed to get Status");
+			}
 			if (null != request.getServices() && !request.getServices().isEmpty()) {
 
 				List<String> documentList = new ArrayList<>();
@@ -1607,13 +1617,15 @@ public class ServiceRequestService {
 				request.getServices().get(0).setService_request_id(serviceRequestId);
 				request.getServices().get(0).setServiceType(serviceType);
 				request.getServices().get(0).setCurrent_assignee(role);
-				request.getServices().get(0).setService_request_status(HCConstants.EDITED);
+				// request.getServices().get(0).setService_request_status(HCConstants.EDITED);
+				// // Need to change
+				request.getServices().get(0).setService_request_status(bussinessServiceDataForStatus);
 				request.getServices().get(0).setCreatedBy(request.getAuditDetails().getCreatedBy());
 				request.getServices().get(0).setCreatedTime(request.getAuditDetails().getCreatedTime());
 				request.getServices().get(0).setLastModifiedBy(request.getAuditDetails().getLastModifiedBy());
 				request.getServices().get(0).setLastModifiedTime(request.getAuditDetails().getLastModifiedTime());
 				request.getServices().get(0).setLocality(request.getServices().get(0).getLocality());
-				
+
 				List<ServiceRequestData> applicatinFormList = new ArrayList<>();
 				applicatinFormList.add(request.getServices().get(0));
 
@@ -2779,7 +2791,7 @@ public class ServiceRequestService {
 				request.getServices().get(0).setLastModifiedBy(request.getAuditDetails().getLastModifiedBy());
 				request.getServices().get(0).setLastModifiedTime(request.getAuditDetails().getLastModifiedTime());
 				request.getServices().get(0).setLocality(request.getServices().get(0).getLocality());
-				
+
 				List<ServiceRequestData> applicatinFormList = new ArrayList<>();
 				applicatinFormList.add(request.getServices().get(0));
 
