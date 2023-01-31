@@ -252,12 +252,20 @@ public class PGRRequestValidator {
 		
 		System.out.println("Start Date : " + criteria.getStartDate());
 		System.out.println("Start Date : " + criteria.getEndDate());
-		System.out.println("System Generated Date : " + System.currentTimeMillis());
+		System.out.println("System Generated Date : " + System.currentTimeMillis() + 24*60*60*1000);
 		
-		if ((criteria.getStartDate() != null && criteria.getStartDate() > cal.getTime().getTime())
-				|| (criteria.getEndDate() != null && criteria.getEndDate() > cal.getTime().getTime())) {
+		/*
+		 * if ((criteria.getStartDate() != null && criteria.getStartDate() >
+		 * cal.getTime().getTime()) || (criteria.getEndDate() != null &&
+		 * criteria.getEndDate() > cal.getTime().getTime())) {
+		 * errorMap.put(ErrorConstants.INVALID_START_END_DATE_CODE,
+		 * ErrorConstants.INVALID_START_END_DATE_MSG); }
+		 */
+		if ((criteria.getStartDate() != null && criteria.getStartDate() > (System.currentTimeMillis() + 24*60*60*1000))
+				|| (criteria.getEndDate() != null && criteria.getEndDate() > (System.currentTimeMillis() + 24*60*60*1000))) {
 			errorMap.put(ErrorConstants.INVALID_START_END_DATE_CODE, ErrorConstants.INVALID_START_END_DATE_MSG);
 		}
+		
 		if ((criteria.getStartDate() != null && criteria.getEndDate() != null)
 				&& criteria.getStartDate().compareTo(criteria.getEndDate()) > 0) {
 			errorMap.put(ErrorConstants.INVALID_START_DATE_CODE, ErrorConstants.INVALID_START_DATE_MSG);
