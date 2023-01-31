@@ -250,6 +250,10 @@ public class PGRRequestValidator {
 		Calendar cal = Calendar.getInstance();
 		cal.roll(Calendar.DATE, 1);
 		
+		System.out.println("Start Date : " + criteria.getStartDate());
+		System.out.println("Start Date : " + criteria.getEndDate());
+		System.out.println("System Generated Date : " + cal.getTime().getTime());
+		
 		if ((criteria.getStartDate() != null && criteria.getStartDate() > cal.getTime().getTime())
 				|| (criteria.getEndDate() != null && criteria.getEndDate() > cal.getTime().getTime())) {
 			errorMap.put(ErrorConstants.INVALID_START_END_DATE_CODE, ErrorConstants.INVALID_START_END_DATE_MSG);
