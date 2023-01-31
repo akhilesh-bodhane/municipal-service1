@@ -252,7 +252,7 @@ public class PGRRequestValidator {
 		
 		System.out.println("Start Date : " + criteria.getStartDate());
 		System.out.println("Start Date : " + criteria.getEndDate());
-		System.out.println("System Generated Date : " + cal.getTime().getTime());
+		System.out.println("System Generated Date : " + System.currentTimeMillis());
 		
 		if ((criteria.getStartDate() != null && criteria.getStartDate() > cal.getTime().getTime())
 				|| (criteria.getEndDate() != null && criteria.getEndDate() > cal.getTime().getTime())) {
