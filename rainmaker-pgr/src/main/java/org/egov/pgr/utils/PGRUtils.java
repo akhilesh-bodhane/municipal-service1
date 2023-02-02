@@ -173,7 +173,8 @@ public class PGRUtils {
 	 */
 	public AuditDetails getAuditDetails(String by, Boolean isCreate) {
 
-		Long dt = new Date().getTime();
+//		Long dt = new Date().getTime();
+		Long dt = System.currentTimeMillis();
 		if (isCreate)
 			return AuditDetails.builder().createdBy(by).createdTime(dt).lastModifiedBy(by).lastModifiedTime(dt).build();
 		else
