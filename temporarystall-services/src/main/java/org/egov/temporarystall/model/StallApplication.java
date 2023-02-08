@@ -111,6 +111,12 @@ public class StallApplication {
 	@JsonProperty("relation")
 	private String relation;
 	
+	@JsonProperty("latitude")
+	private String latitude;
+
+	@JsonProperty("longitude")
+	private String longitude;
+	
 	@JsonProperty("applicationDocument")
 	private List<StallApplicationDocument> applicationDocument;
 	
