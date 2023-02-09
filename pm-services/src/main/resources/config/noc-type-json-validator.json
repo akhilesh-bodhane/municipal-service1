@@ -112,7 +112,7 @@
       },
       "requestedLocation":{
          "mandatory":"false",
-         "validateRegularExp":"^[a-zA-Z0-9!@#$&()\\-`.+,/\" ]{1,100}$"
+         "validateRegularExp":"^(-?\\d+(\\.\\d+)?),\\s*(-?\\d+(\\.\\d+)?)$"
       },
       "landmark":{
          "mandatory":"true",
@@ -374,7 +374,7 @@
       },
       "requestedLocation":{
          "mandatory":"false",
-         "validateRegularExp":"^[a-zA-Z0-9!@#$&()\\-`.+,/\" ]{1,100}$"
+         "validateRegularExp":"^(-?\\d+(\\.\\d+)?),\\s*(-?\\d+(\\.\\d+)?)$"
       },
       "landmark":{
          "mandatory":"true",
