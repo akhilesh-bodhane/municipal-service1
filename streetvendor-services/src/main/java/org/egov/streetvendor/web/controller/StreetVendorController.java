@@ -1,0 +1,32 @@
+package org.egov.streetvendor.web.controller;
+
+import javax.validation.Valid;
+
+import org.egov.streetvendor.model.RequestInfoWrapper;
+import org.egov.streetvendor.model.ResponseInfoWrapper;
+import org.egov.streetvendor.service.StreetVendorService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+@RequestMapping("/streetvendor")
+public class StreetVendorController {
+	
+	private final StreetVendorService streetVendorService;
+
+	@Autowired
+	public StreetVendorController(StreetVendorService streetVendorService) {
+		this.streetVendorService = streetVendorService;
+	}
+	
+	@PostMapping(value = "/_create")
+	public ResponseEntity<ResponseInfoWrapper> createStreetVendorData(
+			@Valid @RequestBody RequestInfoWrapper requestInfoWrapper) {
+		return streetVendorService.createStreetVendorData(requestInfoWrapper);
+	}
+
+}
