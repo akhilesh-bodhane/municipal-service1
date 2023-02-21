@@ -1,0 +1,128 @@
+{
+  
+    "CREATE": {
+    "tenantId": {
+      "mandatory": "false",
+      "validateRegularExp": "[a-zA-Z ]{1,50}$"
+    },
+    "streetvendorDataList": {
+      "vendorUuid": {
+        "mandatory": "false",
+        "validateRegularExp": "[a-zA-Z ]{1,50}$"
+      },
+      "covNo": {
+        "mandatory": "false",
+        "validateRegularExp": "[a-zA-Z ]{1,50}$"
+      },
+      "vendorName": {
+        "mandatory": "false",
+        "validateRegularExp": "[a-zA-Z ]{1,50}$"
+      },
+      "vendorAadharNo": {
+        "mandatory": "false",
+        "validateRegularExp": "[a-zA-Z ]{1,50}$"
+      },
+      "fatherName": {
+        "mandatory": "false",
+        "validateRegularExp": "[a-zA-Z ]{1,50}$"
+      },
+      "spouseName": {
+        "mandatory": "false",
+        "validateRegularExp": "[a-zA-Z ]{1,50}$"
+      },
+      "nomineeName": {
+        "mandatory": "false",
+        "validateRegularExp": "[a-zA-Z ]{1,50}$"
+      },
+      "nomineeAadharNo": {
+        "mandatory": "false",
+        "validateRegularExp": "[a-zA-Z ]{1,50}$"
+      },
+      "nameOfFamilyMember1": {
+        "mandatory": "false",
+        "validateRegularExp": "[a-zA-Z ]{1,50}$"
+      },
+      "nameOfFamilyMember2": {
+        "mandatory": "false",
+        "validateRegularExp": "[a-zA-Z ]{1,50}$"
+      },
+      "mobileNo": {
+        "mandatory": "false",
+        "validateRegularExp": "[a-zA-Z ]{1,50}$"
+      },
+       "alternateMobileNo": {
+        "mandatory": "false",
+        "validateRegularExp": "[a-zA-Z ]{1,50}$"
+      },
+       "category": {
+        "mandatory": "false",
+        "validateRegularExp": "[a-zA-Z ]{1,50}$"
+      },
+       "tradeOfVending": {
+        "mandatory": "false",
+        "validateRegularExp": "[a-zA-Z ]{1,50}$"
+      },
+       "permanentAddress": {
+        "mandatory": "false",
+        "validateRegularExp": "[a-zA-Z ]{1,50}$"
+      },
+        "presentAddress": {
+        "mandatory": "false",
+        "validateRegularExp": "[a-zA-Z ]{1,50}$"
+      },
+        "streetVendingIdCardIssue": {
+        "mandatory": "false",
+        "validateRegularExp": "[a-zA-Z ]{1,50}$"
+      },
+        "surveyLocation": {
+        "mandatory": "false",
+        "validateRegularExp": "[a-zA-Z ]{1,50}$"
+      },
+        "surveyLocality": {
+        "mandatory": "false",
+        "validateRegularExp": "[a-zA-Z ]{1,50}$"
+      },
+       "statusOfOccupancyStreet": {
+        "mandatory": "false",
+        "validateRegularExp": "[a-zA-Z ]{1,50}$"
+      },
+       "pmSvanidhiLoan": {
+        "mandatory": "false",
+        "validateRegularExp": "[a-zA-Z ]{1,50}$"
+      },
+       "enrollmentInPMSBY": {
+        "mandatory": "false",
+        "validateRegularExp": "[a-zA-Z ]{1,50}$"
+      },
+       "enrollmentInPMJJBY": {
+        "mandatory": "false",
+        "validateRegularExp": "[a-zA-Z ]{1,50}$"
+      },
+       "bankAccountNo": {
+        "mandatory": "false",
+        "validateRegularExp": "[a-zA-Z ]{1,50}$"
+      },
+       "bankHolderName": {
+        "mandatory": "false",
+        "validateRegularExp": "[a-zA-Z ]{1,50}$"
+      },
+      "bankName": {
+        "mandatory": "false",
+        "validateRegularExp": "[a-zA-Z ]{1,50}$"
+      },
+      "ifscCode": {
+        "mandatory": "false",
+        "validateRegularExp": "[a-zA-Z ]{1,50}$"
+      },
+      "tenantId": {
+        "mandatory": "false",
+        "validateRegularExp": "[a-zA-Z ]{1,50}$"
+      },
+      "isActive": {
+        "mandatory": "false",
+        "validateRegularExp": "[a-zA-Z ]{1,50}$"
+      }     
+      
+    }
+  }
+    }

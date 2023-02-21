@@ -4,6 +4,7 @@ import javax.validation.Valid;
 
 import org.egov.streetvendor.model.RequestInfoWrapper;
 import org.egov.streetvendor.model.ResponseInfoWrapper;
+import org.egov.streetvendor.model.StreetVendorRequest;
 import org.egov.streetvendor.service.StreetVendorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

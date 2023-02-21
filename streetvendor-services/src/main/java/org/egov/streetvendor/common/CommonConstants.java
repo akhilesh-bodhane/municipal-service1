@@ -94,5 +94,14 @@ public class CommonConstants {
     public static final String STALL_TAX_HEAD_CODE = "TEMPORARY_STALL_CHARGES_BOOKING";
     
     public static final String STALL_TAX_HEAD_CODE_GST = "TEMPORARY_STALL_GST_CHARGES_BOOKING";
+    
+	public static final String SCRIPTTAGXSS = "(.*?)<(\\s*?)script(\\s*?)(.*?)>(.*?)<(\\s*?)/(\\s*?)script(\\s*?)>(.*?)";
+	public static final String SRC1TAGXSS = "(.*?)src[\\r\\n]*=[\\r\\n]*\\\'(.*?)\\\'(.*?)";
+	public static final String SRC2TAGXSS = "(.*?)src[\\r\\n]*=[\\r\\n]*\\\"(.*?)\\\"(.*?)";
+	public static final String SCRIPTENDTAGXSS = "(.*?)</script(\\s*?)>(.*?)";
+	public static final String SCRIPTSTARTTAGXSS = "(.*?)<(\\s*?)script(\\s*?)>(.*?)";
+	public static final String JSTAGXSS = "(.*?)javascript:(.*?)";
+	public static final String VBTAGXSS = "(.*?)vbscript:(.*?)";
+	public static final String ONLOADTAGXSS = "(.*?)onload(.*?)=(.*?)";
 
 }

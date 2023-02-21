@@ -1,6 +1,10 @@
 package org.egov.streetvendor.repository;
 
 
+import java.util.List;
+
+import javax.validation.Valid;
+
 import org.egov.streetvendor.config.StreetVendorConfiguration;
 import org.egov.streetvendor.model.RequestInfoWrapper;
 import org.egov.streetvendor.model.StreetVendorData;
@@ -24,7 +28,7 @@ private StreetVendorConfiguration config;
 		this.config = config;
 	}
 	
-	public void createstreetVendor(StreetVendorData streetVendorData) {
+	public void createstreetVendor(@Valid StreetVendorData streetVendorData) {
 		RequestInfoWrapper infoWrapper = RequestInfoWrapper.builder().requestBody(streetVendorData).build();
 		producer.push(config.getStreetVendorDataSaveTopic(), infoWrapper);
 	}

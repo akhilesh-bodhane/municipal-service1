@@ -3,6 +3,8 @@ package org.egov.streetvendor.model;
 import java.util.List;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
@@ -81,16 +83,16 @@ public class StreetVendorData {
 	private String surveyLocality;
 	
 	@JsonProperty("statusOfOccupancyStreet")
-	private Boolean statusOfOccupancyStreet; 
+	private String statusOfOccupancyStreet; 
 	
 	@JsonProperty("pmSvanidhiLoan")
-	private Boolean pmSvanidhiLoan;
+	private String pmSvanidhiLoan;
 	
 	@JsonProperty("enrollmentInPMSBY")
-	private Boolean enrollmentInPMSBY;
+	private String enrollmentInPMSBY;
 	
 	@JsonProperty("enrollmentInPMJJBY")
-	private Boolean enrollmentInPMJJBY;
+	private String enrollmentInPMJJBY;
 	
 	@JsonProperty("bankAccountNo")
 	private String bankAccountNo;
@@ -113,9 +115,25 @@ public class StreetVendorData {
 	@JsonProperty("applicationStatus")
 	private String applicationStatus;
 	
+	@Size(max = 256)
+	@JsonProperty("createdBy")
+	private String createdBy;
+	
+	@JsonProperty("createdTime")
+	@NotNull(message = "createdTime should not be empty or null")
+	private Long createdTime;
+	
+	@Size(max = 256)
+	@JsonProperty("lastModifiedBy")
+	private String lastModifiedBy;
+	
+	@JsonProperty("lastModifiedTime")
+	@NotNull(message = "lastModifiedTime should not be empty or null")
+	private Long lastModifiedTime;
+	
 
-	@JsonProperty("streetvendorDataRequest")
-	private List<StreetVendorData> streetvendorDataRequest;
+	@JsonProperty("streetvendorDataList")
+	private List<StreetVendorData> streetvendorDataList;
 	
 	@JsonProperty("streetVendorDocument")
 	private List<StreetVendorDocument> streetVendorDocument;
