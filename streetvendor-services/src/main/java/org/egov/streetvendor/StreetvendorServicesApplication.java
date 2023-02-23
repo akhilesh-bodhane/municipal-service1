@@ -20,7 +20,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @SpringBootApplication
 @ComponentScan(basePackages = {"org.egov.streetvendor","org.egov.streetvendor.web.controller","org.egov.streetvendor.config"})
 @Import({TracerConfiguration.class})
-@EnableAutoConfiguration(exclude = DataSourceAutoConfiguration.class)
 public class StreetvendorServicesApplication {
 	
 	@Value("${app.timezone}")
