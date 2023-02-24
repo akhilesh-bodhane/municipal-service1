@@ -17,23 +17,29 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/streetvendor")
 public class StreetVendorController {
-	
+
 	private final StreetVendorService streetVendorService;
 
 	@Autowired
 	public StreetVendorController(StreetVendorService streetVendorService) {
 		this.streetVendorService = streetVendorService;
 	}
-	
+
 	@PostMapping(value = "/_create")
 	public ResponseEntity<ResponseInfoWrapper> createStreetVendorData(
 			@Valid @RequestBody RequestInfoWrapper requestInfoWrapper) {
 		return streetVendorService.createStreetVendorData(requestInfoWrapper);
 	}
-	
-	  @PostMapping(value = "/_get") 
-	  public ResponseEntity<ResponseInfoWrapper>getStreetVendorData(@ModelAttribute StreetVendorData streetVendorData) {
-	  return streetVendorService.getStreetVendorDataList(streetVendorData);
-	  }
+
+	@PostMapping(value = "/_get")
+	public ResponseEntity<ResponseInfoWrapper> getStreetVendorData(@ModelAttribute StreetVendorData streetVendorData) {
+		return streetVendorService.getStreetVendorDataList(streetVendorData);
+	}
+
+	@PostMapping(value = "/_getdetails")
+	public ResponseEntity<ResponseInfoWrapper> getStreetVendorDataDetails(
+			@ModelAttribute StreetVendorData streetVendorData) {
+		return streetVendorService.getStreetVendorDataDataDetails(streetVendorData);
+	}
 
 }
