@@ -115,6 +115,9 @@ public class StreetVendorData {
 	@JsonProperty("applicationStatus")
 	private String applicationStatus;
 	
+	@JsonProperty("landmark")
+	private String landmark;
+	
 	@Size(max = 256)
 	@JsonProperty("createdBy")
 	private String createdBy;

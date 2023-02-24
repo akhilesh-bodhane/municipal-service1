@@ -77,5 +77,18 @@ public class StreetVendorService {
 			throw new CustomException(CommonConstants.STREET_VENDOR_CREATION_EXCEPTION_CODE, e.getMessage());
 		}
 	}
+	
+	
+	public ResponseEntity<ResponseInfoWrapper> getStreetVendorDataList(StreetVendorData streetvendordata) {
+		try {					
+			List<StreetVendorData> StreetVendorList = repository.getStreetVendorList(streetvendordata);
+			return new ResponseEntity<>(ResponseInfoWrapper.builder()
+					.responseInfo(ResponseInfo.builder().status(CommonConstants.SUCCESS).build())
+					.responseBody(StreetVendorList).build(), HttpStatus.OK);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new CustomException(CommonConstants.STREET_VENDOR_GET_EXCEPTION_CODE, e.getMessage());
+		}
+	}
 
 }

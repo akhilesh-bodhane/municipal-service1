@@ -1,13 +1,14 @@
 package org.egov.streetvendor.web.controller;
 
 import javax.validation.Valid;
-
 import org.egov.streetvendor.model.RequestInfoWrapper;
 import org.egov.streetvendor.model.ResponseInfoWrapper;
+import org.egov.streetvendor.model.StreetVendorData;
 import org.egov.streetvendor.model.StreetVendorRequest;
 import org.egov.streetvendor.service.StreetVendorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,5 +30,10 @@ public class StreetVendorController {
 			@Valid @RequestBody RequestInfoWrapper requestInfoWrapper) {
 		return streetVendorService.createStreetVendorData(requestInfoWrapper);
 	}
+	
+	  @PostMapping(value = "/_get") 
+	  public ResponseEntity<ResponseInfoWrapper>getStreetVendorData(@ModelAttribute StreetVendorData streetVendorData) {
+	  return streetVendorService.getStreetVendorDataList(streetVendorData);
+	  }
 
 }
