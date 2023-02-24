@@ -29,7 +29,7 @@ public class StreetVendorService {
 	private AuditDetailsUtil auditDetailsUtil;
 
 	private StreetVendorRepository repository;
-	
+
 	private WorkflowIntegrator wfIntegrator;
 
 	@Autowired
@@ -43,44 +43,43 @@ public class StreetVendorService {
 
 	public ResponseEntity<ResponseInfoWrapper> createStreetVendorData(RequestInfoWrapper requestInfoWrapper) {
 		try {
-			
-			  StreetVendorData streetvendordata =objectMapper.convertValue(requestInfoWrapper.getRequestBody(),
-			  StreetVendorData.class);
-			  
-			  String responseValidate = "";
 
-				Gson gson = new Gson();
-				String payloadData = gson.toJson(streetvendordata, StreetVendorData.class);
+			StreetVendorData streetvendordata = objectMapper.convertValue(requestInfoWrapper.getRequestBody(),
+					StreetVendorData.class);
 
-				responseValidate = wfIntegrator.validateJsonAddUpdateData(payloadData, CommonConstants.ACTION_CREATE);
-				if (responseValidate.equals("")) {
-			 
-			  streetvendordata.getStreetvendorDataList().stream().forEach((c) -> {			 			  			  		  
-			    c.setApplicationStatus(CommonConstants.ACTION_CREATE);
-			    c.setVendorUuid(UUID.randomUUID().toString());
-			    c.setIsActive(true);
-			    c.setAuditDetails(
-						auditDetailsUtil.getAuditDetails(requestInfoWrapper.getRequestInfo(), CommonConstants.ACTION_CREATE));
-			  });
-			 
-			 requestInfoWrapper.setRequestBody(streetvendordata);
+			String responseValidate = "";
 
-			repository.createstreetVendor(streetvendordata);
+			Gson gson = new Gson();
+			String payloadData = gson.toJson(streetvendordata, StreetVendorData.class);
 
-			return new ResponseEntity<>(ResponseInfoWrapper.builder()
-					.responseInfo(ResponseInfo.builder().status(CommonConstants.SUCCESS).build())
-					.responseBody(streetvendordata).build(), HttpStatus.CREATED);
-				}else {
+			responseValidate = wfIntegrator.validateJsonAddUpdateData(payloadData, CommonConstants.ACTION_CREATE);
+			if (responseValidate.equals("")) {
+
+				streetvendordata.getStreetvendorDataList().stream().forEach((c) -> {
+					c.setApplicationStatus(CommonConstants.ACTION_CREATE);
+					c.setVendorUuid(UUID.randomUUID().toString());
+					c.setIsActive(true);
+					c.setAuditDetails(auditDetailsUtil.getAuditDetails(requestInfoWrapper.getRequestInfo(),
+							CommonConstants.ACTION_CREATE));
+				});
+
+				requestInfoWrapper.setRequestBody(streetvendordata);
+
+				repository.createstreetVendor(streetvendordata);
+
+				return new ResponseEntity<>(ResponseInfoWrapper.builder()
+						.responseInfo(ResponseInfo.builder().status(CommonConstants.SUCCESS).build())
+						.responseBody(streetvendordata).build(), HttpStatus.CREATED);
+			} else {
 				throw new CustomException(CommonConstants.STREET_VENDOR_CREATION_EXCEPTION_CODE, responseValidate);
 			}
 		} catch (Exception e) {
 			throw new CustomException(CommonConstants.STREET_VENDOR_CREATION_EXCEPTION_CODE, e.getMessage());
 		}
 	}
-	
-	
+
 	public ResponseEntity<ResponseInfoWrapper> getStreetVendorDataList(StreetVendorData streetvendordata) {
-		try {					
+		try {
 			List<StreetVendorData> StreetVendorList = repository.getStreetVendorList(streetvendordata);
 			return new ResponseEntity<>(ResponseInfoWrapper.builder()
 					.responseInfo(ResponseInfo.builder().status(CommonConstants.SUCCESS).build())
@@ -88,6 +87,25 @@ public class StreetVendorService {
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new CustomException(CommonConstants.STREET_VENDOR_GET_EXCEPTION_CODE, e.getMessage());
+		}
+	}
+
+	public ResponseEntity<ResponseInfoWrapper> getStreetVendorDataDataDetails(StreetVendorData streetVendorData) {
+		try {
+
+			if (streetVendorData.getCovNo().isEmpty() || streetVendorData.getCovNo() == null) {
+				return new ResponseEntity<>(
+						ResponseInfoWrapper.builder().responseInfo(ResponseInfo.builder()
+								.resMsgId("COV No. is null or empty.").status(CommonConstants.FAIL).build()).build(),
+						HttpStatus.OK);
+			}
+			StreetVendorData StreetVendorList = repository.getStreetVendorDetails(streetVendorData);
+			return new ResponseEntity<>(ResponseInfoWrapper.builder()
+					.responseInfo(ResponseInfo.builder().status(CommonConstants.SUCCESS).build())
+					.responseBody(StreetVendorList).build(), HttpStatus.OK);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new CustomException(CommonConstants.STREET_VENDOR_GET_DETAILS_EXCEPTION_CODE, e.getMessage());
 		}
 	}
 
