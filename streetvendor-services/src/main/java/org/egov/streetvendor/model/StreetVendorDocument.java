@@ -33,7 +33,7 @@ public class StreetVendorDocument {
     private String tenantId;
     
     @JsonProperty("isActive")
-    private String isActive;
+    private Boolean isActive;
     
     @JsonProperty("auditDetails")
 	private AuditDetails auditDetails ;
