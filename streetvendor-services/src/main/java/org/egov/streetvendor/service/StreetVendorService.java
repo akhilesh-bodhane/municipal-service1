@@ -115,8 +115,8 @@ public class StreetVendorService {
 				StreetVendorData.class);			
 		
 		streetVendorData.setAuditDetails(
-				auditDetailsUtil.getAuditDetails(streetVendorRequest.getRequestInfo(), CommonConstants.ACTION_UPDATE));
-		streetVendorData.setApplicationStatus(CommonConstants.ACTION_UPDATE);
+				auditDetailsUtil.getAuditDetails(streetVendorRequest.getRequestInfo(), CommonConstants.ACTION_CREATE));
+		streetVendorData.setApplicationStatus(CommonConstants.ACTION_CREATE);
 		// Update document to Streetvendor_data_document table
 					List<StreetVendorDocument> streetvendordoc = new ArrayList<>();
 					for (StreetVendorDocument docobj : streetVendorData.getStreetVendorDocument()) {
@@ -129,8 +129,10 @@ public class StreetVendorService {
 						document.setDocumentType(docobj.getDocumentType());
 						document.setVendorUuid(docobj.getVendorUuid());
 						document.setFilestoreId(docobj.getFilestoreId());
+						document.setIsActive(docobj.getIsActive());
+						document.setTenantId(docobj.getTenantId());
 						document.setAuditDetails(
-								auditDetailsUtil.getAuditDetails(streetVendorRequest.getRequestInfo(), CommonConstants.ACTION_UPDATE));
+								auditDetailsUtil.getAuditDetails(streetVendorRequest.getRequestInfo(), CommonConstants.ACTION_CREATE));
 						streetvendordoc.add(document);
 					}
 					
