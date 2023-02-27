@@ -42,5 +42,10 @@ public class StreetVendorController {
 			@ModelAttribute StreetVendorData streetVendorData) {
 		return streetVendorService.getStreetVendorDataDataDetails(streetVendorData);
 	}
+	
+	@PostMapping(value = "/_update")
+	public ResponseEntity<ResponseInfoWrapper> updateStreetVendorData(@RequestBody StreetVendorRequest streetVendorRequest){
+	    return streetVendorService.updateStreetVendorData(streetVendorRequest);
+	}
 
 }

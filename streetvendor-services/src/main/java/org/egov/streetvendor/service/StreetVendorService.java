@@ -8,6 +8,7 @@ import org.egov.streetvendor.common.CommonConstants;
 import org.egov.streetvendor.model.RequestInfoWrapper;
 import org.egov.streetvendor.model.ResponseInfoWrapper;
 import org.egov.streetvendor.model.StreetVendorData;
+import org.egov.streetvendor.model.StreetVendorDocument;
 import org.egov.streetvendor.model.StreetVendorRequest;
 import org.egov.streetvendor.repository.StreetVendorRepository;
 import org.egov.streetvendor.util.AuditDetailsUtil;
@@ -107,6 +108,41 @@ public class StreetVendorService {
 			e.printStackTrace();
 			throw new CustomException(CommonConstants.STREET_VENDOR_GET_DETAILS_EXCEPTION_CODE, e.getMessage());
 		}
+	}
+	
+	public ResponseEntity<ResponseInfoWrapper> updateStreetVendorData(StreetVendorRequest streetVendorRequest) {
+		StreetVendorData streetVendorData = objectMapper.convertValue(streetVendorRequest.getStreetvendorData(),
+				StreetVendorData.class);			
+		
+		streetVendorData.setAuditDetails(
+				auditDetailsUtil.getAuditDetails(streetVendorRequest.getRequestInfo(), CommonConstants.ACTION_UPDATE));
+		streetVendorData.setApplicationStatus(CommonConstants.ACTION_UPDATE);
+		// Update document to Streetvendor_data_document table
+					List<StreetVendorDocument> streetvendordoc = new ArrayList<>();
+					for (StreetVendorDocument docobj : streetVendorData.getStreetVendorDocument()) {
+						StreetVendorDocument document = new StreetVendorDocument();
+						if("".equals(docobj.getDocumentUuid()) || docobj.getDocumentUuid()==null) {
+						document.setDocumentUuid(UUID.randomUUID().toString());
+						}else {
+							document.setDocumentUuid(docobj.getDocumentUuid());	
+						}
+						document.setDocumentType(docobj.getDocumentType());
+						document.setVendorUuid(docobj.getVendorUuid());
+						document.setFilestoreId(docobj.getFilestoreId());
+						document.setAuditDetails(
+								auditDetailsUtil.getAuditDetails(streetVendorRequest.getRequestInfo(), CommonConstants.ACTION_UPDATE));
+						streetvendordoc.add(document);
+					}
+					
+					streetVendorData.setStreetVendorDocument(streetvendordoc);
+					
+					repository.updateStreetVendor(streetVendorData);
+		
+					return new ResponseEntity<>(ResponseInfoWrapper.builder()
+							.responseInfo(ResponseInfo.builder().status(CommonConstants.SUCCESS).build())
+							.responseBody(streetVendorData).build(), HttpStatus.CREATED);
+		
+		
 	}
 
 }

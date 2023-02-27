@@ -7,6 +7,7 @@ import javax.validation.Valid;
 import org.egov.streetvendor.config.StreetVendorConfiguration;
 import org.egov.streetvendor.model.RequestInfoWrapper;
 import org.egov.streetvendor.model.StreetVendorData;
+import org.egov.streetvendor.model.StreetVendorRequest;
 import org.egov.streetvendor.producer.Producer;
 import org.egov.streetvendor.repository.builder.StreetvendorQueryBuilder;
 import org.egov.streetvendor.repository.rowmapper.StreetVendorDetailsRowMapper;
@@ -74,5 +75,13 @@ public class StreetVendorRepository {
 			throw new CustomException("Exception", e.getMessage());
 		}
 	}
+	
+	public void updateStreetVendor(StreetVendorData StreetVendorData) {
+		StreetVendorRequest infoWrapper = StreetVendorRequest.builder().streetvendorData(StreetVendorData).build();
+		producer.push(config.getStreetVendorDataUpdateTopic(), infoWrapper);
+		
+	}
+	
+	
 
 }
