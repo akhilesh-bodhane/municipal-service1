@@ -1,6 +1,8 @@
 package org.egov.streetvendor.web.controller;
 
 import javax.validation.Valid;
+
+import org.egov.common.contract.request.RequestInfo;
 import org.egov.streetvendor.model.RequestInfoWrapper;
 import org.egov.streetvendor.model.ResponseInfoWrapper;
 import org.egov.streetvendor.model.StreetVendorData;
@@ -33,8 +35,8 @@ public class StreetVendorController {
 	}
 
 	@PostMapping(value = "/_get")
-	public ResponseEntity<ResponseInfoWrapper> getStreetVendorData(@ModelAttribute StreetVendorData streetVendorData) {
-		return streetVendorService.getStreetVendorDataList(streetVendorData);
+	public ResponseEntity<ResponseInfoWrapper> getStreetVendorData(@ModelAttribute StreetVendorData streetVendorData,RequestInfo requestInfo) {
+		return streetVendorService.getStreetVendorDataList(streetVendorData,requestInfo);
 	}
 
 	@PostMapping(value = "/_getdetails")

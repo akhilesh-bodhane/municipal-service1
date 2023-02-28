@@ -3,6 +3,8 @@ package org.egov.streetvendor.service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+
+import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ResponseInfo;
 import org.egov.streetvendor.common.CommonConstants;
 import org.egov.streetvendor.model.RequestInfoWrapper;
@@ -79,9 +81,9 @@ public class StreetVendorService {
 		}
 	}
 
-	public ResponseEntity<ResponseInfoWrapper> getStreetVendorDataList(StreetVendorData streetvendordata) {
+	public ResponseEntity<ResponseInfoWrapper> getStreetVendorDataList(StreetVendorData streetvendordata,RequestInfo requestInfo) {
 		try {
-			List<StreetVendorData> StreetVendorList = repository.getStreetVendorList(streetvendordata);
+			List<StreetVendorData> StreetVendorList = repository.getStreetVendorList(streetvendordata,requestInfo);
 			return new ResponseEntity<>(ResponseInfoWrapper.builder()
 					.responseInfo(ResponseInfo.builder().status(CommonConstants.SUCCESS).build())
 					.responseBody(StreetVendorList).build(), HttpStatus.OK);
