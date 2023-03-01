@@ -3,11 +3,14 @@ package org.egov.streetvendor.service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+
+import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ResponseInfo;
 import org.egov.streetvendor.common.CommonConstants;
 import org.egov.streetvendor.model.RequestInfoWrapper;
 import org.egov.streetvendor.model.ResponseInfoWrapper;
 import org.egov.streetvendor.model.StreetVendorData;
+import org.egov.streetvendor.model.StreetVendorDocument;
 import org.egov.streetvendor.model.StreetVendorRequest;
 import org.egov.streetvendor.repository.StreetVendorRepository;
 import org.egov.streetvendor.util.AuditDetailsUtil;
@@ -78,9 +81,9 @@ public class StreetVendorService {
 		}
 	}
 
-	public ResponseEntity<ResponseInfoWrapper> getStreetVendorDataList(StreetVendorData streetvendordata) {
+	public ResponseEntity<ResponseInfoWrapper> getStreetVendorDataList(StreetVendorData streetvendordata,RequestInfo requestInfo) {
 		try {
-			List<StreetVendorData> StreetVendorList = repository.getStreetVendorList(streetvendordata);
+			List<StreetVendorData> StreetVendorList = repository.getStreetVendorList(streetvendordata,requestInfo);
 			return new ResponseEntity<>(ResponseInfoWrapper.builder()
 					.responseInfo(ResponseInfo.builder().status(CommonConstants.SUCCESS).build())
 					.responseBody(StreetVendorList).build(), HttpStatus.OK);
@@ -107,6 +110,43 @@ public class StreetVendorService {
 			e.printStackTrace();
 			throw new CustomException(CommonConstants.STREET_VENDOR_GET_DETAILS_EXCEPTION_CODE, e.getMessage());
 		}
+	}
+	
+	public ResponseEntity<ResponseInfoWrapper> updateStreetVendorData(StreetVendorRequest streetVendorRequest) {
+		StreetVendorData streetVendorData = objectMapper.convertValue(streetVendorRequest.getStreetvendorData(),
+				StreetVendorData.class);			
+		
+		streetVendorData.setAuditDetails(
+				auditDetailsUtil.getAuditDetails(streetVendorRequest.getRequestInfo(), CommonConstants.ACTION_CREATE));
+		streetVendorData.setApplicationStatus(CommonConstants.ACTION_CREATE);
+		// Update document to Streetvendor_data_document table
+					List<StreetVendorDocument> streetvendordoc = new ArrayList<>();
+					for (StreetVendorDocument docobj : streetVendorData.getStreetVendorDocument()) {
+						StreetVendorDocument document = new StreetVendorDocument();
+						if("".equals(docobj.getDocumentUuid()) || docobj.getDocumentUuid()==null) {
+						document.setDocumentUuid(UUID.randomUUID().toString());
+						}else {
+							document.setDocumentUuid(docobj.getDocumentUuid());	
+						}
+						document.setDocumentType(docobj.getDocumentType());
+						document.setVendorUuid(docobj.getVendorUuid());
+						document.setFilestoreId(docobj.getFilestoreId());
+						document.setIsActive(docobj.getIsActive());
+						document.setTenantId(docobj.getTenantId());
+						document.setAuditDetails(
+								auditDetailsUtil.getAuditDetails(streetVendorRequest.getRequestInfo(), CommonConstants.ACTION_CREATE));
+						streetvendordoc.add(document);
+					}
+					
+					streetVendorData.setStreetVendorDocument(streetvendordoc);
+					
+					repository.updateStreetVendor(streetVendorData);
+		
+					return new ResponseEntity<>(ResponseInfoWrapper.builder()
+							.responseInfo(ResponseInfo.builder().status(CommonConstants.SUCCESS).build())
+							.responseBody(streetVendorData).build(), HttpStatus.CREATED);
+		
+		
 	}
 
 }

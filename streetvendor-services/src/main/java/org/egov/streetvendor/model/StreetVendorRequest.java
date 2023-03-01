@@ -30,7 +30,7 @@ public class StreetVendorRequest {
 	
 	@Valid
 	@JsonProperty("streetvendorData")
-	private List<StreetVendorData> streetvendorData;
+	private StreetVendorData streetvendorData;
 	
 	@JsonProperty("AuditDetails")
 	AuditDetails auditDetails;

@@ -1,12 +1,16 @@
 package org.egov.streetvendor.repository;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import javax.validation.Valid;
+
+import org.egov.common.contract.request.RequestInfo;
 import org.egov.streetvendor.config.StreetVendorConfiguration;
 import org.egov.streetvendor.model.RequestInfoWrapper;
 import org.egov.streetvendor.model.StreetVendorData;
+import org.egov.streetvendor.model.StreetVendorRequest;
 import org.egov.streetvendor.producer.Producer;
 import org.egov.streetvendor.repository.builder.StreetvendorQueryBuilder;
 import org.egov.streetvendor.repository.rowmapper.StreetVendorDetailsRowMapper;
@@ -29,6 +33,9 @@ public class StreetVendorRepository {
 	private StreetVendorDetailsRowMapper streetVendorDetailsRowMapper;
 
 	private JdbcTemplate jdbcTemplate;
+	
+	@Autowired
+	private StreetvendorQueryBuilder streetvendorQueryBuilder;
 
 	@Autowired
 	public StreetVendorRepository(Producer producer, StreetVendorConfiguration config,
@@ -46,20 +53,27 @@ public class StreetVendorRepository {
 		producer.push(config.getStreetVendorDataSaveTopic(), infoWrapper);
 	}
 
-	public List<StreetVendorData> getStreetVendorList(StreetVendorData streetVendorData) {
-		List<StreetVendorData> streetVendorDataList = new ArrayList<>();
+	
+	public List<StreetVendorData> getStreetVendorList(StreetVendorData streetVendorData,
+			RequestInfo requestInfo) {
+		List<Object> preparedStatement = new ArrayList<>();
+		String query =streetvendorQueryBuilder.getSearchQueryStringCount(streetVendorData, preparedStatement, requestInfo);
+		
 
-		try {
-			return streetVendorDataList = jdbcTemplate.query(StreetvendorQueryBuilder.GET_STREET_VENDOR_DATA_QUERY,
-					new Object[] { streetVendorData.getCovNo(), streetVendorData.getCovNo(),
-							streetVendorData.getVendorName(), streetVendorData.getVendorName(),
-							streetVendorData.getCategory(), streetVendorData.getCategory() },
-					streetVendorRowMapper);
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new CustomException("Exception", e.getMessage());
+		StringBuilder str = new StringBuilder("Streetvendor query: ").append(query);
+		
+		if (query == null)
+			return Collections.emptyList();
+	
+		List<StreetVendorData> streetVendorDataList = jdbcTemplate.query(query, preparedStatement.toArray(),
+				streetVendorRowMapper);
+		
+		
+		if (streetVendorDataList == null) {
+			return Collections.emptyList();
 		}
 
+		return streetVendorDataList;
 	}
 
 	public StreetVendorData getStreetVendorDetails(StreetVendorData streetVendorData) {
@@ -72,5 +86,13 @@ public class StreetVendorRepository {
 			throw new CustomException("Exception", e.getMessage());
 		}
 	}
+	
+	public void updateStreetVendor(StreetVendorData StreetVendorData) {
+		StreetVendorRequest infoWrapper = StreetVendorRequest.builder().streetvendorData(StreetVendorData).build();
+		producer.push(config.getStreetVendorDataUpdateTopic(), infoWrapper);
+		
+	}
+	
+	
 
 }
