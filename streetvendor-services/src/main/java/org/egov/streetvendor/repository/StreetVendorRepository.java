@@ -79,9 +79,7 @@ public class StreetVendorRepository {
 	public StreetVendorData getStreetVendorDetails(StreetVendorData streetVendorData) {
 		try {
 			return jdbcTemplate.query(StreetvendorQueryBuilder.GET_DETAILS_STREET_VENDOR_DATA_QUERY,
-					new Object[] { streetVendorData.getCovNo(), streetVendorData.getCovNo(),
-							streetVendorData.getVendorName(), streetVendorData.getVendorName(),
-							streetVendorData.getCategory(), streetVendorData.getCategory() },
+					new Object[] { streetVendorData.getCovNo() },
 					streetVendorDetailsRowMapper);
 		} catch (Exception e) {
 			e.printStackTrace();
