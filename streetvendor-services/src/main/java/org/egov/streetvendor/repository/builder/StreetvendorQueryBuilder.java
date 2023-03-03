@@ -23,6 +23,8 @@ public class StreetvendorQueryBuilder {
 			+ " left join eg_user u1 on sv.last_modified_by =u1.id::varchar \r\n"
 			+ " where sv.cov_no=? group by sv.vendor_uuid, u.name, u1.name";
 	
+	public static final String GET_COV_NOS_QUERY ="select cov_no from street_vendor_data_detail svdd where svdd.tenant_id ='ch.chandigarh'";
+	
 	private static final String ORDER_BY_CLAUSE= " ORDER BY created_time desc";
 	
 	

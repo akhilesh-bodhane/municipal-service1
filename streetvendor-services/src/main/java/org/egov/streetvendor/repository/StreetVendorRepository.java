@@ -13,9 +13,9 @@ import org.egov.streetvendor.model.StreetVendorData;
 import org.egov.streetvendor.model.StreetVendorRequest;
 import org.egov.streetvendor.producer.Producer;
 import org.egov.streetvendor.repository.builder.StreetvendorQueryBuilder;
+import org.egov.streetvendor.repository.rowmapper.StreetVendorCovNoRowMapper;
 import org.egov.streetvendor.repository.rowmapper.StreetVendorDetailsRowMapper;
 import org.egov.streetvendor.repository.rowmapper.StreetVendorRowMapper;
-import org.egov.streetvendor.service.StreetVendorService;
 import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -31,6 +31,10 @@ public class StreetVendorRepository {
 	private StreetVendorRowMapper streetVendorRowMapper;
 
 	private StreetVendorDetailsRowMapper streetVendorDetailsRowMapper;
+	
+	private StreetVendorCovNoRowMapper StreetVendorCovNoRowMapper;
+	
+    
 
 	private JdbcTemplate jdbcTemplate;
 	
@@ -40,12 +44,13 @@ public class StreetVendorRepository {
 	@Autowired
 	public StreetVendorRepository(Producer producer, StreetVendorConfiguration config,
 			StreetVendorRowMapper streetVendorRowMapper, JdbcTemplate jdbcTemplate,
-			StreetVendorDetailsRowMapper streetVendorDetailsRowMapper) {
+			StreetVendorDetailsRowMapper streetVendorDetailsRowMapper,StreetVendorCovNoRowMapper StreetVendorCovNoRowMapper) {
 		this.producer = producer;
 		this.config = config;
 		this.streetVendorRowMapper = streetVendorRowMapper;
 		this.jdbcTemplate = jdbcTemplate;
 		this.streetVendorDetailsRowMapper = streetVendorDetailsRowMapper;
+		this.StreetVendorCovNoRowMapper = StreetVendorCovNoRowMapper;
 	}
 
 	public void createstreetVendor(@Valid StreetVendorData streetVendorData) {
@@ -91,6 +96,21 @@ public class StreetVendorRepository {
 		StreetVendorRequest infoWrapper = StreetVendorRequest.builder().streetvendorData(StreetVendorData).build();
 		producer.push(config.getStreetVendorDataUpdateTopic(), infoWrapper);
 		
+	}
+	
+	public List<StreetVendorData> validateCovNos(StreetVendorData streetvendordata) {
+		List<StreetVendorData> covnos = new ArrayList<>();
+		
+		try {		
+			covnos = jdbcTemplate.query(StreetvendorQueryBuilder.GET_COV_NOS_QUERY,
+							new Object[] {			
+										 }, StreetVendorCovNoRowMapper);
+				} 
+		catch (Exception e) {
+			e.printStackTrace();
+			throw new CustomException("Exception", e.getMessage());
+		}
+		return covnos;
 	}
 	
 	

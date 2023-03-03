@@ -56,14 +56,20 @@ public class StreetVendorService {
 			String payloadData = gson.toJson(streetvendordata, StreetVendorData.class);
 
 			responseValidate = wfIntegrator.validateJsonAddUpdateData(payloadData, CommonConstants.ACTION_CREATE);
+			
+			List<StreetVendorData> validateCovNos = repository.validateCovNos(streetvendordata);
+			
 			if (responseValidate.equals("")) {
-
 				streetvendordata.getStreetvendorDataList().stream().forEach((c) -> {
+					if(validateCovNos.stream().anyMatch(p->p.getCovNo().equals(c.getCovNo()))) {
+						throw new CustomException(CommonConstants.STREET_VENDOR_CREATION_EXCEPTION_CODE,c.getCovNo()+" "+ "COV No Already Exist");	
+					}else {
 					c.setApplicationStatus(CommonConstants.ACTION_CREATE);
 					c.setVendorUuid(UUID.randomUUID().toString());
 					c.setIsActive(true);
 					c.setAuditDetails(auditDetailsUtil.getAuditDetails(requestInfoWrapper.getRequestInfo(),
 							CommonConstants.ACTION_CREATE));
+					}
 				});
 
 				requestInfoWrapper.setRequestBody(streetvendordata);
@@ -148,5 +154,6 @@ public class StreetVendorService {
 		
 		
 	}
+	
 
 }
