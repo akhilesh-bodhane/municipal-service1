@@ -61,10 +61,10 @@ public class StreetVendorDetailsRowMapper implements ResultSetExtractor<StreetVe
 				streetvendorDetails.setTenantId(rs.getString("tenant_id"));
 				streetvendorDetails.setIsActive(rs.getBoolean("is_active"));
 				streetvendorDetails.setLandmark(rs.getString("landmark"));
-
 				AuditDetails audit = AuditDetails.builder().createdBy(rs.getString("created_by"))
 						.createdTime(rs.getLong("created_time")).lastModifiedBy(rs.getString("last_modified_by"))
-						.lastModifiedTime(rs.getLong("last_modified_time")).build();
+						.lastModifiedTime(rs.getLong("last_modified_time")).createdByName(rs.getString("createdbyname"))
+						.lastModifiedByName(rs.getString("lastmodifiedbyname")).build();
 				streetvendorDetails.setAuditDetails(audit);
 
 				List<StreetVendorDocument> documentAttachment = null;

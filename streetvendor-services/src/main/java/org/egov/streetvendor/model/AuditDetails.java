@@ -27,6 +27,12 @@ public class AuditDetails {
 
 	@JsonProperty("lastModifiedTime")
 	private Long lastModifiedTime = null;
+	
+	@JsonProperty("createdByName")
+	private String createdByName;
+	
+	@JsonProperty("lastModifiedByName")
+	private String lastModifiedByName;
 
 	public AuditDetails createdBy(String createdBy) {
 		this.createdBy = createdBy;
@@ -101,6 +107,24 @@ public class AuditDetails {
 	public void setLastModifiedTime(Long lastModifiedTime) {
 		this.lastModifiedTime = lastModifiedTime;
 	}
+	
+	public String getCreatedByName() {
+		return createdByName;
+	}
+
+	public void setCreatedByName(String createdByName) {
+		this.createdByName = createdByName;
+	}
+
+	public String getLastModifiedByName() {
+		return lastModifiedByName;
+	}
+
+	public void setLastModifiedByName(String lastModifiedByName) {
+		this.lastModifiedByName = lastModifiedByName;
+	}
+	
+	
 
 	@Override
 	public boolean equals(java.lang.Object o) {
@@ -145,4 +169,5 @@ public class AuditDetails {
 		}
 		return o.toString().replace("\n", "\n    ");
 	}
+
 }
