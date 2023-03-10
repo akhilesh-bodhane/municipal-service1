@@ -118,6 +118,12 @@ public class StreetVendorData {
 	@JsonProperty("landmark")
 	private String landmark;
 	
+	@JsonProperty("gender")
+	private String gender;
+	
+	@JsonProperty("religion")
+	private String religion;
+	
 	@Size(max = 256)
 	@JsonProperty("createdBy")
 	private String createdBy;

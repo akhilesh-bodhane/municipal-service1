@@ -74,6 +74,8 @@ public class StreetVendorRowMapper  implements ResultSetExtractor<List<StreetVen
 					streetvendorDetails.setTenantId(rs.getString("tenant_id"));
 					streetvendorDetails.setIsActive(rs.getBoolean("is_active"));
 					streetvendorDetails.setLandmark(rs.getString("landmark"));
+					streetvendorDetails.setGender(rs.getString("gender"));
+					streetvendorDetails.setReligion(rs.getString("religion"));
 										
 					streetvendorDetails.setAuditDetails(audit);
 					
