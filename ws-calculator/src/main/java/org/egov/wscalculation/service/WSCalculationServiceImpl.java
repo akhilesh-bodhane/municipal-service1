@@ -114,11 +114,18 @@ public class WSCalculationServiceImpl implements WSCalculationService {
 	public List<Calculation> getEstimation(CalculationReq request) {
 		String appNo = request.getCalculationCriteria().get(0).getApplicationNo();
  		String finYear = appNo.substring(6,13);
-		
+ 		Map<String, Object> masterData;
+ 		
 		System.out.println("Water Connection Detail : " + request.getCalculationCriteria().get(0).getApplicationNo() + "Financial Year : " + finYear);
 		
-		Map<String, Object> masterData = masterDataService.loadExemptionMaster(request.getRequestInfo(),
-				request.getCalculationCriteria().get(0).getTenantId());
+		if(finYear.equals("2022-23") || finYear.equals("2021-22")) {
+			masterData = masterDataService.loadExemptionMasterPrev(request.getRequestInfo(),
+					request.getCalculationCriteria().get(0).getTenantId());
+		} else {
+			masterData = masterDataService.loadExemptionMaster(request.getRequestInfo(),
+					request.getCalculationCriteria().get(0).getTenantId());
+		}
+		
 		List<Calculation> calculations = getFeeCalculation(request, masterData);
 		unsetWaterConnection(calculations);
 		return calculations;

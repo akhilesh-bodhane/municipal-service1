@@ -309,9 +309,15 @@ public class WSCalculationConstant {
 	
 	public static final String WS_TEMP_APP_CHARGES = "WSTempConAppCharges";
 	
+	public static final String WS_TEMP_APP_CHARGES_PREV = "WSTempConAppCharges_bkup_22-23";
+	
 	public static final String WS_TEMP_BILLING_CHARGES = "WSTempConBillingSlab";
 	
+	public static final String WS_TEMP_BILLING_CHARGES_PREV = "WSTempConBillingSlab_bkup_22-23";
+	
 	public static final String WS_REGULAR_CHARGES = "PipeSize";
+	
+	public static final String WS_REGULAR_CHARGES_PREV = "PipeSize_bkup_22-23";
 	
 	public static final String WS_ROAD_CUT_TAX_CHARGES = "RoadCutTaxSlab";
 
@@ -336,6 +342,8 @@ public class WSCalculationConstant {
 	public static final String	WS_SECURITY_CHARGE_STATUS = "PENDING_FOR_SECURITY_DEPOSIT";
 
 	public static final String	WS_WATER_ACTIVITY = "WaterActivity";
+	
+	public static final String	WS_WATER_ACTIVITY_PREV = "WaterActivity_bkup_22-23";
 	
 	public static final String WS_PERMANENT_DISCONNECTION = "PERMANENT_DISCONNECTION";
 	

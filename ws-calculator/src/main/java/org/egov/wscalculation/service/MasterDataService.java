@@ -574,5 +574,19 @@ public class MasterDataService {
 		}
 		return master;
 	}
+	
+	
+	public Map<String, Object> loadExemptionMasterPrev(RequestInfo requestInfo, String tenantId) {
+		Map<String, Object> master = new HashMap<>();
+		master = getMasterMap(requestInfo, tenantId, WSCalculationConstant.ONE_TIME_FEE_SERVICE_FIELD);
+		MdmsResponse response = mapper.convertValue(repository.fetchResult(calculatorUtils.getMdmsSearchUrl(),
+				calculatorUtils.getEstimationMasterCriteriaPrev(requestInfo, tenantId)), MdmsResponse.class);
+
+		Map<String, JSONArray> res = response.getMdmsRes().get(WSCalculationConstant.WS_TAX_MODULE);
+		for (Map.Entry<String, JSONArray> resp : res.entrySet()) {
+			master.put(resp.getKey(), resp.getValue());
+		}
+		return master;
+	}
 
 }
