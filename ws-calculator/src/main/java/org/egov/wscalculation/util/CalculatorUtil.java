@@ -253,9 +253,9 @@ public class CalculatorUtil {
 		details.add(MasterDetail.builder().name(WSCalculationConstant.WS_TEMP_APP_CHARGES).build());
 		details.add(MasterDetail.builder().name(WSCalculationConstant.WC_ROADTYPE_MASTER).build());
 		details.add(MasterDetail.builder().name(WSCalculationConstant.WS_TEMP_BILLING_CHARGES).build());
-		details.add(MasterDetail.builder().name(WSCalculationConstant.WS_REGULAR_CHARGES_PREV).build());
+		details.add(MasterDetail.builder().name(WSCalculationConstant.WS_REGULAR_CHARGES).build());
 		details.add(MasterDetail.builder().name(WSCalculationConstant.WS_ROAD_CUT_TAX_CHARGES).build());
-		details.add(MasterDetail.builder().name(WSCalculationConstant.WS_WATER_ACTIVITY_PREV).build());
+		details.add(MasterDetail.builder().name(WSCalculationConstant.WS_WATER_ACTIVITY).build());
 
 		ModuleDetail mdDtl = ModuleDetail.builder().masterDetails(details)
 				.moduleName(WSCalculationConstant.WS_TAX_MODULE).build();
