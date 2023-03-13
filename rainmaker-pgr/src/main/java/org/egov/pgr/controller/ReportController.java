@@ -39,9 +39,10 @@ public class ReportController {
 	}
 
 	@PostMapping(value = "/_jobscheduler")
-	public ResponseEntity<ResponseInfoWrapper> process(@Valid @RequestBody RequestInfoWrapper request)
+	public ResponseEntity<ResponseInfoWrapper> process(@Valid @RequestBody RequestInfoWrapper request,
+			@ModelAttribute @Valid ServiceReqSearchCriteria serviceReqSearchCriteria)
 			throws JSONException {
-		return service.process(request);
+		return service.process(request,serviceReqSearchCriteria);
 	}
 
 	@PostMapping("_grievance")

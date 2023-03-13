@@ -9,7 +9,9 @@ import java.util.Map;
 import org.egov.pgr.contract.ServiceReqSearchCriteria;
 import org.egov.pgr.contract.ServiceRequest;
 import org.egov.pgr.contract.ServiceRequestComplaints;
+import org.egov.pgr.model.DiscriptionReport;
 import org.egov.pgr.model.Grievance;
+import org.egov.pgr.repository.rowmapper.ColumnsRowMapper;
 import org.egov.pgr.repository.rowmapper.GrievanceDataRowMapper;
 import org.egov.pgr.repository.rowmapper.ServiceRequestDataRowMapper;
 import org.egov.tracer.model.CustomException;
@@ -46,6 +48,9 @@ public class ServiceRequestRepository {
 
 	@Autowired
 	private ServiceRequestDataRowMapper serviceRequestDataRowMapper;
+	
+	@Autowired
+	private ColumnsRowMapper rowMapper;
 
 	public static final String SERVICE_SEARCH_WITH_DETAILS = "select array_to_json(array_agg(row_to_json(serviceRequests))) from (select (select (select (row_to_json(services)) from ( select *, (select (select row_to_json(auditDetails) from (select createdtime, lastmodifiedtime, createdby, lastmodifiedby from eg_pgr_service where svc.serviceRequestId=eg_pgr_service.serviceRequestId) auditDetails) as auditDetails), (select (select (row_to_json(addressDetail)) from (select * from eg_pgr_address where eg_pgr_address.uuid=eg_pgr_service.addressid) addressDetail) as addressDetail) from eg_pgr_service svc where svc.serviceRequestId=eg_pgr_service.serviceRequestId order by createdtime desc) services) as services),(select (select array_to_json(array_agg(row_to_json(actionHistory))) from ( select * from eg_pgr_action where businessKey=eg_pgr_service.serviceRequestId order by \"when\" desc) actionHistory) as actionHistory) from eg_pgr_service WHERE ";
 
@@ -478,6 +483,47 @@ public class ServiceRequestRepository {
 		whereStr.append(" group by ac.businesskey ");
 		query = query + whereStr.toString();
 		log.info("ServiceRequestDetailsForDashBoard query: " + query);
+		return query;
+	}
+	
+	
+	public List<DiscriptionReport> fetchDescriptionDetails(ServiceReqSearchCriteria serviceReqSearchCriteria) {
+		Map<String, Object> preparedStatementValues = new HashMap<>();
+		String query = getDescriptionDetailsQuery(serviceReqSearchCriteria);
+		List<DiscriptionReport> description = null;
+		try {
+			description = namedParameterJdbcTemplate.query(query, preparedStatementValues, rowMapper);
+		} catch (DataAccessResourceFailureException ex) {
+			log.info("Query Execution Failed Due To Timeout: ", ex);
+			PSQLException cause = (PSQLException) ex.getCause();
+			if (cause != null && cause.getSQLState().equals("57014")) {
+				throw new CustomException("QUERY_EXECUTION_TIMEOUT", "Query failed, as it took more than expected");
+			} else {
+				throw ex;
+			}
+		} catch (Exception e) {
+			log.info("Query Execution Failed: ", e);
+			throw e;
+		}
+		return description;
+
+	}
+	
+	
+	public String getDescriptionDetailsQuery(ServiceReqSearchCriteria serviceReqSearchCriteria) {
+		String query = ReportQueryBuilder.GET_DISCRIPTION_REPORT_QUERY;
+		StringBuilder whereStr = new StringBuilder();
+
+		if (serviceReqSearchCriteria.getStartDate() != null && serviceReqSearchCriteria.getStartDate() != 0) {
+			whereStr.append(" and to_timestamp(cast(pg.lastmodifiedtime/1000 as bigint))::date >=")
+					.append("to_timestamp(cast(" + serviceReqSearchCriteria.getStartDate() + "/1000 as bigint))::date");
+		}
+		if (serviceReqSearchCriteria.getEndDate() != null && serviceReqSearchCriteria.getEndDate() != 0) {
+			whereStr.append(" and to_timestamp(cast(pg.lastmodifiedtime/1000 as bigint))::date <=")
+					.append("to_timestamp(cast(" + serviceReqSearchCriteria.getEndDate() + "/1000 as bigint))::date");
+		}
+		query = query + whereStr.toString();
+		log.info("Description Report query: " + query);
 		return query;
 	}
 }
