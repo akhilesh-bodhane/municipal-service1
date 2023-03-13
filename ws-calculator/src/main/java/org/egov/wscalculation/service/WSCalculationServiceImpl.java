@@ -112,9 +112,10 @@ public class WSCalculationServiceImpl implements WSCalculationService {
 	 * @return list of calculation based on request
 	 */
 	public List<Calculation> getEstimation(CalculationReq request) {
+		String appNo = request.getCalculationCriteria().get(0).getApplicationNo();
+ 		String finYear = appNo.substring(6,13);
 		
-		System.out.println("Calculation Request : " + request.toString());
-		System.out.println("Water Connection Detail : " + request.getCalculationCriteria().get(0).getApplicationNo() + request.getCalculationCriteria().get(0).getAssessmentYear());
+		System.out.println("Water Connection Detail : " + request.getCalculationCriteria().get(0).getApplicationNo() + "Financial Year : " + finYear);
 		
 		Map<String, Object> masterData = masterDataService.loadExemptionMaster(request.getRequestInfo(),
 				request.getCalculationCriteria().get(0).getTenantId());
