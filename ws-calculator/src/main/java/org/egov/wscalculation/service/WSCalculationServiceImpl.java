@@ -112,6 +112,10 @@ public class WSCalculationServiceImpl implements WSCalculationService {
 	 * @return list of calculation based on request
 	 */
 	public List<Calculation> getEstimation(CalculationReq request) {
+		
+		System.out.println("Calculation Request : " + request.toString());
+		System.out.println("Water Connection Detail : " + request.getCalculationCriteria().get(0).getApplicationNo() + request.getCalculationCriteria().get(0).getAssessmentYear());
+		
 		Map<String, Object> masterData = masterDataService.loadExemptionMaster(request.getRequestInfo(),
 				request.getCalculationCriteria().get(0).getTenantId());
 		List<Calculation> calculations = getFeeCalculation(request, masterData);
