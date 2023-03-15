@@ -416,7 +416,7 @@ public class ReportService {
 		return tenantId.split("\\.")[0];
 	}
 
-	public ResponseEntity<ResponseInfoWrapper> process(RequestInfoWrapper request) {
+	public ResponseEntity<ResponseInfoWrapper> process(RequestInfoWrapper request,ServiceReqSearchCriteria serviceReqSearchCriteria) {
 		List<DiscriptionReport> list = new ArrayList<>();
 		ObjectMapper mapper = new ObjectMapper();
 		Map<String, ServiceDefMdms> mapOfServiceCodesAndDepts = getServiceName(
@@ -427,8 +427,12 @@ public class ReportService {
 				new RequestInfo());
 		Map<String, Object> paramValues = new HashMap<>();
 		// paramValues.put("sla", mapOfServiceCodesAndDepts.get(key));
-		list = namedParameterJdbcTemplate.query(ReportQueryBuilder.GET_DISCRIPTION_REPORT_QUERY, paramValues,
-				rowMapper);
+		list = serviceRequestRepository
+				.fetchDescriptionDetails(serviceReqSearchCriteria);
+		/*
+		 * list = namedParameterJdbcTemplate.query(ReportQueryBuilder.
+		 * GET_DISCRIPTION_REPORT_QUERY, paramValues, rowMapper);
+		 */
 		if (list.size() > 0) {
 			for (DiscriptionReport data : list) {
 				// String sla=
