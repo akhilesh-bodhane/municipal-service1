@@ -639,12 +639,13 @@ List jsonOutput1 = JsonPath.read(mdmsData, CommonConstants.MDMS_TAXHEAD_STALL_CO
 
 						DemandDetail demanddetails = new DemandDetail();
 						for (DemandDetail demandDetail : stallDemandId) {
-							if (demandDetail.getTaxHeadMasterCode().equalsIgnoreCase("TEMPORARY_STALL_CHARGES_BOOKING")) {
+							if (demandDetail.getTaxHeadMasterCode().equalsIgnoreCase("STALL_TEMPORARY_STALL_CHARGES_BOOKING")) {
 								demanddetails.setId(demandDetail.getId());
 							}
 						}
 //						demanddetails.setId(stallDemandId.get(0).getDemaniddetailid());
-						demanddetails.setTaxHeadMasterCode("TEMPORARY_STALL_CHARGES_BOOKING");
+						//demanddetails.setTaxHeadMasterCode("TEMPORARY_STALL_CHARGES_BOOKING");
+						demanddetails.setTaxHeadMasterCode("STALL_TEMPORARY_STALL_CHARGES_BOOKING");						
 						demanddetails.setDemandId(stallDemand.getDemanid());
 						demanddetails.setTenantId("ch.chandigarh");
 						demanddetails.setCollectionAmount(j);
@@ -653,13 +654,13 @@ List jsonOutput1 = JsonPath.read(mdmsData, CommonConstants.MDMS_TAXHEAD_STALL_CO
 						
 						DemandDetail demanddetailsGst = new DemandDetail();
 						for (DemandDetail demandDetail : stallDemandId) {
-							if (demandDetail.getTaxHeadMasterCode().equalsIgnoreCase("TEMPORARY_STALL_GST_CHARGES_BOOKING")) {
+							if (demandDetail.getTaxHeadMasterCode().equalsIgnoreCase("STALL_TEMPORARY_STALL_CHARGES_BOOKING")) {
 								
 								demanddetailsGst.setId(demandDetail.getId());
 							}
 						}
 //						demanddetailsGst.setId(stallDemandId.get(1).getDemaniddetailid());
-						demanddetailsGst.setTaxHeadMasterCode("TEMPORARY_STALL_GST_CHARGES_BOOKING");
+						demanddetailsGst.setTaxHeadMasterCode("STALL_TEMPORARY_STALL_CHARGES_BOOKING");
 						demanddetailsGst.setDemandId(stallDemand.getDemanid());
 						demanddetailsGst.setTenantId("ch.chandigarh");
 						demanddetailsGst.setCollectionAmount(j);
