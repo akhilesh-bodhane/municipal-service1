@@ -1626,6 +1626,11 @@ public class ServiceRequestService {
 				request.getServices().get(0).setLastModifiedTime(request.getAuditDetails().getLastModifiedTime());
 				request.getServices().get(0).setLocality(request.getServices().get(0).getLocality());
 
+				if (request.getServices().get(0).getCheckpoints() != null
+						&& !request.getServices().get(0).getCheckpoints().toString().isEmpty()) {
+					request.getServices().get(0).setCheckPoint(request.getServices().get(0).getCheckpoints().toString());
+				} 
+
 				List<ServiceRequestData> applicatinFormList = new ArrayList<>();
 				applicatinFormList.add(request.getServices().get(0));
 
