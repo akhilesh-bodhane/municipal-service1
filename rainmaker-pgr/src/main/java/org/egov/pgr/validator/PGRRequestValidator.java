@@ -262,15 +262,15 @@ public class PGRRequestValidator {
 		 * errorMap.put(ErrorConstants.INVALID_START_END_DATE_CODE,
 		 * ErrorConstants.INVALID_START_END_DATE_MSG); }
 		 */
-		if ((criteria.getStartDate() != null && criteria.getStartDate() > System.currentTimeMillis())
-				|| (criteria.getEndDate() != null && criteria.getEndDate() > System.currentTimeMillis())) {
-			errorMap.put(ErrorConstants.INVALID_START_END_DATE_CODE, ErrorConstants.INVALID_START_END_DATE_MSG);
-		}
-		
-		if ((criteria.getStartDate() != null && criteria.getEndDate() != null)
-				&& criteria.getStartDate().compareTo(criteria.getEndDate()) > 0) {
-			errorMap.put(ErrorConstants.INVALID_START_DATE_CODE, ErrorConstants.INVALID_START_DATE_MSG);
-		}
+//		if ((criteria.getStartDate() != null && criteria.getStartDate() > System.currentTimeMillis())
+//				|| (criteria.getEndDate() != null && criteria.getEndDate() > System.currentTimeMillis())) {
+//			errorMap.put(ErrorConstants.INVALID_START_END_DATE_CODE, ErrorConstants.INVALID_START_END_DATE_MSG);
+//		}
+//		
+//		if ((criteria.getStartDate() != null && criteria.getEndDate() != null)
+//				&& criteria.getStartDate().compareTo(criteria.getEndDate()) > 0) {
+//			errorMap.put(ErrorConstants.INVALID_START_DATE_CODE, ErrorConstants.INVALID_START_DATE_MSG);
+//		}
 		if(!CollectionUtils.isEmpty(criteria.getServiceRequestId()) &&
 				criteria.getServiceRequestId().size() == 1) {
 			if(criteria.getServiceRequestId().get(0).length() < 6) {
