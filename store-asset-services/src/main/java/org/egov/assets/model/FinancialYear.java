@@ -135,5 +135,7 @@ public class FinancialYear extends Auditable {
 	 * transferred or not .
 	 */
 	private Boolean transferClosingBalance;
+	
+	private String module;
 
 }

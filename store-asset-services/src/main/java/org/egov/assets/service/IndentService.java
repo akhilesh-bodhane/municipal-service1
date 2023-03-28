@@ -207,15 +207,18 @@ public class IndentService extends DomainService {
 			LOG.info("Indentdate" + b.getIndentDate());
 			LOG.info("FinYear start date:" + fin.getStartingDate());
 			LOG.info("Indentdate getCurrentDate() : " + getCurrentDate());
+			LOG.info("Indentdate fin.getModule() : " + fin.getModule());
 //			if (b.getIndentDate() >= fin.getStartingDate().getTime()
 //					&& b.getIndentDate() <= fin.getEndingDate().getTime()) {
 //				finYearRange = fin.getFinYearRange();
 //				break outer;
 //			}
-			if (getCurrentDate() >= fin.getStartingDate().getTime()
-					&& getCurrentDate() <= fin.getEndingDate().getTime()) {
-				finYearRange = fin.getFinYearRange();
-				break outer;
+			if (fin.getModule().equals("STORE")) {
+				if (getCurrentDate() >= fin.getStartingDate().getTime()
+						&& getCurrentDate() <= fin.getEndingDate().getTime()) {
+					finYearRange = fin.getFinYearRange();
+					break outer;
+				}
 			}
 		}
 
