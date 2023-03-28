@@ -690,8 +690,9 @@ if(Usage != null) {
 			return estimates;
 
 		} else if (criteria.getWaterConnection().getWaterApplication().getActivityType()
-				.equalsIgnoreCase(WSCalculationConstant.WS_APPLY_FOR_TEMP_REGULAR_CON) || criteria.getWaterConnection().getWaterApplication().getActivityType()
-				.equalsIgnoreCase(WSCalculationConstant.WS_APPLY_FOR_TEMP_CON)) {
+				.equalsIgnoreCase(WSCalculationConstant.WS_APPLY_FOR_TEMP_REGULAR_CON)) 
+				/*|| criteria.getWaterConnection().getWaterApplication().getActivityType().equalsIgnoreCase(WSCalculationConstant.WS_APPLY_FOR_TEMP_CON)) */
+		  {
 			List<TaxHeadEstimate> estimates = new ArrayList<>();
 			BigDecimal securityFee = BigDecimal.ZERO;
 
