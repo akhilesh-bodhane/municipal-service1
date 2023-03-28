@@ -776,7 +776,7 @@ if(Usage != null) {
 			BigDecimal constructionCharges = BigDecimal.ZERO;
 			if (multiplier != null) {
 				if (multiplier == 0) {
-                    System.out.println("Contract Value : " + criteria.getWaterConnection().getContractValue().toString());
+                    System.out.println("Contract Value : " + criteria.getWaterConnection().getContractValue());
                     
 					formFee = (criteria.getWaterConnection().getContractValue() == null || criteria.getWaterConnection().getContractValue() == "") 
 							? BigDecimal.ZERO : (new BigDecimal(criteria.getWaterConnection().getContractValue()))
