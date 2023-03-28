@@ -777,7 +777,8 @@ if(Usage != null) {
 			if (multiplier != null) {
 				if (multiplier == 0) {
 
-					formFee = (new BigDecimal(criteria.getWaterConnection().getContractValue()))
+					formFee = (criteria.getWaterConnection().getContractValue().equalsIgnoreCase(null) || criteria.getWaterConnection().getContractValue().equalsIgnoreCase("")) 
+							? BigDecimal.ZERO : (new BigDecimal(criteria.getWaterConnection().getContractValue()))
 							.multiply((BigDecimal.valueOf(1.5)).divide(WSCalculationConstant.HUNDRED));
 				} else {
 
