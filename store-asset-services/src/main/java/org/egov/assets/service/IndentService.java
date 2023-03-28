@@ -206,8 +206,14 @@ public class IndentService extends DomainService {
 			FinancialYear fin = mapper.convertValue(finYears.get(i), FinancialYear.class);
 			LOG.info("Indentdate" + b.getIndentDate());
 			LOG.info("FinYear start date:" + fin.getStartingDate());
-			if (b.getIndentDate() >= fin.getStartingDate().getTime()
-					&& b.getIndentDate() <= fin.getEndingDate().getTime()) {
+			LOG.info("Indentdate getCurrentDate() : " + getCurrentDate());
+//			if (b.getIndentDate() >= fin.getStartingDate().getTime()
+//					&& b.getIndentDate() <= fin.getEndingDate().getTime()) {
+//				finYearRange = fin.getFinYearRange();
+//				break outer;
+//			}
+			if (getCurrentDate() >= fin.getStartingDate().getTime()
+					&& getCurrentDate() <= fin.getEndingDate().getTime()) {
 				finYearRange = fin.getFinYearRange();
 				break outer;
 			}
@@ -225,6 +231,10 @@ public class IndentService extends DomainService {
 		else
 			seq = "TRIN-" + tenant.getCity().getCode() + "-" + b.getIndentStore().getCode() + "-" + finYearRange;
 		return seq + "-" + numberGenerator.getNextNumber(seq, 5);
+	}
+
+	private Long getCurrentDate() {
+		return currentEpochWithoutTime() + (24 * 60 * 60) - 1;
 	}
 
 	@Transactional
@@ -310,13 +320,15 @@ public class IndentService extends DomainService {
 							 * LOG.debug(material.getPurchaseUom().getCode());
 							 * LOG.debug(uomMap.get(material.getPurchaseUom().getCode()).getCode());
 							 */
-							if(material!=null) {
-								material.setPurchaseUom(uomMap.get(
-										(material.getPurchaseUom() != null ? material.getPurchaseUom().getCode() : "")));
-								material.setStockingUom(uomMap.get(
-										(material.getStockingUom() != null ? material.getStockingUom().getCode() : "")));
-								material.setBaseUom(
-										uomMap.get((material.getBaseUom() != null ? material.getBaseUom().getCode() : "")));
+							if (material != null) {
+								material.setPurchaseUom(uomMap
+										.get((material.getPurchaseUom() != null ? material.getPurchaseUom().getCode()
+												: "")));
+								material.setStockingUom(uomMap
+										.get((material.getStockingUom() != null ? material.getStockingUom().getCode()
+												: "")));
+								material.setBaseUom(uomMap
+										.get((material.getBaseUom() != null ? material.getBaseUom().getCode() : "")));
 								detail.setMaterial(material);
 							}
 							indent.addIndentDetailsItem(detail);
@@ -424,7 +436,7 @@ public class IndentService extends DomainService {
 					 * errors.addDataError(ErrorCode.DATE_GE_CURRENTDATE.getCode (),
 					 * "expectedDeliveryDate",indent.getExpectedDeliveryDate(). toString()); }
 					 */
-					if (indent.getExpectedDeliveryDate() != null 
+					if (indent.getExpectedDeliveryDate() != null
 							&& indent.getIndentDate().compareTo(indent.getExpectedDeliveryDate()) > 0) {
 						LOG.info("expectedDeliveryDate=" + toDateStr(indent.getExpectedDeliveryDate()));
 						LOG.info("indentDate=" + toDateStr(indent.getIndentDate()));
