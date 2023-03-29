@@ -771,6 +771,7 @@ if(Usage != null) {
 
 			}
 			BigDecimal formFee = BigDecimal.ZERO;
+			BigDecimal securityFee = BigDecimal.ZERO;
 			BigDecimal additionalCharges = BigDecimal.ZERO;
 			BigDecimal constructionCharges = BigDecimal.ZERO;
 			if (multiplier != null) {
@@ -783,6 +784,11 @@ if(Usage != null) {
 					formFee = new BigDecimal(multiplier * property.getSuperBuiltUpArea());
 				}
 			}
+			if(criteria.getWaterConnection().getWaterApplication().getActivityType().equalsIgnoreCase(WSCalculationConstant.WS_APPLY_FOR_TEMP_CON)) {			
+			securityFee = new BigDecimal(
+					criteria.getWaterConnection().getWaterApplication().getSecurityCharge() == null ? 0.0
+							: criteria.getWaterConnection().getWaterApplication().getSecurityCharge());
+			}
 
 			additionalCharges = new BigDecimal(
 					criteria.getWaterConnection().getWaterApplication().getAdditionalCharges() == null ? 0.0
@@ -792,6 +798,10 @@ if(Usage != null) {
 					criteria.getWaterConnection().getWaterApplication().getConstructionCharges() == null ? 0.0
 							: criteria.getWaterConnection().getWaterApplication().getConstructionCharges());
 
+			if (!(securityFee.compareTo(BigDecimal.ZERO) == 0))
+				estimates.add(TaxHeadEstimate.builder().taxHeadCode(WSCalculationConstant.WS_SECURITY_CHARGE)
+						.estimateAmount(securityFee.setScale(2, 2)).build());
+			
 			if (!(additionalCharges.compareTo(BigDecimal.ZERO) == 0))
 				estimates.add(TaxHeadEstimate.builder().taxHeadCode(WSCalculationConstant.WS_ADDITIONAL_CHARGE)
 						.estimateAmount(additionalCharges.setScale(2, 2)).build());
