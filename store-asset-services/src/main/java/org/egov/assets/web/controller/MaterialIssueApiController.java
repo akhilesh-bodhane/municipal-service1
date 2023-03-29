@@ -29,9 +29,10 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping(value = "/materialissues")
 public class MaterialIssueApiController {
 
-	@Autowired
+	@Autowired 
 	private MaterialIssueService materialIssueService;
 
+	
 	@PostMapping(value = "/_create", produces = { "application/json" }, consumes = { "application/json" })
 	public ResponseEntity<MaterialIssueResponse> materialIssueCreatePost(
 			@NotNull @Valid @RequestParam(value = "tenantId", required = true) String tenantId,
