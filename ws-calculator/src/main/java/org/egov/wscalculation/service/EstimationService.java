@@ -776,9 +776,11 @@ if(Usage != null) {
 			BigDecimal constructionCharges = BigDecimal.ZERO;
 			if (multiplier != null) {
 				if (multiplier == 0) {
-
-					formFee = (new BigDecimal(criteria.getWaterConnection().getContractValue()))
-							.multiply((BigDecimal.valueOf(1.5)).divide(WSCalculationConstant.HUNDRED));
+                    System.out.println("Contract Value : " + criteria.getWaterConnection().getContractValue());
+                    
+					formFee = (criteria.getWaterConnection().getContractValue() == null || criteria.getWaterConnection().getContractValue() == "") 
+							? BigDecimal.ZERO : (new BigDecimal(criteria.getWaterConnection().getContractValue()))
+							.multiply((BigDecimal.valueOf(1.75)).divide(WSCalculationConstant.HUNDRED));
 				} else {
 
 					formFee = new BigDecimal(multiplier * property.getSuperBuiltUpArea());
