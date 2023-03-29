@@ -88,9 +88,52 @@ public class QueryBuilder {
 			+ "WHERE\r\n"
 			+ "    rank > 1 ";
 	
+	
+	public static final String OBPS_IDLE_KILL_CONNECTION_COUNT ="WITH inactive_connections AS (\r\n"
+			+ "    SELECT\r\n"
+			+ "        pid,\r\n"
+			+ "        rank() over (partition by client_addr order by backend_start ASC) as rank\r\n"
+			+ "    FROM\r\n"
+			+ "        pg_stat_activity\r\n"
+			+ "    WHERE\r\n"
+			+ "        -- Exclude the thread owned connection (ie no auto-kill)\r\n"
+			+ "        pid <> pg_backend_pid( )\r\n"
+			+ "    AND\r\n"
+			+ "        -- Exclude known applications connections\r\n"
+			+ "        application_name !~ '(?:psql)|(?:pgAdmin.+)'\r\n"
+			+ "    AND\r\n"
+			+ "        -- Include connections to the same database the thread is connected to\r\n"
+			+ "        datname = 'obps'\r\n"
+			+ "    AND\r\n"
+			+ "        -- Include connections using the same thread username connection\r\n"
+			+ "        usename = 'obps_prod'\r\n"
+			+ "    AND\r\n"
+			+ "        -- Include inactive connections only\r\n"
+			+ "        state in ('idle', 'idle in transaction', 'idle in transaction (aborted)', 'disabled')\r\n"
+			+ "    AND\r\n"
+			+ "        -- Include old connections (found with the state_change field)\r\n"
+			+ "        current_timestamp - state_change > interval '5 minutes'\r\n"
+			+ ")\r\n"
+			+ "SELECT\r\n"
+			+ "    count(pg_terminate_backend(pid)) as idlekillconnections \r\n"
+			+ "FROM\r\n"
+			+ "    inactive_connections\r\n"
+			+ "WHERE\r\n"
+			+ "    rank > 1 ";
+	
 	public String getCoexistenceIdleConnectionKillCount(List<Object> preparedStatement) {
 		StringBuilder query;
 		query = new StringBuilder(COEXISTENCE_IDLE_KILL_CONNECTION_COUNT);
+		
+		//System.out.println("Idle Connections Kill Count query :"+query);
+		
+		return query.toString() ;
+
+	}
+	
+	public String getObpsIdleConnectionKillCount(List<Object> preparedStatement) {
+		StringBuilder query;
+		query = new StringBuilder(OBPS_IDLE_KILL_CONNECTION_COUNT);
 		
 		//System.out.println("Idle Connections Kill Count query :"+query);
 		
