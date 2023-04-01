@@ -95,9 +95,13 @@ public class MasterDataService {
 	public List<TaxPeriod> getTaxPeriodList(RequestInfo requestInfo, String tenantId, String serviceFieldValue) {
 
 		StringBuilder uri = wSCalculationUtil.getTaxPeriodSearchUrl(tenantId, serviceFieldValue);
+		System.out.println("URI 1 :" + uri);
+		System.out.println("Request Info :" + RequestInfoWrapper.builder().requestInfo(requestInfo).build());
+		
 		TaxPeriodResponse res = mapper.convertValue(
 				repository.fetchResult(uri, RequestInfoWrapper.builder().requestInfo(requestInfo).build()),
 				TaxPeriodResponse.class);
+		System.out.println("get periods :" + res.getTaxPeriods());
 		return res.getTaxPeriods();
 	}
 
