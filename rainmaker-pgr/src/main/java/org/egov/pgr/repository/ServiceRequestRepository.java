@@ -48,7 +48,7 @@ public class ServiceRequestRepository {
 
 	@Autowired
 	private ServiceRequestDataRowMapper serviceRequestDataRowMapper;
-	
+
 	@Autowired
 	private ColumnsRowMapper rowMapper;
 
@@ -443,13 +443,20 @@ public class ServiceRequestRepository {
 			serviceIds.append("");
 			whereStr.append(" and pg.serviceRequestId LIKE ANY(ARRAY[").append(serviceIds).append("])");
 		}
+//		if (serviceReqSearchCriteria.getStartDate() != null && serviceReqSearchCriteria.getStartDate() != 0) {
+//			whereStr.append(" and to_timestamp(cast(pg.createdtime/1000 as bigint))::date >=")
+//					.append("to_timestamp(cast(" + serviceReqSearchCriteria.getStartDate() + "/1000 as bigint))::date");
+//		}
+//		if (serviceReqSearchCriteria.getEndDate() != null && serviceReqSearchCriteria.getEndDate() != 0) {
+//			whereStr.append(" and to_timestamp(cast(pg.createdtime/1000 as bigint))::date <=")
+//					.append("to_timestamp(cast(" + serviceReqSearchCriteria.getEndDate() + "/1000 as bigint))::date");
+//		}
+
 		if (serviceReqSearchCriteria.getStartDate() != null && serviceReqSearchCriteria.getStartDate() != 0) {
-			whereStr.append(" and to_timestamp(cast(pg.createdtime/1000 as bigint))::date >=")
-					.append("to_timestamp(cast(" + serviceReqSearchCriteria.getStartDate() + "/1000 as bigint))::date");
+			whereStr.append(" and pg.createdtime >=").append(serviceReqSearchCriteria.getStartDate());
 		}
 		if (serviceReqSearchCriteria.getEndDate() != null && serviceReqSearchCriteria.getEndDate() != 0) {
-			whereStr.append(" and to_timestamp(cast(pg.createdtime/1000 as bigint))::date <=")
-					.append("to_timestamp(cast(" + serviceReqSearchCriteria.getEndDate() + "/1000 as bigint))::date");
+			whereStr.append(" and pg.createdtime <=").append(serviceReqSearchCriteria.getEndDate());
 		}
 
 		if (serviceReqSearchCriteria.getStatus() != null && !serviceReqSearchCriteria.getStatus().isEmpty()) {
@@ -459,7 +466,7 @@ public class ServiceRequestRepository {
 			status.append(")");
 			whereStr.append(" and pg.status in ").append(status);
 		}
-		
+
 		if (serviceReqSearchCriteria.getMohalla() != null && !serviceReqSearchCriteria.getMohalla().isEmpty()) {
 			StringBuilder mohalla = new StringBuilder("(");
 			serviceReqSearchCriteria.getMohalla().stream().forEach(p -> mohalla.append("'").append(p).append("',"));
@@ -467,7 +474,7 @@ public class ServiceRequestRepository {
 			mohalla.append(")");
 			whereStr.append(" and ad.mohalla in ").append(mohalla);
 		}
-		
+
 		if (serviceReqSearchCriteria.getPhone() != null && !serviceReqSearchCriteria.getPhone().isEmpty()) {
 			whereStr.append(" and pg.phone=").append("'" + serviceReqSearchCriteria.getPhone() + "'");
 		}
@@ -485,8 +492,7 @@ public class ServiceRequestRepository {
 		log.info("ServiceRequestDetailsForDashBoard query: " + query);
 		return query;
 	}
-	
-	
+
 	public List<DiscriptionReport> fetchDescriptionDetails(ServiceReqSearchCriteria serviceReqSearchCriteria) {
 		Map<String, Object> preparedStatementValues = new HashMap<>();
 		String query = getDescriptionDetailsQuery(serviceReqSearchCriteria);
@@ -508,8 +514,7 @@ public class ServiceRequestRepository {
 		return description;
 
 	}
-	
-	
+
 	public String getDescriptionDetailsQuery(ServiceReqSearchCriteria serviceReqSearchCriteria) {
 		String query = ReportQueryBuilder.GET_DISCRIPTION_REPORT_QUERY;
 		StringBuilder whereStr = new StringBuilder();

@@ -85,7 +85,7 @@ public class OpeningBalanceService extends DomainService {
 
 	@Autowired
 	private StoreJdbcRepository storeJdbcRepository;
-	
+
 	@Autowired
 	private StoreService storeService;
 
@@ -227,7 +227,6 @@ public class OpeningBalanceService extends DomainService {
 						: Collections.EMPTY_LIST);
 	}
 
-
 	private String getOpbNumber(MaterialReceipt receipt, RequestInfo info) {
 		InvalidDataException errors = new InvalidDataException();
 		ObjectMapper mapper = new ObjectMapper();
@@ -243,10 +242,12 @@ public class OpeningBalanceService extends DomainService {
 				null, info);
 		outer: for (int i = 0; i < finYears.size(); i++) {
 			FinancialYear fin = mapper.convertValue(finYears.get(i), FinancialYear.class);
-			if (getCurrentDate() >= fin.getStartingDate().getTime()
-					&& getCurrentDate() <= fin.getEndingDate().getTime()) {
-				finYearRange = fin.getFinYearRange();
-				break outer;
+			if (fin.getModule().equals("STORE")) {
+				if (getCurrentDate() >= fin.getStartingDate().getTime()
+						&& getCurrentDate() <= fin.getEndingDate().getTime()) {
+					finYearRange = fin.getFinYearRange();
+					break outer;
+				}
 			}
 		}
 
@@ -499,7 +500,8 @@ public class OpeningBalanceService extends DomainService {
 			JSONObject jsonObject = new JSONObject();
 			jsonObject.put("storeName", balanceResponse.getMaterialReceipt().get(0).getReceivingStore().getName());
 			jsonObject.put("financialYear", balanceResponse.getMaterialReceipt().get(0).getFinancialYear());
-			Map<String, MaterialType> materialMap = getMaterialsType(materialReceiptSearch.getTenantId(), mapper, new RequestInfo());
+			Map<String, MaterialType> materialMap = getMaterialsType(materialReceiptSearch.getTenantId(), mapper,
+					new RequestInfo());
 			org.json.simple.JSONArray materialDetails = new org.json.simple.JSONArray();
 			org.json.simple.JSONArray mainMaterials = new org.json.simple.JSONArray();
 			int i = 0;
@@ -509,7 +511,8 @@ public class OpeningBalanceService extends DomainService {
 					materialDetail.put("srNo", i++);
 					materialDetail.put("materialCode", detail.getMaterial().getCode());
 					materialDetail.put("materialName", detail.getMaterial().getName());
-					materialDetail.put("materialType",materialMap.get(detail.getMaterial().getMaterialType().getCode()).getName());
+					materialDetail.put("materialType",
+							materialMap.get(detail.getMaterial().getMaterialType().getCode()).getName());
 					materialDetail.put("uomName", detail.getMaterial().getPurchaseUom().getCode());
 					materialDetail.put("quantity", detail.getUserAcceptedQty());
 					materialDetail.put("unitRate", detail.getUnitRate());
@@ -533,7 +536,7 @@ public class OpeningBalanceService extends DomainService {
 		return PDFResponse.builder()
 				.responseInfo(ResponseInfo.builder().status("Failed").resMsgId("No data found").build()).build();
 	}
-	
+
 	public PDFResponse printClosingBalanceReportPdf(MaterialReceiptSearch materialReceiptSearch,
 			RequestInfo requestInfo) {
 		OpeningBalanceResponse balanceResponse = search(materialReceiptSearch);
@@ -555,7 +558,8 @@ public class OpeningBalanceService extends DomainService {
 			JSONObject jsonObject = new JSONObject();
 			jsonObject.put("storeName", balanceResponse.getMaterialReceipt().get(0).getReceivingStore().getName());
 			jsonObject.put("asOnDate", materialReceiptSearch.getAsOnDate());
-			Map<String, MaterialType> materialMap = getMaterialsType(materialReceiptSearch.getTenantId(), mapper, new RequestInfo());
+			Map<String, MaterialType> materialMap = getMaterialsType(materialReceiptSearch.getTenantId(), mapper,
+					new RequestInfo());
 			org.json.simple.JSONArray materialDetails = new org.json.simple.JSONArray();
 			org.json.simple.JSONArray mainMaterials = new org.json.simple.JSONArray();
 			int i = 0;
@@ -565,15 +569,14 @@ public class OpeningBalanceService extends DomainService {
 					materialDetail.put("srNo", i++);
 					materialDetail.put("materialCode", detail.getMaterial().getCode());
 					materialDetail.put("materialName", detail.getMaterial().getName());
-					materialDetail.put("materialType", materialMap.get(detail.getMaterial().getMaterialType().getCode()).getName());
+					materialDetail.put("materialType",
+							materialMap.get(detail.getMaterial().getMaterialType().getCode()).getName());
 					materialDetail.put("uomName", detail.getMaterial().getPurchaseUom().getCode());
 					materialDetail.put("quantity", detail.getAcceptedQty());
 					materialDetail.put("unitRate", detail.getUnitRate());
-					if(detail.getAcceptedQty()!=null && detail.getUnitRate()!=null)
-					{
-					materialDetail.put("totalAmount", detail.getAcceptedQty().multiply(detail.getUnitRate()));
-					}
-					else {
+					if (detail.getAcceptedQty() != null && detail.getUnitRate() != null) {
+						materialDetail.put("totalAmount", detail.getAcceptedQty().multiply(detail.getUnitRate()));
+					} else {
 						materialDetail.put("totalAmount", "");
 					}
 					materialDetail.put("remarks", detail.getRemarks());
@@ -587,9 +590,11 @@ public class OpeningBalanceService extends DomainService {
 			if (materialReceiptSearch.isForprint())
 				return pdfServiceReposistory.getPrint(mainRequest, "store-asset-report-closing-balance",
 						materialReceiptSearch.getTenantId());
-				
-				/*return pdfServiceReposistory.getPrint(mainRequest, "store-asset-stock-report",
-						materialReceiptSearch.getTenantId());*/
+
+			/*
+			 * return pdfServiceReposistory.getPrint(mainRequest,
+			 * "store-asset-stock-report", materialReceiptSearch.getTenantId());
+			 */
 			else
 				return PDFResponse.builder().responseInfo(ResponseInfo.builder().status("Success").build())
 						.printData(mainRequest).build();
@@ -598,11 +603,11 @@ public class OpeningBalanceService extends DomainService {
 		return PDFResponse.builder()
 				.responseInfo(ResponseInfo.builder().status("Failed").resMsgId("No data found").build()).build();
 	}
-	
-	
-	private Map<String, MaterialType> getMaterialsType(String tenantId, final ObjectMapper mapper, RequestInfo requestInfo) {
-		net.minidev.json.JSONArray responseJSONArray = mdmsRepository.getByCriteria(tenantId, "store-asset", "MaterialType",
-				null, null, requestInfo);
+
+	private Map<String, MaterialType> getMaterialsType(String tenantId, final ObjectMapper mapper,
+			RequestInfo requestInfo) {
+		net.minidev.json.JSONArray responseJSONArray = mdmsRepository.getByCriteria(tenantId, "store-asset",
+				"MaterialType", null, null, requestInfo);
 		Map<String, MaterialType> materialMap = new HashMap<>();
 
 		if (responseJSONArray != null && responseJSONArray.size() > 0) {
@@ -614,10 +619,11 @@ public class OpeningBalanceService extends DomainService {
 		}
 		return materialMap;
 	}
+
 	public PDFResponse printStockBalanceReportPdf(MaterialReceiptSearch materialReceiptSearch,
 			RequestInfo requestInfo) {
 		org.json.simple.JSONArray jsonArray = materialReceiptService.searchStock(materialReceiptSearch);
-		
+
 		JSONArray arrayPrintData = new JSONArray();
 		if (!jsonArray.isEmpty()) {
 			JSONObject requestMain = new JSONObject();
@@ -629,24 +635,23 @@ public class OpeningBalanceService extends DomainService {
 
 			Material material = materialService.fetchMaterial(materialReceiptSearch.getTenantId(),
 					materialReceiptSearch.getMaterials().get(0), new RequestInfo());
-			
+
 			MaterialType materialType = materialService.fetchMaterialType(materialReceiptSearch.getTenantId(),
 					material.getMaterialType().getCode(), new RequestInfo());
-			
+
 			requestMain.put("storeName", store.getStores().isEmpty() ? materialReceiptSearch.getReceivingStore()
 					: store.getStores().get(0).getName());
 			requestMain.put("storeDepartment",
 					store.getStores().isEmpty() ? "" : store.getStores().get(0).getDepartment().getName());
 			requestMain.put("materialName", material.getName());
-			requestMain.put("asOnDate",materialReceiptSearch.getAsOnDate());
-			for(Object js:jsonArray)
-			{
-				JSONObject js1=(JSONObject)js;
+			requestMain.put("asOnDate", materialReceiptSearch.getAsOnDate());
+			for (Object js : jsonArray) {
+				JSONObject js1 = (JSONObject) js;
 				js1.put("materialName", material.getName());
 				js1.put("materialCode", material.getCode());
-				js1.put("materialType",materialType.getName());
-				//(JSONObject) js.pu
-				
+				js1.put("materialType", materialType.getName());
+				// (JSONObject) js.pu
+
 			}
 			requestMain.put("stockDetails", jsonArray);
 			arrayPrintData.add(requestMain);
