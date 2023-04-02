@@ -146,6 +146,8 @@ public class WSCalculationConstant {
 	public static final String WS_ONE_TIME_FEE_ROUND_OFF = "WS_FEE_ROUND_OFF";
 
 	public static final String WS_TAX_MODULE = "ws-services-calculation";
+	
+	public static final String WS_TAX_MODULE_PREV = "ws-services-calculation-prev";
 
 	public static final String WS_MODULE = "ws-services-masters";
 

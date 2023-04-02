@@ -586,7 +586,7 @@ public class MasterDataService {
 		MdmsResponse response = mapper.convertValue(repository.fetchResult(calculatorUtils.getMdmsSearchUrl(),
 				calculatorUtils.getEstimationMasterCriteriaPrev(requestInfo, tenantId)), MdmsResponse.class);
 
-		Map<String, JSONArray> res = response.getMdmsRes().get(WSCalculationConstant.WS_TAX_MODULE);
+		Map<String, JSONArray> res = response.getMdmsRes().get(WSCalculationConstant.WS_TAX_MODULE_PREV);
 		for (Map.Entry<String, JSONArray> resp : res.entrySet()) {
 			master.put(resp.getKey(), resp.getValue());
 		}
