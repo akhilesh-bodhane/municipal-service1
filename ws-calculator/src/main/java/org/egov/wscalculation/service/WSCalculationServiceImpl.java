@@ -114,6 +114,7 @@ public class WSCalculationServiceImpl implements WSCalculationService {
 	public List<Calculation> getEstimation(CalculationReq request) {
 		String appNo = request.getCalculationCriteria().get(0).getApplicationNo();
  		String finYear = appNo.substring(6,13);
+ 		List<Calculation> calculations;
  		
 		System.out.println("Water Connection Detail : " + request.getCalculationCriteria().get(0).getApplicationNo() + "Financial Year : " + finYear);
 		
@@ -125,23 +126,21 @@ public class WSCalculationServiceImpl implements WSCalculationService {
 		return calculations; **/
 		
 		
-		if (finYear != "2023-24") {
-			System.out.println("Inside Fin Yr Not equal to 2023-24");
-			Map<String, Object> masterData = masterDataService.loadExemptionMasterPrev(request.getRequestInfo(),
-					request.getCalculationCriteria().get(0).getTenantId());
-			List<Calculation> calculations = getFeeCalculation(request, masterData);
-			unsetWaterConnection(calculations);
-			return calculations;
-		} else {
+		if (finYear.equalsIgnoreCase("2023-24")) {
 			System.out.println("Inside Fin Yr 2023-24");
 			Map<String, Object> masterData = masterDataService.loadExemptionMaster(request.getRequestInfo(),
 					request.getCalculationCriteria().get(0).getTenantId());
-			List<Calculation> calculations = getFeeCalculation(request, masterData);
+			calculations = getFeeCalculation(request, masterData);
+			unsetWaterConnection(calculations);			
+		} else {
+			System.out.println("Inside Fin Yr Not equal to 2023-24");
+			Map<String, Object> masterData = masterDataService.loadExemptionMasterPrev(request.getRequestInfo(),
+					request.getCalculationCriteria().get(0).getTenantId());
+			calculations = getFeeCalculation(request, masterData);
 			unsetWaterConnection(calculations);
-			return calculations;
 		}
 		  
-		 
+		return calculations;
 	}
 	/**
 	 * It will take calculation and return calculation with tax head code 
