@@ -71,7 +71,9 @@ public class WSCalculationServiceImpl implements WSCalculationService {
 	 */
 	public List<Calculation> getCalculation(CalculationReq request) {
 		List<Calculation> calculations = new ArrayList<>();
-		
+		String appNo = request.getCalculationCriteria().get(0).getApplicationNo();
+		String finYear = appNo.substring(6,13);
+		System.out.println("Water Connection Detail : " + request.getCalculationCriteria().get(0).getApplicationNo() + "Financial Year : " + finYear);
 		if (request.getIsconnectionCalculation()) {
 			//Calculate and create demand for connection
 			Map<String, Object> masterMap = masterDataService.loadMasterData(request.getRequestInfo(),
@@ -84,11 +86,30 @@ public class WSCalculationServiceImpl implements WSCalculationService {
 			unsetWaterConnection(calculations);
 		} else {
 			//Calculate and create demand for application
-			Map<String, Object> masterData = masterDataService.loadExemptionMaster(request.getRequestInfo(),
-					request.getCalculationCriteria().get(0).getTenantId());
-			calculations = getFeeCalculation(request, masterData);
-			demandService.generateDemand(request.getRequestInfo(), calculations, masterData, request.getIsconnectionCalculation());
-			unsetWaterConnection(calculations);
+			
+			if (finYear.equalsIgnoreCase("2023-24")) {
+				System.out.println("Inside Fin Yr 2023-24");
+				Map<String, Object> masterData = masterDataService.loadExemptionMaster(request.getRequestInfo(),
+						request.getCalculationCriteria().get(0).getTenantId());
+				calculations = getFeeCalculation(request, masterData);
+				unsetWaterConnection(calculations);			
+			} else {
+				System.out.println("Inside Fin Yr Not equal to 2023-24");
+				Map<String, Object> masterData = masterDataService.loadExemptionMasterPrev(request.getRequestInfo(),
+						request.getCalculationCriteria().get(0).getTenantId());
+				calculations = getFeeCalculation(request, masterData);
+				unsetWaterConnection(calculations);
+			}
+			
+			/*
+			 * Map<String, Object> masterData =
+			 * masterDataService.loadExemptionMaster(request.getRequestInfo(),
+			 * request.getCalculationCriteria().get(0).getTenantId()); calculations =
+			 * getFeeCalculation(request, masterData);
+			 * demandService.generateDemand(request.getRequestInfo(), calculations,
+			 * masterData, request.getIsconnectionCalculation());
+			 * unsetWaterConnection(calculations);
+			 */
 		}
 		return calculations;
 	}
