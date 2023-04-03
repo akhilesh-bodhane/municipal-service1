@@ -88,18 +88,23 @@ public class WSCalculationServiceImpl implements WSCalculationService {
 			//Calculate and create demand for application
 			
 			if (finYear.equalsIgnoreCase("2023-24")) {
-				System.out.println("Inside Fin Yr 2023-24");
+				System.out.println("Inside Fin Yr 2023-24");				
 				Map<String, Object> masterData = masterDataService.loadExemptionMaster(request.getRequestInfo(),
 						request.getCalculationCriteria().get(0).getTenantId());
 				calculations = getFeeCalculation(request, masterData);
-				unsetWaterConnection(calculations);			
+				demandService.generateDemand(request.getRequestInfo(), calculations, masterData,
+						request.getIsconnectionCalculation());
+				unsetWaterConnection(calculations);		
 			} else {
 				System.out.println("Inside Fin Yr Not equal to 2023-24");
 				Map<String, Object> masterData = masterDataService.loadExemptionMasterPrev(request.getRequestInfo(),
 						request.getCalculationCriteria().get(0).getTenantId());
 				calculations = getFeeCalculation(request, masterData);
+				demandService.generateDemand(request.getRequestInfo(), calculations, masterData,
+						request.getIsconnectionCalculation());
 				unsetWaterConnection(calculations);
 			}
+			
 			
 			/*
 			 * Map<String, Object> masterData =
@@ -110,6 +115,7 @@ public class WSCalculationServiceImpl implements WSCalculationService {
 			 * masterData, request.getIsconnectionCalculation());
 			 * unsetWaterConnection(calculations);
 			 */
+			 
 		}
 		return calculations;
 	}
