@@ -124,6 +124,9 @@ public class StreetVendorData {
 	@JsonProperty("religion")
 	private String religion;
 	
+	@JsonProperty("remarks")
+	private String remarks;
+	
 	@Size(max = 256)
 	@JsonProperty("createdBy")
 	private String createdBy;
