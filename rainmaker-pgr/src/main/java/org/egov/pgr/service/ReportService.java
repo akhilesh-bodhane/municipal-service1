@@ -416,7 +416,8 @@ public class ReportService {
 		return tenantId.split("\\.")[0];
 	}
 
-	public ResponseEntity<ResponseInfoWrapper> process(RequestInfoWrapper request,ServiceReqSearchCriteria serviceReqSearchCriteria) {
+	public ResponseEntity<ResponseInfoWrapper> process(RequestInfoWrapper request,
+			ServiceReqSearchCriteria serviceReqSearchCriteria) {
 		List<DiscriptionReport> list = new ArrayList<>();
 		ObjectMapper mapper = new ObjectMapper();
 		Map<String, ServiceDefMdms> mapOfServiceCodesAndDepts = getServiceName(
@@ -427,8 +428,7 @@ public class ReportService {
 				new RequestInfo());
 		Map<String, Object> paramValues = new HashMap<>();
 		// paramValues.put("sla", mapOfServiceCodesAndDepts.get(key));
-		list = serviceRequestRepository
-				.fetchDescriptionDetails(serviceReqSearchCriteria);
+		list = serviceRequestRepository.fetchDescriptionDetails(serviceReqSearchCriteria);
 		/*
 		 * list = namedParameterJdbcTemplate.query(ReportQueryBuilder.
 		 * GET_DISCRIPTION_REPORT_QUERY, paramValues, rowMapper);
@@ -669,6 +669,19 @@ public class ReportService {
 						.buckets(listAverageSolutionTime).build();
 				metrics.setAverageSolutionTime(Arrays.asList(averageSolutionTime));
 				grievenceReport.setMetrics(metrics);
+
+				// Closed For Average
+				Integer closedComplaints = 0;
+				for (Bucket buckets : todaysClosedComplaintsByDepartmentBucket) {
+					closedComplaints = closedComplaints + buckets.getValue().intValue();
+				}
+
+				Integer completionDays = fetchGrievenceDetails.stream().reduce(0,
+						(s, ob) -> s + ob.getCompletionDays() + ob.getCompletionDays(), Integer::sum);
+
+				metrics.setAvgDaysForApplication(completionDays > 0 ? closedComplaints / completionDays : 0);
+				metrics.setStipulatedDays(completionDays);
+
 			} catch (Exception e) {
 				throw new CustomException(ErrorConstants.ERROR_CODE_GRIVENCE, e.getMessage());
 			}

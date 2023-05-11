@@ -1,5 +1,7 @@
 package org.egov.pgr.model;
 
+import java.math.BigDecimal;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
@@ -68,4 +70,8 @@ public class Grievance {
 
 	@JsonProperty("totalComplaints")
 	public Integer totalComplaints;
+
+	@JsonProperty("completionDays")
+	public Integer completionDays;
+
 }

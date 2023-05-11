@@ -58,4 +58,11 @@ public class Metric {
 
 	@JsonProperty("todaysReassignedComplaints")
 	public List<TodaysReassignedComplaint> todaysReassignedComplaints;
+
+	@JsonProperty("avgDaysForApplication")
+	public Integer avgDaysForApplication;
+
+	@JsonProperty("stipulatedDays")
+	public Integer stipulatedDays;
+
 }
