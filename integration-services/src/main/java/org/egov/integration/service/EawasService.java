@@ -39,10 +39,9 @@ public class EawasService {
 
 	@Autowired
 	private RequestFactory requestFactory;
-	
-	
+
 	@Autowired
-	private TLniuaRepository tLniuaRepository ;
+	private TLniuaRepository tLniuaRepository;
 
 	@Autowired
 	private EawasConfiguration config;
@@ -91,19 +90,18 @@ public class EawasService {
 				.responseInfo(ResponseInfo.builder().status(CommonConstants.SUCCESS).build()).responseBody(organisation)
 				.build(), HttpStatus.OK);
 	}
-	
-	
-	 public metrics searchNIUA(RequestData criteria, RequestInfo requestInfo, String serviceFromPath){
-//	        List<TradeLicense> licenses;
-	              metrics licensesForNIUA = getLicensesForNIUA(criteria,requestInfo);
 
-	       return licensesForNIUA;
-	    }
-	    
-	    public metrics getLicensesForNIUA(RequestData criteria, RequestInfo requestInfo){
+	public metrics searchNIUA(RequestData criteria, RequestInfo requestInfo, String serviceFromPath) {
+//	        List<TradeLicense> licenses;
+		metrics licensesForNIUA = getLicensesForNIUA(criteria, requestInfo);
+
+		return licensesForNIUA;
+	}
+
+	public metrics getLicensesForNIUA(RequestData criteria, RequestInfo requestInfo) {
 //	        enrichmentService.enrichTLCriteriaWithOwnerids(criteria,userDetailResponse);
-	         metrics licensesNIUA = tLniuaRepository.getLicensesNIUA(criteria);
-return licensesNIUA ;
-	    }
+		metrics licensesNIUA = tLniuaRepository.getLicensesNIUA(criteria);
+		return licensesNIUA;
+	}
 
 }
