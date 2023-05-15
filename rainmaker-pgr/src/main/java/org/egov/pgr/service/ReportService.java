@@ -670,17 +670,27 @@ public class ReportService {
 				metrics.setAverageSolutionTime(Arrays.asList(averageSolutionTime));
 				grievenceReport.setMetrics(metrics);
 
-				// Closed For Average
+				// Completion Days Calculation
+
 				Integer closedComplaints = 0;
 				for (Bucket buckets : todaysClosedComplaintsByDepartmentBucket) {
 					closedComplaints = closedComplaints + buckets.getValue().intValue();
 				}
 
-				Integer completionDays = fetchGrievenceDetails.stream().reduce(0,
-						(s, ob) -> s + ob.getCompletionDays() + ob.getCompletionDays(), Integer::sum);
+				Integer resolvedComplaints = 0;
+				for (Bucket buckets : todaysResolvedComplaintsByDepartmentBucket) {
+					resolvedComplaints = resolvedComplaints + buckets.getValue().intValue();
+				}
 
-				metrics.setAvgDaysForApplication(completionDays > 0 ? closedComplaints / completionDays : 0);
-				metrics.setStipulatedDays(completionDays);
+				Integer completionDaysClosed = fetchGrievenceDetails.stream().reduce(0,
+						(s, ob) -> s + ob.getCompletionDaysClosed() + ob.getCompletionDaysClosed(), Integer::sum);
+
+				Integer completionDaysResolved = fetchGrievenceDetails.stream().reduce(0,
+						(s, ob) -> s + ob.getCompletionDaysResolved() + ob.getCompletionDaysResolved(), Integer::sum);
+
+				metrics.setAvgDaysForApplication(
+						resolvedComplaints > 0 ? completionDaysResolved / resolvedComplaints : 0);
+				metrics.setStipulatedDays(closedComplaints > 0 ? completionDaysClosed / closedComplaints : 0);
 
 			} catch (Exception e) {
 				throw new CustomException(ErrorConstants.ERROR_CODE_GRIVENCE, e.getMessage());

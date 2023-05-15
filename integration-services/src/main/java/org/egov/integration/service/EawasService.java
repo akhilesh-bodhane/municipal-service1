@@ -14,7 +14,7 @@ import org.egov.integration.model.ResponseInfoWrapper;
 import org.egov.integration.repository.TLniuaRepository;
 //import org.egov.tl.web.models.TradeLicense;
 //import org.egov.tl.web.models.TradeLicenseSearchCriteria;
-import org.egov.integration.model.metrics;
+import org.egov.integration.model.Metrics;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.XML;
@@ -91,16 +91,16 @@ public class EawasService {
 				.build(), HttpStatus.OK);
 	}
 
-	public metrics searchNIUA(RequestData criteria, RequestInfo requestInfo, String serviceFromPath) {
+	public Metrics searchNIUA(RequestData criteria, RequestInfo requestInfo, String serviceFromPath) {
 //	        List<TradeLicense> licenses;
-		metrics licensesForNIUA = getLicensesForNIUA(criteria, requestInfo);
+		Metrics licensesForNIUA = getLicensesForNIUA(criteria, requestInfo);
 
 		return licensesForNIUA;
 	}
 
-	public metrics getLicensesForNIUA(RequestData criteria, RequestInfo requestInfo) {
+	public Metrics getLicensesForNIUA(RequestData criteria, RequestInfo requestInfo) {
 //	        enrichmentService.enrichTLCriteriaWithOwnerids(criteria,userDetailResponse);
-		metrics licensesNIUA = tLniuaRepository.getLicensesNIUA(criteria);
+		Metrics licensesNIUA = tLniuaRepository.getLicensesNIUA(criteria);
 		return licensesNIUA;
 	}
 

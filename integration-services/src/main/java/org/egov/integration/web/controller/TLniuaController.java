@@ -8,7 +8,7 @@ import org.egov.integration.model.ResponseInfoWrapper;
 import org.egov.integration.service.EawasService;
 //import org.egov.tl.web.models.RequestInfoWrapper;
 //import org.egov.tl.web.models.TradeLicenseSearchCriteria;
-import org.egov.integration.model.metrics;
+import org.egov.integration.model.Metrics;
 import org.egov.integration.model.metricsResponse;
 import org.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,9 +44,9 @@ public class TLniuaController {
 	    public ResponseEntity<metricsResponse> searchNIUA(@Valid @RequestBody EawasRequestInfoWrapper requestInfoWrapper,
 	                                                       @Valid @ModelAttribute RequestData criteria,
 	                                                       @PathVariable(required = false) String servicename) {
-	       metrics licenses = service.searchNIUA(criteria, requestInfoWrapper.getRequestInfo(), servicename);
+	       Metrics licenses = service.searchNIUA(criteria, requestInfoWrapper.getRequestInfo(), servicename);
 
-	       metricsResponse vvv = metricsResponse.builder().metrics(licenses).build();
+	       metricsResponse vvv = metricsResponse.builder().Metrics(licenses).build();
 
 	       return new ResponseEntity<>( vvv , HttpStatus.OK);
 	    

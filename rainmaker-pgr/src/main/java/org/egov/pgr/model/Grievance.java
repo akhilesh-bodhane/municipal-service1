@@ -71,7 +71,10 @@ public class Grievance {
 	@JsonProperty("totalComplaints")
 	public Integer totalComplaints;
 
-	@JsonProperty("completionDays")
-	public Integer completionDays;
+	@JsonProperty("completionDaysResolved")
+	public Integer completionDaysResolved;
+
+	@JsonProperty("completionDaysClosed")
+	public Integer completionDaysClosed;
 
 }
