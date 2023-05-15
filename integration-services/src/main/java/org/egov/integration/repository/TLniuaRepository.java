@@ -13,7 +13,7 @@ import org.egov.integration.repository.builder.RtiQueryBuilder;
 import org.egov.integration.repository.builder.TLQueryBuilderNIUA;
 import org.egov.integration.repository.rowmapper.RtiRowMapper;
 import org.egov.integration.repository.rowmapper.TLRowMapperNIUA;
-import org.egov.integration.model.metrics;
+import org.egov.integration.model.Metrics;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -40,11 +40,11 @@ public class TLniuaRepository {
 		this.rowMapper = rowMapper;
 	}
 
-	 public metrics getLicensesNIUA(RequestData criteria) {
+	 public Metrics getLicensesNIUA(RequestData criteria) {
 	        List<Object> preparedStmtList = new ArrayList<>();
 	        String query = queryBuilder.getTLSearchQuery(criteria, preparedStmtList);
 //	        log.info("Query: " + query);
-	        metrics query2 = jdbcTemplate.query(query, preparedStmtList.toArray(), rowMapperNIUA);
+	        Metrics query2 = jdbcTemplate.query(query, preparedStmtList.toArray(), rowMapperNIUA);
 //	        sortChildObjectsById(licenses);
 	        return query2;
 	    }

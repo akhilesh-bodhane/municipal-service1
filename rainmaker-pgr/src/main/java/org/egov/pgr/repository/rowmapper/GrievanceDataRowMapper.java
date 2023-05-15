@@ -44,7 +44,12 @@ public class GrievanceDataRowMapper implements ResultSetExtractor<List<Grievance
 				grievence.setSource(rs.getString("source"));
 				grievence.setStatus(rs.getString("status"));
 				grievence.setTotalComplaints(Integer.parseInt(rs.getString("totalComplaints")));
-				grievence.setCompletionDays(Integer.parseInt(rs.getString("completionDays")));
+				grievence.setCompletionDaysClosed(rs.getString("completionDaysClosed") != null
+						? Integer.parseInt(rs.getString("completionDaysClosed"))
+						: 0);
+				grievence.setCompletionDaysResolved(rs.getString("completionDaysResolved") != null
+						? Integer.parseInt(rs.getString("completionDaysResolved"))
+						: 0);
 				map.put(grievence.getSequencenum(), grievence);
 
 			}

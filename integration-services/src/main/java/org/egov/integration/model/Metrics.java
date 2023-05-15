@@ -20,7 +20,9 @@ import lombok.Setter;
 import lombok.Builder;
 
 /**
- * Contract class to send response. Array of tradelicense items are used in case of search results or response for create, whereas single tradelicense item is used for update
+ * Contract class to send response. Array of tradelicense items are used in case
+ * of search results or response for create, whereas single tradelicense item is
+ * used for update
  */
 @ApiModel(description = "Contract class to send response. Array of tradelicense items are used in case of search results or response for create, whereas single tradelicense item is used for update")
 @Validated
@@ -31,17 +33,41 @@ import lombok.Builder;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class metricsResponse   {
-        
-        
-	@JsonProperty("metrics")
+public class Metrics {
+	@JsonProperty("transactions")
 	@Valid
-	private Metrics Metrics = null;
-       
-        
-        
+	private int transactions;
 
+	@JsonProperty("todaysApplications")
+	@Valid
+	private int todaysApplications;
 
-      
+	@JsonProperty("tlTax")
+	@Valid
+	private int tlTax;
+
+	@JsonProperty("adhocPenalty")
+	@Valid
+	private int adhocPenalty;
+
+	@JsonProperty("adhocRebate")
+	@Valid
+	private int adhocRebate;
+
+	@JsonProperty("todaysLicenseIssuedWithinSLA")
+	@Valid
+	private int todaysLicenseIssuedWithinSLA;
+
+	@JsonProperty("todaysCollection")
+	@Valid
+	private List<todaysCollection> todaysCollection = null;
+
+	@JsonProperty("todaysTradeLicenses")
+	@Valid
+	private List<todaysTradeLicenses> todaysTradeLicenses = null;
+
+	@JsonProperty("applicationsMovedToday")
+	@Valid
+	private List<applicationsMovedToday> applicationsMovedToday = null;
+
 }
-
