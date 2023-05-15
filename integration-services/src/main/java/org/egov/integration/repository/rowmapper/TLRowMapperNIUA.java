@@ -46,7 +46,17 @@ public class TLRowMapperNIUA implements ResultSetExtractor<Metrics> {
 		amt.setGroupBy("status");
 //    	buckets bckt = new buckets();
 
+		Integer approvedLicense = 0;
+		Integer approvedCompletionDaysLicense = 0;
 		while (rs.next()) {
+
+			approvedLicense = approvedLicense
+					+ Integer.parseInt(rs.getString("approvedLicense") != null ? rs.getString("approvedLicense") : "0");
+			approvedCompletionDaysLicense = approvedCompletionDaysLicense
+					+ Integer.parseInt(rs.getString("approvedCompletionDaysLicense") != null
+							? rs.getString("approvedCompletionDaysLicense")
+							: "0");
+
 			String ccc = rs.getString("ccc");
 			String name = rs.getString("name");
 			int value = rs.getInt("value");
@@ -104,6 +114,7 @@ public class TLRowMapperNIUA implements ResultSetExtractor<Metrics> {
 			}
 
 		}
+		mtrcs.setStipulatedDays(approvedLicense > 0 ? approvedCompletionDaysLicense / approvedLicense : 0);
 		listTTL.add(ttl);
 		mtrcs.setTodaysTradeLicenses(listTTL);
 		listTC.add(TC);

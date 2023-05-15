@@ -34,6 +34,11 @@ import lombok.Builder;
 @NoArgsConstructor
 @Builder
 public class Metrics {
+
+	@JsonProperty("StipulatedDays")
+	@Valid
+	private Integer stipulatedDays;
+
 	@JsonProperty("transactions")
 	@Valid
 	private int transactions;
