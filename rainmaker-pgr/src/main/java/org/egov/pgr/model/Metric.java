@@ -1,6 +1,5 @@
 package org.egov.pgr.model;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -19,6 +18,12 @@ import lombok.ToString;
 @AllArgsConstructor
 @ToString
 public class Metric {
+	
+	@JsonProperty("avgDaysForApplication")
+	public Integer avgDaysForApplication;
+
+	@JsonProperty("stipulatedDays")
+	public Integer stipulatedDays;
 
 	@JsonProperty("slaAchievement")
 	public List<SlaAchievement> slaAchievement;
@@ -59,10 +64,6 @@ public class Metric {
 	@JsonProperty("todaysReassignedComplaints")
 	public List<TodaysReassignedComplaint> todaysReassignedComplaints;
 
-	@JsonProperty("avgDaysForApplication")
-	public Integer avgDaysForApplication;
 
-	@JsonProperty("stipulatedDays")
-	public Integer stipulatedDays;
 
 }
