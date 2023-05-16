@@ -4,7 +4,10 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import org.egov.waterconnection.model.PublicDashBoardSearchCritieria;
+import org.egov.waterconnection.model.PublicDashboardResponse;
 import org.egov.waterconnection.model.RequestInfoWrapper;
+import org.egov.waterconnection.model.ResponseData;
 import org.egov.waterconnection.model.SearchCriteria;
 import org.egov.waterconnection.model.SearchTotalCollectionCriteria;
 import org.egov.waterconnection.model.WaterCollectionCountResponse;
@@ -147,6 +150,17 @@ public class WaterController {
 
 			
 			metricsResponse metricsResponsebody = metricsResponse.builder().metrics(searchTotalCollectionCountNIUA).build();
+
+         return new ResponseEntity<>( metricsResponsebody , HttpStatus.OK);
+	}
+	
+	
+	@RequestMapping(value = "/_searchCountPublicDashBoard", method = RequestMethod.POST)
+	public ResponseEntity<PublicDashboardResponse> searchPublicDashBoardCount(@Valid @RequestBody PublicDashBoardSearchCritieria SearchTotalCollectionCriteria) {
+				
+		ResponseData searchTotalCollectionCount = waterService.searchPublicDashBoardCount(SearchTotalCollectionCriteria);	
+		
+			PublicDashboardResponse metricsResponsebody = PublicDashboardResponse.builder().responseData(searchTotalCollectionCount).build();
 
          return new ResponseEntity<>( metricsResponsebody , HttpStatus.OK);
 	}

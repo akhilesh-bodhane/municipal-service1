@@ -8,6 +8,8 @@ import org.egov.common.contract.request.RequestInfo;
 import org.egov.waterconnection.config.WSConfiguration;
 import org.egov.waterconnection.constants.WCConstants;
 import org.egov.waterconnection.model.Property;
+import org.egov.waterconnection.model.PublicDashBoardSearchCritieria;
+import org.egov.waterconnection.model.PublicDashboardSearch;
 import org.egov.waterconnection.model.SearchCriteria;
 import org.egov.waterconnection.model.SearchTotalCollectionCriteria;
 import org.egov.waterconnection.service.UserService;
@@ -530,6 +532,17 @@ public class WsQueryBuilder {
 			+ "			property.wsid = conn.id\r\n"
 			+ "		left outer join eg_ws_connectionholder connectionholder on\r\n"
 			+ "			connectionholder.connectionid = conn.id";
+	
+	
+	
+	private static final String PUBLIC_DASHBOARD_WATER_SEARCH =  "select count(*) from eg_ws_application ewa " ;
+	
+	private static final String PUBLIC_DASHBOARD_WATER_SEARCH_APPROVED =  "select SUM(case when ewa.applicationstatus = 'CONNECTION_ACTIVATED' then 1 else 0 end) from eg_ws_application ewa " ;
+	
+	private static final String PUBLIC_DASHBOARD_WATER_SEARCH_TIME_TAKEN_APPROVED =  "select \r\n"
+			+ "SUM(case when ewa.applicationstatus  = 'CONNECTION_ACTIVATED' then to_timestamp(ewa.lastmodifiedtime / 1000)::date - to_timestamp(ewa.createdtime / 1000)::date else 0 end) approveddays\r\n"
+			+ "from eg_ws_application ewa " ;
+	
 	/**
 	 * 
 	 * @param criteria
@@ -1082,6 +1095,67 @@ public class WsQueryBuilder {
 		 */
 		query.append(ORDER_BY_CLAUSE);
 		return addPaginationWrapper(query.toString(), preparedStatement, criteria);
+	}
+	
+	
+	
+	
+	
+	public String getSearchQueryStringPublicDashBoard(PublicDashBoardSearchCritieria SearchTotalCollectionCriteria, List<Object> preparedStatement) {
+		preparedStatement.clear();
+		StringBuilder query = null;
+		query = new StringBuilder(PUBLIC_DASHBOARD_WATER_SEARCH);
+		if (SearchTotalCollectionCriteria.getDataPayload().getFromDate() != null) {
+			addClauseIfRequired(preparedStatement, query);
+			query.append("  ewa.createdtime >= ?  ");
+			preparedStatement.add(SearchTotalCollectionCriteria.getDataPayload().getFromDate());
+		}
+		if (SearchTotalCollectionCriteria.getDataPayload().getToDate() != null) {
+			addClauseIfRequired(preparedStatement, query);
+			query.append("  ewa.createdtime <= ? ");
+			preparedStatement.add(SearchTotalCollectionCriteria.getDataPayload().getToDate());
+		}
+		
+		return query.toString();
+				
+	}
+	
+	public String getSearchQueryStringPublicDashBoardApproved(PublicDashBoardSearchCritieria SearchTotalCollectionCriteria, List<Object> preparedStatement) {
+		preparedStatement.clear();
+		StringBuilder query = null;
+		query = new StringBuilder(PUBLIC_DASHBOARD_WATER_SEARCH_APPROVED);
+		if (SearchTotalCollectionCriteria.getDataPayload().getFromDate() != null) {
+			addClauseIfRequired(preparedStatement, query);
+			query.append("  ewa.createdtime >= ?  ");
+			preparedStatement.add(SearchTotalCollectionCriteria.getDataPayload().getFromDate());
+		}
+		if (SearchTotalCollectionCriteria.getDataPayload().getToDate() != null) {
+			addClauseIfRequired(preparedStatement, query);
+			query.append("  ewa.createdtime <= ? ");
+			preparedStatement.add(SearchTotalCollectionCriteria.getDataPayload().getToDate());
+		}
+		
+		return query.toString();
+				
+	}
+	
+	public String getSearchQueryStringPublicDashBoardTimeTaken(PublicDashBoardSearchCritieria SearchTotalCollectionCriteria, List<Object> preparedStatement) {
+		preparedStatement.clear();
+		StringBuilder query = null;
+		query = new StringBuilder(PUBLIC_DASHBOARD_WATER_SEARCH_TIME_TAKEN_APPROVED);
+		if (SearchTotalCollectionCriteria.getDataPayload().getFromDate() != null) {
+			addClauseIfRequired(preparedStatement, query);
+			query.append("  ewa.createdtime >= ?  ");
+			preparedStatement.add(SearchTotalCollectionCriteria.getDataPayload().getFromDate());
+		}
+		if (SearchTotalCollectionCriteria.getDataPayload().getToDate() != null) {
+			addClauseIfRequired(preparedStatement, query);
+			query.append("  ewa.createdtime <= ? ");
+			preparedStatement.add(SearchTotalCollectionCriteria.getDataPayload().getToDate());
+		}
+		
+		return query.toString();
+				
 	}
 	
 }

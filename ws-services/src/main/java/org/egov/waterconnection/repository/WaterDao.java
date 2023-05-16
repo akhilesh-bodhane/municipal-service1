@@ -4,6 +4,8 @@ import java.util.List;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.waterconnection.model.BillGeneration;
+import org.egov.waterconnection.model.PublicDashBoardSearchCritieria;
+import org.egov.waterconnection.model.ResponseData;
 import org.egov.waterconnection.model.SearchCriteria;
 import org.egov.waterconnection.model.SearchTotalCollectionCriteria;
 import org.egov.waterconnection.model.WaterConnection;
@@ -30,6 +32,8 @@ public interface WaterDao {
 	public void updatebillingstatus(BillGeneration bill);
 	
 	public metrics getWaterConnectionTotalCollectionListCountNIUA(SearchTotalCollectionCriteria SearchTotalCollectionCriteria,RequestInfo requestInfo);
+	
+	public ResponseData searchPublicDashBoardCount(PublicDashBoardSearchCritieria SearchTotalCollectionCriteria);
 
 
 }

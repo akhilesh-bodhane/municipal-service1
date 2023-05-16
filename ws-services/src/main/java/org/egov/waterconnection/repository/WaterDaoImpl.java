@@ -10,6 +10,9 @@ import org.egov.waterconnection.config.WSConfiguration;
 import org.egov.waterconnection.constants.WCConstants;
 import org.egov.waterconnection.model.BillGeneration;
 import org.egov.waterconnection.model.BillGenerationRequest;
+import org.egov.waterconnection.model.PublicDashBoardSearchCritieria;
+import org.egov.waterconnection.model.PublicDashboardResponse;
+import org.egov.waterconnection.model.ResponseData;
 import org.egov.waterconnection.model.SearchCriteria;
 import org.egov.waterconnection.model.SearchTotalCollectionCriteria;
 import org.egov.waterconnection.model.WaterConnection;
@@ -68,7 +71,6 @@ public class WaterDaoImpl implements WaterDao {
 	
 	@Autowired
 	private WSConfiguration wsConfiguration;
-	
 	
 
 	@Value("${egov.waterservice.createwaterconnection}")
@@ -433,6 +435,66 @@ public class WaterDaoImpl implements WaterDao {
 		}
 
 		return waterConnectionList;
+	}
+	
+	
+	@Override
+	public  ResponseData searchPublicDashBoardCount(PublicDashBoardSearchCritieria SearchTotalCollectionCriteria) {
+		List<Object> preparedStatement = new ArrayList<>();
+		
+		
+     int ApplicationReceived = publicDashBoardAppicationReceived(SearchTotalCollectionCriteria,preparedStatement);
+     
+     int ApplicationApproved = publicDashBoardApproved(SearchTotalCollectionCriteria,preparedStatement);
+     
+     double ApplicationApprovedTimeTaken = publicDashBoardTimeTaken(SearchTotalCollectionCriteria,preparedStatement);
+     
+     double ApplicationTimeTaken=0.0;
+     int timeTakenForApproval=0;
+     if(ApplicationApproved > 0) {
+    	 ApplicationTimeTaken= ApplicationApprovedTimeTaken / ApplicationApproved;
+    	 timeTakenForApproval =(int)Math.round(ApplicationTimeTaken);
+     }
+        
+     ResponseData rs=new ResponseData();
+     
+     rs.setTotalApplicationReceived(ApplicationReceived);
+     rs.setTotalApplicationsApproved(ApplicationApproved);
+ 	 rs.setTimeTakenForApproval(timeTakenForApproval);
+	
+	return rs;
+	}
+		
+	
+	
+	private int publicDashBoardAppicationReceived(PublicDashBoardSearchCritieria SearchTotalCollectionCriteria,
+			List<Object> preparedStatement) {
+		
+		String query = wsQueryBuilder.getSearchQueryStringPublicDashBoard(SearchTotalCollectionCriteria , preparedStatement);
+			
+		Integer applicationreceivedcount = jdbcTemplate.queryForObject(query,preparedStatement.toArray() , Integer.class);
+		
+		return applicationreceivedcount;
+	}
+	
+	private int publicDashBoardApproved(PublicDashBoardSearchCritieria SearchTotalCollectionCriteria,
+			List<Object> preparedStatement) {
+		
+		String query = wsQueryBuilder.getSearchQueryStringPublicDashBoardApproved(SearchTotalCollectionCriteria , preparedStatement);
+			
+		Integer applicationapprovedcount = jdbcTemplate.queryForObject(query,preparedStatement.toArray(),Integer.class);
+		
+		return applicationapprovedcount;
+	}
+	
+	private Double publicDashBoardTimeTaken(PublicDashBoardSearchCritieria SearchTotalCollectionCriteria,
+			List<Object> preparedStatement) {
+		
+		String query = wsQueryBuilder.getSearchQueryStringPublicDashBoardTimeTaken(SearchTotalCollectionCriteria , preparedStatement);
+			
+		Double applicationapprovedtimetaken = jdbcTemplate.queryForObject(query,preparedStatement.toArray() , Double.class);
+		
+		return applicationapprovedtimetaken;
 	}
 	
 

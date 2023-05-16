@@ -14,6 +14,8 @@ import org.egov.waterconnection.config.WSConfiguration;
 import org.egov.waterconnection.constants.WCConstants;
 import org.egov.waterconnection.model.AuditDetails;
 import org.egov.waterconnection.model.Property;
+import org.egov.waterconnection.model.PublicDashBoardSearchCritieria;
+import org.egov.waterconnection.model.ResponseData;
 import org.egov.waterconnection.model.SMSRequest;
 import org.egov.waterconnection.model.SMSRequest.SMSRequestBuilder;
 import org.egov.waterconnection.model.SearchCriteria;
@@ -383,5 +385,28 @@ public class WaterServiceImpl implements WaterService {
 	public List<WaterConnection> getWaterConnectionsListForGetAPI(SearchCriteria criteria,
 			RequestInfo requestInfo) {
 		return waterDao.getAPI(criteria, requestInfo);
+	}
+	
+	
+	/**
+	 * 
+	 * @param criteria WaterConnectionSearchCriteria contains search criteria on water & sewerage connection
+	 * @param requestInfo 
+	 * @return List(Count) of matching water & sewerage connection
+	 */
+	public ResponseData searchPublicDashBoardCount(PublicDashBoardSearchCritieria SearchTotalCollectionCriteria) {
+		ResponseData waterConnectionList;
+		waterConnectionList = getPublicDashBoardSearchCount(SearchTotalCollectionCriteria);
+		return waterConnectionList;
+	}
+	
+	/**
+	 * 
+	 * @param criteria WaterConnectionSearchCriteria contains search criteria on water & sewerage connection
+	 * @param requestInfo 
+	 * @return List(Count) of matching water & sewerage connection
+	 */
+	public ResponseData getPublicDashBoardSearchCount(PublicDashBoardSearchCritieria SearchTotalCollectionCriteria) {
+		return waterDao.searchPublicDashBoardCount(SearchTotalCollectionCriteria);
 	}
 }
