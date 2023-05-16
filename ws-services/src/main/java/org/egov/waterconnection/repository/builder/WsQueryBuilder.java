@@ -537,11 +537,16 @@ public class WsQueryBuilder {
 	
 	private static final String PUBLIC_DASHBOARD_WATER_SEARCH =  "select count(*) from eg_ws_application ewa " ;
 	
-	private static final String PUBLIC_DASHBOARD_WATER_SEARCH_APPROVED =  "select SUM(case when ewa.applicationstatus = 'CONNECTION_ACTIVATED' then 1 else 0 end) from eg_ws_application ewa " ;
+	private static final String PUBLIC_DASHBOARD_WATER_SEARCH_APPROVED =  "select SUM(case when ewa.applicationstatus in ('CONNECTION_ACTIVATED','METER_UPDATED',"
+			+ "'CONNECTION_TYPE_CHANGED','TUBEWELL_CONNECTION_ACTIVATED','CONNECTION_REACTIVATED','CONNECTION_EXTENDED',"
+			+ "'CONNECTION_UPDATED','CONNECTION_CLOSED','TEMPORARY_CONNECTION_CLOSED','METER_TESTED',"
+			+ "'CONNECTION_TARIFF_CHANGED','CONNECTION_ACCOUNT_NUMBER_CHANGED','CLOSED_CONNECTION') then 1 else 0 end) from eg_ws_application ewa " ;
 	
-	private static final String PUBLIC_DASHBOARD_WATER_SEARCH_TIME_TAKEN_APPROVED =  "select \r\n"
-			+ "SUM(case when ewa.applicationstatus  = 'CONNECTION_ACTIVATED' then to_timestamp(ewa.lastmodifiedtime / 1000)::date - to_timestamp(ewa.createdtime / 1000)::date else 0 end) approveddays\r\n"
-			+ "from eg_ws_application ewa " ;
+	private static final String PUBLIC_DASHBOARD_WATER_SEARCH_TIME_TAKEN_APPROVED =  "select SUM(case when ewa.applicationstatus in ('CONNECTION_ACTIVATED','METER_UPDATED',"
+			+ "	'CONNECTION_TYPE_CHANGED','TUBEWELL_CONNECTION_ACTIVATED','CONNECTION_REACTIVATED','CONNECTION_EXTENDED',"
+			+ "	'CONNECTION_UPDATED','CONNECTION_CLOSED','TEMPORARY_CONNECTION_CLOSED','METER_TESTED',"
+			+ "	'CONNECTION_TARIFF_CHANGED','CONNECTION_ACCOUNT_NUMBER_CHANGED','CLOSED_CONNECTION') then to_timestamp(ewa.lastmodifiedtime / 1000)::date - to_timestamp(ewa.createdtime / 1000)::date else 0 end) approveddays\r\n"
+			+ " from eg_ws_application ewa " ;
 	
 	/**
 	 * 
