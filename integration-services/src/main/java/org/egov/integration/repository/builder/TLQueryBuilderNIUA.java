@@ -3,10 +3,17 @@ package org.egov.integration.repository.builder;
 import java.util.List;
 
 import org.egov.integration.model.RequestData;
+import org.egov.integration.model.TLPublicDashboardRequest;
 import org.springframework.stereotype.Component;
 
 @Component
 public class TLQueryBuilderNIUA {
+
+	public static final String QUERY_TL_PUBLIC_DASHBOARD = "select\r\n" + "	count(1) totalApplicationsReceived,\r\n"
+			+ "	count(case when ett.status = 'APPROVED' then 1 end) totalApplicationsApproved,\r\n"
+			+ "	SUM(case when ett.status = 'APPROVED' then to_timestamp(ett.lastmodifiedtime / 1000)::date - to_timestamp(ett.createdtime / 1000)::date end)/ count(case when ett.status = 'APPROVED' then 1 end) timeTakenForApproval\r\n"
+			+ "from\r\n" + "	eg_tl_tradelicense ett\r\n" + "where\r\n" + "	ett.tenantid = 'ch.chandigarh'\r\n"
+			+ "	and ett.createdtime >= ?\r\n" + " and ett.createdtime <= ?";
 
 	public static final String QUERY_NIUA = "((\r\n" + "select\r\n"
 			+ "	'todaysCollection' ccc , ett.businessservice as name , SUM(py.totaldue) as value, SUM(case when ett.status = 'APPROVED' then 1 else 0 end) approvedLicense, SUM(case when ett.status = 'APPROVED' then to_timestamp(ett.lastmodifiedtime / 1000)::date - to_timestamp(ett.createdtime / 1000)::date else 0 end) approvedCompletionDaysLicense\r\n"
@@ -66,7 +73,7 @@ public class TLQueryBuilderNIUA {
 			+ "			ett.tenantid = 'ch.chandigarh'\r\n" + "			and ett.createdtime >= ?\r\n"
 			+ "			and ett.createdtime <= ?))\r\n"
 			+ "	and taxheadcode not in ('CTL.OLD_BOOK_MARKET_PENALTY' , 'CTL.DHOBI_GHAT_PENALTY' , 'CTL.REHRI_DRIVING_LICENSE_PENALTY', 'CTL.REHRI_REGISTRATION_PENALTY')";
-	
+
 //	public static final String QUERY_NIUA = "(( select 'todaysCollection' ccc ,\r\n"
 //			+ "			      ett.businessservice as name ,\r\n" + "			      SUM(py.totaldue) as value \r\n"
 //			+ "			      from eg_tl_tradelicense ett \r\n"
@@ -147,5 +154,13 @@ public class TLQueryBuilderNIUA {
 
 		// enrichCriteriaForUpdateSearch(builder,preparedStmtList,criteria);
 
+	}
+
+	public String getTLPublicDashboardSearchQuery(TLPublicDashboardRequest tlPublicDashboardRequest,
+			List<Object> preparedStmtList) {
+		StringBuilder builder = new StringBuilder(QUERY_TL_PUBLIC_DASHBOARD);
+		preparedStmtList.add(tlPublicDashboardRequest.getFromDate());
+		preparedStmtList.add(tlPublicDashboardRequest.getToDate());
+		return builder.toString();
 	}
 }

@@ -11,6 +11,9 @@ import org.egov.integration.config.EawasConfiguration;
 import org.egov.integration.model.EawasRequestInfoWrapper;
 import org.egov.integration.model.RequestData;
 import org.egov.integration.model.ResponseInfoWrapper;
+import org.egov.integration.model.TLDashboardRequestInfoWrapper;
+import org.egov.integration.model.TLPublicDashboard;
+import org.egov.integration.model.TLPublicDashboardResponseInfo;
 import org.egov.integration.repository.TLniuaRepository;
 //import org.egov.tl.web.models.TradeLicense;
 //import org.egov.tl.web.models.TradeLicenseSearchCriteria;
@@ -102,6 +105,25 @@ public class EawasService {
 //	        enrichmentService.enrichTLCriteriaWithOwnerids(criteria,userDetailResponse);
 		Metrics licensesNIUA = tLniuaRepository.getLicensesNIUA(criteria);
 		return licensesNIUA;
+	}
+
+	public TLPublicDashboardResponseInfo publicDashboard(TLDashboardRequestInfoWrapper dashboardRequestInfoWrapper) {
+
+		try {
+			TLPublicDashboard tlPublicDashboard = tLniuaRepository.publicDashboard(dashboardRequestInfoWrapper.getDataPayload());
+
+			if (tlPublicDashboard == null)
+				return TLPublicDashboardResponseInfo.builder()
+						.responseInfo(ResponseInfo.builder().status("Failed").msgId("No Data Available.").build())
+						.build();
+
+			return TLPublicDashboardResponseInfo.builder()
+					.responseInfo(ResponseInfo.builder().status("Success").build()).tlPublicDashboard(tlPublicDashboard)
+					.build();
+		} catch (Exception e) {
+			return TLPublicDashboardResponseInfo.builder()
+					.responseInfo(ResponseInfo.builder().status("Failed").msgId(e.getMessage()).build()).build();
+		}
 	}
 
 }
