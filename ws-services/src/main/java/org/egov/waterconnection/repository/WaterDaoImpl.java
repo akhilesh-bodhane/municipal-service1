@@ -484,6 +484,10 @@ public class WaterDaoImpl implements WaterDao {
 			
 		Integer applicationapprovedcount = jdbcTemplate.queryForObject(query,preparedStatement.toArray(),Integer.class);
 		
+		if(applicationapprovedcount ==null) {
+			applicationapprovedcount=0;
+		}
+		
 		return applicationapprovedcount;
 	}
 	
@@ -493,6 +497,10 @@ public class WaterDaoImpl implements WaterDao {
 		String query = wsQueryBuilder.getSearchQueryStringPublicDashBoardTimeTaken(SearchTotalCollectionCriteria , preparedStatement);
 			
 		Double applicationapprovedtimetaken = jdbcTemplate.queryForObject(query,preparedStatement.toArray() , Double.class);
+		
+		if(applicationapprovedtimetaken ==null) {
+			applicationapprovedtimetaken=0.0;
+		}
 		
 		return applicationapprovedtimetaken;
 	}

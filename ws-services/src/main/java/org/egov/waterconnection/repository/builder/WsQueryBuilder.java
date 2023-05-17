@@ -1120,6 +1120,11 @@ public class WsQueryBuilder {
 			query.append("  ewa.createdtime <= ? ");
 			preparedStatement.add(SearchTotalCollectionCriteria.getDataPayload().getToDate());
 		}
+		if (SearchTotalCollectionCriteria.getDataPayload().getServicetype() != null) {
+			addClauseIfRequired(preparedStatement, query);
+			query.append("  ewa.activitytype = ? ");
+			preparedStatement.add(SearchTotalCollectionCriteria.getDataPayload().getServicetype());
+		}
 		
 		return query.toString();
 				
@@ -1139,6 +1144,11 @@ public class WsQueryBuilder {
 			query.append("  ewa.createdtime <= ? ");
 			preparedStatement.add(SearchTotalCollectionCriteria.getDataPayload().getToDate());
 		}
+		if (SearchTotalCollectionCriteria.getDataPayload().getServicetype() != null) {
+			addClauseIfRequired(preparedStatement, query);
+			query.append("  ewa.activitytype = ? ");
+			preparedStatement.add(SearchTotalCollectionCriteria.getDataPayload().getServicetype());
+		}
 		
 		return query.toString();
 				
@@ -1157,6 +1167,11 @@ public class WsQueryBuilder {
 			addClauseIfRequired(preparedStatement, query);
 			query.append("  ewa.createdtime <= ? ");
 			preparedStatement.add(SearchTotalCollectionCriteria.getDataPayload().getToDate());
+		}
+		if (SearchTotalCollectionCriteria.getDataPayload().getServicetype() != null) {
+			addClauseIfRequired(preparedStatement, query);
+			query.append("  ewa.activitytype = ? ");
+			preparedStatement.add(SearchTotalCollectionCriteria.getDataPayload().getServicetype());
 		}
 		
 		return query.toString();
