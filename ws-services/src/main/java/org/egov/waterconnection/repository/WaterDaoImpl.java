@@ -453,7 +453,7 @@ public class WaterDaoImpl implements WaterDao {
      int timeTakenForApproval=0;
      if(ApplicationApproved > 0) {
     	 ApplicationTimeTaken= ApplicationApprovedTimeTaken / ApplicationApproved;
-    	 timeTakenForApproval =(int)Math.round(ApplicationTimeTaken);
+    	 timeTakenForApproval =(int)Math.ceil(ApplicationTimeTaken);
      }
         
      ResponseData rs=new ResponseData();
