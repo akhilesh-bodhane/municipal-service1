@@ -22,7 +22,7 @@ public class TLPublicDashboardResponseInfo {
 	@JsonProperty("responseInfo")
 	private ResponseInfo responseInfo;
 
-	@JsonProperty("tlPublicDashboard")
+	@JsonProperty("responseData")
 	private TLPublicDashboard tlPublicDashboard;
 
 }
