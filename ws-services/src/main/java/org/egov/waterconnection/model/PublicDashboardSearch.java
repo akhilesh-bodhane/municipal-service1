@@ -25,5 +25,8 @@ public class PublicDashboardSearch {
 	
 	@JsonProperty("servicename")
 	private String servicename;
+	
+	@JsonProperty("servicetype")
+	private String servicetype;
 
 }

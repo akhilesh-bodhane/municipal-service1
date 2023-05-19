@@ -448,12 +448,14 @@ public class WaterDaoImpl implements WaterDao {
      int ApplicationApproved = publicDashBoardApproved(SearchTotalCollectionCriteria,preparedStatement);
      
      double ApplicationApprovedTimeTaken = publicDashBoardTimeTaken(SearchTotalCollectionCriteria,preparedStatement);
-     
+     System.out.println("ApplicationApprovedTimeTaken::"+ApplicationApprovedTimeTaken);
      double ApplicationTimeTaken=0.0;
      int timeTakenForApproval=0;
      if(ApplicationApproved > 0) {
     	 ApplicationTimeTaken= ApplicationApprovedTimeTaken / ApplicationApproved;
-    	 timeTakenForApproval =(int)Math.round(ApplicationTimeTaken);
+    	 System.out.println("ApplicationTimeTaken::"+ApplicationTimeTaken);
+    	 timeTakenForApproval =(int)Math.ceil(ApplicationTimeTaken);
+    	 System.out.println("timeTakenForApproval::"+timeTakenForApproval);
      }
         
      ResponseData rs=new ResponseData();
@@ -484,6 +486,10 @@ public class WaterDaoImpl implements WaterDao {
 			
 		Integer applicationapprovedcount = jdbcTemplate.queryForObject(query,preparedStatement.toArray(),Integer.class);
 		
+		if(applicationapprovedcount ==null) {
+			applicationapprovedcount=0;
+		}
+		
 		return applicationapprovedcount;
 	}
 	
@@ -491,8 +497,12 @@ public class WaterDaoImpl implements WaterDao {
 			List<Object> preparedStatement) {
 		
 		String query = wsQueryBuilder.getSearchQueryStringPublicDashBoardTimeTaken(SearchTotalCollectionCriteria , preparedStatement);
-			
+		 System.out.println("query::"+query);	
 		Double applicationapprovedtimetaken = jdbcTemplate.queryForObject(query,preparedStatement.toArray() , Double.class);
+		System.out.println("publicDashBoardTimeTaken::"+applicationapprovedtimetaken);
+		if(applicationapprovedtimetaken ==null) {
+			applicationapprovedtimetaken=0.0;
+		}
 		
 		return applicationapprovedtimetaken;
 	}
