@@ -1122,8 +1122,13 @@ public class WsQueryBuilder {
 		}
 		if (SearchTotalCollectionCriteria.getDataPayload().getServicetype() != null) {
 			addClauseIfRequired(preparedStatement, query);
-			query.append("  ewa.activitytype = ? ");
-			preparedStatement.add(SearchTotalCollectionCriteria.getDataPayload().getServicetype());
+			if("CONNECTION_CONVERSION".equals(SearchTotalCollectionCriteria.getDataPayload().getServicetype())) {
+				query.append("  ewa.activitytype in('CONNECTION_CONVERSION_TARIFF','CONNECTION_CONVERSION') ");				
+				}else {
+				query.append("  ewa.activitytype = ? ");	
+				preparedStatement.add(SearchTotalCollectionCriteria.getDataPayload().getServicetype());
+				}
+			
 		}
 		
 		return query.toString();
@@ -1146,8 +1151,12 @@ public class WsQueryBuilder {
 		}
 		if (SearchTotalCollectionCriteria.getDataPayload().getServicetype() != null) {
 			addClauseIfRequired(preparedStatement, query);
-			query.append("  ewa.activitytype = ? ");
-			preparedStatement.add(SearchTotalCollectionCriteria.getDataPayload().getServicetype());
+			if("CONNECTION_CONVERSION".equals(SearchTotalCollectionCriteria.getDataPayload().getServicetype())) {
+				query.append("  ewa.activitytype in('CONNECTION_CONVERSION_TARIFF','CONNECTION_CONVERSION') ");
+				}else {
+				query.append("  ewa.activitytype = ? ");
+				preparedStatement.add(SearchTotalCollectionCriteria.getDataPayload().getServicetype());
+				}			
 		}
 		
 		return query.toString();
@@ -1170,8 +1179,12 @@ public class WsQueryBuilder {
 		}
 		if (SearchTotalCollectionCriteria.getDataPayload().getServicetype() != null) {
 			addClauseIfRequired(preparedStatement, query);
-			query.append("  ewa.activitytype = ? ");
-			preparedStatement.add(SearchTotalCollectionCriteria.getDataPayload().getServicetype());
+			if("CONNECTION_CONVERSION".equals(SearchTotalCollectionCriteria.getDataPayload().getServicetype())) {
+				query.append("  ewa.activitytype in('CONNECTION_CONVERSION_TARIFF','CONNECTION_CONVERSION') ");
+				}else {
+				query.append("  ewa.activitytype = ? ");	
+				preparedStatement.add(SearchTotalCollectionCriteria.getDataPayload().getServicetype());
+				}			
 		}
 		
 		return query.toString();
