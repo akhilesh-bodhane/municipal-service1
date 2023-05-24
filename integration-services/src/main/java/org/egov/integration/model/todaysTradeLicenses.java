@@ -39,7 +39,7 @@ public class todaysTradeLicenses   {
 	
 	@JsonProperty("buckets")
 	@Valid
-	private List<buckets> buckets = null;
+	private List<TLBucket> buckets = null;
         
         
 

@@ -31,13 +31,13 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class todaysCollection {
+public class TodaysCollection {
 
 	@JsonProperty("groupBy")
 	private String groupBy = null;
 
 	@JsonProperty("buckets")
 	@Valid
-	private List<buckets> buckets = null;
+	private List<TLBucket> buckets = null;
 
 }
