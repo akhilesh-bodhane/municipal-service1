@@ -10,6 +10,7 @@ import org.egov.integration.model.MinistryMaster;
 import org.egov.integration.model.RequestData;
 import org.egov.integration.model.RtiRequestInfoWrapper;
 import org.egov.integration.model.TLDashboardRequestInfoWrapper;
+import org.egov.integration.model.TLNIUAModel;
 import org.egov.integration.model.TLPublicDashboard;
 import org.egov.integration.model.TLPublicDashboardRequest;
 import org.egov.integration.repository.builder.RtiQueryBuilder;
@@ -17,6 +18,7 @@ import org.egov.integration.repository.builder.TLQueryBuilderNIUA;
 import org.egov.integration.repository.rowmapper.RtiRowMapper;
 import org.egov.integration.repository.rowmapper.TLPublicDashboardRowMapper;
 import org.egov.integration.repository.rowmapper.TLRowMapperNIUA;
+import org.egov.integration.repository.rowmapper.TLRowMapperNIUAUpdated;
 import org.egov.integration.model.Metrics;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -34,6 +36,9 @@ public class TLniuaRepository {
 
 	@Autowired
 	private TLRowMapperNIUA rowMapperNIUA;
+
+	@Autowired
+	private TLRowMapperNIUAUpdated mapperNIUAUpdated;
 
 	@Autowired
 	private TLPublicDashboardRowMapper dashboardRowMapper;
@@ -62,5 +67,14 @@ public class TLniuaRepository {
 		String query = queryBuilder.getTLPublicDashboardSearchQuery(tlPublicDashboardRequest, preparedStmtList);
 		dashboard = jdbcTemplate.query(query, preparedStmtList.toArray(), dashboardRowMapper);
 		return dashboard;
+	}
+
+	public List<TLNIUAModel> getLicensesNIUAUpdated(RequestData criteria) {
+		List<Object> preparedStmtList = new ArrayList<>();
+		String query = queryBuilder.getTLSearchQueryUpdated(criteria, preparedStmtList);
+//	        log.info("Query: " + query);
+		List<TLNIUAModel> query2 = jdbcTemplate.query(query, preparedStmtList.toArray(), mapperNIUAUpdated);
+//	        sortChildObjectsById(licenses);
+		return query2;
 	}
 }

@@ -5,10 +5,10 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.egov.integration.model.Metrics;
+import org.egov.integration.model.TodaysCollection;
 import org.egov.integration.model.applicationsMovedToday;
 import org.egov.integration.model.buckets;
-import org.egov.integration.model.Metrics;
-import org.egov.integration.model.todaysCollection;
 import org.egov.integration.model.todaysTradeLicenses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
@@ -35,12 +35,12 @@ public class TLRowMapperNIUA implements ResultSetExtractor<Metrics> {
 		List<buckets> listBCKTamt = new ArrayList<>();
 
 		List<todaysTradeLicenses> listTTL = new ArrayList<todaysTradeLicenses>();
-		List<todaysCollection> listTC = new ArrayList<todaysCollection>();
+		List<TodaysCollection> listTC = new ArrayList<TodaysCollection>();
 		List<applicationsMovedToday> listAMT = new ArrayList<applicationsMovedToday>();
 
 		todaysTradeLicenses ttl = new todaysTradeLicenses();
 		ttl.setGroupBy("status");
-		todaysCollection TC = new todaysCollection();
+		TodaysCollection TC = new TodaysCollection();
 		TC.setGroupBy("tradeType");
 		applicationsMovedToday amt = new applicationsMovedToday();
 		amt.setGroupBy("status");
@@ -48,6 +48,8 @@ public class TLRowMapperNIUA implements ResultSetExtractor<Metrics> {
 
 		Integer approvedLicense = 0;
 		Integer approvedCompletionDaysLicense = 0;
+		Integer todaysApprovedApplicationsWithinSLA = 0;
+		Integer avgDaysForApplicationApproval = 0;
 		while (rs.next()) {
 
 			approvedLicense = approvedLicense
@@ -57,61 +59,70 @@ public class TLRowMapperNIUA implements ResultSetExtractor<Metrics> {
 							? rs.getString("approvedCompletionDaysLicense")
 							: "0");
 
-			String ccc = rs.getString("ccc");
-			String name = rs.getString("name");
-			int value = rs.getInt("value");
-			buckets bckt = new buckets();
-			if (ccc.equalsIgnoreCase("todaysTradeLicenses")) {
-
-				bckt.setName(name);
-				bckt.setValue(value);
-				listBCKTttl.add(bckt);
-
-			}
-
-			else if (ccc.equalsIgnoreCase("todaysCollection")) {
-
-				bckt.setName(name);
-				bckt.setValue(value);
-				listBCKTtc.add(bckt);
-
-			}
-
-			else if (ccc.equalsIgnoreCase("applicationsMovedToday")) {
-
-				bckt.setName(name);
-				bckt.setValue(value);
-				listBCKTamt.add(bckt);
-
-			}
-
-			else if (ccc.equalsIgnoreCase("transactions")) {
-				mtrcs.setTransactions(value);
-			} else if (ccc.equalsIgnoreCase("todaysApplications")) {
-				mtrcs.setTodaysApplications(value);
-
-			} else if (ccc.equalsIgnoreCase("tlTax")) {
-				mtrcs.setTlTax(value);
-			} else if (ccc.equalsIgnoreCase("adhocPenalty")) {
-				mtrcs.setAdhocPenalty(value);
-			} else if (ccc.equalsIgnoreCase("adhocRebate")) {
-				mtrcs.setAdhocRebate(value);
-			}
-
-			if (ccc.equalsIgnoreCase("todaysTradeLicenses")) {
-				ttl.setBuckets(listBCKTttl);
-
-			}
-
-			else if (ccc.equalsIgnoreCase("todaysCollection")) {
-				TC.setBuckets(listBCKTtc);
-
-			}
-
-			else if (ccc.equalsIgnoreCase("applicationsMovedToday")) {
-				amt.setBuckets(listBCKTamt);
-
-			}
+//			todaysApprovedApplicationsWithinSLA = todaysApprovedApplicationsWithinSLA
+//					+ Integer.parseInt(rs.getString("todaysApprovedApplicationsWithinSLA") != null
+//							? rs.getString("todaysApprovedApplicationsWithinSLA")
+//							: "0");
+//			avgDaysForApplicationApproval = avgDaysForApplicationApproval
+//					+ Integer.parseInt(rs.getString("avgDaysForApplicationApproval") != null
+//							? rs.getString("avgDaysForApplicationApproval")
+//							: "0");
+//
+//			String ccc = rs.getString("ccc");
+//			String name = rs.getString("name");
+//			int value = rs.getInt("value");
+//			buckets bckt = new buckets();
+//			if (ccc.equalsIgnoreCase("todaysTradeLicenses")) {
+//
+//				bckt.setName(name);
+//				bckt.setValue(value);
+//				listBCKTttl.add(bckt);
+//
+//			}
+//
+//			else if (ccc.equalsIgnoreCase("todaysCollection")) {
+//
+//				bckt.setName(name);
+//				bckt.setValue(value);
+//				listBCKTtc.add(bckt);
+//
+//			}
+//
+//			else if (ccc.equalsIgnoreCase("applicationsMovedToday")) {
+//
+//				bckt.setName(name);
+//				bckt.setValue(value);
+//				listBCKTamt.add(bckt);
+//
+//			}
+//
+//			else if (ccc.equalsIgnoreCase("transactions")) {
+//				mtrcs.setTransactions(value);
+//			} else if (ccc.equalsIgnoreCase("todaysApplications")) {
+//				mtrcs.setTodaysApplications(value);
+//
+//			} else if (ccc.equalsIgnoreCase("tlTax")) {
+//				mtrcs.setTlTax(value);
+//			} else if (ccc.equalsIgnoreCase("adhocPenalty")) {
+//				mtrcs.setAdhocPenalty(value);
+//			} else if (ccc.equalsIgnoreCase("adhocRebate")) {
+//				mtrcs.setAdhocRebate(value);
+//			}
+//
+//			if (ccc.equalsIgnoreCase("todaysTradeLicenses")) {
+//				ttl.setBuckets(listBCKTttl);
+//
+//			}
+//
+//			else if (ccc.equalsIgnoreCase("todaysCollection")) {
+////				TC.setBuckets(listBCKTtc);
+//
+//			}
+//
+//			else if (ccc.equalsIgnoreCase("applicationsMovedToday")) {
+//				amt.setBuckets(listBCKTamt);
+//
+//			}
 
 		}
 		mtrcs.setStipulatedDays(approvedLicense > 0 ? approvedCompletionDaysLicense / approvedLicense : 0);

@@ -21,7 +21,9 @@ import lombok.Setter;
 import lombok.Builder;
 
 /**
- * Contract class to send response. Array of tradelicense items are used in case of search results or response for create, whereas single tradelicense item is used for update
+ * Contract class to send response. Array of tradelicense items are used in case
+ * of search results or response for create, whereas single tradelicense item is
+ * used for update
  */
 @ApiModel(description = "Contract class to send response. Array of tradelicense items are used in case of search results or response for create, whereas single tradelicense item is used for update")
 @Validated
@@ -32,18 +34,13 @@ import lombok.Builder;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class applicationsMovedToday   {
-        
+public class applicationsMovedToday {
+
 	@JsonProperty("groupBy")
 	private String groupBy = null;
-	
+
 	@JsonProperty("buckets")
 	@Valid
-	private List<buckets> buckets = null;
-        
-        
+	private List<TLBucket> buckets = null;
 
-
-      
 }
-

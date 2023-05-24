@@ -35,13 +35,9 @@ import lombok.Builder;
 @Builder
 public class Metrics {
 
-	@JsonProperty("StipulatedDays")
-	@Valid
-	private Integer stipulatedDays;
-
 	@JsonProperty("transactions")
 	@Valid
-	private int transactions;
+	private Double transactions;
 
 	@JsonProperty("todaysApplications")
 	@Valid
@@ -49,23 +45,39 @@ public class Metrics {
 
 	@JsonProperty("tlTax")
 	@Valid
-	private int tlTax;
+	private Double tlTax;
 
 	@JsonProperty("adhocPenalty")
 	@Valid
-	private int adhocPenalty;
+	private Double adhocPenalty;
 
 	@JsonProperty("adhocRebate")
 	@Valid
-	private int adhocRebate;
+	private Double adhocRebate;
 
 	@JsonProperty("todaysLicenseIssuedWithinSLA")
 	@Valid
 	private int todaysLicenseIssuedWithinSLA;
 
+	@JsonProperty("todaysApprovedApplications")
+	@Valid
+	private int todaysApprovedApplications;
+
+	@JsonProperty("todaysApprovedApplicationsWithinSLA")
+	@Valid
+	private int todaysApprovedApplicationsWithinSLA;
+
+	@JsonProperty("avgDaysForApplicationApproval")
+	@Valid
+	private Integer avgDaysForApplicationApproval;
+
+	@JsonProperty("StipulatedDays")
+	@Valid
+	private Integer stipulatedDays;
+
 	@JsonProperty("todaysCollection")
 	@Valid
-	private List<todaysCollection> todaysCollection = null;
+	private List<TodaysCollection> TodaysCollection = null;
 
 	@JsonProperty("todaysTradeLicenses")
 	@Valid
