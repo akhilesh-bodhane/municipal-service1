@@ -78,6 +78,14 @@ public class metrics {
     @Valid
     private int todaysCompletedApplicationsWithinSLA ;
 	
+	@JsonProperty("avgDaysForApplicationApproval")
+    @Valid
+	private int avgDaysForApplicationApproval;
+	
+	@JsonProperty("StipulatedDays")
+    @Valid
+	private int StipulatedDays;
+	
 	
 	
 

@@ -534,6 +534,23 @@ public class WsQueryBuilder {
 			+ "			connectionholder.connectionid = conn.id";
 	
 	
+	private static final String WATER_SEARCH_QUERY_NIUA16 = "select SUM(case when ewa.applicationstatus in ('CONNECTION_ACTIVATED','METER_UPDATED',\r\n"
+			+ "			'CONNECTION_TYPE_CHANGED','TUBEWELL_CONNECTION_ACTIVATED','CONNECTION_REACTIVATED','CONNECTION_EXTENDED',\r\n"
+			+ "			'CONNECTION_UPDATED','CONNECTION_CLOSED','TEMPORARY_CONNECTION_CLOSED','METER_TESTED',\r\n"
+			+ "			'CONNECTION_TARIFF_CHANGED','CONNECTION_ACCOUNT_NUMBER_CHANGED','CLOSED_CONNECTION') then 1 else 0 end) from eg_ws_application ewa";
+	
+	private static final String WATER_SEARCH_QUERY_NIUA17= " select SUM(case when ewa.applicationstatus in ('CONNECTION_ACTIVATED','METER_UPDATED',\r\n"
+			+ "			'CONNECTION_TYPE_CHANGED','TUBEWELL_CONNECTION_ACTIVATED','CONNECTION_REACTIVATED','CONNECTION_EXTENDED',\r\n"
+			+ "			'CONNECTION_UPDATED','CONNECTION_CLOSED','TEMPORARY_CONNECTION_CLOSED','METER_TESTED',\r\n"
+			+ "			'CONNECTION_TARIFF_CHANGED','CONNECTION_ACCOUNT_NUMBER_CHANGED','CLOSED_CONNECTION') then to_timestamp(ewa.lastmodifiedtime / 1000)::date - to_timestamp(ewa.createdtime / 1000)::date else 0 end) approveddays\r\n"
+			+ "			 from eg_ws_application ewa";
+	
+	
+	private static final String WATER_SEARCH_QUERY_NIUA18 = " select SUM(case when ewa.applicationstatus in ('SEWERAGE_CONNECTION_ACTIVATED') then 1 else 0 end) from eg_sw_connection ewa";
+	
+	private static final String WATER_SEARCH_QUERY_NIUA19 = " select SUM(case when ewa.applicationstatus in ('SEWERAGE_CONNECTION_ACTIVATED') then to_timestamp(ewa.lastmodifiedtime / 1000)::date - to_timestamp(ewa.createdtime / 1000)::date else 0 end) approveddays from eg_sw_connection ewa";
+	
+	
 	
 	private static final String PUBLIC_DASHBOARD_WATER_SEARCH =  "select count(*) from eg_ws_application ewa " ;
 	
@@ -937,15 +954,81 @@ public class WsQueryBuilder {
 				preparedStatement.add(searchTotalCollectionCriteria.getToDate());
 			}
 		 
-		   
-		
-		
-		
+		return query.toString();
+			
+	}
+	
+	public String getWaterSearchQueryApprovedDaysNIUA(SearchTotalCollectionCriteria searchTotalCollectionCriteria, List<Object> preparedStatement) {
+		preparedStatement.clear();
+		StringBuilder query = null;
+		query = new StringBuilder(WATER_SEARCH_QUERY_NIUA16);
+		if (searchTotalCollectionCriteria.getFromDate() != null) {
+			addClauseIfRequired(preparedStatement, query);
+			query.append("  ewa.createdtime >= ?  ");
+			preparedStatement.add(searchTotalCollectionCriteria.getFromDate());
+		}
+		if (searchTotalCollectionCriteria.getToDate() != null) {
+			addClauseIfRequired(preparedStatement, query);
+			query.append("  ewa.createdtime <= ? ");
+			preparedStatement.add(searchTotalCollectionCriteria.getToDate());
+		}
 		
 		return query.toString();
+				
+	}
+	public String getWaterSearchQueryApprovedTimeTakenDaysNIUA(SearchTotalCollectionCriteria searchTotalCollectionCriteria, List<Object> preparedStatement) {
+		preparedStatement.clear();
+		StringBuilder query = null;
+		query = new StringBuilder(WATER_SEARCH_QUERY_NIUA17);
+		if (searchTotalCollectionCriteria.getFromDate() != null) {
+			addClauseIfRequired(preparedStatement, query);
+			query.append("  ewa.createdtime >= ?  ");
+			preparedStatement.add(searchTotalCollectionCriteria.getFromDate());
+		}
+		if (searchTotalCollectionCriteria.getToDate() != null) {
+			addClauseIfRequired(preparedStatement, query);
+			query.append("  ewa.createdtime <= ? ");
+			preparedStatement.add(searchTotalCollectionCriteria.getToDate());
+		}
 		
+		return query.toString();
+				
+	}
+	public String getSewerageSearchQueryApprovedNIUA(SearchTotalCollectionCriteria searchTotalCollectionCriteria, List<Object> preparedStatement) {
+		preparedStatement.clear();
+		StringBuilder query = null;
+		query = new StringBuilder(WATER_SEARCH_QUERY_NIUA18);
+		if (searchTotalCollectionCriteria.getFromDate() != null) {
+			addClauseIfRequired(preparedStatement, query);
+			query.append("  ewa.createdtime >= ?  ");
+			preparedStatement.add(searchTotalCollectionCriteria.getFromDate());
+		}
+		if (searchTotalCollectionCriteria.getToDate() != null) {
+			addClauseIfRequired(preparedStatement, query);
+			query.append("  ewa.createdtime <= ? ");
+			preparedStatement.add(searchTotalCollectionCriteria.getToDate());
+		}
 		
+		return query.toString();
+				
+	}
+	public String getSewerageSearchQueryApprovedTimeTakenNIUA(SearchTotalCollectionCriteria searchTotalCollectionCriteria, List<Object> preparedStatement) {
+		preparedStatement.clear();
+		StringBuilder query = null;
+		query = new StringBuilder(WATER_SEARCH_QUERY_NIUA19);
+		if (searchTotalCollectionCriteria.getFromDate() != null) {
+			addClauseIfRequired(preparedStatement, query);
+			query.append("  ewa.createdtime >= ?  ");
+			preparedStatement.add(searchTotalCollectionCriteria.getFromDate());
+		}
+		if (searchTotalCollectionCriteria.getToDate() != null) {
+			addClauseIfRequired(preparedStatement, query);
+			query.append("  ewa.createdtime <= ? ");
+			preparedStatement.add(searchTotalCollectionCriteria.getToDate());
+		}
 		
+		return query.toString();
+				
 	}
 	
 	

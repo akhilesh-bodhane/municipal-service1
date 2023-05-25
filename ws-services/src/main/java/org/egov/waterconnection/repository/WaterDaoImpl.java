@@ -368,7 +368,8 @@ public class WaterDaoImpl implements WaterDao {
 				.waterConnections(build6).pendingConnections(build7).transactions(trsa(transactions ,SearchTotalCollectionCriteria, preparedStatement, requestInfo))
 				.slaCompliance(transactions1).todaysTotalApplications(trsa(todaysTotalApplications ,SearchTotalCollectionCriteria, preparedStatement, requestInfo))
 				.todaysClosedApplications(trsa(todaysClosedApplications ,SearchTotalCollectionCriteria, preparedStatement, requestInfo))
-				.todaysCompletedApplicationsWithinSLA(transactions1)
+				.todaysCompletedApplicationsWithinSLA(transactions1).avgDaysForApplicationApproval(averageapprovedDays(SearchTotalCollectionCriteria, preparedStatement))
+				.StipulatedDays(averageapprovedDays(SearchTotalCollectionCriteria, preparedStatement))
 				.build();
 		
 		Gson gson = new Gson();
@@ -377,6 +378,57 @@ public class WaterDaoImpl implements WaterDao {
 
 
 		return build;
+	}
+	
+	private int  averageapprovedDays(SearchTotalCollectionCriteria searchTotalCollectionCriteria,List<Object> preparedStatement) {
+		
+		String query1 = wsQueryBuilder.getWaterSearchQueryApprovedDaysNIUA(searchTotalCollectionCriteria , preparedStatement);
+		
+		String query2 = wsQueryBuilder.getWaterSearchQueryApprovedTimeTakenDaysNIUA(searchTotalCollectionCriteria , preparedStatement);
+		
+		String query3 = wsQueryBuilder.getSewerageSearchQueryApprovedNIUA(searchTotalCollectionCriteria , preparedStatement);
+		
+		String query4 = wsQueryBuilder.getSewerageSearchQueryApprovedTimeTakenNIUA(searchTotalCollectionCriteria , preparedStatement);
+		
+		Integer waterapprovedapplication = jdbcTemplate.queryForObject(query1,preparedStatement.toArray() , Integer.class);
+		
+		Double watertimetakenforapproval = jdbcTemplate.queryForObject(query2,preparedStatement.toArray() , Double.class);
+		
+		Integer sewerageapprovedapplication = jdbcTemplate.queryForObject(query3,preparedStatement.toArray() , Integer.class);
+		
+		Double seweragetimetakenforapproval = jdbcTemplate.queryForObject(query4,preparedStatement.toArray() , Double.class);
+		
+		if(waterapprovedapplication ==null) {
+			waterapprovedapplication=0;
+		}
+		if(watertimetakenforapproval ==null) {
+			watertimetakenforapproval=0.0;
+		}
+		if(sewerageapprovedapplication ==null) {
+			sewerageapprovedapplication=0;
+		}
+		if(seweragetimetakenforapproval ==null) {
+			seweragetimetakenforapproval=0.0;
+		}
+		
+		Double WaterApplicationAverageTimeTaken=0.0;
+		Double sewerageApplicationAverageTimeTaken=0.0;
+		int watertimeTakenForApproval=0;
+		int seweragetimeTakenForApproval=0;
+		int avgDaysForApplicationApproval=0;
+		
+		WaterApplicationAverageTimeTaken= watertimetakenforapproval / waterapprovedapplication;
+		
+		watertimeTakenForApproval =(int)Math.ceil(WaterApplicationAverageTimeTaken);
+		
+		sewerageApplicationAverageTimeTaken= seweragetimetakenforapproval / sewerageapprovedapplication;
+		
+		seweragetimeTakenForApproval =(int)Math.ceil(sewerageApplicationAverageTimeTaken);
+		
+		avgDaysForApplicationApproval=watertimeTakenForApproval + seweragetimeTakenForApproval;
+		
+		return avgDaysForApplicationApproval;
+		
 	}
 
 	private int  trsa(String str , SearchTotalCollectionCriteria searchTotalCollectionCriteria,
