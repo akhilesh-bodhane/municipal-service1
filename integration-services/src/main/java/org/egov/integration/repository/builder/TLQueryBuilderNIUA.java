@@ -17,14 +17,14 @@ public class TLQueryBuilderNIUA {
 
 	public static final String QUERY_NIUA_UPDATED = "select\r\n" + "	tl.businessservice tradeType,\r\n"
 			+ "	COUNT(case when tl.status = 'APPROVED' then 1 end) approvedLicense,\r\n" + "	tl.status,\r\n"
-			+ "	COUNT(case when to_date(TO_CHAR(to_timestamp(tl.createdtime / 1000), 'DD/MM/YYYY'), 'DD/MM/YYYY') = NOW()::date then 1 end) todaysTradeLicenses,\r\n"
-			+ "	COUNT(case when to_date(TO_CHAR(to_timestamp(tl.lastmodifiedtime / 1000), 'DD/MM/YYYY'), 'DD/MM/YYYY') = NOW()::date then 1 end) applicationsMovedToday,\r\n"
-			+ "	COUNT(case when to_date(TO_CHAR(to_timestamp(ts.created_time / 1000), 'DD/MM/YYYY'), 'DD/MM/YYYY') = NOW()::date then 1 end) transactions,\r\n"
+			+ "	COUNT(case when to_date(TO_CHAR(to_timestamp(tl.createdtime / 1000), 'DD/MM/YYYY'), 'DD/MM/YYYY') = to_date(TO_CHAR(to_timestamp(? / 1000), 'DD/MM/YYYY'), 'DD/MM/YYYY')::date then 1 end) todaysTradeLicenses,\r\n"
+			+ "	COUNT(case when to_date(TO_CHAR(to_timestamp(tl.lastmodifiedtime / 1000), 'DD/MM/YYYY'), 'DD/MM/YYYY') = to_date(TO_CHAR(to_timestamp(? / 1000), 'DD/MM/YYYY'), 'DD/MM/YYYY')::date then 1 end) applicationsMovedToday,\r\n"
+			+ "	COUNT(case when to_date(TO_CHAR(to_timestamp(ts.created_time / 1000), 'DD/MM/YYYY'), 'DD/MM/YYYY') = to_date(TO_CHAR(to_timestamp(? / 1000), 'DD/MM/YYYY'), 'DD/MM/YYYY')::date then 1 end) transactions,\r\n"
 			+ "	ts.gateway,\r\n"
-			+ "	COUNT(case when tl.status = 'APPROVED' and to_date(TO_CHAR(to_timestamp(tl.createdtime / 1000), 'DD/MM/YYYY'), 'DD/MM/YYYY') = NOW()::date then 1 end) todaysApprovedApplications,\r\n"
-			+ "	SUM(case when ts.created_time is not null and to_date(TO_CHAR(to_timestamp(ts.created_time / 1000), 'DD/MM/YYYY'), 'DD/MM/YYYY') = NOW()::date then ts.txn_amount else 0 end) todaysCollection,\r\n"
+			+ "	COUNT(case when tl.status = 'APPROVED' and to_date(TO_CHAR(to_timestamp(tl.createdtime / 1000), 'DD/MM/YYYY'), 'DD/MM/YYYY') = to_date(TO_CHAR(to_timestamp(? / 1000), 'DD/MM/YYYY'), 'DD/MM/YYYY')::date then 1 end) todaysApprovedApplications,\r\n"
+			+ "	SUM(case when ts.created_time is not null and to_date(TO_CHAR(to_timestamp(ts.created_time / 1000), 'DD/MM/YYYY'), 'DD/MM/YYYY') = to_date(TO_CHAR(to_timestamp(? / 1000), 'DD/MM/YYYY'), 'DD/MM/YYYY')::date then ts.txn_amount else 0 end) todaysCollection,\r\n"
 			+ "	SUM(case when tl.status = 'APPROVED' then to_timestamp(tl.lastmodifiedtime / 1000)::date - to_timestamp(tl.createdtime / 1000)::date else 0 end) approvedCompletionDaysLicense,\r\n"
-			+ "	count(case when tl.status = 'APPROVED' and to_date(TO_CHAR(to_timestamp(tl.lastmodifiedtime / 1000), 'DD/MM/YYYY'), 'DD/MM/YYYY') = NOW()::date and to_timestamp(tl.lastmodifiedtime / 1000)::date - to_timestamp(tl.createdtime / 1000)::date <= 7 then 1 end) todaysApprovedApplicationsWithinSLA,\r\n"
+			+ "	count(case when tl.status = 'APPROVED' and to_date(TO_CHAR(to_timestamp(tl.lastmodifiedtime / 1000), 'DD/MM/YYYY'), 'DD/MM/YYYY') = to_date(TO_CHAR(to_timestamp(? / 1000), 'DD/MM/YYYY'), 'DD/MM/YYYY')::date and to_timestamp(tl.lastmodifiedtime / 1000)::date - to_timestamp(tl.createdtime / 1000)::date <= 7 then 1 end) todaysApprovedApplicationsWithinSLA,\r\n"
 			+ "	SUM(case when tl.status = 'APPROVED' and to_timestamp(tl.lastmodifiedtime / 1000)::date - to_timestamp(tl.createdtime / 1000)::date <= 7 then to_timestamp(tl.lastmodifiedtime / 1000)::date - to_timestamp(tl.createdtime / 1000)::date end) / count(case when tl.status = 'APPROVED' and to_timestamp(tl.lastmodifiedtime / 1000)::date - to_timestamp(tl.createdtime / 1000)::date <= 7 then 1 end) avgDaysForApplicationApproval,\r\n"
 			+ "	SUM(case when tax.taxamount is null then 0 else tax.taxamount end ) taxAmount,\r\n"
 			+ "	SUM(case when pen.taxamount is null then 0 else pen.taxamount end ) penaltyAmount\r\n" + "from\r\n"
@@ -37,9 +37,10 @@ public class TLQueryBuilderNIUA {
 			+ "left join egbs_demanddetail_v1 pen on\r\n" + "	d1.id = pen.demandid\r\n"
 			+ "	and (tl.status = 'APPROVED'\r\n" + "	and pen.taxamount > 0\r\n"
 			+ "	and pen.taxheadcode in ('CTL.OLD_BOOK_MARKET_PENALTY' , 'CTL.DHOBI_GHAT_PENALTY' , 'CTL.REHRI_DRIVING_LICENSE_PENALTY', 'CTL.REHRI_REGISTRATION_PENALTY'))\r\n"
-			+ "where\r\n" + "	tl.tenantid = 'ch.chandigarh'\r\n" + "	and tl.createdtime >= ?\r\n"
-			+ "	and tl.createdtime <= ?\r\n" + "group by\r\n" + "	tl.businessservice,\r\n" + "	ts.gateway,\r\n"
-			+ "	tl.status";
+			+ "where\r\n" + "	tl.tenantid = 'ch.chandigarh'\r\n"
+			+ "	and to_date(TO_CHAR(to_timestamp(tl.createdtime / 1000), 'DD/MM/YYYY'), 'DD/MM/YYYY')::date >= to_date(TO_CHAR(to_timestamp(? / 1000), 'DD/MM/YYYY'), 'DD/MM/YYYY')::date\r\n"
+			+ "	and to_date(TO_CHAR(to_timestamp(tl.createdtime / 1000), 'DD/MM/YYYY'), 'DD/MM/YYYY')::date <= to_date(TO_CHAR(to_timestamp(? / 1000), 'DD/MM/YYYY'), 'DD/MM/YYYY')::date\r\n"
+			+ "group by\r\n" + "	tl.businessservice,\r\n" + "	ts.gateway,\r\n" + "	tl.status";
 
 	public static final String QUERY_NIUA = "((\r\n" + "select\r\n"
 			+ "	'todaysCollection' ccc , ett.businessservice as name , SUM(py.totaldue) as value, SUM(case when ett.status = 'APPROVED' then 1 else 0 end) approvedLicense, SUM(case when ett.status = 'APPROVED' then to_timestamp(ett.lastmodifiedtime / 1000)::date - to_timestamp(ett.createdtime / 1000)::date else 0 end) approvedCompletionDaysLicense\r\n"
@@ -186,7 +187,13 @@ public class TLQueryBuilderNIUA {
 
 		StringBuilder builder = new StringBuilder(QUERY_NIUA_UPDATED);
 		preparedStmtList.add(criteria.getFromDate());
-		preparedStmtList.add(criteria.getToDate());
+		preparedStmtList.add(criteria.getFromDate());
+		preparedStmtList.add(criteria.getFromDate());
+		preparedStmtList.add(criteria.getFromDate());
+		preparedStmtList.add(criteria.getFromDate());
+		preparedStmtList.add(criteria.getFromDate());
+		preparedStmtList.add(criteria.getFromDate());
+		preparedStmtList.add(criteria.getFromDate());
 		return builder.toString();
 	}
 

@@ -58,7 +58,7 @@ public class TLRowMapperNIUAUpdated implements ResultSetExtractor<List<TLNIUAMod
 					.parseInt(rs.getString("todaysTradeLicenses") != null ? rs.getString("todaysTradeLicenses") : "0"));
 
 			model.setTransactions(new Double(
-					rs.getString("todaysTradeLicenses") != null ? rs.getString("todaysTradeLicenses") : "0"));
+					rs.getString("transactions") != null ? rs.getString("transactions") : "0"));
 			model.setPenaltyAmount(
 					new Double(rs.getString("penaltyAmount") != null ? rs.getString("penaltyAmount") : "0"));
 			model.setTaxAmount(new Double(rs.getString("taxAmount") != null ? rs.getString("taxAmount") : "0"));
