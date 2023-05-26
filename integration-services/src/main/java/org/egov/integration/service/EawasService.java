@@ -101,9 +101,7 @@ public class EawasService {
 	}
 
 	public Metrics searchNIUA(RequestData criteria, RequestInfo requestInfo, String serviceFromPath) {
-//	        List<TradeLicense> licenses;
 		Metrics licensesForNIUA = getLicensesForNIUA(criteria, requestInfo);
-
 		return licensesForNIUA;
 	}
 
@@ -123,9 +121,8 @@ public class EawasService {
 			List<TLNIUAModel> paymentChannel = licensesNIUA.stream()
 					.filter(e -> e.getGateway() != null && !e.getGateway().isEmpty()).collect(Collectors.toList());
 
-			List<TLBucket> paymentChannelTypeTodaysCollectionBucket = paymentChannel.stream()
-					.collect(Collectors.groupingBy(TLNIUAModel::getGateway,
-							Collectors.summingDouble(TLNIUAModel::getTransactions)))
+			List<TLBucket> paymentChannelTypeTodaysCollectionBucket = paymentChannel.stream().collect(Collectors
+					.groupingBy(TLNIUAModel::getGateway, Collectors.summingDouble(TLNIUAModel::getTodaysCollection)))
 					.entrySet().stream().map(e -> {
 						return new TLBucket(e.getKey(), e.getValue());
 					}).collect(Collectors.toList());

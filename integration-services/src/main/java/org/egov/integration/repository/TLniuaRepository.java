@@ -72,9 +72,7 @@ public class TLniuaRepository {
 	public List<TLNIUAModel> getLicensesNIUAUpdated(RequestData criteria) {
 		List<Object> preparedStmtList = new ArrayList<>();
 		String query = queryBuilder.getTLSearchQueryUpdated(criteria, preparedStmtList);
-//	        log.info("Query: " + query);
 		List<TLNIUAModel> query2 = jdbcTemplate.query(query, preparedStmtList.toArray(), mapperNIUAUpdated);
-//	        sortChildObjectsById(licenses);
 		return query2;
 	}
 }
