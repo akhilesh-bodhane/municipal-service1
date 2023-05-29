@@ -164,6 +164,9 @@ public class WaterConnection extends Connection {
 	@JsonProperty("proposedLastMeterReading")
 	private BigDecimal proposedLastMeterReading = null;
 	
+	@JsonProperty("location")
+	private String location;
+	
 	
 	public String getContractValue() {
 		return contractValue;
@@ -608,4 +611,6 @@ public class WaterConnection extends Connection {
 	public void setProposedLastMeterReading(BigDecimal proposedLastMeterReading) {
 		this.proposedLastMeterReading = proposedLastMeterReading;
 	}
+	
+	
 }
