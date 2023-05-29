@@ -39,7 +39,7 @@ public class SWQueryBuilder {
 			+ " conn.aadharNo, conn.ferruleSize, conn.cccode,conn.div,conn.subdiv,conn.ledger_no,conn.ledgergroup,conn.billgroup,conn.contract_value,conn.roadcuttingarea, conn.action, conn.adhocpenalty, conn.adhocrebate, conn.createdBy as sw_createdBy,"
 			+ " conn.lastModifiedBy as sw_lastModifiedBy, conn.createdTime as sw_createdTime, conn.lastModifiedTime as sw_lastModifiedTime, "
 			+ " conn.adhocpenaltyreason, conn.adhocpenaltycomment, conn.adhocrebatereason, conn.adhocrebatecomment,"
-			+ " conn.roadtype,conn.total_amount_paid, conn.additionalcharges,document.id as doc_Id, document.documenttype, document.filestoreid, document.active as doc_active, plumber.id as plumber_id, plumber.name as plumber_name, plumber.licenseno, property.usagesubcategory,pta.doorno as propertyplotno,pta.locality as propertysectorno ,"
+			+ " conn.roadtype,conn.total_amount_paid, conn.additionalcharges,conn.location,document.id as doc_Id, document.documenttype, document.filestoreid, document.active as doc_active, plumber.id as plumber_id, plumber.name as plumber_name, plumber.licenseno, property.usagesubcategory,pta.doorno as propertyplotno,pta.locality as propertysectorno ,"
 			+ " plumber.mobilenumber as plumber_mobileNumber, plumber.gender as plumber_gender, plumber.fatherorhusbandname, plumber.correspondenceaddress, plumber.relationship, "
 			+ " property.id as seweragepropertyid, property.usagecategory, property.usagesubcategory, " +holderSelectValues
 			+ " FROM eg_sw_connection conn "
