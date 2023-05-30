@@ -11,8 +11,8 @@ public class TLQueryBuilderNIUA {
 
 	public static final String QUERY_TL_PUBLIC_DASHBOARD = "select\r\n" + "	count(1) totalApplicationsReceived,\r\n"
 			+ "	count(case when ett.status = 'APPROVED' then 1 end) totalApplicationsApproved,\r\n"
-			+ "	SUM(case when ett.status = 'APPROVED' then to_timestamp(ett.lastmodifiedtime / 1000)::date - to_timestamp(ett.createdtime / 1000)::date end)/ count(case when ett.status = 'APPROVED' then 1 end) timeTakenForApproval\r\n"
-			+ "from\r\n" + "	eg_tl_tradelicense ett\r\n" + "where\r\n" + "	ett.tenantid = 'ch.chandigarh'\r\n"
+			+ "	ceil(SUM(case when ett.status = 'APPROVED' then to_timestamp(ett.lastmodifiedtime / 1000)::date - to_timestamp(ett.createdtime / 1000)::date end)/ count(case when ett.status = 'APPROVED' then 1 end)) timeTakenForApproval\r\n"
+			+ "from\r\n" + "	eg_tl_tradelicense ett\r\n" + " where\r\n" + "	ett.tenantid = 'ch.chandigarh'\r\n"
 			+ "	and ett.createdtime >= ?\r\n" + " and ett.createdtime <= ?";
 
 	public static final String QUERY_NIUA_UPDATED = "select\r\n" + "	tl.businessservice tradeType,\r\n"
