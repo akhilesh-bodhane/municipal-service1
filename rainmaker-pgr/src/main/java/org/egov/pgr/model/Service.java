@@ -20,196 +20,200 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-
 /**
- * Instance of Service request raised for a particular service. As per extension propsed in the Service definition \&quot;attributes\&quot; carry the input values requried by metadata definition in the structure as described by the corresponding schema.  * Any one of &#39;address&#39; or &#39;(lat and lang)&#39; or &#39;addressid&#39; is mandatory 
+ * Instance of Service request raised for a particular service. As per extension
+ * propsed in the Service definition \&quot;attributes\&quot; carry the input
+ * values requried by metadata definition in the structure as described by the
+ * corresponding schema. * Any one of &#39;address&#39; or &#39;(lat and
+ * lang)&#39; or &#39;addressid&#39; is mandatory
  */
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class Service   {
-	
-  @JsonProperty("citizen")
-  private Citizen citizen;
-  
-  @NotNull
-  @JsonProperty("tenantId")
-  private String tenantId;
+public class Service {
 
-  @NotNull
-  @JsonProperty("serviceCode")
-  private String serviceCode;
+	@JsonProperty("citizen")
+	private Citizen citizen;
 
-  @JsonProperty("serviceRequestId")
-  private String serviceRequestId;
+	@NotNull
+	@JsonProperty("tenantId")
+	private String tenantId;
 
-  @JsonProperty("description")
-  private String description;
+	@NotNull
+	@JsonProperty("serviceCode")
+	private String serviceCode;
 
-  @JsonProperty("lat")
-  private Double lat;
+	@JsonProperty("serviceRequestId")
+	private String serviceRequestId;
 
-  @JsonProperty("long")
-  private Double longitutde;
+	@JsonProperty("description")
+	private String description;
 
-  @JsonProperty("addressId")
-  private String addressId;
-  
-  @JsonProperty("address")
-  private String address;
+	@JsonProperty("lat")
+	private Double lat;
 
-  @JsonProperty("email")
-  @Email
-  private String email;
+	@JsonProperty("long")
+	private Double longitutde;
 
-  @JsonProperty("deviceId")
-  private String deviceId;
+	@JsonProperty("addressId")
+	private String addressId;
 
-  @JsonProperty("accountId")
-  private String accountId;
+	@JsonProperty("address")
+	private String address;
 
-  @JsonProperty("firstName")
-  private String firstName;
+	@JsonProperty("email")
+	@Email
+	private String email;
 
-  @JsonProperty("lastName")
-  private String lastName;
+	@JsonProperty("deviceId")
+	private String deviceId;
 
-  @JsonProperty("phone")
-  @NotEmpty
-  @Pattern(regexp="(^$|[0-9]{10})")
-  private String phone;
+	@JsonProperty("accountId")
+	private String accountId;
 
-  @JsonProperty("attributes")
-  private Object attributes;
-  
-  @JsonProperty("addressDetail")
-  private Address addressDetail;
-  
-  @JsonProperty("active")
-  private Boolean active;
+	@JsonProperty("firstName")
+	private String firstName;
 
-  /**
-   * The current status of the service request.
-   */
-  public enum StatusEnum {
-	  
-	OPEN("open"),
-	
-	ASSIGNED("assigned"),
-	        
-    CLOSED("closed"),
-    
-    CANCELLED("cancelled"),
-    
-    REJECTED("rejected"),
-    
-    REASSIGNREQUESTED("reassignrequested"),
-    
-    RESOLVED("resolved"),   
-	  
-	ESCALATEDLEVEL1PENDING("escalatedlevel1pending"),
-	
-	ESCALATEDLEVEL2PENDING("escalatedlevel2pending"),
-	;
+	@JsonProperty("lastName")
+	private String lastName;
 
-    private String value;
+	@JsonProperty("phone")
+	@NotEmpty
+	@Pattern(regexp = "(^$|[0-9]{10})")
+	private String phone;
 
-    StatusEnum(String value) {
-      this.value = value;
-    }
+	@JsonProperty("attributes")
+	private Object attributes;
 
-    @Override
-    @JsonValue
-    public String toString() {
-      return String.valueOf(value);
-    }
+	@JsonProperty("addressDetail")
+	private Address addressDetail;
 
-    @JsonCreator
-    public static StatusEnum fromValue(String text) {
-      for (StatusEnum b : StatusEnum.values()) {
-        if (String.valueOf(b.value).equalsIgnoreCase(text)) {
-          return b;
-        }
-      }
-      return null;
-    }
-  }
+	@JsonProperty("location")
+	private String location;
 
-  @JsonProperty("status")
-  private StatusEnum status;
+	@JsonProperty("active")
+	private Boolean active;
 
-  /**
-   * source of the complaint - Text, Mobile app, Phone, CSC, WhatsApp
-   */
-  public enum SourceEnum {
-    SMS("sms"),
-    
-    EMAIL("email"),
-    
-    IVR("ivr"),
-    
-    MOBILEAPP("mobileapp"),
-    
-    WHATSAPP("whatsapp"),
-    
-    CSC("csc"),
-    
-    WEB("web");
+	/**
+	 * The current status of the service request.
+	 */
+	public enum StatusEnum {
 
-    private String value;
+		OPEN("open"),
 
-    SourceEnum(String value) {
-      this.value = value;
-    }
+		ASSIGNED("assigned"),
 
-    @Override
-    @JsonValue
-    public String toString() {
-      return String.valueOf(value);
-    }
+		CLOSED("closed"),
 
-    @JsonCreator
-    public static SourceEnum fromValue(String text) {
-      for (SourceEnum b : SourceEnum.values()) {
-        if (String.valueOf(b.value).equals(text)) {
-          return b;
-        }
-      }
-      return null;
-    }
-  }
+		CANCELLED("cancelled"),
 
-  @JsonProperty("source")
-  private SourceEnum source;
+		REJECTED("rejected"),
 
-  @JsonProperty("expectedTime")
-  private Long expectedTime;
+		REASSIGNREQUESTED("reassignrequested"),
 
-  @JsonProperty("feedback")
-  private String feedback;
+		RESOLVED("resolved"),
 
-  @JsonProperty("rating")
-  @Max(5)
-  @Min(0)
-  private String rating;
+		ESCALATEDLEVEL1PENDING("escalatedlevel1pending"),
 
-  @JsonProperty("auditDetails")
-  private AuditDetails auditDetails;
-  
-  @JsonProperty("landmark")
-  private String landmark;
-  
-  @JsonProperty("category")
-  private String category;
-  
-  @JsonProperty("slaEndTime")
-  private Long slaEndTime = null;
-    
+		ESCALATEDLEVEL2PENDING("escalatedlevel2pending"),;
+
+		private String value;
+
+		StatusEnum(String value) {
+			this.value = value;
+		}
+
+		@Override
+		@JsonValue
+		public String toString() {
+			return String.valueOf(value);
+		}
+
+		@JsonCreator
+		public static StatusEnum fromValue(String text) {
+			for (StatusEnum b : StatusEnum.values()) {
+				if (String.valueOf(b.value).equalsIgnoreCase(text)) {
+					return b;
+				}
+			}
+			return null;
+		}
+	}
+
+	@JsonProperty("status")
+	private StatusEnum status;
+
+	/**
+	 * source of the complaint - Text, Mobile app, Phone, CSC, WhatsApp
+	 */
+	public enum SourceEnum {
+		SMS("sms"),
+
+		EMAIL("email"),
+
+		IVR("ivr"),
+
+		MOBILEAPP("mobileapp"),
+
+		WHATSAPP("whatsapp"),
+
+		CSC("csc"),
+
+		WEB("web");
+
+		private String value;
+
+		SourceEnum(String value) {
+			this.value = value;
+		}
+
+		@Override
+		@JsonValue
+		public String toString() {
+			return String.valueOf(value);
+		}
+
+		@JsonCreator
+		public static SourceEnum fromValue(String text) {
+			for (SourceEnum b : SourceEnum.values()) {
+				if (String.valueOf(b.value).equals(text)) {
+					return b;
+				}
+			}
+			return null;
+		}
+	}
+
+	@JsonProperty("source")
+	private SourceEnum source;
+
+	@JsonProperty("expectedTime")
+	private Long expectedTime;
+
+	@JsonProperty("feedback")
+	private String feedback;
+
+	@JsonProperty("rating")
+	@Max(5)
+	@Min(0)
+	private String rating;
+
+	@JsonProperty("auditDetails")
+	private AuditDetails auditDetails;
+
+	@JsonProperty("landmark")
+	private String landmark;
+
+	@JsonProperty("category")
+	private String category;
+
+	@JsonProperty("slaEndTime")
+	private Long slaEndTime = null;
+
 	/*
 	 * @JsonProperty("revisedDepartment") private String revisedDepartment = null;
 	 */
-  
-  }
 
+}
