@@ -285,7 +285,7 @@ public class GrievanceService {
 			if (!isAutoroutingAvailable) {
 				log.info("Auto routing employee not available for this compliant.");
 			}
-
+			//servReq.setLocation(employeeCode);
 			servReq.setAuditDetails(auditDetails);
 			servReq.setServiceRequestId(currentId);
 			servReq.setActive(true);
