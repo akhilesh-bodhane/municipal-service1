@@ -239,4 +239,7 @@ public class SepApplication {
 	@JsonProperty("auditDetails")
 	private AuditDetails auditDetails ;
 	
+	@JsonProperty("location")
+	private String location;
+	
 }
