@@ -15,7 +15,7 @@ public class NULMQueryBuilder {
 			+ "        NA.previous_experience,  NA.place_of_work,NA.no_of_family_members, NA.task_committee_approved_amount,NA.task_committee_remark,NA.task_committee_action_date,NA.task_committee_status,NA.committee_bank_name,NA.committee_branch_name,NA.application_forwarded_on_date\n"
 			+ ",NA.sanction_date,NA.sanction_remarks,\n"
 			+ "         NA.loan_amount,  NA.recommended_by, NA.bank_name,NA.branch_name,NA.account_name,NA.is_disability_certificate_available,\n"
-			+ "        NA.representative_name,  NA.representative_address,  NA.tenant_id,NA.is_active,NA.created_by ,NA.created_time,NA.last_modified_by, NA.last_modified_time,  NA.location  \n"
+			+ "        NA.representative_name,  NA.representative_address,  NA.tenant_id,NA.is_active,NA.created_by ,NA.created_time,NA.last_modified_by, NA.last_modified_time,  NA.location,  \n"
 			+ "        array_to_json(array_agg(json_build_object('documentType',ND.document_type,'filestoreId',ND.filestore_id,'documnetUuid',ND.document_uuid,'isActive',ND.is_active,\n"
 			+ "        'tenantId',ND.tenant_id,'applicationUuid',ND.application_uuid) ))as document \n"
 			+ "  FROM public.nulm_sep_application_detail NA inner  join nulm_sep_application_document ND on NA.application_uuid=ND.application_uuid and NA.tenant_id=ND.tenant_id\n"
