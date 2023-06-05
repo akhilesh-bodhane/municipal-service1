@@ -41,7 +41,7 @@ public class SuhCitizenNGOApplication {
 
 	@JsonProperty("nominatedBy")
 	private String nominatedBy;
-	
+
 	@JsonProperty("nameOfNominatedPerson")
 	private String nameOfNominatedPerson;
 
@@ -62,5 +62,8 @@ public class SuhCitizenNGOApplication {
 
 	@JsonProperty("dob")
 	private String dob;
+
+	@JsonProperty("location")
+	private String location;
 
 }

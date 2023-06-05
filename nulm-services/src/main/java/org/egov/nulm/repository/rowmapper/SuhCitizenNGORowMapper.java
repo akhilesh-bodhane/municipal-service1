@@ -27,23 +27,21 @@ public class SuhCitizenNGORowMapper implements ResultSetExtractor<List<SuhCitize
 		List<SuhCitizenNGOApplication> suhList = new ArrayList<>();
 		try {
 			while (rs.next()) {
-					AuditDetails audit = AuditDetails.builder().createdBy(rs.getString("created_by"))
-							.createdTime(rs.getLong("created_time")).lastModifiedBy(rs.getString("last_modified_by"))
-							.lastModifiedTime(rs.getLong("last_modified_time")).build();
+				AuditDetails audit = AuditDetails.builder().createdBy(rs.getString("created_by"))
+						.createdTime(rs.getLong("created_time")).lastModifiedBy(rs.getString("last_modified_by"))
+						.lastModifiedTime(rs.getLong("last_modified_time")).build();
 
-					SuhCitizenNGOApplication suhapp = SuhCitizenNGOApplication.builder().auditDetails(audit)
-							.suhCitizenNGOUuid(rs.getString("suh_citizen_ngo_uuid"))
-							.address(rs.getString("address"))
-							.shelterRequestedForPerson(rs.getString("shelter_requested_for_person"))
-							.age(rs.getInt("age")).gender(rs.getString("gender"))
-							.reasonForStaying(rs.getString("reason_for_staying"))
-							.nominatedBy(rs.getString("nominated_by"))
-							.dob(rs.getString("dob"))
-							.nameOfNominatedPerson(rs.getString("name_of_nominated_person"))
-							.contactNo(rs.getString("contact_no")).isDisabled(rs.getBoolean("is_disabled")).contactNo(rs.getString("contact_no"))
-							.isActive(rs.getBoolean("is_active")).build();
-					suhList.add(suhapp);
-				}
+				SuhCitizenNGOApplication suhapp = SuhCitizenNGOApplication.builder().auditDetails(audit)
+						.suhCitizenNGOUuid(rs.getString("suh_citizen_ngo_uuid")).address(rs.getString("address"))
+						.shelterRequestedForPerson(rs.getString("shelter_requested_for_person")).age(rs.getInt("age"))
+						.gender(rs.getString("gender")).reasonForStaying(rs.getString("reason_for_staying"))
+						.nominatedBy(rs.getString("nominated_by")).dob(rs.getString("dob"))
+						.nameOfNominatedPerson(rs.getString("name_of_nominated_person"))
+						.contactNo(rs.getString("contact_no")).isDisabled(rs.getBoolean("is_disabled"))
+						.contactNo(rs.getString("contact_no")).isActive(rs.getBoolean("is_active"))
+						.location(rs.getString("location")).build();
+				suhList.add(suhapp);
+			}
 		} catch (Exception e) {
 			throw new CustomException(CommonConstants.SUH_APPLICATION_EXCEPTION_CODE, e.getMessage());
 		}
