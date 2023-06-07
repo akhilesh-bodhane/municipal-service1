@@ -56,6 +56,10 @@ public class SWCalculationServiceImpl implements SWCalculationService {
 	 */
 	public List<Calculation> getCalculation(CalculationReq request) {
 		List<Calculation> calculations = new ArrayList<>();
+		
+		String appNo = request.getCalculationCriteria().get(0).getApplicationNo();
+		String finYear = appNo.substring(6,13);
+		System.out.println("Sewerage Connection Detail : " + request.getCalculationCriteria().get(0).getApplicationNo() + "Financial Year : " + finYear);
 
 		if (request.getIsconnectionCalculation()) {
 			// Calculate and create demand for connection
@@ -66,13 +70,24 @@ public class SWCalculationServiceImpl implements SWCalculationService {
 					request.getIsconnectionCalculation());
 			unsetSewerageConnection(calculations);
 		} else {
-			// Calculate and create demand for application
-			Map<String, Object> masterData = mDataService.loadExcemptionMaster(request.getRequestInfo(),
-					request.getCalculationCriteria().get(0).getTenantId());
-			calculations = getFeeCalculation(request, masterData);
-			demandService.generateDemand(request.getRequestInfo(), calculations, masterData,
-					request.getIsconnectionCalculation());
-			unsetSewerageConnection(calculations);
+			// Calculate and create demand for application					
+			if (finYear.equalsIgnoreCase("2023-24")) {
+				System.out.println("Inside Fin Yr 2023-24");
+				Map<String, Object> masterData = mDataService.loadExcemptionMaster(request.getRequestInfo(),
+						request.getCalculationCriteria().get(0).getTenantId());
+				calculations = getFeeCalculation(request, masterData);
+				demandService.generateDemand(request.getRequestInfo(), calculations, masterData,
+						request.getIsconnectionCalculation());
+				unsetSewerageConnection(calculations);		
+			} else {
+				System.out.println("Inside Fin Yr Not equal to 2023-24");
+				Map<String, Object> masterData = mDataService.loadExcemptionMasterPrev(request.getRequestInfo(),
+						request.getCalculationCriteria().get(0).getTenantId());
+				calculations = getFeeCalculation(request, masterData);
+				demandService.generateDemand(request.getRequestInfo(), calculations, masterData,
+						request.getIsconnectionCalculation());
+				unsetSewerageConnection(calculations);		
+			}
 		}
 		
 		return calculations;
@@ -247,10 +262,34 @@ public class SWCalculationServiceImpl implements SWCalculationService {
 	 * @return list of calculation based on request
 	 */
 	public List<Calculation> getEstimation(CalculationReq request) {
-		Map<String, Object> masterData = mDataService.loadExcemptionMaster(request.getRequestInfo(),
-				request.getCalculationCriteria().get(0).getTenantId());
-		List<Calculation> calculations = getFeeCalculation(request, masterData);
-		unsetSewerageConnection(calculations);
+		
+		String appNo   = request.getCalculationCriteria().get(0).getApplicationNo();
+		String finYear = appNo.substring(6,13);
+        List<Calculation> calculations;
+ 		
+		System.out.println("Sewerage Connection Detail : " + request.getCalculationCriteria().get(0).getApplicationNo() + "Financial Year : " + finYear);
+		/*
+		 * Map<String, Object> masterData =
+		 * mDataService.loadExcemptionMaster(request.getRequestInfo(),
+		 * request.getCalculationCriteria().get(0).getTenantId()); List<Calculation>
+		 * calculations = getFeeCalculation(request, masterData);
+		 * unsetSewerageConnection(calculations); return calculations;
+		 */
+		
+		if (finYear.equalsIgnoreCase("2023-24")) {
+			System.out.println("Inside Fin Yr 2023-24");
+			Map<String, Object> masterData = mDataService.loadExcemptionMaster(request.getRequestInfo(),
+					request.getCalculationCriteria().get(0).getTenantId());
+			calculations = getFeeCalculation(request, masterData);
+			unsetSewerageConnection(calculations);			
+		} else {
+			System.out.println("Inside Fin Yr Not equal to 2023-24");
+			Map<String, Object> masterData = mDataService.loadExcemptionMasterPrev(request.getRequestInfo(),
+					request.getCalculationCriteria().get(0).getTenantId());
+			calculations = getFeeCalculation(request, masterData);
+			unsetSewerageConnection(calculations);
+		}
+		
 		return calculations;
 	}
 

@@ -253,6 +253,30 @@ public class CalculatorUtils {
 	 * 
 	 * @param requestInfo
 	 * @param tenantId
+	 * @param roadType
+	 * @param usageType
+	 * @return mdms request for master data
+	 */
+	public MdmsCriteriaReq getEstimationMasterCriteriaPrev(RequestInfo requestInfo, String tenantId) {
+		List<MasterDetail> details = new ArrayList<>();
+		details.add(MasterDetail.builder().name(SWCalculationConstant.SW_REGULAR_CHARGES_MASTER)
+				.filter("[?(@.isActive== " + true + ")]").build());
+		details.add(MasterDetail.builder().name(SWCalculationConstant.SW_ROAD_CUT_TAX_CHARGES)
+				.filter("[?(@.isActive== " + true + ")]").build());
+		
+		details.add(MasterDetail.builder().name(SWCalculationConstant.SC_ROADTYPE_MASTER)
+				.filter("[?(@.isActive== " + true + ")]").build());
+		ModuleDetail mdDtl = ModuleDetail.builder().masterDetails(details)
+				.moduleName(SWCalculationConstant.SW_TAX_MODULE_PREV).build();
+		MdmsCriteria mdmsCriteria = MdmsCriteria.builder().moduleDetails(Arrays.asList(mdDtl)).tenantId(tenantId)
+				.build();
+		return MdmsCriteriaReq.builder().requestInfo(requestInfo).mdmsCriteria(mdmsCriteria).build();
+	}
+	
+	/**
+	 * 
+	 * @param requestInfo
+	 * @param tenantId
 	 * @return MdmsCriteria
 	 */
 	private MdmsCriteriaReq getBillingFrequencyForScheduler(RequestInfo requestInfo, String tenantId) {

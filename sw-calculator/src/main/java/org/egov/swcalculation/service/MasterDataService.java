@@ -442,6 +442,26 @@ public class MasterDataService {
 	
 	/**
 	 * 
+	 * @param requestInfo
+	 * @param tenantId
+	 * @param roadType
+	 * @param usageType
+	 * @param masterMap
+	 *            return master data with exception master data
+	 */
+	public Map<String, Object> loadExcemptionMasterPrev(RequestInfo requestInfo, String tenantId) {
+		Map<String, Object> master = getMasterMap(requestInfo, tenantId, SWCalculationConstant.ONE_TIME_FEE_SERVICE_FIELD);
+		MdmsResponse response = mapper.convertValue(repository.fetchResult(calculatorUtils.getMdmsSearchUrl(),
+				calculatorUtils.getEstimationMasterCriteriaPrev(requestInfo, tenantId)), MdmsResponse.class);
+		Map<String, JSONArray> res = response.getMdmsRes().get(SWCalculationConstant.SW_TAX_MODULE_PREV);
+		for (Map.Entry<String, JSONArray> resp : res.entrySet()) {
+			master.put(resp.getKey(), resp.getValue());
+		}
+		return master;
+	}
+	
+	/**
+	 * 
 	 * @param masterMap
 	 * @return master map contains demand start date, end date and expiry date
 	 */

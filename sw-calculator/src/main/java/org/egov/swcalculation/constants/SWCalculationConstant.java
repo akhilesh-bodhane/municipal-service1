@@ -46,6 +46,8 @@ public class SWCalculationConstant {
 	public static final String FINANCIAL_MODULE = "egf-master";
 
 	public static final String SW_TAX_MODULE = "sw-services-calculation";
+	
+	public static final String SW_TAX_MODULE_PREV = "sw-services-calculation-prev";
 
 	public static final String SW_REBATE_MASTER = "Rebate";
 
