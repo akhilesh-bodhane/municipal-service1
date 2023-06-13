@@ -11,7 +11,6 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.egov.common.contract.request.RequestInfo;
-import org.egov.integration.model.MasterData;
 import org.egov.swcalculation.constants.SWCalculationConstant;
 import org.egov.swcalculation.model.AdhocTaxReq;
 import org.egov.swcalculation.model.Calculation;
