@@ -11,6 +11,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.egov.common.contract.request.RequestInfo;
+import org.egov.integration.model.MasterData;
 import org.egov.swcalculation.constants.SWCalculationConstant;
 import org.egov.swcalculation.model.AdhocTaxReq;
 import org.egov.swcalculation.model.Calculation;
@@ -266,6 +267,12 @@ public class SWCalculationServiceImpl implements SWCalculationService {
 		String appNo   = request.getCalculationCriteria().get(0).getApplicationNo();
 		String finYear = appNo.substring(6,13);
         List<Calculation> calculations;
+        
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd-MM-yyyy");  
+		 LocalDateTime now = LocalDateTime.now();  
+		 String Date = dtf.format(now);
+		 
+		 System.out.println("Current Date::"+Date);
  		
 		System.out.println("Sewerage Connection Detail : " + request.getCalculationCriteria().get(0).getApplicationNo() + "Financial Year : " + finYear);
 		/*
@@ -278,10 +285,18 @@ public class SWCalculationServiceImpl implements SWCalculationService {
 		
 		if (finYear.equalsIgnoreCase("2023-24")) {
 			System.out.println("Inside Fin Yr 2023-24");
-			Map<String, Object> masterData = mDataService.loadExcemptionMaster(request.getRequestInfo(),
-					request.getCalculationCriteria().get(0).getTenantId());
-			calculations = getFeeCalculation(request, masterData);
-			unsetSewerageConnection(calculations);			
+			if(Date.compareTo("14-06-2023") < 0) {
+				System.out.println("Inside Fin Yr Not equal to 2023-24 and Date compare");
+				Map<String, Object> masterData = mDataService.loadExcemptionMasterPrev(request.getRequestInfo(),
+						request.getCalculationCriteria().get(0).getTenantId());
+				calculations = getFeeCalculation(request, masterData);
+				unsetSewerageConnection(calculations);	
+			}else {
+				Map<String, Object> masterData = mDataService.loadExcemptionMaster(request.getRequestInfo(),
+						request.getCalculationCriteria().get(0).getTenantId());
+				calculations = getFeeCalculation(request, masterData);
+				unsetSewerageConnection(calculations);	
+			}						
 		} else {
 			System.out.println("Inside Fin Yr Not equal to 2023-24");
 			Map<String, Object> masterData = mDataService.loadExcemptionMasterPrev(request.getRequestInfo(),
