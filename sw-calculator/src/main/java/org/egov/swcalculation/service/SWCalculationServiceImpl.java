@@ -60,6 +60,12 @@ public class SWCalculationServiceImpl implements SWCalculationService {
 		String appNo = request.getCalculationCriteria().get(0).getApplicationNo();
 		String finYear = appNo.substring(6,13);
 		System.out.println("Sewerage Connection Detail : " + request.getCalculationCriteria().get(0).getApplicationNo() + "Financial Year : " + finYear);
+		
+		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd-MM-yyyy");  
+		 LocalDateTime now = LocalDateTime.now();  
+		 String Date = dtf.format(now);
+		 
+		 System.out.println("Current Date getCalculation method::"+Date);
 
 		if (request.getIsconnectionCalculation()) {
 			// Calculate and create demand for connection
@@ -73,12 +79,22 @@ public class SWCalculationServiceImpl implements SWCalculationService {
 			// Calculate and create demand for application					
 			if (finYear.equalsIgnoreCase("2023-24")) {
 				System.out.println("Inside Fin Yr 2023-24");
-				Map<String, Object> masterData = mDataService.loadExcemptionMaster(request.getRequestInfo(),
-						request.getCalculationCriteria().get(0).getTenantId());
-				calculations = getFeeCalculation(request, masterData);
-				demandService.generateDemand(request.getRequestInfo(), calculations, masterData,
-						request.getIsconnectionCalculation());
-				unsetSewerageConnection(calculations);		
+				if(Date.compareTo("12-06-2023") < 0) {
+					System.out.println("Inside Fin Yr Not equal to 2023-24");
+					Map<String, Object> masterData = mDataService.loadExcemptionMasterPrev(request.getRequestInfo(),
+							request.getCalculationCriteria().get(0).getTenantId());
+					calculations = getFeeCalculation(request, masterData);
+					demandService.generateDemand(request.getRequestInfo(), calculations, masterData,
+							request.getIsconnectionCalculation());
+					unsetSewerageConnection(calculations);	
+				}else {
+					Map<String, Object> masterData = mDataService.loadExcemptionMaster(request.getRequestInfo(),
+							request.getCalculationCriteria().get(0).getTenantId());
+					calculations = getFeeCalculation(request, masterData);
+					demandService.generateDemand(request.getRequestInfo(), calculations, masterData,
+							request.getIsconnectionCalculation());
+					unsetSewerageConnection(calculations);
+				}						
 			} else {
 				System.out.println("Inside Fin Yr Not equal to 2023-24");
 				Map<String, Object> masterData = mDataService.loadExcemptionMasterPrev(request.getRequestInfo(),
@@ -284,7 +300,7 @@ public class SWCalculationServiceImpl implements SWCalculationService {
 		
 		if (finYear.equalsIgnoreCase("2023-24")) {
 			System.out.println("Inside Fin Yr 2023-24");
-			if(Date.compareTo("14-06-2023") < 0) {
+			if(Date.compareTo("12-06-2023") < 0) {
 				System.out.println("Inside Fin Yr Not equal to 2023-24 and Date compare");
 				Map<String, Object> masterData = mDataService.loadExcemptionMasterPrev(request.getRequestInfo(),
 						request.getCalculationCriteria().get(0).getTenantId());
