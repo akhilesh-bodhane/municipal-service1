@@ -79,7 +79,7 @@ public class SWCalculationServiceImpl implements SWCalculationService {
 			// Calculate and create demand for application					
 			if (finYear.equalsIgnoreCase("2023-24")) {
 				System.out.println("Inside Fin Yr 2023-24");
-				if(Date.compareTo("17-06-2023") < 0) {
+				if(Date.compareTo("13-06-2023") < 0) {
 					System.out.println("Inside Fin Yr Not equal to 2023-24");
 					Map<String, Object> masterData = mDataService.loadExcemptionMasterPrev(request.getRequestInfo(),
 							request.getCalculationCriteria().get(0).getTenantId());
@@ -300,7 +300,7 @@ public class SWCalculationServiceImpl implements SWCalculationService {
 		
 		if (finYear.equalsIgnoreCase("2023-24")) {
 			System.out.println("Inside Fin Yr 2023-24");
-			if(Date.compareTo("17-06-2023") < 0) {
+			if(Date.compareTo("13-06-2023") < 0) {
 				System.out.println("Inside Fin Yr Not equal to 2023-24 and Date compare");
 				Map<String, Object> masterData = mDataService.loadExcemptionMasterPrev(request.getRequestInfo(),
 						request.getCalculationCriteria().get(0).getTenantId());
