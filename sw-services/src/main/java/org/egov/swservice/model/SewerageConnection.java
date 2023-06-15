@@ -4,6 +4,7 @@ import java.util.Objects;
 
 import javax.validation.Valid;
 
+import org.egov.swcalculation.model.AuditDetails;
 import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -90,6 +91,9 @@ public class SewerageConnection extends Connection {
 	
 	@JsonProperty("location")
 	private String location;
+	
+	@JsonProperty("auditDetails")
+	private AuditDetails auditDetails;
 
 	public String getDiv() {
 		return div;
