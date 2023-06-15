@@ -67,7 +67,7 @@ public class SWCalculationServiceImpl implements SWCalculationService {
 		 
 		 System.out.println("Current Date getCalculation method::"+Date);
 		 
-		 System.out.println("Audit Details Created Time:" + request.getCalculationCriteria().get(0).getSewerageConnection().getAuditDetails().getCreatedTime().toString());
+		 System.out.println("Audit Details Created Time:" + request.getCalculationCriteria().get(0).getSewerageConnection().getAuditDetails().getCreatedTime());
 
 		if (request.getIsconnectionCalculation()) {
 			// Calculate and create demand for connection
