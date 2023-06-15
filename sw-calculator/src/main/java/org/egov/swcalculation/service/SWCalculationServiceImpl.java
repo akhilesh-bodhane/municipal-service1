@@ -66,6 +66,8 @@ public class SWCalculationServiceImpl implements SWCalculationService {
 		 String Date = dtf.format(now);
 		 
 		 System.out.println("Current Date getCalculation method::"+Date);
+		 
+		 System.out.println("Audit Details Created Time:" + request.getCalculationCriteria().get(0).getSewerageConnection().getAuditDetails().getCreatedTime().toString());
 
 		if (request.getIsconnectionCalculation()) {
 			// Calculate and create demand for connection
