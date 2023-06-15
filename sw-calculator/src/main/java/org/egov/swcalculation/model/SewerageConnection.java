@@ -84,6 +84,9 @@ public class SewerageConnection extends Connection {
 	
 	@JsonProperty("additionalCharges")
 	private Double additionalCharges = null;
+	
+	@JsonProperty("auditDetails")
+	private AuditDetails auditDetails;
 
 	public SewerageConnection noOfWaterClosets(Integer noOfWaterClosets) {
 		this.noOfWaterClosets = noOfWaterClosets;
