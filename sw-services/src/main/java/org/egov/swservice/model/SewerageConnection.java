@@ -4,7 +4,6 @@ import java.util.Objects;
 
 import javax.validation.Valid;
 
-import org.egov.swcalculation.model.AuditDetails;
 import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
