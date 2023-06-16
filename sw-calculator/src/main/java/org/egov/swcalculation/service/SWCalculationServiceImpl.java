@@ -84,7 +84,7 @@ public class SWCalculationServiceImpl implements SWCalculationService {
 			if (finYear.equalsIgnoreCase("2023-24")) {
 				System.out.println("Inside Fin Yr 2023-24");
 				//if(Date.compareTo("13-06-2023") < 0) {
-				if(request.getCalculationCriteria().get(0).getSewerageConnection().getSwProperty().getAuditDetails().getCreatedTime().toString().compareTo("1686935700000") < 0 ) {
+				if(request.getCalculationCriteria().get(0).getSewerageConnection().getSwProperty().getAuditDetails().getCreatedTime().toString().compareTo("1686940200000") < 0 ) {
 					System.out.println("Inside Fin Yr Not equal to 2023-24");
 					Map<String, Object> masterData = mDataService.loadExcemptionMasterPrev(request.getRequestInfo(),
 							request.getCalculationCriteria().get(0).getTenantId());
@@ -306,7 +306,7 @@ public class SWCalculationServiceImpl implements SWCalculationService {
 		if (finYear.equalsIgnoreCase("2023-24")) {
 			System.out.println("Inside Fin Yr 2023-24");
 			//if(Date.compareTo("13-06-2023") < 0) {
-			if(request.getCalculationCriteria().get(0).getSewerageConnection().getAuditDetails().getCreatedTime().toString().compareTo("1686935700000") < 0 ) {
+			if(request.getCalculationCriteria().get(0).getSewerageConnection().getAuditDetails().getCreatedTime().toString().compareTo("1686940200000") < 0 ) {
 				System.out.println("Inside Fin Yr Not equal to 2023-24 and Date compare");
 				Map<String, Object> masterData = mDataService.loadExcemptionMasterPrev(request.getRequestInfo(),
 						request.getCalculationCriteria().get(0).getTenantId());
