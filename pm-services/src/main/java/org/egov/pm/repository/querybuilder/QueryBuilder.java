@@ -22,7 +22,7 @@ public class QueryBuilder {
 
 	public static final String ALL_REMARKS_QUERY = "select application_uuid applicationUuid,remark,created_by,document_detail documentDetail,application_status applicationStatus, created_time createdTime from egpm_noc_application_remark WHERE application_uuid=? order by created_time DESC";
 	public static final String SELECT_VIEW_QUERY = "select EA.application_uuid applicationUuid, EA.noc_number nocNumber,EA.application_type applicationType,EA.applicant_name applicantName,ED.application_detail applicationDetail,EA.house_number houseNumber,EA.sector sector,EA.applied_date appliedDate,EA.application_status applicationStatus,EA.amount amount,EA.gst_amount gstAmount,EA.performance_bank_guarantee performanceBankGuaranteeCharges,EA.total_amount totalamount,EA.created_by createdby from egpm_noc_application_detail ED inner join egpm_noc_application EA on ED.application_uuid=EA.application_uuid WHERE EA.noc_number=? AND EA.is_active=TRUE AND ED.is_active=TRUE";
-		
+
 	public static final String SELECT_FALLBACK_QUERY = "select EA.application_uuid as applicationUuid, EA.noc_number as nocNumber,EA.application_type as applicationType,\r\n"
 			+ "EA.applicant_name as applicantName,ED.application_detail as applicationDetail,EA.house_number as houseNumber,\r\n"
 			+ "EA.sector as sector,EA.applied_date as appliedDate,EA.application_status as applicationStatus,\r\n"
@@ -265,6 +265,29 @@ public class QueryBuilder {
 			+ "         GROUP BY\r\n" + "            T4.application_type \r\n" + "      )\r\n" + "      MainTable2 \r\n"
 			+ "      ON MainTable1.application_type = MainTable2.application_type";
 
+	public static final String SELECT_IUDX_NOC_DATA_QUERY = "select\r\n" + "	iudxData.applicationType,\r\n"
+			+ "	count(statusWiseApplicationCount) as applicationCount,\r\n"
+			+ "	round(sum(revenueCollected)) as revenueCollected\r\n" + "from\r\n" + "	(\r\n" + "	select\r\n"
+			+ "		a.application_type as applicationType, Count(a.application_uuid) statusWiseApplicationCount,\r\n"
+			+ "		case\r\n"
+			+ "			when a.application_type in ('PETNOC') then SUM(coalesce(c.txn_amount , 0))\r\n"
+			+ "			when a.application_type in ('ROADCUTNOC')\r\n"
+			+ "			and a.application_status in('PAID', 'COMPLETE') then SUM(coalesce(c.txn_amount , 0))\r\n"
+			+ "			when a.application_type in ('ADVERTISEMENTNOC')\r\n"
+			+ "			and a.application_status in('PAID')\r\n"
+			+ "			and max(coalesce((b.application_detail::jsonb -> 'exemptedCategory' )::text, '0')) = '1' then SUM(coalesce(c.txn_amount , 0))\r\n"
+			+ "			when a.application_type in ('SELLMEATNOC')\r\n"
+			+ "			and a.application_status in('PAID', 'APPROVED') then SUM(coalesce(c.txn_amount , 0))\r\n"
+			+ "			when a.application_type in ('UTROADCUTNOC')\r\n"
+			+ "			and a.application_status in('PAID', 'COMPLETE') then SUM(coalesce(c.txn_amount , 0))\r\n"
+			+ "			else 0\r\n" + "		end revenueCollected\r\n" + "	from\r\n"
+			+ "		egpm_noc_application a\r\n" + "	inner join egpm_noc_application_detail b on\r\n"
+			+ "		a.application_uuid = b.application_uuid\r\n" + "		and b.is_active = a.is_active\r\n"
+			+ "	left join eg_pg_transactions c on\r\n" + "		a.noc_number = c.consumer_code\r\n"
+			+ "		and c.txn_status = 'SUCCESS'\r\n" + "	where\r\n" + "		a.tenant_id = ?\r\n"
+			+ "		and a.created_time >= ?\r\n" + "		and a.created_time <= ?\r\n" + "	group by\r\n"
+			+ "		a.application_type, a.application_status) as iudxData\r\n" + "group by\r\n" + "	applicationType";
+
 	public static String getPetsQuery() {
 
 		StringBuilder petsQuery = new StringBuilder(SELECT_PETS_QUERY);
@@ -282,7 +305,7 @@ public class QueryBuilder {
 		StringBuilder builder = new StringBuilder(BASE_QUERY);
 		JSONObject dataPayload = criteria.getDataPayload();
 		// service type
-		if (criteria.getApplicationType() != null) { 
+		if (criteria.getApplicationType() != null) {
 			addClauseIfRequired(preparedStmtList, builder);
 			builder.append(" EA.application_type=?");
 			preparedStmtList.add(criteria.getApplicationType());
@@ -326,7 +349,6 @@ public class QueryBuilder {
 		return builder.toString();
 	}
 
-	
 	private static final String BASE_QUERY_COUNT = "select "
 			+ "application_status \"applicationStatus\",sector \"sector\",EA.created_time \"createdTime\", "
 			+ "EA.application_type \"applicationType\" from egpm_noc_application_detail ED "
@@ -336,7 +358,7 @@ public class QueryBuilder {
 		StringBuilder builder = new StringBuilder(BASE_QUERY_COUNT);
 		JSONObject dataPayload = criteria.getDataPayload();
 		// service type
-		if (criteria.getApplicationType() != null) { 
+		if (criteria.getApplicationType() != null) {
 			addClauseIfRequired(preparedStmtList, builder);
 			builder.append(" EA.application_type=?");
 			preparedStmtList.add(criteria.getApplicationType());
@@ -380,7 +402,6 @@ public class QueryBuilder {
 		return builder.toString();
 	}
 
-	
 	// private String addPaginationWrapper(String query, List<Object>
 	// preparedStmtList, RequestData criteria) {
 	//
