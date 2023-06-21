@@ -2,6 +2,7 @@ package org.egov.pgr.controller;
 
 import javax.validation.Valid;
 
+import org.egov.pgr.contract.IUDXDataRequest;
 import org.egov.pgr.contract.ReportRequest;
 import org.egov.pgr.contract.ServiceReqSearchCriteria;
 import org.egov.pgr.model.GrievanceReport;
@@ -40,9 +41,8 @@ public class ReportController {
 
 	@PostMapping(value = "/_jobscheduler")
 	public ResponseEntity<ResponseInfoWrapper> process(@Valid @RequestBody RequestInfoWrapper request,
-			@ModelAttribute @Valid ServiceReqSearchCriteria serviceReqSearchCriteria)
-			throws JSONException {
-		return service.process(request,serviceReqSearchCriteria);
+			@ModelAttribute @Valid ServiceReqSearchCriteria serviceReqSearchCriteria) throws JSONException {
+		return service.process(request, serviceReqSearchCriteria);
 	}
 
 	@PostMapping("_grievance")
@@ -54,4 +54,11 @@ public class ReportController {
 				serviceReqSearchCriteria);
 		return new ResponseEntity<>(grievenceReport, HttpStatus.OK);
 	}
+
+	@PostMapping("/iudx/_get")
+	@ResponseBody
+	public ResponseEntity<?> getIUDXDataReports(@RequestBody @Valid IUDXDataRequest iudxDataRequest) {
+		return service.getIUDXDataReports(iudxDataRequest);
+	}
+
 }

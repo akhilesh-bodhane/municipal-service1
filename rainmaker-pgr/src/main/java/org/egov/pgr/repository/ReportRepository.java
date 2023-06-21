@@ -4,11 +4,15 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+
+import org.egov.pgr.contract.IUDXData;
+import org.egov.pgr.contract.IUDXDataRequest;
 import org.egov.pgr.contract.ReportRequest;
 import org.egov.pgr.model.DiscriptionReport;
 import org.egov.pgr.model.DiscriptionRequestInfoWrapper;
 import org.egov.pgr.model.RequestInfoWrapper;
 import org.egov.pgr.producer.PGRProducer;
+import org.egov.pgr.repository.rowmapper.IUDXDataRowMapper;
 import org.egov.pgr.utils.ReportConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -20,69 +24,80 @@ import lombok.extern.slf4j.Slf4j;
 @Repository
 @Slf4j
 public class ReportRepository {
-	
+
 	@Autowired
 	private ReportQueryBuilder reportQueryBuilder;
-	
+
 	@Autowired
 	private PGRProducer pGRProducer;
-	
-	
+
 	@Value("${kafka.topics.save.discription}")
 	private String saveDiscriptionTopic;
-	
+
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
-	
+
+	@Autowired
+	private IUDXDataRowMapper iudxDataRowMapper;
+
 	public List<Map<String, Object>> getDataFromDb(ReportRequest reportRequest) {
 		String query = null;
 		List<Map<String, Object>> result = new ArrayList<>();
-		if(reportRequest.getReportName().equalsIgnoreCase(ReportConstants.COMPLAINT_TYPE_REPORT)) {
+		if (reportRequest.getReportName().equalsIgnoreCase(ReportConstants.COMPLAINT_TYPE_REPORT)) {
 			query = reportQueryBuilder.getComplaintWiseReportQuery(reportRequest);
-		}else if(reportRequest.getReportName().equalsIgnoreCase(ReportConstants.AO_REPORT)) {
+		} else if (reportRequest.getReportName().equalsIgnoreCase(ReportConstants.AO_REPORT)) {
 			query = reportQueryBuilder.getAOWiseReportQuery(reportRequest);
-		}else if(reportRequest.getReportName().equalsIgnoreCase(ReportConstants.DEPARTMENT_REPORT)) {
+		} else if (reportRequest.getReportName().equalsIgnoreCase(ReportConstants.DEPARTMENT_REPORT)) {
 			query = reportQueryBuilder.getDepartmentWiseReportQuery(reportRequest);
-		}else if(reportRequest.getReportName().equalsIgnoreCase(ReportConstants.SOURCE_REPORT)) {
+		} else if (reportRequest.getReportName().equalsIgnoreCase(ReportConstants.SOURCE_REPORT)) {
 			query = reportQueryBuilder.getSourceWiseReportQuery(reportRequest);
-		}else if(reportRequest.getReportName().equalsIgnoreCase(ReportConstants.ULBEMPLOYEE_REPORT)) {
+		} else if (reportRequest.getReportName().equalsIgnoreCase(ReportConstants.ULBEMPLOYEE_REPORT)) {
 			query = reportQueryBuilder.getFunctionaryWiseReportQuert(reportRequest);
 		}
 		try {
 			result = jdbcTemplate.queryForList(query);
-		}catch(Exception e) {
-			log.error("Exception while executing query: "+e);
+		} catch (Exception e) {
+			log.error("Exception while executing query: " + e);
 		}
-		log.info("dbResponse: "+result);
+		log.info("dbResponse: " + result);
 		return result;
 	}
-	
+
 	public void createOrDropViewDb(ReportRequest reportRequest, Boolean shouldbeDropped) {
 		List<String> queries = new LinkedList<>();
-		if(!shouldbeDropped) {
-/*			queries.add(reportQueryBuilder.createATempTable());
-			queries.add(reportQueryBuilder.populateTempTable(reportRequest));*/
+		if (!shouldbeDropped) {
+			/*
+			 * queries.add(reportQueryBuilder.createATempTable());
+			 * queries.add(reportQueryBuilder.populateTempTable(reportRequest));
+			 */
 			queries.add(reportQueryBuilder.getCreateViewQuery());
-		}else {
+		} else {
 			queries.add(reportQueryBuilder.getDropViewQuery());
-		//	queries.add(reportQueryBuilder.getDropTempTableQuery());
+			// queries.add(reportQueryBuilder.getDropTempTableQuery());
 		}
-		for(String query: queries) {
+		for (String query : queries) {
 			try {
-				   jdbcTemplate.execute(query);
-			}catch(Exception e) {
-				log.error("Query: "+query);
-				log.error("Execution failed: "+e);
+				jdbcTemplate.execute(query);
+			} catch (Exception e) {
+				log.error("Query: " + query);
+				log.error("Execution failed: " + e);
 			}
 		}
 	}
 
-	public void saveData(RequestInfoWrapper request,DiscriptionReport data) {
-		
-		DiscriptionRequestInfoWrapper infoWrapper = DiscriptionRequestInfoWrapper.builder().discriptionReport(data).build();		
+	public void saveData(RequestInfoWrapper request, DiscriptionReport data) {
+
+		DiscriptionRequestInfoWrapper infoWrapper = DiscriptionRequestInfoWrapper.builder().discriptionReport(data)
+				.build();
 		pGRProducer.push(saveDiscriptionTopic, infoWrapper);
-		
-		
+
+	}
+
+	public IUDXData getIUDXDataReports(IUDXDataRequest iudxDataRequest) {
+		return jdbcTemplate.query(reportQueryBuilder.getIUDXQuery(),
+				new Object[] { iudxDataRequest.getRequestData().getTenantId(),
+						iudxDataRequest.getRequestData().getFromDate(), iudxDataRequest.getRequestData().getToDate() },
+				iudxDataRowMapper);
 	}
 
 }

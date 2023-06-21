@@ -1,7 +1,6 @@
 package org.egov.pgr.service;
 
 import java.math.BigDecimal;
-import java.math.MathContext;
 import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -22,6 +21,9 @@ import org.egov.mdms.model.MdmsCriteria;
 import org.egov.mdms.model.MdmsCriteriaReq;
 import org.egov.mdms.model.MdmsResponse;
 import org.egov.mdms.model.ModuleDetail;
+import org.egov.pgr.contract.IUDXData;
+import org.egov.pgr.contract.IUDXDataRequest;
+import org.egov.pgr.contract.IUDXDataResponse;
 import org.egov.pgr.contract.ReportRequest;
 import org.egov.pgr.contract.ReportResponse;
 import org.egov.pgr.contract.ServiceReqSearchCriteria;
@@ -48,7 +50,6 @@ import org.egov.pgr.model.TodaysReassignedComplaint;
 import org.egov.pgr.model.TodaysRejectedComplaint;
 import org.egov.pgr.model.TodaysReopenedComplaint;
 import org.egov.pgr.model.TodaysResolvedComplaints;
-import org.egov.pgr.repository.ReportQueryBuilder;
 import org.egov.pgr.repository.ReportRepository;
 import org.egov.pgr.repository.ServiceRequestRepository;
 import org.egov.pgr.repository.rowmapper.ColumnsRowMapper;
@@ -66,7 +67,6 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.jsonpath.JsonPath;
 
@@ -715,5 +715,27 @@ public class ReportService {
 		}
 		return response;
 
+	}
+
+	@SuppressWarnings("unchecked")
+	public ResponseEntity getIUDXDataReports(IUDXDataRequest iudxDataRequest) {
+		if (iudxDataRequest.getRequestData() != null && iudxDataRequest.getRequestData().getTenantId() != null
+				&& !iudxDataRequest.getRequestData().getTenantId().isEmpty()
+				&& iudxDataRequest.getRequestData().getFromDate() != null
+				&& iudxDataRequest.getRequestData().getToDate() != null) {
+			IUDXData iudxNocData = repository.getIUDXDataReports(iudxDataRequest);
+
+			if (iudxNocData != null)
+				iudxNocData.setCityName(iudxDataRequest.getRequestData().getTenantId());
+			;
+			return new ResponseEntity(IUDXDataResponse.builder()
+					.responseInfo(ResponseInfo.builder().status("Success").build()).iudxData(iudxNocData).build(),
+					HttpStatus.OK);
+		} else {
+			return new ResponseEntity(IUDXDataResponse.builder()
+					.responseInfo(ResponseInfo.builder().status("Fail")
+							.msgId("tenant id, from date, todate are mandatory").build())
+					.iudxData(null).build(), HttpStatus.OK);
+		}
 	}
 }

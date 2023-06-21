@@ -191,4 +191,16 @@ public class ReportQueryBuilder {
 		return query;
 	}
 
+	public static final String SELECT_IUDX_DATA_QUERY = "select\r\n" + "	upper(category) category,\r\n"
+			+ "	json_object_agg(upper(t.status), t.counts) as statusWiseCount\r\n" + "from\r\n" + "	(\r\n"
+			+ "	select\r\n" + "		category, status, count(1) counts\r\n" + "	from\r\n"
+			+ "		eg_pgr_service eps\r\n" + "	where\r\n" + "		category is not null and tenantid = ? \r\n"
+			+ "		and createdtime >= ?\r\n" + "		and createdtime <=?\r\n" + "	group by\r\n"
+			+ "		category , status) as t\r\n" + "group by\r\n" + "	category\r\n" + "order by\r\n"
+			+ "	category\r\n" + "";
+
+	public String getIUDXQuery() {
+		return SELECT_IUDX_DATA_QUERY;
+	}
+
 }
