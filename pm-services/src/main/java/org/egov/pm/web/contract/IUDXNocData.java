@@ -1,6 +1,6 @@
 package org.egov.pm.web.contract;
 
-import org.egov.common.contract.response.ResponseInfo;
+import org.egov.pm.model.IUDXServiceData;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -17,11 +17,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class IUDXNocResponse {
+public class IUDXNocData {
 
-	@JsonProperty("resposneInfo")
-	private ResponseInfo resposneInfo;
+	@JsonProperty("cityName")
+	private String cityName;
 
-	@JsonProperty("data")
-	private IUDXNocData iudxNocData;
+	@JsonProperty("services")
+	private IUDXServiceData services;
 }

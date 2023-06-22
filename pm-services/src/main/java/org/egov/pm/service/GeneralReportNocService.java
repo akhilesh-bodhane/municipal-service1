@@ -2,9 +2,9 @@ package org.egov.pm.service;
 
 import org.egov.common.contract.response.ResponseInfo;
 import org.egov.pm.model.IUDXRequestData;
-import org.egov.pm.model.IUDXServiceData;
 import org.egov.pm.repository.GeneralReportNocRepository;
 import org.egov.pm.util.CommonConstants;
+import org.egov.pm.web.contract.IUDXNocData;
 import org.egov.pm.web.contract.IUDXNocResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -26,17 +26,19 @@ public class GeneralReportNocService {
 				&& !iudxRequestData.getRequestData().getTenantId().isEmpty()
 				&& iudxRequestData.getRequestData().getFromDate() != null
 				&& iudxRequestData.getRequestData().getToDate() != null) {
-			IUDXServiceData iudxNocData = generalReportNocRepository.getIUDXNOCDATARepository(iudxRequestData);
+			IUDXNocData data = IUDXNocData.builder()
+					.services(generalReportNocRepository.getIUDXNOCDATARepository(iudxRequestData))
+					.cityName("chandigarh").build();
+			return new ResponseEntity(IUDXNocResponse.builder()
+					.resposneInfo(ResponseInfo.builder().status(CommonConstants.SUCCESS).build()).iudxNocData(data)
+					.build(), HttpStatus.OK);
+		} else {
 			return new ResponseEntity(
 					IUDXNocResponse.builder()
-							.resposneInfo(ResponseInfo.builder().status(CommonConstants.SUCCESS).build())
-							.services(iudxNocData).cityName(iudxRequestData.getRequestData().getTenantId()).build(),
+							.resposneInfo(ResponseInfo.builder().status(CommonConstants.FAIL)
+									.msgId("tenant id, from date, todate are mandatory").build())
+							.build(),
 					HttpStatus.OK);
-		} else {
-			return new ResponseEntity(IUDXNocResponse.builder()
-					.resposneInfo(ResponseInfo.builder().status(CommonConstants.FAIL)
-							.msgId("tenant id, from date, todate are mandatory").build())
-					.services(null).cityName(iudxRequestData.getRequestData().getTenantId()).build(), HttpStatus.OK);
 		}
 	}
 }
