@@ -726,8 +726,13 @@ public class ReportService {
 			IUDXData iudxNocData = repository.getIUDXDataReports(iudxDataRequest);
 
 			if (iudxNocData != null)
-				iudxNocData.setCityName(iudxDataRequest.getRequestData().getTenantId());
-			;
+				iudxNocData.setCityName("chandigarh");
+			else {
+				return new ResponseEntity(IUDXDataResponse.builder()
+						.responseInfo(ResponseInfo.builder().status("Fail").msgId("No record found").build())
+						.iudxData(null).build(), HttpStatus.OK);
+			}
+
 			return new ResponseEntity(IUDXDataResponse.builder()
 					.responseInfo(ResponseInfo.builder().status("Success").build()).iudxData(iudxNocData).build(),
 					HttpStatus.OK);

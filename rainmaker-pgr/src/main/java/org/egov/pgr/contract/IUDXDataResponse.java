@@ -20,6 +20,6 @@ public class IUDXDataResponse {
 	@JsonProperty("responseInfo")
 	private ResponseInfo responseInfo;
 
-	@JsonProperty("iudxData")
+	@JsonProperty("data")
 	private IUDXData iudxData;
 }
