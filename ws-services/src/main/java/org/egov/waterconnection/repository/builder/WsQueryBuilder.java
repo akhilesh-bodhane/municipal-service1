@@ -479,59 +479,126 @@ public class WsQueryBuilder {
 			+ "and\r\n"
 			+ "createdtime  >= ? and createdtime <= ? ";
 
-	private static final String WATER_GET_API = " select wc.connectionType,conn.tenantid,\r\n"
-			+ "wc.connection_id as connection_Id,application.applicationno as app_applicationno,conn.applicationStatus ,conn.status,\r\n"
-			+ "		conn.connectionNo,\r\n"
-			+ "		wc.proposedPipeSize, wc.waterSource,\r\n"
-			+ "		conn.waterApplicationType,\r\n"
-			+ "		conn.inworkflow,\r\n"
-			+ "		application.activitytype as app_activitytype,\r\n"
-			+ "		conn.property_id,\r\n"
-			+ "		conn.applicationType,\r\n"
-			+ "		conn.id as conn_id,\r\n"
-			+ "		conn.subdiv,\r\n"
-			+ "		application.id as application_id,\r\n"
-			+ "		application.applicationstatus as app_applicationstatus,\r\n"
-			+ "		application.action as app_action,\r\n"
-			+ "		application.comments as app_comments,\r\n"
-			+ "		property.id as waterpropertyid,\r\n"
-			+ "	    property.usagecategory,\r\n"
-			+ "		property.usagesubcategory,\r\n"
-			+ "		pta.doorno as propertyplotno,\r\n"
-			+ "		property.plotareatt as ploatAreaTT,\r\n"
-			+ "		pta.locality as propertysectorno,\r\n"
-			+ "		application.createdBy as app_createdBy,\r\n"
-			+ "			application.lastModifiedBy as app_lastModifiedBy,\r\n"
-			+ "			application.createdTime as app_createdTime,\r\n"
-			+ "			application.lastModifiedTime as app_lastModifiedTime,\r\n"
-			+ "			userid,\r\n"
-			+ "		connectionholder.ws_application_id,\r\n"
-			+ "		holdershippercentage,\r\n"
-			+ "		isprimaryholder,\r\n"
-			+ "		connectionholder.relationship as holderrelationship,\r\n"
-			+ "		connectionholder.status as holderstatus,\r\n"
-			+ "		connectionholdertype,\r\n"
-			+ "		connectionholder.tenantid as holdertenantid,\r\n"
-			+ "		connectionholder.name as holdername,\r\n"
-			+ "		connectionholder.correspondance_address as holdercorrepondanceaddress,\r\n"
-			+ "		connectionholder.proposed_correspondance_address as proposedCorrespondanceAddress ,\r\n"
-			+ "		connectionholder.proposed_gender as proposedGender ,\r\n"
-			+ "		connectionholder.proposed_guardian_name as proposedGuardianName ,\r\n"
-			+ "		connectionholder.proposed_mobile_no as proposedMobileNo ,\r\n"
-			+ "		connectionholder.proposed_name as proposedName,\r\n"
-			+ "		connectionholder.lastmodifiedtime as holderlastmodifiedtime\r\n"
-			+ "		from\r\n"
-			+ "			eg_ws_connection conn\r\n"
-			+ "		inner join eg_ws_service wc on\r\n"
-			+ "			wc.connection_id = conn.id\r\n"
-			+ "		inner join eg_pt_address pta on\r\n"
-			+ "			conn.property_id = pta.propertyid\r\n"
-			+ "		inner join eg_ws_application application on\r\n"
-			+ "			application.wsid = conn.id\r\n"
-			+ "		inner join eg_ws_property property on\r\n"
-			+ "			property.wsid = conn.id\r\n"
-			+ "		left outer join eg_ws_connectionholder connectionholder on\r\n"
-			+ "			connectionholder.connectionid = conn.id";
+	/*
+	 * private static final String WATER_GET_API =
+	 * " select wc.connectionType,conn.tenantid,\r\n" +
+	 * "wc.connection_id as connection_Id,application.applicationno as app_applicationno,conn.applicationStatus ,conn.status,\r\n"
+	 * + "		conn.connectionNo,\r\n" +
+	 * "		wc.proposedPipeSize, wc.waterSource,\r\n" +
+	 * "		conn.waterApplicationType,\r\n" + "		conn.inworkflow,\r\n" +
+	 * "		application.activitytype as app_activitytype,\r\n" +
+	 * "		conn.property_id,\r\n" + "		conn.applicationType,\r\n" +
+	 * "		conn.id as conn_id,\r\n" + "		conn.subdiv,\r\n" +
+	 * "		application.id as application_id,\r\n" +
+	 * "		application.applicationstatus as app_applicationstatus,\r\n" +
+	 * "		application.action as app_action,\r\n" +
+	 * "		application.comments as app_comments,\r\n" +
+	 * "		property.id as waterpropertyid,\r\n" +
+	 * "	    property.usagecategory,\r\n" +
+	 * "		property.usagesubcategory,\r\n" +
+	 * "		pta.doorno as propertyplotno,\r\n" +
+	 * "		property.plotareatt as ploatAreaTT,\r\n" +
+	 * "		pta.locality as propertysectorno,\r\n" +
+	 * "		application.createdBy as app_createdBy,\r\n" +
+	 * "			application.lastModifiedBy as app_lastModifiedBy,\r\n" +
+	 * "			application.createdTime as app_createdTime,\r\n" +
+	 * "			application.lastModifiedTime as app_lastModifiedTime,\r\n" +
+	 * "			userid,\r\n" + "		connectionholder.ws_application_id,\r\n"
+	 * + "		holdershippercentage,\r\n" + "		isprimaryholder,\r\n" +
+	 * "		connectionholder.relationship as holderrelationship,\r\n" +
+	 * "		connectionholder.status as holderstatus,\r\n" +
+	 * "		connectionholdertype,\r\n" +
+	 * "		connectionholder.tenantid as holdertenantid,\r\n" +
+	 * "		connectionholder.name as holdername,\r\n" +
+	 * "		connectionholder.correspondance_address as holdercorrepondanceaddress,\r\n"
+	 * +
+	 * "		connectionholder.proposed_correspondance_address as proposedCorrespondanceAddress ,\r\n"
+	 * + "		connectionholder.proposed_gender as proposedGender ,\r\n" +
+	 * "		connectionholder.proposed_guardian_name as proposedGuardianName ,\r\n"
+	 * + "		connectionholder.proposed_mobile_no as proposedMobileNo ,\r\n" +
+	 * "		connectionholder.proposed_name as proposedName,\r\n" +
+	 * "		connectionholder.lastmodifiedtime as holderlastmodifiedtime\r\n" +
+	 * "		from\r\n" + "			eg_ws_connection conn\r\n" +
+	 * "		inner join eg_ws_service wc on\r\n" +
+	 * "			wc.connection_id = conn.id\r\n" +
+	 * "		inner join eg_pt_address pta on\r\n" +
+	 * "			conn.property_id = pta.propertyid\r\n" +
+	 * "		inner join eg_ws_application application on\r\n" +
+	 * "			application.wsid = conn.id\r\n" +
+	 * "		inner join eg_ws_property property on\r\n" +
+	 * "			property.wsid = conn.id\r\n" +
+	 * "		left outer join eg_ws_connectionholder connectionholder on\r\n" +
+	 * "			connectionholder.connectionid = conn.id";
+	 */
+	
+	  
+	
+	private static final String WATER_GET_API = " select distinct "
+			+ "wc.connectionType,"
+			+ "conn.tenantid,\r\n"
+			 + "wc.connection_id as connection_Id," 
+			+ "application.applicationno as app_applicationno,"
+			/* + "conn.applicationStatus ," */
+			/* + "conn.status,\r\n" */
+			+ "conn.connectionNo,\r\n"
+			/* + "	wc.proposedPipeSize, wc.waterSource,\r\n" */
+			/* + "	conn.waterApplicationType,\r\n" */
+			/* + "	conn.inworkflow,\r\n" */
+			+ "	application.activitytype as app_activitytype,\r\n"
+			+ "	conn.property_id,\r\n"
+			/* + "	conn.applicationType,\r\n" */
+			 + "	conn.id as conn_id,\r\n" 
+			+ "	conn.div,\r\n"
+			+ "	conn.subdiv,\r\n"
+			 + " application.id as application_id,\r\n" 
+			+ "	application.applicationstatus as app_applicationstatus,\r\n"
+			/* + "	application.action as app_action,\r\n" */
+			/* + "	application.comments as app_comments,\r\n" */
+			 + "	property.id as waterpropertyid,\r\n" 
+			/* + "	property.usagecategory,\r\n" */
+			/* + "	property.usagesubcategory,\r\n" */
+			+ "	pta.doorno as propertyplotno,\r\n"
+			/* + "	property.plotareatt as ploatAreaTT,\r\n" */
+			+ "	pta.locality as propertysectorno,\r\n"
+			/* + "	application.createdBy as app_createdBy,\r\n" */
+			/* + "	application.lastModifiedBy as app_lastModifiedBy,\r\n" */
+			/* + "	application.createdTime as app_createdTime,\r\n" */
+			/* + "	application.lastModifiedTime as app_lastModifiedTime,\r\n" */
+			 + "	userid,\r\n" 
+			/* + "	connectionholder.ws_application_id,\r\n" */
+			/* + "	holdershippercentage,\r\n" */
+			/* + "	isprimaryholder,\r\n" */
+			/* + "	connectionholder.relationship as holderrelationship,\r\n" */
+			/* + "	connectionholder.status as holderstatus,\r\n" */
+			/* + "	connectionholdertype,\r\n" */
+			/* + "	connectionholder.tenantid as holdertenantid,\r\n" */
+			/* + "	connectionholder.name as holdername,\r\n" */
+			+ "	'WATER' as service,\r\n"
+			+ "	application.total_amount_paid as paidamount,\r\n"
+			+ "	connectionholder.correspondance_address as holdercorrepondanceaddress\r\n"
+			/*
+			 * +
+			 * "	connectionholder.proposed_correspondance_address as proposedCorrespondanceAddress ,\r\n"
+			 */
+			/* + "	connectionholder.proposed_gender as proposedGender ,\r\n" */
+			/*
+			 * + "	connectionholder.proposed_guardian_name as proposedGuardianName ,\r\n"
+			 */
+			/* + "	connectionholder.proposed_mobile_no as proposedMobileNo ,\r\n" */
+			/* + "	connectionholder.proposed_name as proposedName,\r\n" */
+			/* + "	connectionholder.lastmodifiedtime as holderlastmodifiedtime\r\n" */
+			+ "	from\r\n"
+			+ "	eg_ws_connection conn\r\n"
+			+ "	inner join eg_ws_service wc on\r\n"
+			+ "	wc.connection_id = conn.id\r\n"
+			+ "	inner join eg_pt_address pta on\r\n"
+			+ "	conn.property_id = pta.propertyid\r\n"
+			+ "	inner join eg_ws_application application on\r\n"
+			+ "	application.wsid = conn.id\r\n"
+			+ "	inner join eg_ws_property property on\r\n"
+			+ "	property.wsid = conn.id\r\n"
+			+ "	left outer join eg_ws_connectionholder connectionholder on\r\n"
+			+ "	connectionholder.connectionid = conn.id";
 	
 	
 	private static final String WATER_SEARCH_QUERY_NIUA16 = "select SUM(case when ewa.applicationstatus in ('CONNECTION_ACTIVATED','METER_UPDATED',\r\n"
