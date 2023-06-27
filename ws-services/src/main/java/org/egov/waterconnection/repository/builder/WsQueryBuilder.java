@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.egov.common.contract.request.RequestInfo;
+import org.egov.tracer.model.CustomException;
 import org.egov.waterconnection.config.WSConfiguration;
 import org.egov.waterconnection.constants.WCConstants;
 import org.egov.waterconnection.model.Property;
@@ -632,6 +633,8 @@ public class WsQueryBuilder {
 			+ "	'CONNECTION_TARIFF_CHANGED','CONNECTION_ACCOUNT_NUMBER_CHANGED','CLOSED_CONNECTION') then to_timestamp(ewa.lastmodifiedtime / 1000)::date - to_timestamp(ewa.createdtime / 1000)::date else 0 end) approveddays\r\n"
 			+ " from eg_ws_application ewa " ;
 	
+	public static final String MOBILE_NUMBER_EXCEPTION_CODE = "MOBILE NUMBER DOES NOT EXISTS";
+	
 	/**
 	 * 
 	 * @param criteria
@@ -1135,6 +1138,8 @@ public class WsQueryBuilder {
 				query.append(" connectionholder.userid in (").append(createQuery(uuids)).append(" ))");
 				addToPreparedStatement(preparedStatement, uuids);
 				userIdsPresent = true;
+			}else {
+				throw new CustomException(MOBILE_NUMBER_EXCEPTION_CODE,"This mobile number is not register in our system");	
 			}
 			/*
 			 * if(propertyIdsPresent && !userIdsPresent){ query.append(")"); }

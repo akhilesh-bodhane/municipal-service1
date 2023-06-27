@@ -7,12 +7,15 @@ import org.egov.waterconnection.model.Connection.StatusEnum;
 import org.egov.waterconnection.model.enums.Status;
 import org.egov.waterconnection.model.workflow.ProcessInstance;
 import org.springframework.dao.DataAccessException;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
+import org.threeten.bp.format.DateTimeFormatter;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -26,6 +29,9 @@ public class WaterGetAPIRowMapper implements ResultSetExtractor<List<WaterConnec
 		Map<String, WaterConnection> connectionListMap = new HashMap<>();
 		List<WaterConnection> currentWaterConnectionlist =new ArrayList<>();
 		
+		//DateTimeFormatter dt=DateTimeFormatter.ofPattern("dd/mm/yyy HH:mm:ss");
+		LocalDateTime now=LocalDateTime.now();		
+		System.out.println(now+" start while");
 		while (rs.next()) {
 			String applicationNo = rs.getString("connection_Id");
 
@@ -86,6 +92,8 @@ public class WaterGetAPIRowMapper implements ResultSetExtractor<List<WaterConnec
 			addChildrenToProperty(rs, currentWaterConnection);
 			currentWaterConnectionlist.add(currentWaterConnection);
 		}
+		LocalDateTime now1=LocalDateTime.now();		
+		System.out.println(now1+"  end while");
 		return currentWaterConnectionlist;
 	}
 
