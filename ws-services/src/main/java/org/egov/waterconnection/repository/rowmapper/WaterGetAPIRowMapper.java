@@ -7,15 +7,12 @@ import org.egov.waterconnection.model.Connection.StatusEnum;
 import org.egov.waterconnection.model.enums.Status;
 import org.egov.waterconnection.model.workflow.ProcessInstance;
 import org.springframework.dao.DataAccessException;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
-import org.threeten.bp.format.DateTimeFormatter;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -27,16 +24,13 @@ public class WaterGetAPIRowMapper implements ResultSetExtractor<List<WaterConnec
 	@Override
 	public List<WaterConnection> extractData(ResultSet rs) throws SQLException, DataAccessException {
 		Map<String, WaterConnection> connectionListMap = new HashMap<>();
-		List<WaterConnection> currentWaterConnectionlist =new ArrayList<>();
+		WaterConnection currentWaterConnection = new WaterConnection();
 		
-		//DateTimeFormatter dt=DateTimeFormatter.ofPattern("dd/mm/yyy HH:mm:ss");
-		LocalDateTime now=LocalDateTime.now();		
-		System.out.println(now+" start while");
 		while (rs.next()) {
 			String applicationNo = rs.getString("connection_Id");
 
-			/* if (connectionListMap.getOrDefault(applicationNo, null) == null) { */
-			WaterConnection currentWaterConnection = new WaterConnection();
+			if (connectionListMap.getOrDefault(applicationNo, null) == null) {
+				currentWaterConnection = new WaterConnection();
 				currentWaterConnection.setTenantId(rs.getString("tenantid"));
 				currentWaterConnection.setConnectionType(rs.getString("connectionType"));
 				currentWaterConnection.setId(rs.getString("connection_Id"));
@@ -87,14 +81,10 @@ public class WaterGetAPIRowMapper implements ResultSetExtractor<List<WaterConnec
 				}
 				 
 				connectionListMap.put(applicationNo, currentWaterConnection);
-				
-			/*}*/
+			}
 			addChildrenToProperty(rs, currentWaterConnection);
-			currentWaterConnectionlist.add(currentWaterConnection);
 		}
-		LocalDateTime now1=LocalDateTime.now();		
-		System.out.println(now1+"  end while");
-		return currentWaterConnectionlist;
+		return new ArrayList<>(connectionListMap.values());
 	}
 
 
@@ -112,15 +102,14 @@ public class WaterGetAPIRowMapper implements ResultSetExtractor<List<WaterConnec
 			app.setApplicationNo(rs.getString("app_applicationno"));
 			app.setActivityType(rs.getString("app_activitytype"));
 			app.setApplicationStatus(rs.getString("app_applicationstatus"));
-			//app.setAction(rs.getString("app_action"));
-			/*
-			 * AuditDetails auditdetails1 = AuditDetails.builder()
-			 * .createdBy(rs.getString("app_createdBy"))
-			 * .createdTime(rs.getLong("app_createdTime"))
-			 * .lastModifiedBy(rs.getString("app_lastModifiedBy"))
-			 * .lastModifiedTime(rs.getLong("app_lastModifiedTime")) .build();
-			 * app.setAuditDetails(auditdetails1);
-			 */
+			/* app.setAction(rs.getString("app_action")); */
+			AuditDetails auditdetails1 = AuditDetails.builder()
+                   .createdBy(rs.getString("app_createdBy"))
+                   .createdTime(rs.getLong("app_createdTime"))
+                   .lastModifiedBy(rs.getString("app_lastModifiedBy"))
+                   .lastModifiedTime(rs.getLong("app_lastModifiedTime"))
+                   .build();
+			app.setAuditDetails(auditdetails1);
 		 
 			waterConnection.addWaterApplication(app);
 		}
@@ -129,34 +118,41 @@ public class WaterGetAPIRowMapper implements ResultSetExtractor<List<WaterConnec
 
     private void addHoldersDeatilsToWaterConnection(ResultSet rs, WaterConnection waterConnection) throws SQLException {
         String uuid = rs.getString("userid");
-        //String WSuuid = rs.getString("ws_application_id");
+        String WSuuid = rs.getString("ws_application_id");
         List<ConnectionHolderInfo> connectionHolders = waterConnection.getConnectionHolders();
 
         //Commented for Connection Holder changes
-		
-		/*
-		 * if (!CollectionUtils.isEmpty(connectionHolders)) { //
-		 * System.out.println(connectionHolders.size()); for (ConnectionHolderInfo
-		 * connectionHolderInfo : connectionHolders) {
-		 * 
-		 * if(!StringUtils.isEmpty(connectionHolderInfo.getUuid())
-		 * &&!StringUtils.isEmpty(uuid) //&& connectionHolderInfo.getUuid().equals(uuid)
-		 * ) { if (!StringUtils.isEmpty(connectionHolderInfo.getWs_application_id())
-		 * &&!StringUtils.isEmpty(WSuuid) &&
-		 * connectionHolderInfo.getWs_application_id().equals(WSuuid)) {
-		 * 
-		 * return; } }
-		 * 
-		 * } }
-		 */
-		 
+        if (!CollectionUtils.isEmpty(connectionHolders)) {
+           // System.out.println(connectionHolders.size());
+            for (ConnectionHolderInfo connectionHolderInfo : connectionHolders) {
+				
+            	 if(!StringUtils.isEmpty(connectionHolderInfo.getUuid())
+            			 &&!StringUtils.isEmpty(uuid) 
+            			 //&& connectionHolderInfo.getUuid().equals(uuid)
+            	)
+            	 {
+				  if (!StringUtils.isEmpty(connectionHolderInfo.getWs_application_id()) &&!StringUtils.isEmpty(WSuuid) && connectionHolderInfo.getWs_application_id().equals(WSuuid)) { 
+					 
+					  return; 
+				  } 
+				  }
+				 
+				  
+				
+				 
+            	
+            	
+           }
+        }
         if(!StringUtils.isEmpty(uuid)){
-			/*
-			 * Double holderShipPercentage = rs.getDouble("holdershippercentage"); if
-			 * (rs.wasNull()) { holderShipPercentage = null; } Boolean isPrimaryOwner =
-			 * rs.getBoolean("isprimaryholder"); if (rs.wasNull()) { isPrimaryOwner = null;
-			 * }
-			 */
+            Double holderShipPercentage = rs.getDouble("holdershippercentage");
+            if (rs.wasNull()) {
+                holderShipPercentage = null;
+            }
+            Boolean isPrimaryOwner = rs.getBoolean("isprimaryholder");
+            if (rs.wasNull()) {
+                isPrimaryOwner = null;
+            }
             ConnectionHolderInfo connectionHolderInfo = ConnectionHolderInfo.builder()
                     //.relationship(Relationship.fromValue(rs.getString("holderrelationship")))
                     //.status(org.egov.waterconnection.model.Status.fromValue(rs.getString("holderstatus")))
