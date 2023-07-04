@@ -57,16 +57,20 @@ public class SuhLogRepository {
 					return log = jdbcTemplate.query(NULMQueryBuilder.GET_SUH_LOG_QUERY,
 							new Object[] {suhLog.getLogUuid(),suhLog.getLogUuid(),"","",
 									suhLog.getName(),suhLog.getName(),suhLog.getNameOfShelter(),suhLog.getNameOfShelter(),
-									suhLog.getFromDate(),suhLog.getFromDate(),suhLog.getToDate(),suhLog.getToDate(),
-									suhLog.getTenantId() },
+									suhLog.getFromDate(), suhLog.getFromDate(), suhLog.getToDate(),
+									suhLog.getToDate()/*
+														 * , suhLog.getTenantId()
+														 */ },
 							suhLogrowMapper);				}
 			}
 
 			return	log = jdbcTemplate.query(NULMQueryBuilder.GET_SUH_LOG_QUERY,
 					new Object[] {suhLog.getLogUuid(),suhLog.getLogUuid(),userId.toString(),userId.toString(),
 							suhLog.getName(),suhLog.getName(),suhLog.getNameOfShelter(),suhLog.getNameOfShelter(),
-							suhLog.getFromDate(),suhLog.getFromDate(),suhLog.getToDate(),suhLog.getToDate(),
-							suhLog.getTenantId() },
+							suhLog.getFromDate(), suhLog.getFromDate(), suhLog.getToDate(),
+							suhLog.getToDate()/*
+												 * , suhLog.getTenantId()
+												 */ },
 					suhLogrowMapper);
 		} catch (Exception e) {
 			e.printStackTrace();
