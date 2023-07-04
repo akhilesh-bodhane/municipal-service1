@@ -57,7 +57,7 @@ public class SusvRepository {
 		Map<String, String> errorMap = new HashMap<>();
 		int i = 0;
 		i = jdbcTemplate.queryForObject(NULMQueryBuilder.GET_COV_NO_QUERY,
-				new Object[] {request.getCovNo(),request.getTenantId() }, Integer.class);
+				new Object[] { request.getCovNo()/* ,request.getTenantId() */}, Integer.class);
 
 		if (i > 0) {
 			errorMap.put(CommonConstants.INVALID_SUSV_REQUEST, CommonConstants.DIPLICATE_COV_NO_MESSAGE);

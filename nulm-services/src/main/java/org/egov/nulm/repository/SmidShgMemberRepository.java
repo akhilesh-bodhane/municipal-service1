@@ -153,7 +153,8 @@ public List<SmidShgMemberApplication> saveGuest(List<SmidShgMemberApplication> u
 //							new Object[] { memberrequest.getApplicationId(), memberrequest.getApplicationId(), "",
 									new Object[] { shg.getApplicationId(), shg.getApplicationId(), "",
 //							new Object[] { shg[0].getShgUuid(), shg[0].getShgUuid(), "",
-									"", shg.getTenantId(),
+									"", 
+										/* shg.getTenantId(), */
 									
 									shg.getApplicationStatus() == null ? ""
 											: shg.getApplicationStatus().toString(),

@@ -71,7 +71,7 @@ public class SuhRepository {
 		Map<String, String> errorMap = new HashMap<>();
 		int i = 0;
 		i = jdbcTemplate.queryForObject(NULMQueryBuilder.GET_SUH_NAME_QUERY,
-				new Object[] {suh.getNameOfShelter(),suh.getTenantId() }, Integer.class);
+				new Object[] { suh.getNameOfShelter()/* ,suh.getTenantId() */ }, Integer.class);
 
 		if (i > 0) {
 			errorMap.put(CommonConstants.INVALID_SUH_REQUEST, CommonConstants.INVALID_SUH_REQUEST_MESSAGE);
@@ -82,7 +82,7 @@ public class SuhRepository {
 		Map<String, String> errorMap = new HashMap<>();
 		int i = 0;
 		i = jdbcTemplate.queryForObject(NULMQueryBuilder.GET_ORGANIZATION_UUID_QUERY,
-				new Object[] {suhapplication.getTenantId(),suhapplication.getAssignedTo() }, Integer.class);
+				new Object[] { /* suhapplication.getTenantId(), */suhapplication.getAssignedTo() }, Integer.class);
 
 		if (i == 0) {
 			errorMap.put(CommonConstants.INVALID_SUH_REQUEST, CommonConstants.INVALID_SUH_ASSIGNED_TO);

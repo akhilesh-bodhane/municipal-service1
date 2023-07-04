@@ -185,7 +185,7 @@ public class SmidShgRepository {
 		Map<String, String> errorMap = new HashMap<>();
 		int i = 0;
 		i = jdbcTemplate.queryForObject(NULMQueryBuilder.GET_SHG_MEMBER_COUNT_QUERY,
-				new Object[] { shg.getShgUuid(), shg.getTenantId() }, Integer.class);
+				new Object[] { shg.getShgUuid()/* , shg.getTenantId() */ }, Integer.class);
 
 		if (i < 10) {
 			errorMap.put(CommonConstants.INVALID_SHG_REQUEST, CommonConstants.INVALID_SHG_REQUEST_MESSAGE);

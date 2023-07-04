@@ -53,7 +53,7 @@ public class OrganizationRepository {
 		Map<String, String> errorMap = new HashMap<>();
 		int i = 0;
 		i = jdbcTemplate.queryForObject(NULMQueryBuilder.GET_ORGANIZATION_MOBILE_NO_QUERY,
-				new Object[] { request.getTenantId(), request.getMobileNo() }, Integer.class);
+				new Object[] { /* request.getTenantId(), */ request.getMobileNo() }, Integer.class);
 
 		if (i > 0) {
 			errorMap.put(CommonConstants.INVALID_ORGANIZATION_REQUEST,
