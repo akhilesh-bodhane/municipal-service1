@@ -61,8 +61,10 @@ public class SepRepository {
 									sepApplication.getApplicationId(), 
 									isEmployee ? "" : userId.toString(), 
 									isEmployee ? "" : userId.toString(),
-									isEmployee ? "" : sepApplication.getTenantId(),
-									isEmployee ? "" : sepApplication.getTenantId(),
+							/*
+							 * isEmployee ? "" : sepApplication.getTenantId(), isEmployee ? "" :
+							 * sepApplication.getTenantId(),
+							 */
 									sepApplication.getApplicationStatus() == null ? "" : sepApplication.getApplicationStatus().toString(),
 									sepApplication.getApplicationStatus() == null ? "" : sepApplication.getApplicationStatus().toString(),
 									sepApplication.getFromDate(), 

@@ -64,7 +64,8 @@ public class SmidRepository {
 				if ((roleobj.getCode()).equalsIgnoreCase(config.getRoleEmployee())) {
 					return smid = jdbcTemplate.query(NULMQueryBuilder.GET_SMID_APPLICATION_QUERY,
 							new Object[] { smidApplication.getApplicationId(), smidApplication.getApplicationId(),
-									"", "", smidApplication.getTenantId(),
+									"",
+									"", /* smidApplication.getTenantId(), */
 									smidApplication.getApplicationStatus() == null ? ""
 											: smidApplication.getApplicationStatus().toString(),
 									smidApplication.getApplicationStatus() == null ? ""

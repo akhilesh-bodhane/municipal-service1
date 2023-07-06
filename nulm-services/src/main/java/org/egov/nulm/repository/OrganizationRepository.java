@@ -81,7 +81,8 @@ public class OrganizationRepository {
 			for (Role roleobj : role) {
 				if ((roleobj.getCode()).equalsIgnoreCase(config.getRoleEmployee())) {
 					 smid = jdbcTemplate.query(NULMQueryBuilder.GET_ORGANIZATION_QUERY,
-							new Object[] { request.getTenantId(),request.getOrganizationUuid(),request.getOrganizationUuid(),
+								new Object[] {
+										/* request.getTenantId(), */request.getOrganizationUuid(),request.getOrganizationUuid(),
 									request.getOrganizationName(),request.getOrganizationName(),
 									request.getRegistrationNo(),request.getRegistrationNo(),
 									request.getFromDate(),request.getFromDate(),

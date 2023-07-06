@@ -83,7 +83,7 @@ public class SusvRepository {
 			Long userId) {
 		List<SusvApplication> susv = new ArrayList<>();
 		Map<String, Object> paramValues = new HashMap<>();
-		paramValues.put("tenantId", request.getTenantId());
+//		paramValues.put("tenantId", request.getTenantId());
 		paramValues.put("fromDate", request.getFromDate());
 		paramValues.put("toDate", request.getToDate());
 		paramValues.put("nameOfApplicant", request.getNameOfApplicant());

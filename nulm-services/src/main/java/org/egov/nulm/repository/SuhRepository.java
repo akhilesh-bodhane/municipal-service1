@@ -94,7 +94,7 @@ public class SuhRepository {
 	public List<SuhApplication> getSuhApplication(SuhApplication suh, List<Role> role, Long userId) {
 		List<SuhApplication> suhApp = new ArrayList<>();
 		Map<String, Object> paramValues = new HashMap<>();
-		paramValues.put("tenantId", suh.getTenantId());
+//		paramValues.put("tenantId", suh.getTenantId());
 		paramValues.put("fromDate", suh.getFromDate());
 		paramValues.put("toDate", suh.getToDate());
 		paramValues.put("nameOfShelter", suh.getNameOfShelter());

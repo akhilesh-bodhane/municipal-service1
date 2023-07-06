@@ -76,7 +76,7 @@ public class SusvRenewRepository {
 
 	public List<SusvRenewApplication> getSusvRenewApplication(SusvRenewApplication request, String userType, Long userId) {
 		Map<String, Object> paramValues = new HashMap<>();
-		paramValues.put("tenantId", request.getTenantId());
+//		paramValues.put("tenantId", request.getTenantId());
 		paramValues.put("fromDate", request.getFromDate());
 		paramValues.put("toDate", request.getToDate());
 //		paramValues.put("nameOfApplicant", request.getNameOfApplicant());

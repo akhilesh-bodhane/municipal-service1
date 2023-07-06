@@ -58,7 +58,7 @@ public class TransactionRepository {
 	public List<Transaction> getTransaction(Transaction trans, List<Role> role,Long userId) {
 		List<Transaction> result = new ArrayList<>();
 		Map<String, Object> paramValues = new HashMap<>();
-		paramValues.put("tenantId", trans.getTenantId());
+//		paramValues.put("tenantId", trans.getTenantId());
 		paramValues.put("fromDate", trans.getFromDate());
 		paramValues.put("toDate", trans.getToDate());
 		paramValues.put("transactionType", trans.getTransactionType());
