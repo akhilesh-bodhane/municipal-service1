@@ -86,7 +86,7 @@ public class SmidShgRepository {
 	public List<SmidShgGroup> getGroup(SmidShgGroup shg, List<Role> role, Long userId) {
 		List<SmidShgGroup> smid = new ArrayList<>();
 		Map<String, Object> paramValues = new HashMap<>();
-		paramValues.put("tenantId", shg.getTenantId());
+//		paramValues.put("tenantId", shg.getTenantId());
 		paramValues.put("fromDate", shg.getFromDate());
 		paramValues.put("toDate", shg.getToDate());
 		paramValues.put("name", shg.getName());

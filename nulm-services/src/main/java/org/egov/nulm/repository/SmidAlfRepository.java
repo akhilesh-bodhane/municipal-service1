@@ -86,8 +86,10 @@ public class SmidAlfRepository {
 							        alfApplication.getId(), 
 									isEmployee ? "" : userId.toString(), 
 									isEmployee ? "" : userId.toString(),
-									isEmployee ? "" : alfApplication.getTenantId(),
-									isEmployee ? "" : alfApplication.getTenantId(),
+							/*
+							 * isEmployee ? "" : alfApplication.getTenantId(), isEmployee ? "" :
+							 * alfApplication.getTenantId(),
+							 */
 			                        alfApplication.getFromDate(), alfApplication.getFromDate(),alfApplication.getToDate(),alfApplication.getToDate()
 								
 								 }, columnsRowMapper);
