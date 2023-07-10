@@ -200,7 +200,7 @@ public class NULMQueryBuilder {
 			+ "'tenantId',tenant_id,'applicationUuid',application_uuid) ))as document FROM nulm_susv_renew_application_document GROUP BY application_uuid) ND on SA.application_uuid=ND.application_uuid \n"
 			+ "left join (SELECT count(application_uuid) fmember, application_uuid,max(tenant_id) tenant_id, array_to_json(array_agg(json_build_object('uuid',uuid,'name',name,'age',age,'relation',relation,'isActive',is_active, \n"
 			+ "'tenantId',tenant_id,'applicationUuid',application_uuid))) as familymembers FROM nulm_susv_renew_familiy_detail GROUP BY application_uuid) NF \n"
-			+ "on SA.application_uuid=NF.application_uuid and \n"
+			+ "on SA.application_uuid=NF.application_uuid \n"
 			+ "left join nulm_susv_application_detail SN  on SN.application_id= SA.susv_applicaton_id where SA.application_id=(case when :applicationId  <>'' then :applicationId  else SA.application_id end) and SA.created_by=(case when :createdBy  <>'' then :createdBy  else SA.created_by end) \n"
 			+ "AND SA.is_active='true'  AND SA.application_status  IN(:applicationStaus) and \n"
 			+ "TO_DATE(TO_CHAR(TO_TIMESTAMP(SA.created_time / 1000), 'YYYY-MM-DD'),'YYYY-MM-DD') >= CASE WHEN :fromDate <> ''THEN DATE(:fromDate) ELSE\n"
