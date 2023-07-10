@@ -70,7 +70,7 @@ public class SmidShgRepository {
 		Map<String, Object> paramValues = new HashMap<>();
 		
 		try {
-			paramValues.put("tenantId", shg.getTenantId());
+//			paramValues.put("tenantId", shg.getTenantId());
 			paramValues.put("shgUuid", shg.getShgUuid());
 			
 					return smid = namedParameterJdbcTemplate.query(NULMQueryBuilder.GET_SHG_STATUS_QUERY, paramValues,
@@ -197,7 +197,7 @@ public class SmidShgRepository {
 		Map<String, String> errorMap = new HashMap<>();
 		int i = 0;
 		i = jdbcTemplate.queryForObject(NULMQueryBuilder.SHG_UUID_EXIST_QUERY,
-				new Object[] { shg.getShgUuid(), shg.getTenantId() }, Integer.class);
+				new Object[] { shg.getShgUuid() }, Integer.class);
 
 		if (i == 0) {
 			errorMap.put(CommonConstants.INVALID_SHG_UUID, CommonConstants.INVALID_SHG_UUID_MESSAGE);
