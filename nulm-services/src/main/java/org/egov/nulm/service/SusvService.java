@@ -70,6 +70,8 @@ public class SusvService {
 
 	public ResponseEntity<ResponseInfoWrapper> createSusvApplication(NulmSusvRequest request) {
 		try {
+			System.out.println("createSusvApplication Requet : " + objectMapper.writeValueAsString(request));
+			
 			SusvApplication susvApplication = objectMapper.convertValue(request.getNulmSusvRequest(),
 					SusvApplication.class);
 
