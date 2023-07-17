@@ -46,12 +46,12 @@ public class OrganizationService {
 					Organization.class);
 			repository.checkMobileNo(organization);
 			repository.checkOrganizationName(organization);
-		    UserDetailResponse userDetailResponse =userUtil.createUser(request);
-			
-			if (userDetailResponse.getUser().get(0) != null && userDetailResponse.getUser().get(0).getId() != null)
-				organization.setUserId(userDetailResponse.getUser().get(0).getId() );
-			else
-				throw new CustomException(HttpStatus.INTERNAL_SERVER_ERROR.toString(), CommonConstants.USER_CREATION);
+//		    UserDetailResponse userDetailResponse =userUtil.createUser(request);
+//			
+//			if (userDetailResponse.getUser().get(0) != null && userDetailResponse.getUser().get(0).getId() != null)
+//				organization.setUserId(userDetailResponse.getUser().get(0).getId() );
+//			else
+//				throw new CustomException(HttpStatus.INTERNAL_SERVER_ERROR.toString(), CommonConstants.USER_CREATION);
 			 
 			String sepid = UUID.randomUUID().toString();
 			organization.setOrganizationUuid(sepid);
