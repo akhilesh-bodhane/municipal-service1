@@ -66,7 +66,7 @@ public class OrganizationRepository {
 		Map<String, String> errorMap = new HashMap<>();
 		int i = 0;
 		i = jdbcTemplate.queryForObject(NULMQueryBuilder.GET_ORGANIZATION_NAME_QUERY,
-				new Object[] { request.getTenantId(), request.getOrganizationName() }, Integer.class);
+				new Object[] { /* request.getTenantId(), */ request.getOrganizationName() }, Integer.class);
 
 		if (i > 0) {
 			errorMap.put(CommonConstants.INVALID_ORGANIZATION_REQUEST,
