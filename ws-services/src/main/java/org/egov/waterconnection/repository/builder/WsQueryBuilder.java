@@ -38,10 +38,10 @@ public class WsQueryBuilder {
 			+ "       netamount , grossamount , surcharge , totalnetamount  , totalsurcharge  , \r\n"
 			+ "       totalgrossamount , fixchargecode , fixcharge  , duedatecash , duedatecheque  , \r\n"
 			+ "       status , billid , paymentid  ,totalamount_paid as totalAmountPaid, paymentmode, receiptdate, paymentstatus , createdby , lastmodifiedby  , \r\n"
-			+ "       createdtime , lastmodifiedtime\r\n" + "  FROM public.eg_ws_savebilling where status ='PAID';";
+			+ "       createdtime , lastmodifiedtime\r\n" + "  FROM eg_ws_savebilling where status ='PAID';";
 
 	public static final String GET_WS_BILLING_FILES = "SELECT  filestore_url as billFileStoreUrl, filestore_id as billFileStoreId, filegeneration_time as fileGenerationTime\r\n"
-			+ "  FROM public.eg_ws_billfile_history;";
+			+ "  FROM eg_ws_billfile_history;";
 	public static final String GET_WS_BILLING_Data = "SELECT id as billGenerationId, cccode as ccCode, divsdiv as divSdiv, consumercode as consumerCode, billcycle as billCycle, billgroup as billGroup,\r\n"
 			+ " subgroup as subGroup, \r\n"
 			+ "       billtype as billType, name as name, address as address, add1 as add1, add2 as add2, add3 as add3 , add4 as add4 , add5 as add5, cesscharge as cessCharge, \r\n"
@@ -49,7 +49,7 @@ public class WsQueryBuilder {
 			+ "       totalgrossamount  , fixchargecode  , fixcharge  , duedatecash  , duedatecheque  , \r\n"
 			+ "       status  , billid  , paymentid , paymentstatus  , createdby  , lastmodifiedby  , \r\n"
 			+ "       createdtime  , lastmodifiedtime\r\n"
-			+ "  FROM public.eg_ws_savebilling where concat(divsdiv,consumercode) = ?;";
+			+ "  FROM eg_ws_savebilling where concat(divsdiv,consumercode) = ?;";
 	private static final String INNER_JOIN_STRING = " INNER JOIN ";
 	private static final String LEFT_OUTER_JOIN_STRING = " LEFT OUTER JOIN ";
 
@@ -101,7 +101,7 @@ public class WsQueryBuilder {
 			+ "       billid, paymentid, paymentstatus, createdby, lastmodifiedby, \r\n"
 			+ "       createdtime, lastmodifiedtime, totalamount_paid, paymentmode, \r\n"
 			+ "       fromdate, todate, receiptdate, year\r\n"
-			+ "  FROM public.eg_ws_monthlybill_history where lastmodifiedtime >= ? and lastmodifiedtime <= ? ;";
+			+ "  FROM eg_ws_monthlybill_history where lastmodifiedtime >= ? and lastmodifiedtime <= ? ;";
 
 	private static final String WATER_SEARCH_QUERY_COUNT = "SELECT   wc.connectionType, wc.connection_id as connection_Id, conn.subdiv,"
 			+ " py.paymentmode,py.lastmodifiedtime as paymentdate , conn.applicationStatus, conn.status,  conn.createdTime as ws_createdTime, "

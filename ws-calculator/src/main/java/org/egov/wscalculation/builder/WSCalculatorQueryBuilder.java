@@ -41,7 +41,7 @@ public class WSCalculatorQueryBuilder {
 			"       totalgrossamount as , fixchargecode as , fixcharge as , duedatecash as , duedatecheque as , \r\n" + 
 			"       status as , billid as , paymentid as , paymentstatus as , createdby as , lastmodifiedby as , \r\n" + 
 			"       createdtime as , lastmodifiedtime\r\n" + 
-			"  FROM public.eg_ws_savebilling where status ='INITIATED' and duedatecash::date >= now()::date;";
+			"  FROM eg_ws_savebilling where status ='INITIATED' and duedatecash::date >= now()::date;";
 	
 	public static final String getBillingDataForSurcharge = "SELECT id as billGenerationId, cccode as ccCode, divsdiv as divSdiv, consumercode as consumerCode, billcycle as billCycle, billgroup as billGroup,\r\n" + 
 			" subgroup as subGroup, \r\n" + 
@@ -50,7 +50,7 @@ public class WSCalculatorQueryBuilder {
 			"       totalgrossamount as , fixchargecode as , fixcharge as , duedatecash as , duedatecheque as , \r\n" + 
 			"       status as , billid as , paymentid as , paymentstatus as , createdby as , lastmodifiedby as , \r\n" + 
 			"       createdtime as , lastmodifiedtime\r\n" + 
-			"  FROM public.eg_ws_savebilling where status not in ('PAID')::date and duedatecash::date < now()::date;";
+			"  FROM eg_ws_savebilling where status not in ('PAID')::date and duedatecash::date < now()::date;";
 
 	public static final String getBillingDataForConnection = "SELECT id as billGenerationId, cccode as ccCode, divsdiv as divSdiv, consumercode as consumerCode, billcycle as billCycle, billgroup as billGroup,\r\n" + 
 			" subgroup as subGroup, \r\n" + 
@@ -59,7 +59,7 @@ public class WSCalculatorQueryBuilder {
 			"       totalgrossamount  , fixchargecode  , fixcharge  , duedatecash  , duedatecheque  , \r\n" + 
 			"       status  , billid  , paymentid , paymentstatus  , createdby  , lastmodifiedby  , \r\n" + 
 			"       createdtime  , lastmodifiedtime,fromDate, toDate\r\n" + 
-			"  FROM public.eg_ws_savebilling where concat(divsdiv,consumercode) = ?;";
+			"  FROM eg_ws_savebilling where concat(divsdiv,consumercode) = ?;";
 
 	public String getDistinctTenantIds() {
 		return distinctTenantIdsCriteria;
