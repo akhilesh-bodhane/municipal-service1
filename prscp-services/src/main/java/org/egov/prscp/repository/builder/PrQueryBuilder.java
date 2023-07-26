@@ -19,7 +19,7 @@ public class PrQueryBuilder {
 		this.config = config;
 	}
 
-	public static final String GET_TENDER_AVAILABLE = "SELECT COUNT(1) FROM public.egpr_tender_notice WHERE module_code=? and tenant_id=? and tender_notice_uuid=?";
+	public static final String GET_TENDER_AVAILABLE = "SELECT COUNT(1) FROM egpr_tender_notice WHERE module_code=? and tenant_id=? and tender_notice_uuid=?";
 
 	public static final String GET_INVITATION_GUEST = "select module_code,tenant_Id,department_name,department_uuid,user_uuid,event_guest_uuid,event_detail_uuid,guest_name, event_guest_type, guest_email, guest_mobile, COALESCE(sent_flag,false) sent_flag, is_active  from egpr_event_guestlist where tenant_id=? and module_code=? and event_detail_uuid=? and COALESCE(sent_flag,false)=false and created_by=? and is_active=true";
 	public static final String GET_INVITATION_GUEST_LIST = "select module_code,tenant_Id,department_name,department_uuid,user_uuid,event_guest_uuid,event_detail_uuid,guest_name, event_guest_type, guest_email, guest_mobile, COALESCE(sent_flag,false) sent_flag, is_active from egpr_event_guestlist where tenant_id=? and module_code=? and event_detail_uuid=? and created_by = case when ?<>'' then ? else created_by end and COALESCE(sent_flag,false) = case when COALESCE(?,false)=false then COALESCE(?,false) else COALESCE(sent_flag,false) end and is_active=true";
@@ -100,12 +100,12 @@ public class PrQueryBuilder {
 			+ "CASE WHEN ((TO_TIMESTAMP(to_char(CURRENT_TIMESTAMP, 'YYYY-MM-DD HH24:MI:SS'),'YYYY-MM-DD HH24:MI:SS') between TO_TIMESTAMP(concat(to_char(start_date, 'YYYY-MM-DD'),' ',start_time), 'YYYY-MM-DD HH24:MI:SS') and TO_TIMESTAMP(concat(to_char(end_date, 'YYYY-MM-DD'),' ',end_time), 'YYYY-MM-DD HH24:MI:SS'))) THEN 'ONGOING'\n"
 			+ "WHEN ((TO_TIMESTAMP(to_char(CURRENT_TIMESTAMP, 'YYYY-MM-DD HH24:MI:SS'),'YYYY-MM-DD HH24:MI:SS') < TO_TIMESTAMP(concat(to_char(start_date, 'YYYY-MM-DD'),' ',start_time), 'YYYY-MM-DD HH24:MI:SS'))) THEN 'UPCOMING'\n"
 			+ "WHEN ((TO_TIMESTAMP(to_char(CURRENT_TIMESTAMP, 'YYYY-MM-DD HH24:MI:SS'),'YYYY-MM-DD HH24:MI:SS') > TO_TIMESTAMP(concat(to_char(end_date, 'YYYY-MM-DD'),' ',end_time), 'YYYY-MM-DD HH24:MI:SS'))) THEN 'EXPIRED'\n"
-			+ "END AS status FROM public.egpr_event_detail) AS MainTable LEFT JOIN (SELECT max(gu.event_detail_uuid) as event_detail_uuid, max(gu.tenant_id) as tenant_id, max(gu.module_code) as module_code, \n"
+			+ "END AS status FROM egpr_event_detail) AS MainTable LEFT JOIN (SELECT max(gu.event_detail_uuid) as event_detail_uuid, max(gu.tenant_id) as tenant_id, max(gu.module_code) as module_code, \n"
 			+ "array_to_json(array_agg(json_build_object('eventGuestUuid',gu.event_guest_uuid,'eventGuestType',gu.event_guest_type,'guestName',gu.guest_name,'guestEmail',gu.guest_email,'guestMobile',gu.guest_mobile,'tenantId',gu.tenant_id,'sentFlag',gu.sent_flag,'moduleCode',gu.module_code))) as InvitedGuest\n"
 			+ "from egpr_event_guestlist gu inner join egpr_event_detail ev\n"
 			+ "ON ev.event_detail_uuid=gu.event_detail_uuid and ev.tenant_id = gu.tenant_id and ev.module_code = gu.module_code and gu.is_active=true\n"
 			+ "GROUP BY gu.event_detail_uuid) as MainGuest ON MainTable.event_detail_uuid=MainGuest.event_detail_uuid AND MainTable.tenant_id=MainGuest.tenant_id AND MainTable.module_code=MainGuest.module_code\n"
-			+ "LEFT JOIN public.egpr_committee_detail cm ON COALESCE(MainTable.committee_uuid,'')=COALESCE(cm.committee_uuid,'') and MainTable.tenant_id = cm.tenant_id and MainTable.module_code = cm.module_code and cm.is_active=true\n"
+			+ "LEFT JOIN egpr_committee_detail cm ON COALESCE(MainTable.committee_uuid,'')=COALESCE(cm.committee_uuid,'') and MainTable.tenant_id = cm.tenant_id and MainTable.module_code = cm.module_code and cm.is_active=true\n"
 			+ "WHERE MainTable.tenant_id=? AND MainTable.module_code=? AND MainTable.is_active=true\n"
 			+ "AND MainTable.status = CASE WHEN ?<>'' THEN ? ELSE MainTable.status END AND MainTable.event_status = CASE WHEN ?<>'' THEN ? ELSE MainTable.event_status END\n"
 			+ "AND MainTable.event_title LIKE CONCAT('%',(CASE WHEN ?<>'' THEN ? ELSE MainTable.event_title END),'%')\n"
@@ -124,7 +124,7 @@ public class PrQueryBuilder {
 			+ "	  WHEN DATE(start_date) <= DATE(NOW()) AND DATE(end_date) >= DATE(NOW()) THEN 'ONGOING'\n"
 			+ "	  WHEN DATE(start_date) > DATE(NOW()) THEN 'UPCOMING'\n"
 			+ "	  WHEN DATE(end_date) < DATE(NOW()) THEN 'EXPIRED'\n" + "	 END AS status\n"
-			+ "      from public.egpr_event_detail where tenant_id=? and event_status=? and event_detail_uuid=? and module_code=?";
+			+ "      from egpr_event_detail where tenant_id=? and event_status=? and event_detail_uuid=? and module_code=?";
 
 	private static final String getMobileSmsForTenderPress = "select email,mobile,press_master_uuid from egpr_press_master where press_master_uuid in (\n"
 			+ "select press_master_uuid from egpr_map_tender_press  where tender_notice_uuid = (select tender_notice_uuid from egpr_tender_notice where tender_notice_id=?))";// PMS-2020-04-20-044504
@@ -143,7 +143,7 @@ public class PrQueryBuilder {
 			+ "	  WHEN DATE(start_date) <= DATE(NOW()) AND DATE(end_date) >= DATE(NOW()) THEN 'ONGOING'\n"
 			+ "	  WHEN DATE(start_date) > DATE(NOW()) THEN 'UPCOMING'\n"
 			+ "	  WHEN DATE(end_date) < DATE(NOW()) THEN 'EXPIRED'\n" + "	 END AS status\n" + "      \n"
-			+ "FROM public.egpr_event_detail \n" + "WHERE DATE(start_date) >= DATE(NOW()) and event_status=?";
+			+ "FROM egpr_event_detail \n" + "WHERE DATE(start_date) >= DATE(NOW()) and event_status=?";
 
 	public static String GET_NUMBER_OF_EVENTS_DEPARTMENT_WISE = "select \n" + "	a.tenant_id as tenantId,\n"
 			+ "	a.module_code as moduleCode,\n" + "	COALESCE(a.organizer_department_name,'') as departmentName,\n"
