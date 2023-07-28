@@ -18,7 +18,7 @@ public class NULMQueryBuilder {
 			+ "        NA.representative_name,  NA.representative_address,  NA.tenant_id,NA.is_active,NA.created_by ,NA.created_time,NA.last_modified_by, NA.last_modified_time,  NA.location,  \n"
 			+ "        array_to_json(array_agg(json_build_object('documentType',ND.document_type,'filestoreId',ND.filestore_id,'documnetUuid',ND.document_uuid,'isActive',ND.is_active,\n"
 			+ "        'tenantId',ND.tenant_id,'applicationUuid',ND.application_uuid) ))as document \n"
-			+ "  FROM public.nulm_sep_application_detail NA inner  join nulm_sep_application_document ND on NA.application_uuid=ND.application_uuid \n"
+			+ "  FROM nulm_sep_application_detail NA inner  join nulm_sep_application_document ND on NA.application_uuid=ND.application_uuid \n"
 			+ "  where NA.application_id=(case when ?  <>'' then ?  else NA.application_id end) and NA.created_by=(case when ?  <>'' then ?  else NA.created_by end) "
 			+ "AND NA.application_status=(case when ?  <>'' then ?  else NA.application_status end) \n"
 			+ "  AND NA.is_active='true' AND ND.is_active='true' AND  TO_DATE(TO_CHAR(TO_TIMESTAMP(NA.created_time / 1000), 'YYYY-MM-DD'),'YYYY-MM-DD') >= CASE WHEN ?<>'' THEN DATE(?) ELSE \n"
@@ -38,7 +38,7 @@ public class NULMQueryBuilder {
 			" TO_DATE(TO_CHAR(TO_TIMESTAMP(NA.created_time / 1000), 'YYYY-MM-DD'),'YYYY-MM-DD') END  group by NA.uuid ORDER BY created_time desc;";
 	
 	public static final String GET_SEP_DOCUMENT_QUERY = "SELECT count(*) \n"
-			+ "        FROM public.nulm_sep_application_document \n"
+			+ "        FROM nulm_sep_application_document \n"
 			+ "        WHERE application_uuid=? and filestore_id=? and document_type=? and is_active='true'; ";
 
 	public static final String GET_SMID_APPLICATION_QUERY = "select * FROM nulm_smid_application_detail where application_id=(case when ?  <>'' then ?  else application_id end) and created_by=(case when ?  <>'' then ?  else created_by end) \n"
@@ -77,7 +77,7 @@ public class NULMQueryBuilder {
 			+ "array_to_json(array_agg(json_build_object('shgUuid',GP.shg_uuid,'shgId',GP.shg_id,'name',GP.name,'type',GP.type,'groupsNominatedBy',GP.groups_nominated_by,\n"
 			+ "'formedThrough',GP.formed_through,'status',GP.status,'address',GP.address,'contactNo',GP.contact_no,'dateOfFormation',\n"
 			+ "GP.date_of_formation,'accountNo',GP.account_no,'dateOfOpeningAccount',GP.date_of_opening_account,'bankName',GP.bank_name,'branchName',GP.branch_name,'mainActivity',GP.main_activity,'remark',GP.remark) ))as group \n"
-			+ "FROM public.nulm_smid_shg_member_details MB INNER  join nulm_smid_shg_detail GP on GP.shg_uuid=MB.shg_uuid \n"
+			+ "FROM nulm_smid_shg_member_details MB INNER  join nulm_smid_shg_detail GP on GP.shg_uuid=MB.shg_uuid \n"
 			+ "WHERE application_id=(case when ?  <>'' then ?  else application_id end) OR MB.created_by=(case when ?  <>'' then ?  else MB.created_by end)  \n"
 			+ " OR MB.application_status=(case when ?  <>'' then ?  else MB.application_status end) OR MB.is_active='true'\n"
 			+ "   OR TO_DATE(TO_CHAR(TO_TIMESTAMP(MB.created_time / 1000), 'YYYY-MM-DD'),'YYYY-MM-DD') >= CASE WHEN ?<>'' THEN DATE(?) ELSE\n"
@@ -92,7 +92,7 @@ public class NULMQueryBuilder {
 			+ "array_to_json(array_agg(json_build_object('uuid',GP.uuid,'id',GP.id,'name',GP.name,\n"
 			+ "'address',GP.address,'dateOfFormation',\n"
 			+ "GP.date_of_formation,'dateOfOpeningAccount',GP.date_of_opening_account,'bankName',GP.bank_name,'branchName',GP.branch_name) ))as group \n"
-			+ "FROM public.nulm_smid_alf_member_details MB INNER  join nulm_smid_alf_details GP on GP.uuid=MB.alf_uuid \n"
+			+ "FROM nulm_smid_alf_member_details MB INNER  join nulm_smid_alf_details GP on GP.uuid=MB.alf_uuid \n"
 			+ "WHERE application_id=(case when ?  <>'' then ?  else application_id end) OR MB.created_by=(case when ?  <>'' then ?  else MB.created_by end)  \n"
 			+ "  OR MB.application_status=(case when ?  <>'' then ?  else MB.application_status end) OR MB.is_active='true'\n"
 			+ "   OR TO_DATE(TO_CHAR(TO_TIMESTAMP(MB.created_time / 1000), 'YYYY-MM-DD'),'YYYY-MM-DD') >= CASE WHEN ?<>'' THEN DATE(?) ELSE\n"
@@ -103,16 +103,16 @@ public class NULMQueryBuilder {
 	public static final String GET_ORGANIZATION_MOBILE_NO_QUERY = "select count(*) from nulm_organization where is_active='true'and mobile_no=? ";
 	public static final String GET_ORGANIZATION_NAME_QUERY = "select count(*) from nulm_organization where is_active='true'and organization_name=? ";
 	public static final String GET_ORGANIZATION_QUERY = "SELECT organization_uuid, user_id, organization_name, address, email_id,representative_name, mobile_no, registration_no, tenant_id, is_active,created_by, created_time, last_modified_by, last_modified_time\n"
-			+ " FROM public.nulm_organization where is_active='true' and organization_uuid=(case when ?  <>'' then ?  else organization_uuid end)\n"
+			+ " FROM nulm_organization where is_active='true' and organization_uuid=(case when ?  <>'' then ?  else organization_uuid end)\n"
 			+ " and  UPPER(organization_name) like concat('%',case when UPPER(?)<>'' then UPPER(?) else UPPER(organization_name) end,'%') and  UPPER(registration_no) like concat('%',case when UPPER(?)<>'' then UPPER(?) else UPPER(registration_no) end,'%') \n"
 			+ " AND  TO_DATE(TO_CHAR(TO_TIMESTAMP(created_time / 1000), 'YYYY-MM-DD'),'YYYY-MM-DD') >= CASE WHEN ?<>'' THEN DATE(?) ELSE TO_DATE(TO_CHAR(TO_TIMESTAMP(created_time / 1000), 'YYYY-MM-DD'),'YYYY-MM-DD') END\n"
 			+ " AND  TO_DATE(TO_CHAR(TO_TIMESTAMP(created_time / 1000), 'YYYY-MM-DD'),'YYYY-MM-DD') <= CASE WHEN ?<>'' THEN DATE(?) ELSE TO_DATE(TO_CHAR(TO_TIMESTAMP(created_time / 1000), 'YYYY-MM-DD'),'YYYY-MM-DD') END\n"
 			+ "ORDER BY created_time desc";
 	public static final String GET_ORGANIZATION_UUID_QUERY = "select count(*) from nulm_organization where is_active='true'and organization_uuid=? ";
 
-	public static final String GET_SUH_NAME_QUERY = "select count(*) from public.nulm_suh_application_detail where name_of_shelter=? and  is_active='true'";
+	public static final String GET_SUH_NAME_QUERY = "select count(*) from nulm_suh_application_detail where name_of_shelter=? and  is_active='true'";
 
-	public static final String GET_SUH_QUERY = "SELECT NA.*,FM.facilities,RM.record,SM.staff, og.organization_name FROM public.nulm_suh_application_detail NA \n"
+	public static final String GET_SUH_QUERY = "SELECT NA.*,FM.facilities,RM.record,SM.staff, og.organization_name FROM nulm_suh_application_detail NA \n"
 			+ "left join (SELECT count(suh_uuid) facility, suh_uuid,max(tenant_id) tenant_id,array_to_json( array_agg(json_build_object('suhUuid',suh_uuid,'facilityUuid',facility_uuid,'isBedding',is_bedding,'beddingRemark',bedding_remark,\n"
 			+ "'isWashingOfLinen',is_washing_of_linen,'washingOfLinenRemark',washing_of_linen_remark,'isCleaningOfPremises',is_cleaning_of_premises,'cleaningOfPremiseRemark',cleaning_of_premise_remark,\n"
 			+ "'isRecreationFacilities',is_recreation_facilities,'recreationFacilitiesRemark',recreation_facilities_remark,'isDrinkingWater',is_drinking_water,\n"
@@ -144,32 +144,32 @@ public class NULMQueryBuilder {
 			+ "TO_DATE(TO_CHAR(TO_TIMESTAMP(NA.created_time / 1000), 'YYYY-MM-DD'),'YYYY-MM-DD') END AND  TO_DATE(TO_CHAR(TO_TIMESTAMP(NA.created_time / 1000), 'YYYY-MM-DD'),'YYYY-MM-DD') <= CASE WHEN :toDate<>'' THEN DATE(:toDate) ELSE \n"
 			+ " TO_DATE(TO_CHAR(TO_TIMESTAMP(NA.created_time / 1000), 'YYYY-MM-DD'),'YYYY-MM-DD') END AND UPPER(na.name_of_shelter) like concat('%',case when UPPER(:nameOfShelter)<>'' then UPPER(:nameOfShelter) else UPPER(na.name_of_shelter) end,'%') ORDER BY created_time desc";
 
-	public static final String GET_SUH_QUERY_COUNT = "SELECT NA.* FROM public.nulm_suh_application_detail NA \r\n"
+	public static final String GET_SUH_QUERY_COUNT = "SELECT NA.* FROM nulm_suh_application_detail NA \r\n"
 			+ "where NA.suh_id=(case when :suhId  <>'' then :suhId   else NA.suh_id end) and NA.created_by=(case when :createdBy  <>'' then :createdBy  else NA.created_by end) AND NA.application_status IN (:status) \r\n"
 			+ "AND NA.is_active='true'  AND TO_DATE(TO_CHAR(TO_TIMESTAMP(NA.created_time / 1000), 'YYYY-MM-DD'),'YYYY-MM-DD') >= CASE WHEN :fromDate<>'' THEN DATE(:fromDate) ELSE\r\n"
 			+ "TO_DATE(TO_CHAR(TO_TIMESTAMP(NA.created_time / 1000), 'YYYY-MM-DD'),'YYYY-MM-DD') END AND  TO_DATE(TO_CHAR(TO_TIMESTAMP(NA.created_time / 1000), 'YYYY-MM-DD'),'YYYY-MM-DD') <= CASE WHEN :toDate<>'' THEN DATE(:toDate) ELSE \r\n"
 			+ "TO_DATE(TO_CHAR(TO_TIMESTAMP(NA.created_time / 1000), 'YYYY-MM-DD'),'YYYY-MM-DD') END AND UPPER(na.name_of_shelter) like concat('%',case when UPPER(:nameOfShelter)<>'' then UPPER(:nameOfShelter) else UPPER(na.name_of_shelter) end,'%') ORDER BY created_time desc";
 			
 	public static final String GET_SUH_LOG_QUERY = "SELECT log_uuid, name_of_shelter, date, name, qualification, gender, age, address, adhar_no, reason_for_staying, tenant_id, is_active, created_by, created_time, last_modified_by, last_modified_time,dob\n"
-			+ "  FROM public.nulm_suh_occupancy_log where log_uuid=(case when ?  <>'' then ?   else log_uuid end) and created_by=(case when ?  <>'' then ?  else created_by end)  "
+			+ "  FROM nulm_suh_occupancy_log where log_uuid=(case when ?  <>'' then ?   else log_uuid end) and created_by=(case when ?  <>'' then ?  else created_by end)  "
 			+ "AND UPPER(name) like concat('%',case when UPPER(?)<>'' then UPPER(?) else UPPER(name) end,'%') "
 			+ "AND UPPER(name_of_shelter) like concat('%',case when UPPER(?)<>'' then UPPER(?) else UPPER(name_of_shelter) end,'%') AND TO_DATE(TO_CHAR(TO_TIMESTAMP(created_time / 1000), 'YYYY-MM-DD'),'YYYY-MM-DD') >= CASE WHEN ?<>'' THEN DATE(?) ELSE \n"
 			+ "TO_DATE(TO_CHAR(TO_TIMESTAMP(created_time / 1000), 'YYYY-MM-DD'),'YYYY-MM-DD') END AND  TO_DATE(TO_CHAR(TO_TIMESTAMP(created_time / 1000), 'YYYY-MM-DD'),'YYYY-MM-DD') <= CASE WHEN ?<>'' THEN DATE(?) ELSE \n"
 			+ "TO_DATE(TO_CHAR(TO_TIMESTAMP(created_time / 1000), 'YYYY-MM-DD'),'YYYY-MM-DD') END and is_active='true'";
 
-	public static final String GET_SUH_LOG_DATE_QUERY = "SELECT log_uuid,created_time FROM public.nulm_suh_occupancy_log where log_uuid=? and is_active='true';";
+	public static final String GET_SUH_LOG_DATE_QUERY = "SELECT log_uuid,created_time FROM nulm_suh_occupancy_log where log_uuid=? and is_active='true';";
 	public static final String GET_SUH_SHELTER_NAME_QUERY = "select suh.suh_uuid, suh.suh_id, suh.tenant_id, suh.name_of_shelter \n" + 
 			"from nulm_suh_application_detail suh \n" + 
 			"left join nulm_organization og on suh.assigned_to = og.organization_uuid \n" + 
 			"where suh.is_active='true' \n";
 
-	public static final String GET_SUSV_DOCUMENT_QUERY = "SELECT count(*)  FROM public.nulm_susv_application_document  WHERE application_uuid=? and filestore_id=? and document_type=? and is_active='true';";
+	public static final String GET_SUSV_DOCUMENT_QUERY = "SELECT count(*)  FROM nulm_susv_application_document  WHERE application_uuid=? and filestore_id=? and document_type=? and is_active='true';";
 
 	public static final String GET_SUSV_QUERY = "SELECT * FROM (SELECT DISTINCT ON( SA.application_id)  SA.application_id,SA.cov_no,SA.application_uuid, SA.application_id, SA.nulm_application_id, SA.application_status,SA.name_of_applicant, SA.gender, SA.age,SA.dob, SA.adhar_no, SA.mother_name, SA.father_or_husband_name,\n"
 			+ "SA.permanent_address, SA.present_address, SA.mobile_no, SA.is_disability,SA.category, SA.qualification, SA.blood_group, SA.category_of_vending, SA.proposed_location_of_vending,\n"
 			+ "SA.proposed_time_of_vending, SA.goverment_scheme, SA.name_of_nominee,SA.tenant_id, SA.remark,SA.is_undertaking,SA.date,SA.place,  SA.is_active, SA.created_by,\n"
 			+ "SA.created_time, SA.last_modified_by, SA.last_modified_time,ND.document,NF.familymembers\n"
-			+ "FROM public.nulm_susv_application_detail SA  left join (SELECT count(application_uuid) docs, application_uuid,max(tenant_id) tenant_id, array_to_json(array_agg(json_build_object('documentType',document_type,'filestoreId',filestore_id,'documnetUuid',document_uuid,'isActive',is_active, \n"
+			+ "FROM nulm_susv_application_detail SA  left join (SELECT count(application_uuid) docs, application_uuid,max(tenant_id) tenant_id, array_to_json(array_agg(json_build_object('documentType',document_type,'filestoreId',filestore_id,'documnetUuid',document_uuid,'isActive',is_active, \n"
 			+ "'tenantId',tenant_id,'applicationUuid',application_uuid) ))as document FROM nulm_susv_application_document GROUP BY application_uuid) ND on SA.application_uuid=ND.application_uuid \n"
 			+ "left join (SELECT count(application_uuid) fmember, application_uuid,max(tenant_id) tenant_id, array_to_json(array_agg(json_build_object('uuid',uuid,'name',name,'age',age,'relation',relation,'isActive',is_active, \n"
 			+ "'tenantId',tenant_id,'applicationUuid',application_uuid))) as familymembers FROM nulm_susv_familiy_detail GROUP BY application_uuid) NF \n"
@@ -183,7 +183,7 @@ public class NULMQueryBuilder {
 
 	public static final String GET_SUSV_QUERY_COUNT = "SELECT * FROM (SELECT  SA.application_uuid, SA.application_status,SA.created_by,\r\n"
 			+ "			SA.created_time, SA.last_modified_by, SA.last_modified_time\r\n"
-			+ "			FROM public.nulm_susv_application_detail SA  \r\n"
+			+ "			FROM nulm_susv_application_detail SA  \r\n"
 			+ "			\r\n"
 			+ "			 where SA.application_id=(case when :applicationId  <>'' then :applicationId  else SA.application_id end) and coalesce(SA.cov_no, '') =(case when :covNo  <>'' then :covNo  else coalesce(SA.cov_no, '')  end) and SA.created_by=(case when :createdBy  <>'' then :createdBy  else SA.created_by end) \r\n"
 			+ "			AND SA.is_active='true'  AND SA.application_status  IN(:applicationStaus) and \r\n"
@@ -196,7 +196,7 @@ public class NULMQueryBuilder {
 	public static final String GET_SUSV_RENEW_QUERY = "SELECT SA.application_uuid, SA.application_id,SA.susv_applicaton_id, "
 			+ "SA.looking_for,SA.application_status,SA.relationship_with_vendor, SA.name_of_street_vendor,SN.cov_no, SA.residential_address,SA.change_of_location, SA.proposed_address,SA.name_of_proposed_new_street_vendor,SA.tenant_id,SA.is_active, SA.created_by,\n"
 			+ "SA.created_time, SA.last_modified_by, SA.last_modified_time,ND.document,NF.familymembers\n"
-			+ "FROM public.nulm_susv_renew_application_detail SA  left join (SELECT count(application_uuid) docs, application_uuid,max(tenant_id) tenant_id, array_to_json(array_agg(json_build_object('documentType',document_type,'filestoreId',filestore_id,'documnetUuid',document_uuid,'isActive',is_active, \n"
+			+ "FROM nulm_susv_renew_application_detail SA  left join (SELECT count(application_uuid) docs, application_uuid,max(tenant_id) tenant_id, array_to_json(array_agg(json_build_object('documentType',document_type,'filestoreId',filestore_id,'documnetUuid',document_uuid,'isActive',is_active, \n"
 			+ "'tenantId',tenant_id,'applicationUuid',application_uuid) ))as document FROM nulm_susv_renew_application_document GROUP BY application_uuid) ND on SA.application_uuid=ND.application_uuid \n"
 			+ "left join (SELECT count(application_uuid) fmember, application_uuid,max(tenant_id) tenant_id, array_to_json(array_agg(json_build_object('uuid',uuid,'name',name,'age',age,'relation',relation,'isActive',is_active, \n"
 			+ "'tenantId',tenant_id,'applicationUuid',application_uuid))) as familymembers FROM nulm_susv_renew_familiy_detail GROUP BY application_uuid) NF \n"
@@ -213,7 +213,7 @@ public class NULMQueryBuilder {
 			+ "       is_pwd, is_street_vendor, is_homeless, is_insurance, bpl_no,minority, caste, ward_no, name_as_per_adhar, adhar_acknowledgement_no, \n"
 			+ "       insurance_through, document_attachemnt, account_no, bank_name,branch_name, remark, tenant_id, is_active, created_by, created_time, \n"
 			+ "       last_modified_by, last_modified_time\n"
-			+ "  FROM public.nulm_smid_shg_member_details where shg_uuid=:shgUuid ";
+			+ "  FROM nulm_smid_shg_member_details where shg_uuid=:shgUuid ";
 
 	public static final String GET_MEMBER_COUNT_QUERY = "SELECT COUNT(*) AS memberCount FROM nulm_smid_shg_member_details NM INNER JOIN nulm_smid_shg_detail ND on NM.shg_uuid=ND.shg_uuid WHERE NM.shg_uuid=:shgUuid \n"
 			+ "  and CASE WHEN ND.status<> 'REJECTED' THEN application_status IN('APPROVED','UPDATED','CREATED') ELSE application_status IN('APPROVED','UPDATED','CREATED','REJECTED') END";
@@ -222,7 +222,7 @@ public class NULMQueryBuilder {
 			+ "TD.expenditure_details,  TD.email_id,  TD.comments,  TD.tenant_id,  TD.remark,  TD.is_active,  TD.created_by, TD.created_time,  TD.last_modified_by,  TD.last_modified_time\n"
 			+ ",array_to_json(array_agg(json_build_object('documentType',ND.document_type,'filestoreId',ND.filestore_id,'documnetUuid',ND.document_uuid,'isActive',ND.is_active,\n"
 			+ "'tenantId',ND.tenant_id,'uuid',ND.uuid) ))as document\n"
-			+ "FROM public.nulm_susv_transaction_detail TD inner  join nulm_susv_transaction_document ND on TD.uuid=ND.uuid \n"
+			+ "FROM nulm_susv_transaction_detail TD inner  join nulm_susv_transaction_document ND on TD.uuid=ND.uuid \n"
 			+ "where TD.created_by=(case when :createdBy  <>'' then  :createdBy  else TD.created_by end) and TD.transaction_type=(case when :transactionType  <>'' then  :transactionType  else TD.transaction_type end)\n"
 			+ "and TD.uuid=(case when :uuid  <>'' then  :uuid  else TD.uuid end) AND TD.is_active='true' AND ND.is_active='true' AND  TO_DATE(TO_CHAR(TO_TIMESTAMP(TD.created_time / 1000), 'YYYY-MM-DD'),'YYYY-MM-DD') >= CASE WHEN :fromDate<>'' THEN DATE(:fromDate) ELSE\n"
 			+ "TO_DATE(TO_CHAR(TO_TIMESTAMP(TD.created_time / 1000), 'YYYY-MM-DD'),'YYYY-MM-DD') END\n"
