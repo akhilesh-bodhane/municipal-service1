@@ -19,7 +19,7 @@ public class UpdateCityScheduler {
 	private QueryBuilder QueryBuilder;
 	
 	
-	@Scheduled(cron = "*/5 * * * *", zone = "Asia/Calcutta")
+	@Scheduled(cron = "0 */5 * * * *", zone = "Asia/Calcutta")
 	public void updateCity() {
 		System.out.println("updateCity Cro Started");
 				
