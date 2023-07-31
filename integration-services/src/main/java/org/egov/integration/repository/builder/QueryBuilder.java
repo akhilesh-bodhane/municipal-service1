@@ -121,6 +121,10 @@ public class QueryBuilder {
 			+ "WHERE\r\n"
 			+ "    rank > 1 ";
 	
+	public static final String UPDATE_CITY ="update eg_user_address set city ='ch.chandigarh'\r\n"
+			+ " from eg_user where eg_user.id=eg_user_address.userid \r\n"
+			+ " and eg_user.\"type\" ='CITIZEN' and eg_user_address.city='ch'";
+	
 	public String getCoexistenceIdleConnectionKillCount(List<Object> preparedStatement) {
 		StringBuilder query;
 		query = new StringBuilder(COEXISTENCE_IDLE_KILL_CONNECTION_COUNT);
@@ -138,6 +142,16 @@ public class QueryBuilder {
 		//System.out.println("Idle Connections Kill Count query :"+query);
 		
 		return query.toString() ;
+
+	}
+	
+	public String updatecity(List<Object> preparedStatement) {
+		StringBuilder query;
+		query = new StringBuilder(UPDATE_CITY);
+		
+		System.out.println("updatecity query :"+query);
+		
+		return query.toString();
 
 	}
 }
