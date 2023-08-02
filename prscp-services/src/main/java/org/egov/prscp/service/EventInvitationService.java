@@ -106,7 +106,12 @@ public class EventInvitationService {
 			
 			int lastIndexOf = fileUrls.lastIndexOf('\\')+1;
 			int lastIndexOf1 = fileUrls.indexOf(".xls")-1;
+			
+			log.info("file URL lastIndexOf : " + lastIndexOf);
+			log.info("file URL lastIndexOf1 : " + lastIndexOf1);
 			String filename=fileUrls.substring(lastIndexOf, lastIndexOf1).replaceAll(" ", "%20");
+			
+			log.info("filename : " + filename);
 			StringBuilder string = new StringBuilder(fileUrls);			
 			string.replace(lastIndexOf,lastIndexOf1 , filename);
 			UrlResource fileResource = new UrlResource(string.toString());
