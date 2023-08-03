@@ -28,15 +28,15 @@ public class FileStoreUtils {
 	 */
 	public List<Files> getFiles(String tenantId, List<Files> fileStoreIds) {
 
-		log.info("Filestore Host:" + config.getFilStoreHost());
-		log.info("Filestore Url End Point :" + config.getFilStoreUrlEndPoint());
+		log.info("Filestore Host:" + config.getFilStoreHost().toString());
+		log.info("Filestore Url End Point :" + config.getFilStoreUrlEndPoint().toString());
 	
 		StringBuilder url = new StringBuilder(config.getFilStoreHost());
 		url.append(config.getFilStoreUrlEndPoint());
 		url.append("?tenantId=" + tenantId.split("\\.")[0]);
 		url.append("&fileStoreIds=");
 		
-		log.info("Filestore Url :" + url);
+		log.info("Filestore Url :" + url.toString());
 
 		for (Files ids : fileStoreIds) {
 			url.append(ids.getFileStoreId());
