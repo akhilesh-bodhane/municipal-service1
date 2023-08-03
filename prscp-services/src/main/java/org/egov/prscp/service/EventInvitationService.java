@@ -114,6 +114,7 @@ public class EventInvitationService {
 //			string.replace(lastIndexOf,lastIndexOf1 , filename);
 //			UrlResource fileResource = new UrlResource(string.toString());
 			
+			System.setProperty("https.protocols", "TLSv1,TLSv1.1,TLSv1.2");
 			CloseableHttpClient client = HttpClientBuilder.create().build();
 			HttpGet request = new HttpGet(fileUrls.replaceAll(" ", "%20"));
 			request.addHeader("accept", "application/vnd.ms-excel");
