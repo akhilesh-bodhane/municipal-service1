@@ -108,24 +108,25 @@ public class EventInvitationService {
 //			int lastIndexOf1 = fileUrls.indexOf(".xls")-1;
 			
 //			String filename=fileUrls.substring(lastIndexOf, lastIndexOf1).replaceAll(" ", "%20");
-//			String filename=fileUrls.replaceAll(" ", "%20");
-//			log.info("filename : " + filename);
+			String filename=fileUrls.replaceAll(" ", "%20");
+			log.info("filename : " + filename);
 			StringBuilder string = new StringBuilder(fileUrls);			
 //			string.replace(lastIndexOf,lastIndexOf1 , filename);
-//			UrlResource fileResource = new UrlResource(string.toString());
+			UrlResource fileResource = new UrlResource(string.toString());
 			
-			System.setProperty("https.protocols", "TLSv1,TLSv1.1,TLSv1.2");
-			CloseableHttpClient client = HttpClientBuilder.create().build();
-			HttpGet request = new HttpGet(fileUrls.replaceAll(" ", "%20"));
-			request.addHeader("accept", "application/vnd.ms-excel");
-			HttpResponse response = client.execute(request);
-			HttpEntity entity = response.getEntity();
-			int responseCode = response.getStatusLine().getStatusCode();
-			InputStream inputStream = entity.getContent();
+			
+			/*
+			 * CloseableHttpClient client = HttpClientBuilder.create().build(); HttpGet
+			 * request = new HttpGet(fileUrls.replaceAll(" ", "%20"));
+			 * request.addHeader("accept", "application/vnd.ms-excel"); HttpResponse
+			 * response = client.execute(request); HttpEntity entity = response.getEntity();
+			 * int responseCode = response.getStatusLine().getStatusCode(); InputStream
+			 * inputStream = entity.getContent();
+			 */
 			
 			List<InviteGuest> userList = new ArrayList<>();
-//			HSSFWorkbook workbook = new HSSFWorkbook(fileResource.getInputStream());
-			HSSFWorkbook workbook = new HSSFWorkbook(inputStream);
+			HSSFWorkbook workbook = new HSSFWorkbook(fileResource.getInputStream());
+//			HSSFWorkbook workbook = new HSSFWorkbook(inputStream);
 			HSSFSheet worksheet = workbook.getSheetAt(0);
 			Iterator<Row> rowIterator = worksheet.iterator();
 			rowIterator.next(); // skip the header row
