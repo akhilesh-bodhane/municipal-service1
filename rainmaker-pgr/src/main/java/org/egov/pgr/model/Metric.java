@@ -19,10 +19,10 @@ import lombok.ToString;
 @ToString
 public class Metric {
 	
-	@JsonProperty("avgDaysForApplication")
+	@JsonProperty("avgDaysForApplicationApproval")
 	public Integer avgDaysForApplication;
 
-	@JsonProperty("stipulatedDays")
+	@JsonProperty("StipulatedDays")
 	public Integer stipulatedDays;
 
 	@JsonProperty("slaAchievement")
