@@ -56,17 +56,49 @@ public class ServiceRequestRepository {
 
 	public static final String SERVICE_SEARCH_WITH_COUNT = "select array_to_json(array_agg(row_to_json(services))) from (select (row_to_json(services)) from ( select count(*) from eg_pgr_service where ";
 
+	/*
+	 * public static final String GRIEVANCE_SEARCH =
+	 * "select row_number() over(order by servicecode,category,status,\"source\") sequencenum, servicecode,category,status,\"source\",\r\n"
+	 * +
+	 * "SUM(case when to_date(TO_CHAR(to_timestamp(lastmodifiedtime / 1000), 'DD/MM/YYYY'),'DD/MM/YYYY') = NOW()::date or to_date(TO_CHAR(to_timestamp(createdtime / 1000), 'DD/MM/YYYY'),'DD/MM/YYYY') = NOW()::date then 1 else 0 end)  allComplaints,\r\n"
+	 * +
+	 * "SUM(case when status = 'open' and to_date(TO_CHAR(to_timestamp(createdtime / 1000), 'DD/MM/YYYY'),'DD/MM/YYYY') = NOW()::date then 1 else 0 end)  open,\r\n"
+	 * +
+	 * "SUM(case when status = 'reopen' and to_date(TO_CHAR(to_timestamp(lastmodifiedtime / 1000), 'DD/MM/YYYY'),'DD/MM/YYYY') = NOW()::date then 1 else 0 end)  reopen,\r\n"
+	 * +
+	 * "SUM(case when status = 'assigned' and to_date(TO_CHAR(to_timestamp(lastmodifiedtime / 1000), 'DD/MM/YYYY'),'DD/MM/YYYY') = NOW()::date then 1 else 0 end)  assigned,\r\n"
+	 * +
+	 * "SUM(case when status = 'rejected' and to_date(TO_CHAR(to_timestamp(lastmodifiedtime / 1000), 'DD/MM/YYYY'),'DD/MM/YYYY') = NOW()::date then 1 else 0 end)  rejected,\r\n"
+	 * +
+	 * "SUM(case when status = 'reassignrequested' and to_date(TO_CHAR(to_timestamp(lastmodifiedtime / 1000), 'DD/MM/YYYY'),'DD/MM/YYYY') = NOW()::date then 1 else 0 end)  reassignrequested,\r\n"
+	 * +
+	 * "SUM(case when status = 'closed' and to_date(TO_CHAR(to_timestamp(lastmodifiedtime / 1000), 'DD/MM/YYYY'),'DD/MM/YYYY') = NOW()::date then 1 else 0 end)  closed,\r\n"
+	 * +
+	 * "SUM(case when status = 'escalatedlevel2pending' and to_date(TO_CHAR(to_timestamp(lastmodifiedtime / 1000), 'DD/MM/YYYY'),'DD/MM/YYYY') = NOW()::date then 1 else 0 end)  escalatedlevel2pending,\r\n"
+	 * +
+	 * "SUM(case when status = 'escalatedlevel1pending' and to_date(TO_CHAR(to_timestamp(lastmodifiedtime / 1000), 'DD/MM/YYYY'),'DD/MM/YYYY') = NOW()::date then 1 else 0 end)  escalatedlevel1pending,\r\n"
+	 * +
+	 * "SUM(case when status = 'resolved' and to_date(TO_CHAR(to_timestamp(lastmodifiedtime / 1000), 'DD/MM/YYYY'),'DD/MM/YYYY') = NOW()::date then 1 else 0 end)  resolved,\r\n"
+	 * +
+	 * "SUM(case when status = 'closed' then 1 else 0 end)  closedComplaints, SUM(case when status = 'resolved' then 1 else 0 end)  resolvedComplaints, count(1) totalComplaints, 0 slaAchievement,"
+	 * +
+	 * "SUM(case when status = 'resolved' then to_timestamp(lastmodifiedtime / 1000)::date - to_timestamp(createdtime / 1000)::date else 0 end) completionDaysResolved,\r\n"
+	 * +
+	 * "SUM(case when status = 'closed' then to_timestamp(lastmodifiedtime / 1000)::date - to_timestamp(createdtime / 1000)::date else 0 end) completionDaysClosed from eg_pgr_service where "
+	 * ;
+	 */
+	
 	public static final String GRIEVANCE_SEARCH = "select row_number() over(order by servicecode,category,status,\"source\") sequencenum, servicecode,category,status,\"source\",\r\n"
-			+ "SUM(case when to_date(TO_CHAR(to_timestamp(lastmodifiedtime / 1000), 'DD/MM/YYYY'),'DD/MM/YYYY') = NOW()::date or to_date(TO_CHAR(to_timestamp(createdtime / 1000), 'DD/MM/YYYY'),'DD/MM/YYYY') = NOW()::date then 1 else 0 end)  allComplaints,\r\n"
-			+ "SUM(case when status = 'open' and to_date(TO_CHAR(to_timestamp(createdtime / 1000), 'DD/MM/YYYY'),'DD/MM/YYYY') = NOW()::date then 1 else 0 end)  open,\r\n"
-			+ "SUM(case when status = 'reopen' and to_date(TO_CHAR(to_timestamp(lastmodifiedtime / 1000), 'DD/MM/YYYY'),'DD/MM/YYYY') = NOW()::date then 1 else 0 end)  reopen,\r\n"
-			+ "SUM(case when status = 'assigned' and to_date(TO_CHAR(to_timestamp(lastmodifiedtime / 1000), 'DD/MM/YYYY'),'DD/MM/YYYY') = NOW()::date then 1 else 0 end)  assigned,\r\n"
-			+ "SUM(case when status = 'rejected' and to_date(TO_CHAR(to_timestamp(lastmodifiedtime / 1000), 'DD/MM/YYYY'),'DD/MM/YYYY') = NOW()::date then 1 else 0 end)  rejected,\r\n"
-			+ "SUM(case when status = 'reassignrequested' and to_date(TO_CHAR(to_timestamp(lastmodifiedtime / 1000), 'DD/MM/YYYY'),'DD/MM/YYYY') = NOW()::date then 1 else 0 end)  reassignrequested,\r\n"
-			+ "SUM(case when status = 'closed' and to_date(TO_CHAR(to_timestamp(lastmodifiedtime / 1000), 'DD/MM/YYYY'),'DD/MM/YYYY') = NOW()::date then 1 else 0 end)  closed,\r\n"
-			+ "SUM(case when status = 'escalatedlevel2pending' and to_date(TO_CHAR(to_timestamp(lastmodifiedtime / 1000), 'DD/MM/YYYY'),'DD/MM/YYYY') = NOW()::date then 1 else 0 end)  escalatedlevel2pending,\r\n"
-			+ "SUM(case when status = 'escalatedlevel1pending' and to_date(TO_CHAR(to_timestamp(lastmodifiedtime / 1000), 'DD/MM/YYYY'),'DD/MM/YYYY') = NOW()::date then 1 else 0 end)  escalatedlevel1pending,\r\n"
-			+ "SUM(case when status = 'resolved' and to_date(TO_CHAR(to_timestamp(lastmodifiedtime / 1000), 'DD/MM/YYYY'),'DD/MM/YYYY') = NOW()::date then 1 else 0 end)  resolved,\r\n"
+			+ "count(1)  allComplaints,\r\n"
+			+ "SUM(case when status = 'open' then 1 else 0 end)  open,\r\n"
+			+ "SUM(case when status = 'reopen' then 1 else 0 end)  reopen,\r\n"
+			+ "SUM(case when status = 'assigned' then 1 else 0 end)  assigned,\r\n"
+			+ "SUM(case when status = 'rejected'  then 1 else 0 end)  rejected,\r\n"
+			+ "SUM(case when status = 'reassignrequested' then 1 else 0 end)  reassignrequested,\r\n"
+			+ "SUM(case when status = 'closed' then 1 else 0 end)  closed,\r\n"
+			+ "SUM(case when status = 'escalatedlevel2pending' then 1 else 0 end)  escalatedlevel2pending,\r\n"
+			+ "SUM(case when status = 'escalatedlevel1pending' then 1 else 0 end)  escalatedlevel1pending,\r\n"
+			+ "SUM(case when status = 'resolved' then 1 else 0 end)  resolved,\r\n"
 			+ "SUM(case when status = 'closed' then 1 else 0 end)  closedComplaints, SUM(case when status = 'resolved' then 1 else 0 end)  resolvedComplaints, count(1) totalComplaints, 0 slaAchievement,"
 			+ "SUM(case when status = 'resolved' then to_timestamp(lastmodifiedtime / 1000)::date - to_timestamp(createdtime / 1000)::date else 0 end) completionDaysResolved,\r\n"
 			+ "SUM(case when status = 'closed' then to_timestamp(lastmodifiedtime / 1000)::date - to_timestamp(createdtime / 1000)::date else 0 end) completionDaysClosed from eg_pgr_service where ";
