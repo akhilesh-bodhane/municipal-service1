@@ -352,7 +352,8 @@ public class UserService {
 	private UserDetailResponse updateUserExists(ConnectionHolderInfo connectionHolderInfo, RequestInfo requestInfo) {
 		UserSearchRequest userSearchRequest = getBaseUserSearchRequest(connectionHolderInfo.getTenantId(), requestInfo);
 		userSearchRequest.setMobileNumber(connectionHolderInfo.getMobileNumber());
-		userSearchRequest.setUserType(connectionHolderInfo.getType());
+		//userSearchRequest.setUserType(connectionHolderInfo.getType());
+		userSearchRequest.setUserType("CITIZEN");
 		userSearchRequest.setName(connectionHolderInfo.getName());
 		StringBuilder uri = new StringBuilder(configuration.getUserHost())
 				.append(configuration.getUserSearchEndpoint());
