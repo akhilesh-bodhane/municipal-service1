@@ -280,24 +280,11 @@ public class WaterServiceImpl implements WaterService {
 	@Override
 	public List<WaterConnection> addConnectionMapping(WaterConnectionRequest waterConnectionRequest) {
 		//Added Application Data for changes in water connection holder changes 
-		AuditDetails auditDetails;
-		boolean isSameUserValid = waterConnectionRequest.getWaterConnection().getConnectionHolders().get(0).getSameuservalid();	
+	
 		
-		System.out.println("isSameUserValid : " + isSameUserValid);
-		if(!isSameUserValid) {
-			auditDetails = wsUtil.getAuditDetails(waterConnectionRequest.getRequestInfo().getUserInfo().getUuid(), true);
-			waterConnectionRequest.getWaterConnection().setAuditDetails(auditDetails);
-		} else {
-			userService.createUser(waterConnectionRequest);
-			auditDetails = wsUtil.getAuditDetails(waterConnectionRequest.getRequestInfo().getUserInfo().getUuid(), true);
-			waterConnectionRequest.getWaterConnection().setAuditDetails(auditDetails);
-		}
-		/*
-		 * AuditDetails auditDetails = wsUtil
-		 * .getAuditDetails(waterConnectionRequest.getRequestInfo().getUserInfo().
-		 * getUuid(), true);
-		 */
-		
+		AuditDetails auditDetails = wsUtil
+				.getAuditDetails(waterConnectionRequest.getRequestInfo().getUserInfo().getUuid(), true);		 
+		waterConnectionRequest.getWaterConnection().setAuditDetails(auditDetails);
 		WaterApplication waterApplication = new WaterApplication();
 		waterApplication.setId(UUID.randomUUID().toString());
 		waterConnectionRequest.getWaterConnection().setWaterApplication(waterApplication);
