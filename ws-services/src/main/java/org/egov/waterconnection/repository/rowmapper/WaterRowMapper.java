@@ -38,9 +38,12 @@ public class WaterRowMapper implements ResultSetExtractor<List<WaterConnection>>
 				currentWaterConnection.setMeterId(rs.getString("meterId"));
 				currentWaterConnection.setMeterInstallationDate(rs.getLong("meterInstallationDate"));
 				currentWaterConnection.setId(rs.getString("connection_Id"));
-			   currentWaterConnection.setWaterChargesTT(rs.getString("waterChargesTT"));
-			   currentWaterConnection.setLocation(rs.getString("location"));
-			   currentWaterConnection.setPloatAreaTT(rs.getString("ploatAreaTT"));
+			    currentWaterConnection.setWaterChargesTT(rs.getString("waterChargesTT"));
+			    currentWaterConnection.setLocation(rs.getString("location"));
+			    currentWaterConnection.setSameuservalid(rs.getBoolean("sameuservalid"));
+			    currentWaterConnection.setSubmitBy(rs.getString("submitby"));
+			    currentWaterConnection.setSubmitByName(rs.getString("submitbyname"));
+			    currentWaterConnection.setPloatAreaTT(rs.getString("ploatAreaTT"));
 				
 				currentWaterConnection.setApplicationNo(rs.getString("app_applicationno"));
 				currentWaterConnection.setApplicationStatus(rs.getString("applicationstatus"));
