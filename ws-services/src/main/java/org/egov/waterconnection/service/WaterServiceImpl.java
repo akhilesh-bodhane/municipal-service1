@@ -283,6 +283,7 @@ public class WaterServiceImpl implements WaterService {
 		AuditDetails auditDetails;
 		boolean isSameUserValid = waterConnectionRequest.getWaterConnection().getConnectionHolders().get(0).getSameuservalid();	
 		
+		System.out.println("isSameUserValid : " + isSameUserValid);
 		if(!isSameUserValid) {
 			auditDetails = wsUtil.getAuditDetails(waterConnectionRequest.getRequestInfo().getUserInfo().getUuid(), true);
 			waterConnectionRequest.getWaterConnection().setAuditDetails(auditDetails);
@@ -291,7 +292,6 @@ public class WaterServiceImpl implements WaterService {
 			auditDetails = wsUtil.getAuditDetails(waterConnectionRequest.getRequestInfo().getUserInfo().getUuid(), true);
 			waterConnectionRequest.getWaterConnection().setAuditDetails(auditDetails);
 		}
-		userService.createUser(waterConnectionRequest);
 		/*
 		 * AuditDetails auditDetails = wsUtil
 		 * .getAuditDetails(waterConnectionRequest.getRequestInfo().getUserInfo().
