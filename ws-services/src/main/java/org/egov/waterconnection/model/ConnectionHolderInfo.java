@@ -74,14 +74,6 @@ public class ConnectionHolderInfo extends User {
     @JsonProperty("ws_application_id")
     private String ws_application_id;
     
-    @JsonProperty("sameuservalid")
-    private Boolean sameuservalid;
-    
-    @JsonProperty("submitBy")
-    private String submitBy;
-
-    @JsonProperty("submitByName")
-    private String submitByName;
 
     @Builder
     public ConnectionHolderInfo(Long id, String uuid, String userName, String password, String salutation, String name,
@@ -94,7 +86,7 @@ public class ConnectionHolderInfo extends User {
                      String ownerInfoUuid, String mobileNumber2, String gender2, String fatherOrHusbandName2,
                      String correspondenceAddress2, Boolean isPrimaryOwner, Double ownerShipPercentage, String ownerType,
                      String proposedName,String proposedMobileNo,String proposedGender,String proposedGuardianName,String proposedCorrespondanceAddress,
-                     String institutionId, Status status, List<Document> documents, Relationship relationship,String ws_application_id, Boolean sameuservalid,String submitBy, String submitByName) {
+                     String institutionId, Status status, List<Document> documents, Relationship relationship,String ws_application_id) {
         super(id, uuid, userName, password, salutation, name, gender, mobileNumber, emailId, altContactNumber, pan,
                 aadhaarNumber, permanentAddress, permanentCity, permanentPincode, correspondenceCity,
                 correspondencePincode, correspondenceAddress, active, dob, pwdExpiryDate, locale, type, signature,
@@ -118,9 +110,6 @@ public class ConnectionHolderInfo extends User {
         this.proposedMobileNo=proposedMobileNo;
         this.proposedGuardianName=proposedGuardianName ;
         this.ws_application_id=ws_application_id;
-        this.sameuservalid=sameuservalid;
-        this.submitBy=submitBy;
-        this.submitByName=submitByName;
     }
 
     public ConnectionHolderInfo addDocumentsItem(Document documentsItem) {

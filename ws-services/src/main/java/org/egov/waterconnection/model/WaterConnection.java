@@ -167,6 +167,14 @@ public class WaterConnection extends Connection {
 	@JsonProperty("location")
 	private String location;
 	
+	@JsonProperty("sameuservalid")
+    private Boolean sameuservalid;
+    
+    @JsonProperty("submitBy")
+    private String submitBy;
+
+    @JsonProperty("submitByName")
+    private String submitByName;
 	
 	public String getContractValue() {
 		return contractValue;

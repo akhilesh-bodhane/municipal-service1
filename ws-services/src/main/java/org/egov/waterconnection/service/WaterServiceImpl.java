@@ -280,8 +280,6 @@ public class WaterServiceImpl implements WaterService {
 	@Override
 	public List<WaterConnection> addConnectionMapping(WaterConnectionRequest waterConnectionRequest) {
 		//Added Application Data for changes in water connection holder changes 
-	
-		
 		AuditDetails auditDetails = wsUtil
 				.getAuditDetails(waterConnectionRequest.getRequestInfo().getUserInfo().getUuid(), true);		 
 		waterConnectionRequest.getWaterConnection().setAuditDetails(auditDetails);
