@@ -168,13 +168,13 @@ public class WaterConnection extends Connection {
 	private String location;
 	
 	@JsonProperty("sameuservalid")
-    private Boolean sameuservalid;
+    private Boolean sameuservalid = false;
     
     @JsonProperty("submitBy")
-    private String submitBy;
+    private String submitBy = null;
 
     @JsonProperty("submitByName")
-    private String submitByName;
+    private String submitByName = null;
 	
 	public String getContractValue() {
 		return contractValue;
