@@ -57,6 +57,8 @@ public class UserService {
 	 */
 	public void createUser(WaterConnectionRequest request) {
 		if (!CollectionUtils.isEmpty(request.getWaterConnection().getConnectionHolders())) {
+			
+			System.out.println("Inside create user if condition");
 			Role role = getCitizenRole();
 			Set<String> listOfMobileNumbers = getMobileNumbers(request);
 			request.getWaterConnection().getConnectionHolders().forEach(holderInfo -> {
@@ -85,10 +87,13 @@ public class UserService {
 					}
 
 				} else {
+					System.out.println("Inside create else if condition");
 					updateUser(request);
 				}
 				// Assigns value of fields from user got from userDetailResponse to owner object
 				setOwnerFields(holderInfo, userDetailResponse, request.getRequestInfo());
+				System.out.println("Holder Info : " + holderInfo.toString());
+				System.out.println("userDetailResponse : " + userDetailResponse.toString());
 			});
 		}
 	}

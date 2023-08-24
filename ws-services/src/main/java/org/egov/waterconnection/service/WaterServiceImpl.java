@@ -293,7 +293,7 @@ public class WaterServiceImpl implements WaterService {
 		waterConnectionRequest.getWaterConnection()
 				.setSubmitByName(waterConnectionRequest.getRequestInfo().getUserInfo().getName());
 		
-		if(waterConnectionRequest.getWaterConnection().getSameuservalid().equals(false)) {
+		if(waterConnectionRequest.getWaterConnection().getSameuservalid().equals(true)) {
 			System.out.println("Inside sameuservalid check");
 			userService.createUser(waterConnectionRequest);
 		}
