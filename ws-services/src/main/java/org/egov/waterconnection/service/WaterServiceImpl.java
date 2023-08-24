@@ -294,8 +294,6 @@ public class WaterServiceImpl implements WaterService {
 				.setSubmitByName(waterConnectionRequest.getRequestInfo().getUserInfo().getName());
 		System.out.println("PropertyId : " + waterConnectionRequest.getWaterConnection().getPropertyId().toString());
 		if(waterConnectionRequest.getWaterConnection().getSameuservalid().equals(true)) {
-			waterConnectionValidator.validateWaterConnection(waterConnectionRequest, false);
-			Property property = validateProperty.getOrValidateProperty(waterConnectionRequest);
 			enrichmentService.enrichWaterConnection(waterConnectionRequest);
 			userService.createUser(waterConnectionRequest);
 		}
