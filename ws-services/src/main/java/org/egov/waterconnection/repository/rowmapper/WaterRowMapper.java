@@ -265,28 +265,23 @@ public class WaterRowMapper implements ResultSetExtractor<List<WaterConnection>>
         List<ConnectionHolderInfo> connectionHolders = waterConnection.getConnectionHolders();
 
         //Commented for Connection Holder changes
-        if (!CollectionUtils.isEmpty(connectionHolders)) {
-           // System.out.println(connectionHolders.size());
-            for (ConnectionHolderInfo connectionHolderInfo : connectionHolders) {
-				
-            	 if(!StringUtils.isEmpty(connectionHolderInfo.getUuid())
-            			 &&!StringUtils.isEmpty(uuid) 
-            			 //&& connectionHolderInfo.getUuid().equals(uuid)
-            	)
-            	 {
-				  if (!StringUtils.isEmpty(connectionHolderInfo.getWs_application_id()) &&!StringUtils.isEmpty(WSuuid) && connectionHolderInfo.getWs_application_id().equals(WSuuid)) { 
-					 
-					  return; 
-				  } 
-				  }
-				 
-				  
-				
-				 
-            	
-            	
-           }
-        }
+		if (!CollectionUtils.isEmpty(connectionHolders)) {
+			// System.out.println(connectionHolders.size());
+			for (ConnectionHolderInfo connectionHolderInfo : connectionHolders) {
+
+				if (!StringUtils.isEmpty(connectionHolderInfo.getUuid()) && !StringUtils.isEmpty(uuid)
+				// && connectionHolderInfo.getUuid().equals(uuid)
+				) {
+					if (!StringUtils.isEmpty(connectionHolderInfo.getWs_application_id())
+							&& !StringUtils.isEmpty(WSuuid)
+							&& connectionHolderInfo.getWs_application_id().equals(WSuuid)) {
+
+						return;
+					}
+				}
+
+			}
+		}
         if(!StringUtils.isEmpty(uuid)){
             Double holderShipPercentage = rs.getDouble("holdershippercentage");
             if (rs.wasNull()) {
@@ -307,6 +302,9 @@ public class WaterRowMapper implements ResultSetExtractor<List<WaterConnection>>
                     .proposedMobileNo(rs.getString("proposedMobileNo"))
                     .proposedName(rs.getString("proposedName"))
                     .ws_application_id(rs.getString("ws_application_id"))
+                    .sameuservalid(rs.getBoolean("sameuservalid"))
+                    .submitBy(rs.getString("submitby"))
+                    .submitByName(rs.getString("submitbyname"))
                     .lastModifiedDate(rs.getLong("holderlastmodifiedtime"))
                     .build();
             

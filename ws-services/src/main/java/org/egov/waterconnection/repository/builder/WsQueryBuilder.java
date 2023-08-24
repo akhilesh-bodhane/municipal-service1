@@ -54,7 +54,7 @@ public class WsQueryBuilder {
 	private static final String LEFT_OUTER_JOIN_STRING = " LEFT OUTER JOIN ";
 
 	private static String holderSelectValues = "connectionholder.tenantid as holdertenantid, connectionholder.connectionid as holderapplicationId, userid, connectionholder.status as holderstatus, isprimaryholder, connectionholdertype,connectionholder.correspondance_address as holdercorrepondanceaddress, holdershippercentage, connectionholder.relationship as holderrelationship,connectionholder.name as holdername,connectionholder.proposed_mobile_no as proposedMobileNo ,connectionholder.proposed_name as  proposedName,connectionholder.proposed_gender as proposedGender ,connectionholder.proposed_guardian_name as proposedGuardianName ,connectionholder.proposed_correspondance_address as  proposedCorrespondanceAddress , connectionholder.createdby as holdercreatedby, connectionholder.createdtime as holdercreatedtime, connectionholder.lastmodifiedby as holderlastmodifiedby,"
-			+ " connectionholder.lastmodifiedtime as holderlastmodifiedtime, connectionholder.ws_application_id,";
+			+ " connectionholder.lastmodifiedtime as holderlastmodifiedtime, connectionholder.ws_application_id, connectionholder.sameuservalid, connectionholder.submitby, connectionholder.submitbyname,";
 
 	private static final String WATER_SEARCH_QUERY = "SELECT "
 			/* + " conn.*, wc.*, document.*, plumber.*, application.*, property.*, " */
