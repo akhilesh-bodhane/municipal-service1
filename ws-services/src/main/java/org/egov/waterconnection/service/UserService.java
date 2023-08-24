@@ -57,7 +57,6 @@ public class UserService {
 	 */
 	public void createUser(WaterConnectionRequest request) {
 		if (!CollectionUtils.isEmpty(request.getWaterConnection().getConnectionHolders())) {
-			
 			System.out.println("Inside create user if condition");
 			Role role = getCitizenRole();
 			Set<String> listOfMobileNumbers = getMobileNumbers(request);
@@ -96,8 +95,7 @@ public class UserService {
 				System.out.println("userDetailResponse : " + userDetailResponse.toString());
 			});
 		}
-	}
-	
+	}	
 	
 	public void updateUser(WaterConnectionRequest request) {
 		if (!CollectionUtils.isEmpty(request.getWaterConnection().getConnectionHolders())) {
@@ -335,6 +333,17 @@ public class UserService {
 	 *         responseInfo
 	 */
 	private UserDetailResponse userExists(ConnectionHolderInfo connectionHolderInfo, RequestInfo requestInfo) {
+		UserSearchRequest userSearchRequest = getBaseUserSearchRequest(connectionHolderInfo.getTenantId(), requestInfo);
+		userSearchRequest.setMobileNumber(connectionHolderInfo.getMobileNumber());
+		userSearchRequest.setUserType(connectionHolderInfo.getType());
+		userSearchRequest.setName(connectionHolderInfo.getName());
+		StringBuilder uri = new StringBuilder(configuration.getUserHost())
+				.append(configuration.getUserSearchEndpoint());
+		return userCall(userSearchRequest, uri);
+	}
+	
+	
+	private UserDetailResponse userExistsNewConnection(ConnectionHolderInfo connectionHolderInfo, RequestInfo requestInfo) {
 		UserSearchRequest userSearchRequest = getBaseUserSearchRequest(connectionHolderInfo.getTenantId(), requestInfo);
 		userSearchRequest.setMobileNumber(connectionHolderInfo.getMobileNumber());
 		userSearchRequest.setUserType(connectionHolderInfo.getType());

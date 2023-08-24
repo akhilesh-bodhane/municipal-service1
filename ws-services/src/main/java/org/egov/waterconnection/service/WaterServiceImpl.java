@@ -279,8 +279,6 @@ public class WaterServiceImpl implements WaterService {
 	}
 	@Override
 	public List<WaterConnection> addConnectionMapping(WaterConnectionRequest waterConnectionRequest) {
-		userService.createUser(waterConnectionRequest);
-		System.out.println("water connection request : " + waterConnectionRequest.toString());
 		//Added Application Data for changes in water connection holder changes 
 		AuditDetails auditDetails = wsUtil
 				.getAuditDetails(waterConnectionRequest.getRequestInfo().getUserInfo().getUuid(), true);		 
@@ -294,9 +292,12 @@ public class WaterServiceImpl implements WaterService {
 				.setSubmitBy(waterConnectionRequest.getRequestInfo().getUserInfo().getUuid());
 		waterConnectionRequest.getWaterConnection()
 				.setSubmitByName(waterConnectionRequest.getRequestInfo().getUserInfo().getName());
-		
+		System.out.println("PropertyId : " + waterConnectionRequest.getWaterConnection().getPropertyId().toString());
 		if(waterConnectionRequest.getWaterConnection().getSameuservalid().equals(true)) {
-
+			waterConnectionValidator.validateWaterConnection(waterConnectionRequest, false);
+			Property property = validateProperty.getOrValidateProperty(waterConnectionRequest);
+			enrichmentService.enrichWaterConnection(waterConnectionRequest);
+			userService.createUser(waterConnectionRequest);
 		}
 		waterDao.addConnectionMapping(waterConnectionRequest);
 		
