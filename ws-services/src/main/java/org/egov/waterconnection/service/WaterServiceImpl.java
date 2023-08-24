@@ -286,14 +286,17 @@ public class WaterServiceImpl implements WaterService {
 		WaterApplication waterApplication = new WaterApplication();
 		waterApplication.setId(UUID.randomUUID().toString());
 		waterConnectionRequest.getWaterConnection().setWaterApplication(waterApplication);
-		/*
-		 * waterConnectionRequest.getWaterConnection().setSameuservalid(
-		 * waterConnectionRequest.getWaterConnection().getSameuservalid());
-		 * waterConnectionRequest.getWaterConnection().setSubmitBy(
-		 * waterConnectionRequest.getRequestInfo().getUserInfo().getUuid());
-		 * waterConnectionRequest.getWaterConnection().setSubmitByName(
-		 * waterConnectionRequest.getRequestInfo().getUserInfo().getName());
-		 */
+		waterConnectionRequest.getWaterConnection()
+				.setSameuservalid(waterConnectionRequest.getWaterConnection().getSameuservalid());
+		waterConnectionRequest.getWaterConnection()
+				.setSubmitBy(waterConnectionRequest.getRequestInfo().getUserInfo().getUuid());
+		waterConnectionRequest.getWaterConnection()
+				.setSubmitByName(waterConnectionRequest.getRequestInfo().getUserInfo().getName());
+		
+		if(waterConnectionRequest.getWaterConnection().getSameuservalid().equals(false)) {
+			System.out.println("Inside sameuservalid check");
+			userService.createUser(waterConnectionRequest);
+		}
 		waterDao.addConnectionMapping(waterConnectionRequest);
 		
 		return  Arrays.asList(waterConnectionRequest.getWaterConnection());
