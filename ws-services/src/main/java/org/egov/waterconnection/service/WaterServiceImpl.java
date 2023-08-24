@@ -286,9 +286,14 @@ public class WaterServiceImpl implements WaterService {
 		WaterApplication waterApplication = new WaterApplication();
 		waterApplication.setId(UUID.randomUUID().toString());
 		waterConnectionRequest.getWaterConnection().setWaterApplication(waterApplication);
-		waterConnectionRequest.getWaterConnection().setSameuservalid(waterConnectionRequest.getWaterConnection().getSameuservalid());
-		waterConnectionRequest.getWaterConnection().setSubmitBy(waterConnectionRequest.getRequestInfo().getUserInfo().getUuid());
-		waterConnectionRequest.getWaterConnection().setSubmitByName(waterConnectionRequest.getRequestInfo().getUserInfo().getName());
+		/*
+		 * waterConnectionRequest.getWaterConnection().setSameuservalid(
+		 * waterConnectionRequest.getWaterConnection().getSameuservalid());
+		 * waterConnectionRequest.getWaterConnection().setSubmitBy(
+		 * waterConnectionRequest.getRequestInfo().getUserInfo().getUuid());
+		 * waterConnectionRequest.getWaterConnection().setSubmitByName(
+		 * waterConnectionRequest.getRequestInfo().getUserInfo().getName());
+		 */
 		waterDao.addConnectionMapping(waterConnectionRequest);
 		
 		return  Arrays.asList(waterConnectionRequest.getWaterConnection());
