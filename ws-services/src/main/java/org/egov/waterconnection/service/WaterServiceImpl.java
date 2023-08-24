@@ -292,9 +292,14 @@ public class WaterServiceImpl implements WaterService {
 				.setSubmitBy(waterConnectionRequest.getRequestInfo().getUserInfo().getUuid());
 		waterConnectionRequest.getWaterConnection()
 				.setSubmitByName(waterConnectionRequest.getRequestInfo().getUserInfo().getName());
-		System.out.println("PropertyId : " + waterConnectionRequest.getWaterConnection().getPropertyId().toString());
+		
+		
 		if(waterConnectionRequest.getWaterConnection().getSameuservalid().equals(true)) {
-			enrichmentService.enrichWaterConnection(waterConnectionRequest);
+			Property property = validateProperty.getOrValidateProperty(waterConnectionRequest);
+			waterConnectionRequest.getWaterConnection().setProperty(property);
+			validateProperty.validatePropertyCriteria(property);
+			
+			System.out.println("Property Details : " + property.toString());
 			userService.createUser(waterConnectionRequest);
 		}
 		waterDao.addConnectionMapping(waterConnectionRequest);
