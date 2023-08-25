@@ -19,7 +19,9 @@ import org.egov.waterconnection.config.WSConfiguration;
 import org.egov.waterconnection.model.ConnectionHolderInfo;
 import org.egov.waterconnection.model.ConnectionHolderInfoV2;
 import org.egov.waterconnection.model.ConnectionUserRequest;
+import org.egov.waterconnection.model.ConnectionUserRequestNew;
 import org.egov.waterconnection.model.ConnectionUserRequestV2;
+import org.egov.waterconnection.model.Property;
 import org.egov.waterconnection.model.Status;
 import org.egov.waterconnection.model.WaterConnection;
 import org.egov.waterconnection.model.WaterConnectionRequest;
@@ -95,7 +97,51 @@ public class UserService {
 				System.out.println("userDetailResponse : " + userDetailResponse.toString());
 			});
 		}
-	}	
+	}
+	
+	
+	public void createUserNewConnection(WaterConnectionRequest request) {
+		if (!StringUtils.isEmpty(request.getWaterConnection().getProperty().getId())) {
+			System.out.println("Inside create user if condition");
+			Role role = getCitizenRole();
+			Property property = request.getWaterConnection().getProperty();
+			
+			System.out.println("Property Details : " + property.toString());
+			String mobileNumber = request.getWaterConnection().getProperty().getOwners().get(0).getMobileNumber();
+				addUserDefaultFieldsNew(request.getWaterConnection().getTenantId(), role, property);
+				UserDetailResponse userDetailResponse = userExistsNewConnection(property, request.getRequestInfo());
+				if (CollectionUtils.isEmpty(userDetailResponse.getUser())) {
+					/*
+					 * Sets userName equal to mobileNumber
+					 *
+					 * If mobileNumber already assigned as user-name for another user
+					 *
+					 * then random uuid is assigned as user-name
+					 */
+					StringBuilder uri = new StringBuilder(configuration.getUserHost())
+							.append(configuration.getUserContextPath()).append(configuration.getUserCreateEndPoint());
+					setUserNameNewConnection(property, mobileNumber);
+
+					ConnectionUserRequestNew userRequest = ConnectionUserRequestNew.builder()
+							.requestInfo(request.getRequestInfo()).user(property).build();
+
+					userDetailResponse = userCall(userRequest, uri);
+
+					if (ObjectUtils.isEmpty(userDetailResponse)) {
+						throw new CustomException("INVALID USER RESPONSE",
+								"The user create has failed for the mobileNumber : " + property.getOwners().get(0).getUserName());
+					}
+
+				} else {
+					System.out.println("Inside create else if condition");
+					updateUserNew(request);
+				}
+				// Assigns value of fields from user got from userDetailResponse to owner object
+				setOwnerFieldsNew(property, userDetailResponse, request.getRequestInfo());
+				System.out.println("Holder Info : " + property.toString());
+				System.out.println("userDetailResponse : " + userDetailResponse.toString());
+		}
+	}
 	
 	public void updateUser(WaterConnectionRequest request) {
 		if (!CollectionUtils.isEmpty(request.getWaterConnection().getConnectionHolders())) {
@@ -117,6 +163,31 @@ public class UserService {
 				// Assigns value of fields from user got from userDetailResponse to owner object
 					setOwnerFieldsUpdate(holderInfo, userDetailResponse, request.getRequestInfo());
 			});
+		}
+	}
+	
+	
+	public void updateUserNew(WaterConnectionRequest request) {
+		if (!StringUtils.isEmpty(request.getWaterConnection().getProperty().getId())) {
+			Role role = getCitizenRole();
+			Property property = request.getWaterConnection().getProperty();
+			addUserDefaultFieldsNew(request.getWaterConnection().getTenantId(), role, property);
+			UserDetailResponse userDetailResponse = updateUserExistsNew(property, request.getRequestInfo());
+			property.getOwners().get(0).setId(userDetailResponse.getUser().get(0).getId());
+			property.getOwners().get(0).setUuid(userDetailResponse.getUser().get(0).getUuid());
+			// addUserDefaultFields(request.getWaterConnection().getTenantId(), role,
+			// holderInfo);
+			addUserDefaultFieldsUpdateNew(request.getWaterConnection().getTenantId(), role, property);
+
+			StringBuilder uri = new StringBuilder(configuration.getUserHost())
+					.append(configuration.getUserContextPath()).append(configuration.getUserUpdateEndPoint());
+			userDetailResponse = updateUserCall(new ConnectionUserRequestNew(request.getRequestInfo(), property), uri);
+			if (userDetailResponse.getUser().get(0).getUuid() == null) {
+				throw new CustomException("INVALID USER RESPONSE", "The user updated has uuid as null");
+			}
+			// Assigns value of fields from user got from userDetailResponse to owner object
+			setOwnerFieldsUpdateNew(property, userDetailResponse, request.getRequestInfo());
+
 		}
 	}
 	
@@ -298,6 +369,23 @@ public class UserService {
 		holderInfo.setLastModifiedBy(null);
 	}
 	
+	private void addUserDefaultFieldsNew(String tenantId, Role role, Property property) {
+		property.getOwners().get(0).setActive(true);
+		
+		if(null==property.getOwners().get(0).getStatus()) {
+			property.getOwners().get(0).setStatus(Status.ACTIVE);
+		}
+		
+		
+		property.getOwners().get(0).setTenantId(tenantId);
+		property.getOwners().get(0).setRoles(Collections.singletonList(role));
+		property.getOwners().get(0).setType("CITIZEN");
+		property.getOwners().get(0).setCreatedDate(null);
+		property.getOwners().get(0).setCreatedBy(null);
+		property.getOwners().get(0).setLastModifiedDate(null);
+		property.getOwners().get(0).setLastModifiedBy(null);
+	}
+	
 	
 	/**
 	 * Sets the role,type,active and tenantId for a Citizen
@@ -322,6 +410,24 @@ public class UserService {
 		holderInfo.setLastModifiedDate(null);
 		holderInfo.setLastModifiedBy(null);
 	}
+	
+	
+	private void addUserDefaultFieldsUpdateNew(String tenantId, Role role, Property property) {
+		property.getOwners().get(0).setActive(true);
+		
+		if(null==property.getOwners().get(0).getStatus()) {
+			property.getOwners().get(0).setStatus(Status.ACTIVE);
+		}
+		
+		
+		property.getOwners().get(0).setTenantId(tenantId);
+		property.getOwners().get(0).setRoles(Collections.singletonList(role));
+		property.getOwners().get(0).setType("CITIZEN");
+		property.getOwners().get(0).setCreatedDate(null);
+		property.getOwners().get(0).setCreatedBy(null);
+		property.getOwners().get(0).setLastModifiedDate(null);
+		property.getOwners().get(0).setLastModifiedBy(null);
+	}
 
 	/**
 	 * Searches if the connection holder is already created. Search is based on name
@@ -342,16 +448,16 @@ public class UserService {
 		return userCall(userSearchRequest, uri);
 	}
 	
-	
-	private UserDetailResponse userExistsNewConnection(ConnectionHolderInfo connectionHolderInfo, RequestInfo requestInfo) {
-		UserSearchRequest userSearchRequest = getBaseUserSearchRequest(connectionHolderInfo.getTenantId(), requestInfo);
-		userSearchRequest.setMobileNumber(connectionHolderInfo.getMobileNumber());
-		userSearchRequest.setUserType(connectionHolderInfo.getType());
-		userSearchRequest.setName(connectionHolderInfo.getName());
+	private UserDetailResponse userExistsNewConnection(Property property, RequestInfo requestInfo) {
+		UserSearchRequest userSearchRequest = getBaseUserSearchRequest(property.getTenantId(), requestInfo);
+		userSearchRequest.setMobileNumber(property.getOwners().get(0).getMobileNumber());
+		userSearchRequest.setUserType(property.getOwners().get(0).getType());
+		userSearchRequest.setName(property.getOwners().get(0).getName());
 		StringBuilder uri = new StringBuilder(configuration.getUserHost())
 				.append(configuration.getUserSearchEndpoint());
 		return userCall(userSearchRequest, uri);
 	}
+	
 	
 	
 	/**
@@ -369,6 +475,18 @@ public class UserService {
 		//userSearchRequest.setUserType(connectionHolderInfo.getType());
 		userSearchRequest.setUserType("CITIZEN");
 		userSearchRequest.setName(connectionHolderInfo.getName());
+		StringBuilder uri = new StringBuilder(configuration.getUserHost())
+				.append(configuration.getUserSearchEndpoint());
+		return updateUserCall(userSearchRequest, uri);
+	}
+	
+	
+	private UserDetailResponse updateUserExistsNew(Property property, RequestInfo requestInfo) {
+		UserSearchRequest userSearchRequest = getBaseUserSearchRequest(property.getTenantId(), requestInfo);
+		userSearchRequest.setMobileNumber(property.getOwners().get(0).getMobileNumber());
+		//userSearchRequest.setUserType(connectionHolderInfo.getType());
+		userSearchRequest.setUserType("CITIZEN");
+		userSearchRequest.setName(property.getOwners().get(0).getName());
 		StringBuilder uri = new StringBuilder(configuration.getUserHost())
 				.append(configuration.getUserSearchEndpoint());
 		return updateUserCall(userSearchRequest, uri);
@@ -410,6 +528,19 @@ public class UserService {
 			holderInfo.setUserName(username);
 		}
 	}
+	
+	
+	private void setUserNameNewConnection(Property property, String mobileNumber) {
+
+		if (mobileNumber.contains(property.getOwners().get(0).getMobileNumber())) {
+			property.getOwners().get(0).setUserName(property.getOwners().get(0).getMobileNumber());
+			// Once mobileNumber is set as userName it is removed from the list
+			//mobileNumber.remove(property.getOwners().get(0).getMobileNumber());
+		} else {
+			String username = UUID.randomUUID().toString();
+			property.getOwners().get(0).setUserName(username);
+		}
+	}
 
 	/**
 	 *
@@ -429,6 +560,19 @@ public class UserService {
 		holderInfo.setLastModifiedDate(System.currentTimeMillis());
 		holderInfo.setActive(userDetailResponse.getUser().get(0).getActive());
 	}
+	
+	private void setOwnerFieldsNew(Property property, UserDetailResponse userDetailResponse,
+			RequestInfo requestInfo) {
+
+		property.getOwners().get(0).setUuid(userDetailResponse.getUser().get(0).getUuid());
+		property.getOwners().get(0).setId(userDetailResponse.getUser().get(0).getId());
+		property.getOwners().get(0).setUserName((userDetailResponse.getUser().get(0).getUserName()));
+		property.getOwners().get(0).setCreatedBy(requestInfo.getUserInfo().getUuid());
+		property.getOwners().get(0).setCreatedDate(System.currentTimeMillis());
+		property.getOwners().get(0).setLastModifiedBy(requestInfo.getUserInfo().getUuid());
+		property.getOwners().get(0).setLastModifiedDate(System.currentTimeMillis());
+		property.getOwners().get(0).setActive(userDetailResponse.getUser().get(0).getActive());
+	}
 
 	/**
 	 *
@@ -447,6 +591,19 @@ public class UserService {
 		holderInfo.setLastModifiedBy(requestInfo.getUserInfo().getUuid());
 		holderInfo.setLastModifiedDate(System.currentTimeMillis());
 		holderInfo.setActive(userDetailResponse.getUser().get(0).getActive());
+	}
+	
+	private void setOwnerFieldsUpdateNew(Property property, UserDetailResponse userDetailResponse,
+			RequestInfo requestInfo) {
+
+		property.getOwners().get(0).setUuid(userDetailResponse.getUser().get(0).getUuid());
+		property.getOwners().get(0).setId(userDetailResponse.getUser().get(0).getId());
+		property.getOwners().get(0).setUserName((userDetailResponse.getUser().get(0).getUserName()));
+		property.getOwners().get(0).setCreatedBy(requestInfo.getUserInfo().getUuid());
+		property.getOwners().get(0).setCreatedDate(System.currentTimeMillis());
+		property.getOwners().get(0).setLastModifiedBy(requestInfo.getUserInfo().getUuid());
+		property.getOwners().get(0).setLastModifiedDate(System.currentTimeMillis());
+		property.getOwners().get(0).setActive(userDetailResponse.getUser().get(0).getActive());
 	}
 	/**
 	 *

@@ -13,6 +13,7 @@ import org.egov.tracer.model.CustomException;
 import org.egov.waterconnection.config.WSConfiguration;
 import org.egov.waterconnection.constants.WCConstants;
 import org.egov.waterconnection.model.AuditDetails;
+import org.egov.waterconnection.model.ConnectionHolderInfo;
 import org.egov.waterconnection.model.Property;
 import org.egov.waterconnection.model.PublicDashBoardSearchCritieria;
 import org.egov.waterconnection.model.ResponseData;
@@ -298,9 +299,7 @@ public class WaterServiceImpl implements WaterService {
 			Property property = validateProperty.getOrValidateProperty(waterConnectionRequest);
 			waterConnectionRequest.getWaterConnection().setProperty(property);
 			validateProperty.validatePropertyCriteria(property);
-			
-			System.out.println("Property Details : " + property.toString());
-			userService.createUser(waterConnectionRequest);
+			userService.createUserNewConnection(waterConnectionRequest);
 		}
 		waterDao.addConnectionMapping(waterConnectionRequest);
 		

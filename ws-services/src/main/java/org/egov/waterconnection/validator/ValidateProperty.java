@@ -24,6 +24,10 @@ public class ValidateProperty {
 		if (StringUtils.isEmpty(property.getPropertyId())) {
 			throw new CustomException("INVALID PROPERTY", "WaterConnection cannot be updated without propertyId");
 		}
+		
+		if(StringUtils.isEmpty(property.getOwners().get(0).getName())) {
+			throw new CustomException("INVALID PROPERTY OWNER NAME", "Property/Connection owner name is not present in master data");
+		}
 	}
 
 	/**
