@@ -175,17 +175,17 @@ public class UserService {
 			Role role = getCitizenRole();
 			Property property = request.getWaterConnection().getProperty();
 			addUserDefaultFieldsNew(request.getWaterConnection().getTenantId(), role, property);
-			UserDetailResponse userDetailResponse = updateUserExistsNew(property, request.getRequestInfo());
-			property.getOwners().get(0).setId(userDetailResponse.getUser().get(0).getId());
-			property.getOwners().get(0).setUuid(userDetailResponse.getUser().get(0).getUuid());
+			UserDetailResponseNew userDetailResponse = updateUserExistsNew(property, request.getRequestInfo());
+			property.getOwners().get(0).setId(userDetailResponse.getUser().get(0).getOwners().get(0).getId());
+			property.getOwners().get(0).setUuid(userDetailResponse.getUser().get(0).getOwners().get(0).getUuid());
 			// addUserDefaultFields(request.getWaterConnection().getTenantId(), role,
 			// holderInfo);
 			addUserDefaultFieldsUpdateNew(request.getWaterConnection().getTenantId(), role, property);
 
 			StringBuilder uri = new StringBuilder(configuration.getUserHost())
 					.append(configuration.getUserContextPath()).append(configuration.getUserUpdateEndPoint());
-			userDetailResponse = updateUserCall(new ConnectionUserRequestNew(request.getRequestInfo(), property), uri);
-			if (userDetailResponse.getUser().get(0).getUuid() == null) {
+			userDetailResponse = updateUserCallNew(new ConnectionUserRequestNew(request.getRequestInfo(), property), uri);
+			if (userDetailResponse.getUser().get(0).getOwners().get(0).getUuid() == null) {
 				throw new CustomException("INVALID USER RESPONSE", "The user updated has uuid as null");
 			}
 			// Assigns value of fields from user got from userDetailResponse to owner object
@@ -322,6 +322,29 @@ public class UserService {
 				return mapper.convertValue(responseMap, UserDetailResponse.class);
 			} else {
 				return new UserDetailResponse();
+			}
+		}
+		// Which Exception to throw?
+		catch (IllegalArgumentException e) {
+			throw new CustomException("IllegalArgumentException", "ObjectMapper not able to convertValue in userCall");
+		}
+	}
+	
+	@SuppressWarnings("unchecked")
+	private UserDetailResponseNew updateUserCallNew(Object userRequest, StringBuilder uri) {
+		String dobFormat = null;
+		if (uri.toString().contains(configuration.getUserSearchEndpoint())
+				|| uri.toString().contains(configuration.getUserUpdateEndPoint()))
+			dobFormat = "yyyy-MM-dd";
+		else if (uri.toString().contains(configuration.getUserCreateEndPoint()))
+			dobFormat = "dd/MM/yyyy";
+		try {
+			LinkedHashMap<String, Object> responseMap = (LinkedHashMap<String, Object>) serviceRequestRepository.fetchResult(uri, userRequest);
+			if (!CollectionUtils.isEmpty(responseMap)) {
+				parseResponse(responseMap, dobFormat);
+				return mapper.convertValue(responseMap, UserDetailResponseNew.class);
+			} else {
+				return new UserDetailResponseNew();
 			}
 		}
 		// Which Exception to throw?
@@ -508,7 +531,7 @@ public class UserService {
 	}
 	
 	
-	private UserDetailResponse updateUserExistsNew(Property property, RequestInfo requestInfo) {
+	private UserDetailResponseNew updateUserExistsNew(Property property, RequestInfo requestInfo) {
 		UserSearchRequest userSearchRequest = getBaseUserSearchRequest(property.getTenantId(), requestInfo);
 		userSearchRequest.setMobileNumber(property.getOwners().get(0).getMobileNumber());
 		//userSearchRequest.setUserType(connectionHolderInfo.getType());
@@ -516,7 +539,7 @@ public class UserService {
 		userSearchRequest.setName(property.getOwners().get(0).getName());
 		StringBuilder uri = new StringBuilder(configuration.getUserHost())
 				.append(configuration.getUserSearchEndpoint());
-		return updateUserCall(userSearchRequest, uri);
+		return updateUserCallNew(userSearchRequest, uri);
 	}
 
 	/**
@@ -620,17 +643,17 @@ public class UserService {
 		holderInfo.setActive(userDetailResponse.getUser().get(0).getActive());
 	}
 	
-	private void setOwnerFieldsUpdateNew(Property property, UserDetailResponse userDetailResponse,
+	private void setOwnerFieldsUpdateNew(Property property, UserDetailResponseNew userDetailResponse,
 			RequestInfo requestInfo) {
 
-		property.getOwners().get(0).setUuid(userDetailResponse.getUser().get(0).getUuid());
-		property.getOwners().get(0).setId(userDetailResponse.getUser().get(0).getId());
-		property.getOwners().get(0).setUserName((userDetailResponse.getUser().get(0).getUserName()));
+		property.getOwners().get(0).setUuid(userDetailResponse.getUser().get(0).getOwners().get(0).getUuid());
+		property.getOwners().get(0).setId(userDetailResponse.getUser().get(0).getOwners().get(0).getId());
+		property.getOwners().get(0).setUserName((userDetailResponse.getUser().get(0).getOwners().get(0).getUserName()));
 		property.getOwners().get(0).setCreatedBy(requestInfo.getUserInfo().getUuid());
 		property.getOwners().get(0).setCreatedDate(System.currentTimeMillis());
 		property.getOwners().get(0).setLastModifiedBy(requestInfo.getUserInfo().getUuid());
 		property.getOwners().get(0).setLastModifiedDate(System.currentTimeMillis());
-		property.getOwners().get(0).setActive(userDetailResponse.getUser().get(0).getActive());
+		property.getOwners().get(0).setActive(userDetailResponse.getUser().get(0).getOwners().get(0).getActive());
 	}
 	/**
 	 *
