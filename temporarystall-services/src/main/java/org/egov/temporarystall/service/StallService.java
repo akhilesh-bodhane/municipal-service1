@@ -657,7 +657,7 @@ List jsonOutput1 = JsonPath.read(mdmsData, CommonConstants.MDMS_TAXHEAD_STALL_CO
 						System.out.println("demand details : " + demanddetails.toString());
 						DemandDetail demanddetailsGst = new DemandDetail();
 						for (DemandDetail demandDetail : stallDemandId) {
-							if (demandDetail.getTaxHeadMasterCode().equalsIgnoreCase("STALL_TEMPORARY_STALL_CHARGES_BOOKING")) {
+							if (demandDetail.getTaxHeadMasterCode().equalsIgnoreCase("TEMPORARY_STALL_GST_CHARGES_BOOKING")) {
 								
 								demanddetailsGst.setId(demandDetail.getId());
 							}
