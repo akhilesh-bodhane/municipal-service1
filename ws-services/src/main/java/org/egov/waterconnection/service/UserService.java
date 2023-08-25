@@ -591,14 +591,14 @@ public class UserService {
 	private void setOwnerFieldsNew(Property property, UserDetailResponseNew userDetailResponse,
 			RequestInfo requestInfo) {
 
-		property.getOwners().get(0).setUuid(userDetailResponse.getUser().getOwners().get(0).getUuid());
-		property.getOwners().get(0).setId(userDetailResponse.getUser().getOwners().get(0).getId());
-		property.getOwners().get(0).setUserName((userDetailResponse.getUser().getOwners().get(0).getUserName()));
+		property.getOwners().get(0).setUuid(((Property) userDetailResponse.getUser()).getOwners().get(0).getUuid());
+		property.getOwners().get(0).setId(((Property) userDetailResponse.getUser()).getOwners().get(0).getId());
+		property.getOwners().get(0).setUserName((((Property) userDetailResponse.getUser()).getOwners().get(0).getUserName()));
 		property.getOwners().get(0).setCreatedBy(requestInfo.getUserInfo().getUuid());
 		property.getOwners().get(0).setCreatedDate(System.currentTimeMillis());
 		property.getOwners().get(0).setLastModifiedBy(requestInfo.getUserInfo().getUuid());
 		property.getOwners().get(0).setLastModifiedDate(System.currentTimeMillis());
-		property.getOwners().get(0).setActive(userDetailResponse.getUser().getOwners().get(0).getActive());
+		property.getOwners().get(0).setActive(((Property) userDetailResponse.getUser()).getOwners().get(0).getActive());
 	}
 
 	/**

@@ -23,6 +23,6 @@ public class UserDetailResponseNew {
     ResponseInfo responseInfo;
     
     @JsonProperty("user")
-    Property user;
+    List<Property> user;
     
 }
