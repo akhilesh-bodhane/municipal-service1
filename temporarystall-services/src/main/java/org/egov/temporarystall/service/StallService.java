@@ -32,6 +32,7 @@ import org.egov.temporarystall.model.demand.Demand.StatusEnum;
 import org.egov.temporarystall.producer.Producer;
 import org.egov.temporarystall.model.demand.DemandDetail;
 import org.egov.temporarystall.model.demand.DemandRequest;
+import org.egov.temporarystall.model.demand.DemandResponse;
 import org.egov.temporarystall.repository.TemporaryStallRepository;
 import org.egov.temporarystall.repository.ServiceRequestRepository;
 import org.egov.temporarystall.util.AuditDetailsUtil;
@@ -699,15 +700,25 @@ List jsonOutput1 = JsonPath.read(mdmsData, CommonConstants.MDMS_TAXHEAD_STALL_CO
 		
 						if ((CommonConstants.FAILURE.equalsIgnoreCase(StallApplication.getPaymentstatus()))) {
 							System.out.println("Inside failure if condition");
-							MdmsResponse response2 = mapper.convertValue(
+							/*
+							 * MdmsResponse response2 = mapper.convertValue(
+							 * repository1.fetchResult(repository.getBillingUpdateUrl(), request),
+							 * MdmsResponse.class);
+							 */
+							DemandResponse response2 = mapper.convertValue(
 									repository1.fetchResult(repository.getBillingUpdateUrl(), request),
-									MdmsResponse.class);
+									DemandResponse.class);
 							System.out.println("failure payment response :" + response2.toString());
 						} else if ((StallApplication.getPaymentstatus() == null)) {
 							System.out.println("Inside null else if condition");
-							MdmsResponse response2 = mapper.convertValue(
+							/*
+							 * MdmsResponse response2 = mapper.convertValue(
+							 * repository1.fetchResult(repository.getBillingUpdateUrl(), request),
+							 * MdmsResponse.class);
+							 */
+							DemandResponse response2 = mapper.convertValue(
 									repository1.fetchResult(repository.getBillingUpdateUrl(), request),
-									MdmsResponse.class);
+									DemandResponse.class);
 							System.out.println("null payment response :" + response2.toString());
 						}
 						
