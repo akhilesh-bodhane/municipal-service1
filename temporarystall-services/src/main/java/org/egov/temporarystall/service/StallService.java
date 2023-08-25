@@ -573,34 +573,25 @@ List jsonOutput1 = JsonPath.read(mdmsData, CommonConstants.MDMS_TAXHEAD_STALL_CO
 					
 					StallApplication.setTotalamount(totalamount);
 					
-					enrichmentService.generateDemand(stallrequest);
 					
-					/*
-					 * StringBuilder uri = new StringBuilder(); uri =
-					 * uri.append(config.getBillingHost()).append(config.getBillingHostSerach());
-					 * 
-					 * uri =
-					 * uri.append("tenantId=").append("ch.chandigarh").append("&businessService=").
-					 * append("TEMPORARY_STALL_CHARGES_BOOKING&consumerCode=").append(
-					 * StallApplication.getApplicationId());
-					 * StallRequest.builder().requestInfo(stallrequest.getRequestInfo()).build();
-					 * Object fetchResult = repository1.fetchResult(uri,
-					 * stallrequest.getRequestInfo());
-					 * 
-					 * System.out.println("Billing Service Response Result : " +
-					 * fetchResult.toString());
-					 * 
-					 * 
-					 * StringBuilder curi = new StringBuilder(); StringBuilder append =
-					 * curi.append(config.getCollectionHostSerach()).append(config.
-					 * getCollectionSearcheUrl());
-					 * append.append("consumerCodes=").append(StallApplication.getApplicationId()).
-					 * append("&tenantId=ch.chandigarh");
-					 * 
-					 * System.out.println("Append Value Collection Service : " + append.toString());
-					 * 
-					 * StringBuilder curii = new StringBuilder();
-					 */
+					StringBuilder uri = new StringBuilder();
+					uri = uri.append(config.getBillingHost()).append(config.getBillingHostSerach());
+					
+					uri = uri.append("tenantId=").append("ch.chandigarh").append("&businessService=").append("TEMPORARY_STALL_CHARGES_BOOKING&consumerCode=").append(StallApplication.getApplicationId());
+					StallRequest.builder().requestInfo(stallrequest.getRequestInfo()).build();
+					Object fetchResult = repository1.fetchResult(uri,
+							stallrequest.getRequestInfo());   
+					
+					System.out.println("Billing Service Response Result : " + fetchResult.toString());
+					
+					
+					StringBuilder curi = new StringBuilder();
+					StringBuilder append = curi.append(config.getCollectionHostSerach()).append(config.getCollectionSearcheUrl());
+					append.append("consumerCodes=").append(StallApplication.getApplicationId()).append("&tenantId=ch.chandigarh");
+					
+					System.out.println("Append Value Collection Service : " + append.toString());
+
+					StringBuilder curii = new StringBuilder();
 
 // 					StallRequest build3 = StallRequest.builder().requestInfo(stallrequest.getRequestInfo()).build();
 // 					Object fetchResult2 = repository1.fetchResult(append, build3);
@@ -623,101 +614,102 @@ List jsonOutput1 = JsonPath.read(mdmsData, CommonConstants.MDMS_TAXHEAD_STALL_CO
 					
 
 					
-					/*
-					 * StallApplication stallDemand = repository.getStallDemand(StallApplication);
-					 * 
-					 * List<DemandDetail> stallDemandId =
-					 * repository.getStallDemandDetailId(StallApplication);
-					 * 
-					 * 
-					 * System.out.println("stall demand : " + stallDemand.toString());
-					 * System.out.println("stall demand ID : " + stallDemandId.toString());
-					 * 
-					 * org.egov.common.contract.request.User user = new
-					 * org.egov.common.contract.request.User();
-					 * 
-					 * // User lp = stallrequest.getRequestInfo().getUserInfo();
-					 * user.setId(stallrequest.getRequestInfo().getUserInfo().getId());
-					 * user.setEmailId(stallrequest.getRequestInfo().getUserInfo().getEmailId());
-					 * user.setName(stallrequest.getRequestInfo().getUserInfo().getName());
-					 * user.setTenantId(stallrequest.getRequestInfo().getUserInfo().getTenantId());
-					 * user.setType(stallrequest.getRequestInfo().getUserInfo().getType());
-					 * user.setUuid(stallrequest.getRequestInfo().getUserInfo().getUuid());
-					 * user.setUserName(stallrequest.getRequestInfo().getUserInfo().getUserName());
-					 * 
-					 * 
-					 * double j =0;
-					 * 
-					 * 
-					 * 
-					 * DemandDetail demanddetails = new DemandDetail(); for (DemandDetail
-					 * demandDetail : stallDemandId) { if
-					 * (demandDetail.getTaxHeadMasterCode().equalsIgnoreCase(
-					 * "STALL_TEMPORARY_STALL_CHARGES_BOOKING")) {
-					 * demanddetails.setId(demandDetail.getId()); } } //
-					 * demanddetails.setId(stallDemandId.get(0).getDemaniddetailid());
-					 * //demanddetails.setTaxHeadMasterCode("TEMPORARY_STALL_CHARGES_BOOKING");
-					 * demanddetails.setTaxHeadMasterCode("STALL_TEMPORARY_STALL_CHARGES_BOOKING");
-					 * demanddetails.setDemandId(stallDemand.getDemanid());
-					 * demanddetails.setTenantId("ch.chandigarh");
-					 * demanddetails.setCollectionAmount(j); demanddetails.setTaxAmount(amount);
-					 * demanddetails.setAuditDetails(StallApplication.getAuditDetails());
-					 * 
-					 * System.out.println("demand details : " + demanddetails.toString());
-					 * DemandDetail demanddetailsGst = new DemandDetail(); for (DemandDetail
-					 * demandDetail : stallDemandId) { if
-					 * (demandDetail.getTaxHeadMasterCode().equalsIgnoreCase(
-					 * "STALL_TEMPORARY_STALL_CHARGES_BOOKING")) {
-					 * 
-					 * demanddetailsGst.setId(demandDetail.getId()); } } //
-					 * demanddetailsGst.setId(stallDemandId.get(1).getDemaniddetailid());
-					 * demanddetailsGst.setTaxHeadMasterCode("STALL_TEMPORARY_STALL_CHARGES_BOOKING"
-					 * ); demanddetailsGst.setDemandId(stallDemand.getDemanid());
-					 * demanddetailsGst.setTenantId("ch.chandigarh");
-					 * demanddetailsGst.setCollectionAmount(j);
-					 * demanddetailsGst.setTaxAmount(gstamount);
-					 * demanddetailsGst.setAuditDetails(StallApplication.getAuditDetails());
-					 * 
-					 * System.out.println("demand details gst : " + demanddetailsGst.toString());
-					 * List<DemandDetail> dema1 = new ArrayList<>();
-					 * 
-					 * dema1.add(demanddetails);
-					 * 
-					 * dema1.add(demanddetailsGst);
-					 * 
-					 * System.out.println("dema1 value : " + dema1.toString());
-					 * 
-					 * List<Demand> dema = new ArrayList<>(); Demand build2 =
-					 * Demand.builder().id(stallDemand.getDemanid()).tenantId("ch.chandigarh")
-					 * .consumerCode(StallApplication.getApplicationId()).consumerType("booking")
-					 * .businessService("TEMPORARY_STALL_CHARGES_BOOKING")
-					 * .taxPeriodFrom(StallApplication.getAuditDetails().getLastModifiedTime())
-					 * .taxPeriodTo(StallApplication.getAuditDetails().getLastModifiedTime())
-					 * .billExpiryTime(System.currentTimeMillis())
-					 * .demandDetails(dema1).auditDetails(StallApplication.getAuditDetails())
-					 * .minimumAmountPayable(BigDecimal.ZERO).status(StatusEnum.ACTIVE).payer(user)
-					 * .build(); dema.add(build2); DemandRequest DR = new DemandRequest();
-					 * DemandRequest build = DR.builder().demands(dema).build(); DemandRequest
-					 * request = new DemandRequest(stallrequest.getRequestInfo(), dema);
-					 * 
-					 * System.out.println("Demand Request : " + request.toString());
-					 * 
-					 * StallApplication.setApplicationstatus(updateApplicationStatus(
-					 * StallApplication));
-					 * 
-					 * if
-					 * ((CommonConstants.FAILURE.equalsIgnoreCase(StallApplication.getPaymentstatus(
-					 * )))) { System.out.println("Inside failure if condition"); MdmsResponse
-					 * response2 = mapper.convertValue(
-					 * repository1.fetchResult(repository.getBillingUpdateUrl(), request),
-					 * MdmsResponse.class); System.out.println("failure payment response :" +
-					 * response2.toString()); } else if ((StallApplication.getPaymentstatus() ==
-					 * null)) { System.out.println("Inside null else if condition"); MdmsResponse
-					 * response2 = mapper.convertValue(
-					 * repository1.fetchResult(repository.getBillingUpdateUrl(), request),
-					 * MdmsResponse.class); System.out.println("null payment response :" +
-					 * response2.toString()); }
-					 */
+			StallApplication stallDemand = repository.getStallDemand(StallApplication);
+			
+			List<DemandDetail> stallDemandId = repository.getStallDemandDetailId(StallApplication);
+			
+			
+					System.out.println("stall demand : " + stallDemand.toString());
+					System.out.println("stall demand ID : " + stallDemandId.toString());
+						
+						org.egov.common.contract.request.User user = new org.egov.common.contract.request.User();
+
+//						User lp = stallrequest.getRequestInfo().getUserInfo();
+						user.setId(stallrequest.getRequestInfo().getUserInfo().getId());
+						user.setEmailId(stallrequest.getRequestInfo().getUserInfo().getEmailId());
+						user.setName(stallrequest.getRequestInfo().getUserInfo().getName());
+						user.setTenantId(stallrequest.getRequestInfo().getUserInfo().getTenantId());
+						user.setType(stallrequest.getRequestInfo().getUserInfo().getType());
+						user.setUuid(stallrequest.getRequestInfo().getUserInfo().getUuid());
+						user.setUserName(stallrequest.getRequestInfo().getUserInfo().getUserName());
+
+				
+						double j =0;
+
+						
+
+						DemandDetail demanddetails = new DemandDetail();
+						for (DemandDetail demandDetail : stallDemandId) {
+							if (demandDetail.getTaxHeadMasterCode().equalsIgnoreCase("STALL_TEMPORARY_STALL_CHARGES_BOOKING")) {
+								demanddetails.setId(demandDetail.getId());
+							}
+						}
+//						demanddetails.setId(stallDemandId.get(0).getDemaniddetailid());
+						//demanddetails.setTaxHeadMasterCode("TEMPORARY_STALL_CHARGES_BOOKING");
+						demanddetails.setTaxHeadMasterCode("STALL_TEMPORARY_STALL_CHARGES_BOOKING");						
+						demanddetails.setDemandId(stallDemand.getDemanid());
+						demanddetails.setTenantId("ch.chandigarh");
+						demanddetails.setCollectionAmount(j);
+						demanddetails.setTaxAmount(amount);
+						demanddetails.setAuditDetails(StallApplication.getAuditDetails());
+						
+						System.out.println("demand details : " + demanddetails.toString());
+						DemandDetail demanddetailsGst = new DemandDetail();
+						for (DemandDetail demandDetail : stallDemandId) {
+							if (demandDetail.getTaxHeadMasterCode().equalsIgnoreCase("STALL_TEMPORARY_STALL_CHARGES_BOOKING")) {
+								
+								demanddetailsGst.setId(demandDetail.getId());
+							}
+						}
+//						demanddetailsGst.setId(stallDemandId.get(1).getDemaniddetailid());
+						demanddetailsGst.setTaxHeadMasterCode("STALL_TEMPORARY_STALL_CHARGES_BOOKING");
+						demanddetailsGst.setDemandId(stallDemand.getDemanid());
+						demanddetailsGst.setTenantId("ch.chandigarh");
+						demanddetailsGst.setCollectionAmount(j);
+						demanddetailsGst.setTaxAmount(gstamount);
+						demanddetailsGst.setAuditDetails(StallApplication.getAuditDetails());
+
+						System.out.println("demand details gst : " + demanddetailsGst.toString());
+						List<DemandDetail> dema1 = new ArrayList<>();
+
+						dema1.add(demanddetails);
+						
+						dema1.add(demanddetailsGst);
+						
+						System.out.println("dema1 value : " + dema1.toString());
+
+						List<Demand> dema = new ArrayList<>();
+						Demand build2 = Demand.builder().id(stallDemand.getDemanid()).tenantId("ch.chandigarh")
+								.consumerCode(StallApplication.getApplicationId()).consumerType("booking")
+								.businessService("TEMPORARY_STALL_CHARGES_BOOKING")
+								.taxPeriodFrom(StallApplication.getAuditDetails().getLastModifiedTime())
+								.taxPeriodTo(StallApplication.getAuditDetails().getLastModifiedTime())
+							        .billExpiryTime(System.currentTimeMillis())
+								.demandDetails(dema1).auditDetails(StallApplication.getAuditDetails())
+								.minimumAmountPayable(BigDecimal.ZERO).status(StatusEnum.ACTIVE).payer(user)
+								.build();
+						dema.add(build2);
+						DemandRequest DR = new DemandRequest();
+						DemandRequest build = DR.builder().demands(dema).build();
+						DemandRequest request = new DemandRequest(stallrequest.getRequestInfo(), dema);
+
+						System.out.println("Demand Request : " + request.toString());
+						
+						StallApplication.setApplicationstatus(updateApplicationStatus(StallApplication));
+		
+						if ((CommonConstants.FAILURE.equalsIgnoreCase(StallApplication.getPaymentstatus()))) {
+							System.out.println("Inside failure if condition");
+							MdmsResponse response2 = mapper.convertValue(
+									repository1.fetchResult(repository.getBillingUpdateUrl(), request),
+									MdmsResponse.class);
+							System.out.println("failure payment response :" + response2.toString());
+						} else if ((StallApplication.getPaymentstatus() == null)) {
+							System.out.println("Inside null else if condition");
+							MdmsResponse response2 = mapper.convertValue(
+									repository1.fetchResult(repository.getBillingUpdateUrl(), request),
+									MdmsResponse.class);
+							System.out.println("null payment response :" + response2.toString());
+						}
 						
 						
 						
