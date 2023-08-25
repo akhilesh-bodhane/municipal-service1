@@ -22,9 +22,7 @@ public class UserDetailResponseNew {
     @JsonProperty("responseInfo")
     ResponseInfo responseInfo;
     
-    @JsonProperty("userNew")
-    Property userNew;
-    
     @JsonProperty("user")
-    List<ConnectionHolderInfo> user;
+    Property user;
+    
 }

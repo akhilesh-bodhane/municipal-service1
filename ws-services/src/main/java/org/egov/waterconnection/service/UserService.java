@@ -103,7 +103,7 @@ public class UserService {
 	
 	public void createUserNewConnection(WaterConnectionRequest request) {
 		if (!StringUtils.isEmpty(request.getWaterConnection().getProperty().getId())) {
-			System.out.println("Inside create user if condition");
+			System.out.println("Inside Create New User Method");
 			Role role = getCitizenRole();
 			Property property = request.getWaterConnection().getProperty();
 			
@@ -112,7 +112,7 @@ public class UserService {
 				addUserDefaultFieldsNew(request.getWaterConnection().getTenantId(), role, property);
 				UserDetailResponseNew userDetailResponse = userExistsNewConnection(property, request.getRequestInfo());
 				System.out.println("user detail response : " + userDetailResponse.toString());
-				if (CollectionUtils.isEmpty(userDetailResponse.getUser())) {
+				if (userDetailResponse.getUser().equals(null)) {
 					/*
 					 * Sets userName equal to mobileNumber
 					 *
@@ -120,6 +120,7 @@ public class UserService {
 					 *
 					 * then random uuid is assigned as user-name
 					 */
+					System.out.println("Indside if conidtion of user creation");
 					StringBuilder uri = new StringBuilder(configuration.getUserHost())
 							.append(configuration.getUserContextPath()).append(configuration.getUserCreateEndPoint());
 					setUserNameNewConnection(property, mobileNumber);
@@ -135,7 +136,7 @@ public class UserService {
 					}
 
 				} else {
-					System.out.println("Inside create else if condition");
+					System.out.println("Inside else condition of user creation");
 					updateUserNew(request);
 				}
 				// Assigns value of fields from user got from userDetailResponse to owner object
@@ -590,14 +591,14 @@ public class UserService {
 	private void setOwnerFieldsNew(Property property, UserDetailResponseNew userDetailResponse,
 			RequestInfo requestInfo) {
 
-		property.getOwners().get(0).setUuid(userDetailResponse.getUser().get(0).getUuid());
-		property.getOwners().get(0).setId(userDetailResponse.getUser().get(0).getId());
-		property.getOwners().get(0).setUserName((userDetailResponse.getUser().get(0).getUserName()));
+		property.getOwners().get(0).setUuid(userDetailResponse.getUser().getOwners().get(0).getUuid());
+		property.getOwners().get(0).setId(userDetailResponse.getUser().getOwners().get(0).getId());
+		property.getOwners().get(0).setUserName((userDetailResponse.getUser().getOwners().get(0).getUserName()));
 		property.getOwners().get(0).setCreatedBy(requestInfo.getUserInfo().getUuid());
 		property.getOwners().get(0).setCreatedDate(System.currentTimeMillis());
 		property.getOwners().get(0).setLastModifiedBy(requestInfo.getUserInfo().getUuid());
 		property.getOwners().get(0).setLastModifiedDate(System.currentTimeMillis());
-		property.getOwners().get(0).setActive(userDetailResponse.getUser().get(0).getActive());
+		property.getOwners().get(0).setActive(userDetailResponse.getUser().getOwners().get(0).getActive());
 	}
 
 	/**
