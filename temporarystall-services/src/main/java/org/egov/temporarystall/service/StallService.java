@@ -663,7 +663,7 @@ List jsonOutput1 = JsonPath.read(mdmsData, CommonConstants.MDMS_TAXHEAD_STALL_CO
 							}
 						}
 //						demanddetailsGst.setId(stallDemandId.get(1).getDemaniddetailid());
-						demanddetailsGst.setTaxHeadMasterCode("STALL_TEMPORARY_STALL_CHARGES_BOOKING");
+						demanddetailsGst.setTaxHeadMasterCode("TEMPORARY_STALL_GST_CHARGES_BOOKING");
 						demanddetailsGst.setDemandId(stallDemand.getDemanid());
 						demanddetailsGst.setTenantId("ch.chandigarh");
 						demanddetailsGst.setCollectionAmount(j);
