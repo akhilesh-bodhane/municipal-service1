@@ -26,6 +26,7 @@ import org.egov.waterconnection.model.Status;
 import org.egov.waterconnection.model.WaterConnection;
 import org.egov.waterconnection.model.WaterConnectionRequest;
 import org.egov.waterconnection.model.users.UserDetailResponse;
+import org.egov.waterconnection.model.users.UserDetailResponseNew;
 import org.egov.waterconnection.model.users.UserDetailResponseV2;
 import org.egov.waterconnection.model.users.UserSearchRequest;
 import org.egov.waterconnection.repository.ServiceRequestRepository;
@@ -65,6 +66,8 @@ public class UserService {
 			request.getWaterConnection().getConnectionHolders().forEach(holderInfo -> {
 				addUserDefaultFields(request.getWaterConnection().getTenantId(), role, holderInfo);
 				UserDetailResponse userDetailResponse = userExists(holderInfo, request.getRequestInfo());
+				
+				System.out.println("user detail response ; " + userDetailResponse);
 				if (CollectionUtils.isEmpty(userDetailResponse.getUser())) {
 					/*
 					 * Sets userName equal to mobileNumber
@@ -109,7 +112,7 @@ public class UserService {
 			System.out.println("Property Details : " + property.toString());
 			String mobileNumber = request.getWaterConnection().getProperty().getOwners().get(0).getMobileNumber();
 				addUserDefaultFieldsNew(request.getWaterConnection().getTenantId(), role, property);
-				UserDetailResponse userDetailResponse = userExistsNewConnection(property, request.getRequestInfo());
+				UserDetailResponseNew userDetailResponse = userExistsNewConnection(property, request.getRequestInfo());
 				if (CollectionUtils.isEmpty(userDetailResponse.getUser())) {
 					/*
 					 * Sets userName equal to mobileNumber
@@ -125,7 +128,7 @@ public class UserService {
 					ConnectionUserRequestNew userRequest = ConnectionUserRequestNew.builder()
 							.requestInfo(request.getRequestInfo()).user(property).build();
 
-					userDetailResponse = userCall(userRequest, uri);
+					userDetailResponse = userCallNew(userRequest, uri);
 
 					if (ObjectUtils.isEmpty(userDetailResponse)) {
 						throw new CustomException("INVALID USER RESPONSE",
@@ -263,6 +266,30 @@ public class UserService {
 				return mapper.convertValue(responseMap, UserDetailResponse.class);
 			} else {
 				return new UserDetailResponse();
+			}
+		}
+		// Which Exception to throw?
+		catch (IllegalArgumentException e) {
+			throw new CustomException("IllegalArgumentException", "ObjectMapper not able to convertValue in userCall");
+		}
+	}
+	
+	
+	@SuppressWarnings("unchecked")
+	private UserDetailResponseNew userCallNew(Object userRequest, StringBuilder uri) {
+		String dobFormat = null;
+		if (uri.toString().contains(configuration.getUserSearchEndpoint())
+				|| uri.toString().contains(configuration.getUserUpdateEndPoint()))
+			dobFormat = "yyyy-MM-dd";
+		else if (uri.toString().contains(configuration.getUserCreateEndPoint()))
+			dobFormat = "dd/MM/yyyy";
+		try {
+			LinkedHashMap<String, Object> responseMap = (LinkedHashMap<String, Object>) serviceRequestRepository.fetchResult(uri, userRequest);
+			if (!CollectionUtils.isEmpty(responseMap)) {
+				parseResponse(responseMap, dobFormat);
+				return mapper.convertValue(responseMap, UserDetailResponseNew.class);
+			} else {
+				return new UserDetailResponseNew();
 			}
 		}
 		// Which Exception to throw?
@@ -448,14 +475,14 @@ public class UserService {
 		return userCall(userSearchRequest, uri);
 	}
 	
-	private UserDetailResponse userExistsNewConnection(Property property, RequestInfo requestInfo) {
+	private UserDetailResponseNew userExistsNewConnection(Property property, RequestInfo requestInfo) {
 		UserSearchRequest userSearchRequest = getBaseUserSearchRequest(property.getTenantId(), requestInfo);
 		userSearchRequest.setMobileNumber(property.getOwners().get(0).getMobileNumber());
 		userSearchRequest.setUserType(property.getOwners().get(0).getType());
 		userSearchRequest.setName(property.getOwners().get(0).getName());
 		StringBuilder uri = new StringBuilder(configuration.getUserHost())
 				.append(configuration.getUserSearchEndpoint());
-		return userCall(userSearchRequest, uri);
+		return userCallNew(userSearchRequest, uri);
 	}
 	
 	
@@ -561,7 +588,7 @@ public class UserService {
 		holderInfo.setActive(userDetailResponse.getUser().get(0).getActive());
 	}
 	
-	private void setOwnerFieldsNew(Property property, UserDetailResponse userDetailResponse,
+	private void setOwnerFieldsNew(Property property, UserDetailResponseNew userDetailResponse,
 			RequestInfo requestInfo) {
 
 		property.getOwners().get(0).setUuid(userDetailResponse.getUser().get(0).getUuid());
