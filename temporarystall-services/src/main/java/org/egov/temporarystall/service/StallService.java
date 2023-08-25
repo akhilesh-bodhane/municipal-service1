@@ -558,7 +558,7 @@ List jsonOutput1 = JsonPath.read(mdmsData, CommonConstants.MDMS_TAXHEAD_STALL_CO
 						
 						double totalamount = amount + gstamount;
 				
-				
+				      System.out.println("Total amount : " + totalamount + " Amount : " + amount + " GST Amount : " + gstamount);
 // 						StallApplication.setAmount(amount);
 						
 // 						StallApplication.setGstamount(gstamount);	
@@ -582,14 +582,14 @@ List jsonOutput1 = JsonPath.read(mdmsData, CommonConstants.MDMS_TAXHEAD_STALL_CO
 					Object fetchResult = repository1.fetchResult(uri,
 							stallrequest.getRequestInfo());   
 					
-					
+					System.out.println("Billing Service Response Result : " + fetchResult.toString());
 					
 					
 					StringBuilder curi = new StringBuilder();
 					StringBuilder append = curi.append(config.getCollectionHostSerach()).append(config.getCollectionSearcheUrl());
 					append.append("consumerCodes=").append(StallApplication.getApplicationId()).append("&tenantId=ch.chandigarh");
 					
-
+					System.out.println("Append Value Collection Service : " + append.toString());
 
 					StringBuilder curii = new StringBuilder();
 
@@ -619,7 +619,8 @@ List jsonOutput1 = JsonPath.read(mdmsData, CommonConstants.MDMS_TAXHEAD_STALL_CO
 			List<DemandDetail> stallDemandId = repository.getStallDemandDetailId(StallApplication);
 			
 			
-					
+					System.out.println("stall demand : " + stallDemand.toString());
+					System.out.println("stall demand ID : " + stallDemandId.toString());
 						
 						org.egov.common.contract.request.User user = new org.egov.common.contract.request.User();
 
@@ -652,6 +653,7 @@ List jsonOutput1 = JsonPath.read(mdmsData, CommonConstants.MDMS_TAXHEAD_STALL_CO
 						demanddetails.setTaxAmount(amount);
 						demanddetails.setAuditDetails(StallApplication.getAuditDetails());
 						
+						System.out.println("demand details : " + demanddetails.toString());
 						DemandDetail demanddetailsGst = new DemandDetail();
 						for (DemandDetail demandDetail : stallDemandId) {
 							if (demandDetail.getTaxHeadMasterCode().equalsIgnoreCase("STALL_TEMPORARY_STALL_CHARGES_BOOKING")) {
@@ -667,11 +669,14 @@ List jsonOutput1 = JsonPath.read(mdmsData, CommonConstants.MDMS_TAXHEAD_STALL_CO
 						demanddetailsGst.setTaxAmount(gstamount);
 						demanddetailsGst.setAuditDetails(StallApplication.getAuditDetails());
 
+						System.out.println("demand details gst : " + demanddetailsGst.toString());
 						List<DemandDetail> dema1 = new ArrayList<>();
 
 						dema1.add(demanddetails);
 						
 						dema1.add(demanddetailsGst);
+						
+						System.out.println("dema1 value : " + dema1.toString());
 
 						List<Demand> dema = new ArrayList<>();
 						Demand build2 = Demand.builder().id(stallDemand.getDemanid()).tenantId("ch.chandigarh")
@@ -688,24 +693,29 @@ List jsonOutput1 = JsonPath.read(mdmsData, CommonConstants.MDMS_TAXHEAD_STALL_CO
 						DemandRequest build = DR.builder().demands(dema).build();
 						DemandRequest request = new DemandRequest(stallrequest.getRequestInfo(), dema);
 
-						
+						System.out.println("Demand Request : " + request.toString());
 						
 						StallApplication.setApplicationstatus(updateApplicationStatus(StallApplication));
 		
-		                             if ((CommonConstants.FAILURE.equalsIgnoreCase(StallApplication.getPaymentstatus()))  ) {
+						if ((CommonConstants.FAILURE.equalsIgnoreCase(StallApplication.getPaymentstatus()))) {
+							System.out.println("Inside failure if condition");
 							MdmsResponse response2 = mapper.convertValue(
 									repository1.fetchResult(repository.getBillingUpdateUrl(), request),
 									MdmsResponse.class);
-						}
-						else if ( (StallApplication.getPaymentstatus()== null ) ) {
+							System.out.println("failure payment response :" + response2.toString());
+						} else if ((StallApplication.getPaymentstatus() == null)) {
+							System.out.println("Inside null else if condition");
 							MdmsResponse response2 = mapper.convertValue(
 									repository1.fetchResult(repository.getBillingUpdateUrl(), request),
 									MdmsResponse.class);
+							System.out.println("null payment response :" + response2.toString());
 						}
 						
 						
 						
-					StallApplication.setApplicationDocument(stalldoc);			
+					StallApplication.setApplicationDocument(stalldoc);	
+					
+					System.out.println("Stall Application : " + StallApplication.toString());
 					repository.updateSTALLApplication(StallApplication);
 		
 					return new ResponseEntity<>(ResponseInfoWrapper.builder()
