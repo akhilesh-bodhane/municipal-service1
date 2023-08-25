@@ -706,6 +706,8 @@ List jsonOutput1 = JsonPath.read(mdmsData, CommonConstants.MDMS_TAXHEAD_STALL_CO
 						
 						
 					StallApplication.setApplicationDocument(stalldoc);
+					
+					enrichmentService.generateDemand(stallrequest); 					
 					repository.updateSTALLApplication(StallApplication);
 		
 					return new ResponseEntity<>(ResponseInfoWrapper.builder()
