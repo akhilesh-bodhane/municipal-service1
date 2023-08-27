@@ -22,6 +22,7 @@ import org.egov.waterconnection.model.ConnectionHolderInfoV2;
 import org.egov.waterconnection.model.ConnectionUserRequest;
 import org.egov.waterconnection.model.ConnectionUserRequestNew;
 import org.egov.waterconnection.model.ConnectionUserRequestV2;
+import org.egov.waterconnection.model.OwnerInfo;
 import org.egov.waterconnection.model.Property;
 import org.egov.waterconnection.model.Status;
 import org.egov.waterconnection.model.WaterConnection;
@@ -40,6 +41,7 @@ import org.springframework.util.ObjectUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.extern.slf4j.Slf4j;
+
 @Slf4j
 @Service
 public class UserService {
@@ -100,20 +102,18 @@ public class UserService {
 			});
 		}
 	}
-	
-	
+
 	public void createUserNewConnection(WaterConnectionRequest request) {
 		if (!StringUtils.isEmpty(request.getWaterConnection().getProperty().getId())) {
 			System.out.println("Inside Create New User Method");
 			Role role = getCitizenRole();
 			Property property = request.getWaterConnection().getProperty();
-			
 			System.out.println("Property Details : " + property.toString());
 			String mobileNumber = request.getWaterConnection().getProperty().getOwners().get(0).getMobileNumber();
-				addUserDefaultFieldsNew(request.getWaterConnection().getTenantId(), role, property);
-				UserDetailResponseNew userDetailResponse = userExistsNewConnection(property, request.getRequestInfo());
-				System.out.println("user detail response : " + userDetailResponse.toString());
-				if (CollectionUtils.isEmpty(userDetailResponse.getUser().get(0).getOwners())) {
+			request.getWaterConnection().getProperty().getOwners().forEach(ownerInfo -> {
+				addUserDefaultFieldsNew(request.getWaterConnection().getTenantId(), role, ownerInfo);
+				UserDetailResponseNew userDetailResponse = userExistsNewConnection(ownerInfo, request.getRequestInfo());
+				if (CollectionUtils.isEmpty(userDetailResponse.getUser())) {
 					/*
 					 * Sets userName equal to mobileNumber
 					 *
@@ -121,96 +121,158 @@ public class UserService {
 					 *
 					 * then random uuid is assigned as user-name
 					 */
-					System.out.println("Indside if conidtion of user creation");
 					StringBuilder uri = new StringBuilder(configuration.getUserHost())
 							.append(configuration.getUserContextPath()).append(configuration.getUserCreateEndPoint());
-					setUserNameNewConnection(property, mobileNumber);
+					setUserNameNewConnection(ownerInfo, mobileNumber);
 
 					ConnectionUserRequestNew userRequest = ConnectionUserRequestNew.builder()
-							.requestInfo(request.getRequestInfo()).user(property).build();
+							.requestInfo(request.getRequestInfo()).user(ownerInfo).build();
 
 					userDetailResponse = userCallNew(userRequest, uri);
 
 					if (ObjectUtils.isEmpty(userDetailResponse)) {
 						throw new CustomException("INVALID USER RESPONSE",
-								"The user create has failed for the mobileNumber : " + property.getOwners().get(0).getUserName());
+								"The user create has failed for the mobileNumber : " + ownerInfo.getUserName());
 					}
 
 				} else {
-					System.out.println("Inside else condition of user creation");
-					updateUserNew(request);
+					System.out.println("Inside create else if condition");
+					updateUser(request);
 				}
 				// Assigns value of fields from user got from userDetailResponse to owner object
-				setOwnerFieldsNew(property, userDetailResponse, request.getRequestInfo());
-				System.out.println("Holder Info : " + property.toString());
+				setOwnerFieldsNew(ownerInfo, userDetailResponse, request.getRequestInfo());
+				System.out.println("Holder Info : " + ownerInfo.toString());
 				System.out.println("userDetailResponse : " + userDetailResponse.toString());
+			});
+			/*
+			 * addUserDefaultFieldsNew(request.getWaterConnection().getTenantId(), role,
+			 * property); UserDetailResponseNew userDetailResponse =
+			 * userExistsNewConnection(property, request.getRequestInfo());
+			 * System.out.println("user detail response : " +
+			 * userDetailResponse.toString()); if
+			 * (CollectionUtils.isEmpty(userDetailResponse.getUser().get(0).getOwners())) {
+			 * 
+			 * Sets userName equal to mobileNumber
+			 *
+			 * If mobileNumber already assigned as user-name for another user
+			 *
+			 * then random uuid is assigned as user-name
+			 * 
+			 * System.out.println("Indside if condition of user creation"); StringBuilder
+			 * uri = new StringBuilder(configuration.getUserHost())
+			 * .append(configuration.getUserContextPath()).append(configuration.
+			 * getUserCreateEndPoint()); setUserNameNewConnection(property, mobileNumber);
+			 * 
+			 * ConnectionUserRequestNew userRequest = ConnectionUserRequestNew.builder()
+			 * .requestInfo(request.getRequestInfo()).user(property).build();
+			 * 
+			 * userDetailResponse = userCallNew(userRequest, uri);
+			 * 
+			 * if (ObjectUtils.isEmpty(userDetailResponse)) { throw new
+			 * CustomException("INVALID USER RESPONSE",
+			 * "The user create has failed for the mobileNumber : " +
+			 * property.getOwners().get(0).getUserName()); }
+			 * 
+			 * } else { System.out.println("Inside else condition of user creation");
+			 * updateUserNew(request); } // Assigns value of fields from user got from
+			 * userDetailResponse to owner object setOwnerFieldsNew(property,
+			 * userDetailResponse, request.getRequestInfo());
+			 * System.out.println("Holder Info : " + property.toString());
+			 * System.out.println("userDetailResponse : " + userDetailResponse.toString());
+			 */
 		}
 	}
-	
+
 	public void updateUser(WaterConnectionRequest request) {
 		if (!CollectionUtils.isEmpty(request.getWaterConnection().getConnectionHolders())) {
 			Role role = getCitizenRole();
 			request.getWaterConnection().getConnectionHolders().forEach(holderInfo -> {
 				addUserDefaultFields(request.getWaterConnection().getTenantId(), role, holderInfo);
 				UserDetailResponse userDetailResponse = updateUserExists(holderInfo, request.getRequestInfo());
-					holderInfo.setId(userDetailResponse.getUser().get(0).getId());
-					holderInfo.setUuid(userDetailResponse.getUser().get(0).getUuid());
-					//addUserDefaultFields(request.getWaterConnection().getTenantId(), role, holderInfo);
-					addUserDefaultFieldsUpdate(request.getWaterConnection().getTenantId(), role, holderInfo);
+				holderInfo.setId(userDetailResponse.getUser().get(0).getId());
+				holderInfo.setUuid(userDetailResponse.getUser().get(0).getUuid());
+				// addUserDefaultFields(request.getWaterConnection().getTenantId(), role,
+				// holderInfo);
+				addUserDefaultFieldsUpdate(request.getWaterConnection().getTenantId(), role, holderInfo);
 
-					StringBuilder uri = new StringBuilder(configuration.getUserHost())
-							.append(configuration.getUserContextPath()).append(configuration.getUserUpdateEndPoint());
-					userDetailResponse = updateUserCall(new ConnectionUserRequest(request.getRequestInfo(), holderInfo), uri);
-					if (userDetailResponse.getUser().get(0).getUuid() == null) {
-						throw new CustomException("INVALID USER RESPONSE", "The user updated has uuid as null");
-					}
+				StringBuilder uri = new StringBuilder(configuration.getUserHost())
+						.append(configuration.getUserContextPath()).append(configuration.getUserUpdateEndPoint());
+				userDetailResponse = updateUserCall(new ConnectionUserRequest(request.getRequestInfo(), holderInfo),
+						uri);
+				if (userDetailResponse.getUser().get(0).getUuid() == null) {
+					throw new CustomException("INVALID USER RESPONSE", "The user updated has uuid as null");
+				}
 				// Assigns value of fields from user got from userDetailResponse to owner object
-					setOwnerFieldsUpdate(holderInfo, userDetailResponse, request.getRequestInfo());
+				setOwnerFieldsUpdate(holderInfo, userDetailResponse, request.getRequestInfo());
 			});
 		}
 	}
-	
-	
+
 	public void updateUserNew(WaterConnectionRequest request) {
 		if (!StringUtils.isEmpty(request.getWaterConnection().getProperty().getId())) {
 			Role role = getCitizenRole();
-			Property property = request.getWaterConnection().getProperty();
-			addUserDefaultFieldsNew(request.getWaterConnection().getTenantId(), role, property);
-			UserDetailResponseNew userDetailResponse = updateUserExistsNew(property, request.getRequestInfo());
-			property.getOwners().get(0).setId(userDetailResponse.getUser().get(0).getOwners().get(0).getId());
-			property.getOwners().get(0).setUuid(userDetailResponse.getUser().get(0).getOwners().get(0).getUuid());
-			// addUserDefaultFields(request.getWaterConnection().getTenantId(), role,
-			// holderInfo);
-			addUserDefaultFieldsUpdateNew(request.getWaterConnection().getTenantId(), role, property);
+			request.getWaterConnection().getProperty().getOwners().forEach(ownerInfo -> {
+				addUserDefaultFieldsNew(request.getWaterConnection().getTenantId(), role, ownerInfo);
+				UserDetailResponseNew userDetailResponse = updateUserExistsNew(ownerInfo, request.getRequestInfo());
+				ownerInfo.setId(userDetailResponse.getUser().get(0).getId());
+				ownerInfo.setUuid(userDetailResponse.getUser().get(0).getUuid());
+				// addUserDefaultFields(request.getWaterConnection().getTenantId(), role,
+				// holderInfo);
+				addUserDefaultFieldsUpdateNew(request.getWaterConnection().getTenantId(), role, ownerInfo);
 
-			StringBuilder uri = new StringBuilder(configuration.getUserHost())
-					.append(configuration.getUserContextPath()).append(configuration.getUserUpdateEndPoint());
-			userDetailResponse = updateUserCallNew(new ConnectionUserRequestNew(request.getRequestInfo(), property), uri);
-			if (userDetailResponse.getUser().get(0).getOwners().get(0).getUuid() == null) {
-				throw new CustomException("INVALID USER RESPONSE", "The user updated has uuid as null");
-			}
-			// Assigns value of fields from user got from userDetailResponse to owner object
-			setOwnerFieldsUpdateNew(property, userDetailResponse, request.getRequestInfo());
+				StringBuilder uri = new StringBuilder(configuration.getUserHost())
+						.append(configuration.getUserContextPath()).append(configuration.getUserUpdateEndPoint());
+				userDetailResponse = updateUserCallNew(new ConnectionUserRequestNew(request.getRequestInfo(), ownerInfo),
+						uri);
+				if (userDetailResponse.getUser().get(0).getUuid() == null) {
+					throw new CustomException("INVALID USER RESPONSE", "The user updated has uuid as null");
+				}
+				// Assigns value of fields from user got from userDetailResponse to owner object
+				setOwnerFieldsUpdateNew(ownerInfo, userDetailResponse, request.getRequestInfo());
+			});
+			/*
+			 * Property property = request.getWaterConnection().getProperty();
+			 * addUserDefaultFieldsNew(request.getWaterConnection().getTenantId(), role,
+			 * property); UserDetailResponseNew userDetailResponse =
+			 * updateUserExistsNew(property, request.getRequestInfo());
+			 * property.getOwners().get(0).setId(userDetailResponse.getUser().get(0).
+			 * getOwners().get(0).getId());
+			 * property.getOwners().get(0).setUuid(userDetailResponse.getUser().get(0).
+			 * getOwners().get(0).getUuid()); //
+			 * addUserDefaultFields(request.getWaterConnection().getTenantId(), role, //
+			 * holderInfo);
+			 * addUserDefaultFieldsUpdateNew(request.getWaterConnection().getTenantId(),
+			 * role, property);
+			 * 
+			 * StringBuilder uri = new StringBuilder(configuration.getUserHost())
+			 * .append(configuration.getUserContextPath()).append(configuration.
+			 * getUserUpdateEndPoint()); userDetailResponse = updateUserCallNew(new
+			 * ConnectionUserRequestNew(request.getRequestInfo(), property), uri); if
+			 * (userDetailResponse.getUser().get(0).getOwners().get(0).getUuid() == null) {
+			 * throw new CustomException("INVALID USER RESPONSE",
+			 * "The user updated has uuid as null"); } // Assigns value of fields from user
+			 * got from userDetailResponse to owner object setOwnerFieldsUpdateNew(property,
+			 * userDetailResponse, request.getRequestInfo());
+			 */
 
 		}
 	}
-	
 
 	public void updateUser(WaterConnectionRequest request, WaterConnection existingWaterConnection) {
-		if(!CollectionUtils.isEmpty(existingWaterConnection.getConnectionHolders())) {
+		if (!CollectionUtils.isEmpty(existingWaterConnection.getConnectionHolders())) {
 			// We have connection holder in the existing application.
-			if(CollectionUtils.isEmpty(request.getWaterConnection().getConnectionHolders())) {
+			if (CollectionUtils.isEmpty(request.getWaterConnection().getConnectionHolders())) {
 				// New update request removed the connectionHolder - need to clear the records.
 				ConnectionHolderInfo conHolder = new ConnectionHolderInfo();
 				request.getWaterConnection().addConnectionHolderInfo(conHolder);
 				return;
 			}
 		}
-		
-		//Update connection holder.
+
+		// Update connection holder.
 		createUser(request);
 	}
-	
+
 	/**
 	 * Create citizen role
 	 *
@@ -261,7 +323,8 @@ public class UserService {
 		else if (uri.toString().contains(configuration.getUserCreateEndPoint()))
 			dobFormat = "dd/MM/yyyy";
 		try {
-			LinkedHashMap<String, Object> responseMap = (LinkedHashMap<String, Object>) serviceRequestRepository.fetchResult(uri, userRequest);
+			LinkedHashMap<String, Object> responseMap = (LinkedHashMap<String, Object>) serviceRequestRepository
+					.fetchResult(uri, userRequest);
 			if (!CollectionUtils.isEmpty(responseMap)) {
 				parseResponse(responseMap, dobFormat);
 				return mapper.convertValue(responseMap, UserDetailResponse.class);
@@ -274,8 +337,7 @@ public class UserService {
 			throw new CustomException("IllegalArgumentException", "ObjectMapper not able to convertValue in userCall");
 		}
 	}
-	
-	
+
 	@SuppressWarnings("unchecked")
 	private UserDetailResponseNew userCallNew(Object userRequest, StringBuilder uri) {
 		String dobFormat = null;
@@ -285,7 +347,8 @@ public class UserService {
 		else if (uri.toString().contains(configuration.getUserCreateEndPoint()))
 			dobFormat = "dd/MM/yyyy";
 		try {
-			LinkedHashMap<String, Object> responseMap = (LinkedHashMap<String, Object>) serviceRequestRepository.fetchResult(uri, userRequest);
+			LinkedHashMap<String, Object> responseMap = (LinkedHashMap<String, Object>) serviceRequestRepository
+					.fetchResult(uri, userRequest);
 			if (!CollectionUtils.isEmpty(responseMap)) {
 				parseResponse(responseMap, dobFormat);
 				return mapper.convertValue(responseMap, UserDetailResponseNew.class);
@@ -298,9 +361,7 @@ public class UserService {
 			throw new CustomException("IllegalArgumentException", "ObjectMapper not able to convertValue in userCall");
 		}
 	}
-	
-	
-	
+
 	/**
 	 * Returns UserDetailResponse by calling user service with given uri and object
 	 *
@@ -317,7 +378,8 @@ public class UserService {
 		else if (uri.toString().contains(configuration.getUserCreateEndPoint()))
 			dobFormat = "dd/MM/yyyy";
 		try {
-			LinkedHashMap<String, Object> responseMap = (LinkedHashMap<String, Object>) serviceRequestRepository.fetchResult(uri, userRequest);
+			LinkedHashMap<String, Object> responseMap = (LinkedHashMap<String, Object>) serviceRequestRepository
+					.fetchResult(uri, userRequest);
 			if (!CollectionUtils.isEmpty(responseMap)) {
 				parseResponse(responseMap, dobFormat);
 				return mapper.convertValue(responseMap, UserDetailResponse.class);
@@ -330,7 +392,7 @@ public class UserService {
 			throw new CustomException("IllegalArgumentException", "ObjectMapper not able to convertValue in userCall");
 		}
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	private UserDetailResponseNew updateUserCallNew(Object userRequest, StringBuilder uri) {
 		String dobFormat = null;
@@ -340,7 +402,8 @@ public class UserService {
 		else if (uri.toString().contains(configuration.getUserCreateEndPoint()))
 			dobFormat = "dd/MM/yyyy";
 		try {
-			LinkedHashMap<String, Object> responseMap = (LinkedHashMap<String, Object>) serviceRequestRepository.fetchResult(uri, userRequest);
+			LinkedHashMap<String, Object> responseMap = (LinkedHashMap<String, Object>) serviceRequestRepository
+					.fetchResult(uri, userRequest);
 			if (!CollectionUtils.isEmpty(responseMap)) {
 				parseResponse(responseMap, dobFormat);
 				return mapper.convertValue(responseMap, UserDetailResponseNew.class);
@@ -399,18 +462,17 @@ public class UserService {
 	/**
 	 * Sets the role,type,active and tenantId for a Citizen
 	 *
-	 * @param tenantId  TenantId of the water connection
-	 * @param role      The role of the user set in this case to CITIZEN
+	 * @param tenantId   TenantId of the water connection
+	 * @param role       The role of the user set in this case to CITIZEN
 	 * @param holderInfo The user whose fields are to be set
 	 */
 	private void addUserDefaultFields(String tenantId, Role role, ConnectionHolderInfo holderInfo) {
 		holderInfo.setActive(true);
-		
-		if(null==holderInfo.getStatus()) {
+
+		if (null == holderInfo.getStatus()) {
 			holderInfo.setStatus(Status.ACTIVE);
 		}
-		
-		
+
 		holderInfo.setTenantId(tenantId);
 		holderInfo.setRoles(Collections.singletonList(role));
 		holderInfo.setType("CITIZEN");
@@ -419,40 +481,37 @@ public class UserService {
 		holderInfo.setLastModifiedDate(null);
 		holderInfo.setLastModifiedBy(null);
 	}
-	
-	private void addUserDefaultFieldsNew(String tenantId, Role role, Property property) {
-		property.getOwners().get(0).setActive(true);
-		
-		if(null==property.getOwners().get(0).getStatus()) {
-			property.getOwners().get(0).setStatus(Status.ACTIVE);
+
+	private void addUserDefaultFieldsNew(String tenantId, Role role, OwnerInfo ownerInfo) {
+		ownerInfo.setActive(true);
+
+		if (null == ownerInfo.getStatus()) {
+			ownerInfo.setStatus(Status.ACTIVE);
 		}
-		
-		
-		property.getOwners().get(0).setTenantId(tenantId);
-		property.getOwners().get(0).setRoles(Collections.singletonList(role));
-		property.getOwners().get(0).setType("CITIZEN");
-		property.getOwners().get(0).setCreatedDate(null);
-		property.getOwners().get(0).setCreatedBy(null);
-		property.getOwners().get(0).setLastModifiedDate(null);
-		property.getOwners().get(0).setLastModifiedBy(null);
+
+		ownerInfo.setTenantId(tenantId);
+		ownerInfo.setRoles(Collections.singletonList(role));
+		ownerInfo.setType("CITIZEN");
+		ownerInfo.setCreatedDate(null);
+		ownerInfo.setCreatedBy(null);
+		ownerInfo.setLastModifiedDate(null);
+		ownerInfo.setLastModifiedBy(null);
 	}
-	
-	
+
 	/**
 	 * Sets the role,type,active and tenantId for a Citizen
 	 *
-	 * @param tenantId  TenantId of the water connection
-	 * @param role      The role of the user set in this case to CITIZEN
+	 * @param tenantId   TenantId of the water connection
+	 * @param role       The role of the user set in this case to CITIZEN
 	 * @param holderInfo The user whose fields are to be set
 	 */
 	private void addUserDefaultFieldsUpdate(String tenantId, Role role, ConnectionHolderInfo holderInfo) {
 		holderInfo.setActive(true);
-		
-		if(null==holderInfo.getStatus()) {
+
+		if (null == holderInfo.getStatus()) {
 			holderInfo.setStatus(Status.ACTIVE);
 		}
-		
-		
+
 		holderInfo.setTenantId(tenantId);
 		holderInfo.setRoles(Collections.singletonList(role));
 		holderInfo.setType("CITIZEN");
@@ -461,23 +520,21 @@ public class UserService {
 		holderInfo.setLastModifiedDate(null);
 		holderInfo.setLastModifiedBy(null);
 	}
-	
-	
-	private void addUserDefaultFieldsUpdateNew(String tenantId, Role role, Property property) {
-		property.getOwners().get(0).setActive(true);
-		
-		if(null==property.getOwners().get(0).getStatus()) {
-			property.getOwners().get(0).setStatus(Status.ACTIVE);
+
+	private void addUserDefaultFieldsUpdateNew(String tenantId, Role role, OwnerInfo ownerInfo) {
+		ownerInfo.setActive(true);
+
+		if (null == ownerInfo.getStatus()) {
+			ownerInfo.setStatus(Status.ACTIVE);
 		}
-		
-		
-		property.getOwners().get(0).setTenantId(tenantId);
-		property.getOwners().get(0).setRoles(Collections.singletonList(role));
-		property.getOwners().get(0).setType("CITIZEN");
-		property.getOwners().get(0).setCreatedDate(null);
-		property.getOwners().get(0).setCreatedBy(null);
-		property.getOwners().get(0).setLastModifiedDate(null);
-		property.getOwners().get(0).setLastModifiedBy(null);
+
+		ownerInfo.setTenantId(tenantId);
+		ownerInfo.setRoles(Collections.singletonList(role));
+		ownerInfo.setType("CITIZEN");
+		ownerInfo.setCreatedDate(null);
+		ownerInfo.setCreatedBy(null);
+		ownerInfo.setLastModifiedDate(null);
+		ownerInfo.setLastModifiedBy(null);
 	}
 
 	/**
@@ -498,19 +555,17 @@ public class UserService {
 				.append(configuration.getUserSearchEndpoint());
 		return userCall(userSearchRequest, uri);
 	}
-	
-	private UserDetailResponseNew userExistsNewConnection(Property property, RequestInfo requestInfo) {
-		UserSearchRequest userSearchRequest = getBaseUserSearchRequest(property.getTenantId(), requestInfo);
-		userSearchRequest.setMobileNumber(property.getOwners().get(0).getMobileNumber());
-		userSearchRequest.setUserType(property.getOwners().get(0).getType());
-		userSearchRequest.setName(property.getOwners().get(0).getName());
+
+	private UserDetailResponseNew userExistsNewConnection(OwnerInfo ownerInfo, RequestInfo requestInfo) {
+		UserSearchRequest userSearchRequest = getBaseUserSearchRequest(ownerInfo.getTenantId(), requestInfo);
+		userSearchRequest.setMobileNumber(ownerInfo.getMobileNumber());
+		userSearchRequest.setUserType(ownerInfo.getType());
+		userSearchRequest.setName(ownerInfo.getName());
 		StringBuilder uri = new StringBuilder(configuration.getUserHost())
 				.append(configuration.getUserSearchEndpoint());
 		return userCallNew(userSearchRequest, uri);
 	}
-	
-	
-	
+
 	/**
 	 * Searches if the connection holder is already created. Search is based on name
 	 * of owner, uuid and mobileNumbe
@@ -523,21 +578,20 @@ public class UserService {
 	private UserDetailResponse updateUserExists(ConnectionHolderInfo connectionHolderInfo, RequestInfo requestInfo) {
 		UserSearchRequest userSearchRequest = getBaseUserSearchRequest(connectionHolderInfo.getTenantId(), requestInfo);
 		userSearchRequest.setMobileNumber(connectionHolderInfo.getMobileNumber());
-		//userSearchRequest.setUserType(connectionHolderInfo.getType());
+		// userSearchRequest.setUserType(connectionHolderInfo.getType());
 		userSearchRequest.setUserType("CITIZEN");
 		userSearchRequest.setName(connectionHolderInfo.getName());
 		StringBuilder uri = new StringBuilder(configuration.getUserHost())
 				.append(configuration.getUserSearchEndpoint());
 		return updateUserCall(userSearchRequest, uri);
 	}
-	
-	
-	private UserDetailResponseNew updateUserExistsNew(Property property, RequestInfo requestInfo) {
-		UserSearchRequest userSearchRequest = getBaseUserSearchRequest(property.getTenantId(), requestInfo);
-		userSearchRequest.setMobileNumber(property.getOwners().get(0).getMobileNumber());
-		//userSearchRequest.setUserType(connectionHolderInfo.getType());
+
+	private UserDetailResponseNew updateUserExistsNew(OwnerInfo ownerInfo, RequestInfo requestInfo) {
+		UserSearchRequest userSearchRequest = getBaseUserSearchRequest(ownerInfo.getTenantId(), requestInfo);
+		userSearchRequest.setMobileNumber(ownerInfo.getMobileNumber());
+		// userSearchRequest.setUserType(connectionHolderInfo.getType());
 		userSearchRequest.setUserType("CITIZEN");
-		userSearchRequest.setName(property.getOwners().get(0).getName());
+		userSearchRequest.setName(ownerInfo.getName());
 		StringBuilder uri = new StringBuilder(configuration.getUserHost())
 				.append(configuration.getUserSearchEndpoint());
 		return updateUserCallNew(userSearchRequest, uri);
@@ -579,17 +633,16 @@ public class UserService {
 			holderInfo.setUserName(username);
 		}
 	}
-	
-	
-	private void setUserNameNewConnection(Property property, String mobileNumber) {
 
-		if (mobileNumber.contains(property.getOwners().get(0).getMobileNumber())) {
-			property.getOwners().get(0).setUserName(property.getOwners().get(0).getMobileNumber());
+	private void setUserNameNewConnection(OwnerInfo ownerInfo, String mobileNumber) {
+
+		if (mobileNumber.contains(ownerInfo.getMobileNumber())) {
+			ownerInfo.setUserName(ownerInfo.getMobileNumber());
 			// Once mobileNumber is set as userName it is removed from the list
-			//mobileNumber.remove(property.getOwners().get(0).getMobileNumber());
+			// mobileNumber.remove(property.getOwners().get(0).getMobileNumber());
 		} else {
 			String username = UUID.randomUUID().toString();
-			property.getOwners().get(0).setUserName(username);
+			ownerInfo.setUserName(username);
 		}
 	}
 
@@ -611,18 +664,18 @@ public class UserService {
 		holderInfo.setLastModifiedDate(System.currentTimeMillis());
 		holderInfo.setActive(userDetailResponse.getUser().get(0).getActive());
 	}
-	
-	private void setOwnerFieldsNew(Property property, UserDetailResponseNew userDetailResponse,
+
+	private void setOwnerFieldsNew(OwnerInfo ownerInfo, UserDetailResponseNew userDetailResponse,
 			RequestInfo requestInfo) {
 
-		property.getOwners().get(0).setUuid(((Property) userDetailResponse.getUser()).getOwners().get(0).getUuid());
-		property.getOwners().get(0).setId(((Property) userDetailResponse.getUser()).getOwners().get(0).getId());
-		property.getOwners().get(0).setUserName((((Property) userDetailResponse.getUser()).getOwners().get(0).getUserName()));
-		property.getOwners().get(0).setCreatedBy(requestInfo.getUserInfo().getUuid());
-		property.getOwners().get(0).setCreatedDate(System.currentTimeMillis());
-		property.getOwners().get(0).setLastModifiedBy(requestInfo.getUserInfo().getUuid());
-		property.getOwners().get(0).setLastModifiedDate(System.currentTimeMillis());
-		property.getOwners().get(0).setActive(((Property) userDetailResponse.getUser()).getOwners().get(0).getActive());
+		ownerInfo.setUuid(((Property) userDetailResponse.getUser()).getOwners().get(0).getUuid());
+		ownerInfo.setId(((Property) userDetailResponse.getUser()).getOwners().get(0).getId());
+		ownerInfo.setUserName((((Property) userDetailResponse.getUser()).getOwners().get(0).getUserName()));
+		ownerInfo.setCreatedBy(requestInfo.getUserInfo().getUuid());
+		ownerInfo.setCreatedDate(System.currentTimeMillis());
+		ownerInfo.setLastModifiedBy(requestInfo.getUserInfo().getUuid());
+		ownerInfo.setLastModifiedDate(System.currentTimeMillis());
+		ownerInfo.setActive(((Property) userDetailResponse.getUser()).getOwners().get(0).getActive());
 	}
 
 	/**
@@ -643,19 +696,20 @@ public class UserService {
 		holderInfo.setLastModifiedDate(System.currentTimeMillis());
 		holderInfo.setActive(userDetailResponse.getUser().get(0).getActive());
 	}
-	
-	private void setOwnerFieldsUpdateNew(Property property, UserDetailResponseNew userDetailResponse,
+
+	private void setOwnerFieldsUpdateNew(OwnerInfo ownerInfo, UserDetailResponseNew userDetailResponse,
 			RequestInfo requestInfo) {
 
-		property.getOwners().get(0).setUuid(userDetailResponse.getUser().get(0).getOwners().get(0).getUuid());
-		property.getOwners().get(0).setId(userDetailResponse.getUser().get(0).getOwners().get(0).getId());
-		property.getOwners().get(0).setUserName((userDetailResponse.getUser().get(0).getOwners().get(0).getUserName()));
-		property.getOwners().get(0).setCreatedBy(requestInfo.getUserInfo().getUuid());
-		property.getOwners().get(0).setCreatedDate(System.currentTimeMillis());
-		property.getOwners().get(0).setLastModifiedBy(requestInfo.getUserInfo().getUuid());
-		property.getOwners().get(0).setLastModifiedDate(System.currentTimeMillis());
-		property.getOwners().get(0).setActive(userDetailResponse.getUser().get(0).getOwners().get(0).getActive());
+		ownerInfo.setUuid(userDetailResponse.getUser().get(0).getUuid());
+		ownerInfo.setId(userDetailResponse.getUser().get(0).getId());
+		ownerInfo.setUserName((userDetailResponse.getUser().get(0).getUserName()));
+		ownerInfo.setCreatedBy(requestInfo.getUserInfo().getUuid());
+		ownerInfo.setCreatedDate(System.currentTimeMillis());
+		ownerInfo.setLastModifiedBy(requestInfo.getUserInfo().getUuid());
+		ownerInfo.setLastModifiedDate(System.currentTimeMillis());
+		ownerInfo.setActive(userDetailResponse.getUser().get(0).getActive());
 	}
+
 	/**
 	 *
 	 * @param userSearchRequest
@@ -670,6 +724,7 @@ public class UserService {
 
 	/**
 	 * Get user based on given property
+	 * 
 	 * @param userSearchRequest
 	 * @return combination of uuid given in search criteria
 	 */
@@ -690,10 +745,10 @@ public class UserService {
 	 * @return
 	 */
 	public Set<String> getUUIDForUsers(String mobileNumber, String tenantId, RequestInfo requestInfo) {
-		//TenantId is not mandatory when Citizen searches. So it can be empty. Refer the value from UserInfo
+		// TenantId is not mandatory when Citizen searches. So it can be empty. Refer
+		// the value from UserInfo
 		tenantId = StringUtils.isEmpty(tenantId) ? requestInfo.getUserInfo().getTenantId() : tenantId;
-		UserSearchRequest userSearchRequest = UserSearchRequest.builder()
-				.requestInfo(requestInfo).userType("CITIZEN")
+		UserSearchRequest userSearchRequest = UserSearchRequest.builder().requestInfo(requestInfo).userType("CITIZEN")
 				.tenantId(tenantId).mobileNumber(mobileNumber).build();
 		return getUsersUUID(userSearchRequest);
 	}

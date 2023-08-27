@@ -15,5 +15,5 @@ public class ConnectionUserRequestNew {
     private RequestInfo requestInfo;
     
     @JsonProperty("user")
-    private Property user;
+    private OwnerInfo user;
 }
