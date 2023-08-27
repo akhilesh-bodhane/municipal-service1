@@ -113,7 +113,7 @@ public class UserService {
 				addUserDefaultFieldsNew(request.getWaterConnection().getTenantId(), role, property);
 				UserDetailResponseNew userDetailResponse = userExistsNewConnection(property, request.getRequestInfo());
 				System.out.println("user detail response : " + userDetailResponse.toString());
-				if (userDetailResponse.getUser().get(0).getOwners().isEmpty()) {
+				if (CollectionUtils.isEmpty(userDetailResponse.getUser().get(0).getOwners())) {
 					/*
 					 * Sets userName equal to mobileNumber
 					 *
