@@ -668,14 +668,14 @@ public class UserService {
 	private void setOwnerFieldsNew(OwnerInfo ownerInfo, UserDetailResponseNew userDetailResponse,
 			RequestInfo requestInfo) {
 
-		ownerInfo.setUuid(((Property) userDetailResponse.getUser()).getOwners().get(0).getUuid());
-		ownerInfo.setId(((Property) userDetailResponse.getUser()).getOwners().get(0).getId());
-		ownerInfo.setUserName((((Property) userDetailResponse.getUser()).getOwners().get(0).getUserName()));
+		ownerInfo.setUuid(userDetailResponse.getUser().get(0).getUuid());
+		ownerInfo.setId(userDetailResponse.getUser().get(0).getId());
+		ownerInfo.setUserName((userDetailResponse.getUser().get(0).getUserName()));
 		ownerInfo.setCreatedBy(requestInfo.getUserInfo().getUuid());
 		ownerInfo.setCreatedDate(System.currentTimeMillis());
 		ownerInfo.setLastModifiedBy(requestInfo.getUserInfo().getUuid());
 		ownerInfo.setLastModifiedDate(System.currentTimeMillis());
-		ownerInfo.setActive(((Property) userDetailResponse.getUser()).getOwners().get(0).getActive());
+		ownerInfo.setActive(userDetailResponse.getUser().get(0).getActive());
 	}
 
 	/**
