@@ -11,6 +11,7 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.request.Role;
@@ -112,7 +113,7 @@ public class UserService {
 				addUserDefaultFieldsNew(request.getWaterConnection().getTenantId(), role, property);
 				UserDetailResponseNew userDetailResponse = userExistsNewConnection(property, request.getRequestInfo());
 				System.out.println("user detail response : " + userDetailResponse.toString());
-				if (userDetailResponse.getUser().get(0).getOwners().equals(null)) {
+				if (userDetailResponse.getUser().get(0).getOwners().isEmpty()) {
 					/*
 					 * Sets userName equal to mobileNumber
 					 *
