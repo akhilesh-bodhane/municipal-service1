@@ -141,7 +141,7 @@ public class UserService {
 				}
 				// Assigns value of fields from user got from userDetailResponse to owner object
 				setOwnerFieldsNew(ownerInfo, userDetailResponse, request.getRequestInfo());
-				System.out.println("Holder Info : " + ownerInfo.toString());
+				System.out.println("Owner Info : " + ownerInfo.toString());
 				System.out.println("userDetailResponse : " + userDetailResponse.toString());
 			});
 			

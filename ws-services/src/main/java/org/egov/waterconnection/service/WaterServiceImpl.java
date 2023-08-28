@@ -301,6 +301,8 @@ public class WaterServiceImpl implements WaterService {
 			validateProperty.validatePropertyCriteria(property);
 			userService.createUserNewConnection(waterConnectionRequest);
 		}
+		
+		System.out.println("Water Connection Request : " + waterConnectionRequest.toString());
 		waterDao.addConnectionMapping(waterConnectionRequest);
 		
 		return  Arrays.asList(waterConnectionRequest.getWaterConnection());
