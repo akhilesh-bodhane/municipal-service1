@@ -175,6 +175,9 @@ public class WaterConnection extends Connection {
 
 	@JsonProperty("submitByName")
 	private String submitByName = null;
+	
+	@JsonProperty("userName")
+	private String userName = null;
 	 
 	
 	public String getContractValue() {
