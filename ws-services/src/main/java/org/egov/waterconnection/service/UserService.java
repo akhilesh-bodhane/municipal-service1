@@ -107,7 +107,7 @@ public class UserService {
 		if (!StringUtils.isEmpty(request.getWaterConnection().getProperty().getId())) {
 			System.out.println("Inside Create New User Method");
 			Role role = getCitizenRole();
-			String mobileNumber = request.getWaterConnection().getProperty().getOwners().get(0).getMobileNumber();			
+			String mobileNumber = request.getRequestInfo().getUserInfo().getMobileNumber();			
 			System.out.println("Property Owner Mobile No. Outside : " + mobileNumber);
 			request.getWaterConnection().getProperty().getOwners().forEach(ownerInfo -> {
 				System.out.println("Property Owner Mobile No. Inside : " + mobileNumber);
