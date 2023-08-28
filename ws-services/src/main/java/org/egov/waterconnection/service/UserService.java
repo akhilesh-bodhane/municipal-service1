@@ -107,10 +107,10 @@ public class UserService {
 		if (!StringUtils.isEmpty(request.getWaterConnection().getProperty().getId())) {
 			System.out.println("Inside Create New User Method");
 			Role role = getCitizenRole();
-			Property property = request.getWaterConnection().getProperty();
-			System.out.println("Property Details : " + property.toString());
-			String mobileNumber = request.getWaterConnection().getProperty().getOwners().get(0).getMobileNumber();
+			String mobileNumber = request.getWaterConnection().getProperty().getOwners().get(0).getMobileNumber();			
+			System.out.println("Property Owner Mobile No. Outside : " + mobileNumber);
 			request.getWaterConnection().getProperty().getOwners().forEach(ownerInfo -> {
+				System.out.println("Property Owner Mobile No. Inside : " + mobileNumber);
 				addUserDefaultFieldsNew(request.getWaterConnection().getTenantId(), role, ownerInfo);
 				UserDetailResponseNew userDetailResponse = userExistsNewConnection(ownerInfo, request.getRequestInfo());
 				if (CollectionUtils.isEmpty(userDetailResponse.getUser())) {
@@ -137,7 +137,7 @@ public class UserService {
 
 				} else {
 					System.out.println("Inside create else if condition");
-					updateUser(request);
+					updateUserNew(request);
 				}
 				// Assigns value of fields from user got from userDetailResponse to owner object
 				setOwnerFieldsNew(ownerInfo, userDetailResponse, request.getRequestInfo());
@@ -578,6 +578,9 @@ public class UserService {
 
 		String username = UUID.randomUUID().toString();
 		ownerInfo.setUserName(username);
+		ownerInfo.setMobileNumber(mobileNumber);
+		
+		System.out.println("Owner Mobile No. : " + mobileNumber);
 
 	}
 
