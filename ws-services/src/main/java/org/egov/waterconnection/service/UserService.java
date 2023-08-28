@@ -144,42 +144,7 @@ public class UserService {
 				System.out.println("Holder Info : " + ownerInfo.toString());
 				System.out.println("userDetailResponse : " + userDetailResponse.toString());
 			});
-			/*
-			 * addUserDefaultFieldsNew(request.getWaterConnection().getTenantId(), role,
-			 * property); UserDetailResponseNew userDetailResponse =
-			 * userExistsNewConnection(property, request.getRequestInfo());
-			 * System.out.println("user detail response : " +
-			 * userDetailResponse.toString()); if
-			 * (CollectionUtils.isEmpty(userDetailResponse.getUser().get(0).getOwners())) {
-			 * 
-			 * Sets userName equal to mobileNumber
-			 *
-			 * If mobileNumber already assigned as user-name for another user
-			 *
-			 * then random uuid is assigned as user-name
-			 * 
-			 * System.out.println("Indside if condition of user creation"); StringBuilder
-			 * uri = new StringBuilder(configuration.getUserHost())
-			 * .append(configuration.getUserContextPath()).append(configuration.
-			 * getUserCreateEndPoint()); setUserNameNewConnection(property, mobileNumber);
-			 * 
-			 * ConnectionUserRequestNew userRequest = ConnectionUserRequestNew.builder()
-			 * .requestInfo(request.getRequestInfo()).user(property).build();
-			 * 
-			 * userDetailResponse = userCallNew(userRequest, uri);
-			 * 
-			 * if (ObjectUtils.isEmpty(userDetailResponse)) { throw new
-			 * CustomException("INVALID USER RESPONSE",
-			 * "The user create has failed for the mobileNumber : " +
-			 * property.getOwners().get(0).getUserName()); }
-			 * 
-			 * } else { System.out.println("Inside else condition of user creation");
-			 * updateUserNew(request); } // Assigns value of fields from user got from
-			 * userDetailResponse to owner object setOwnerFieldsNew(property,
-			 * userDetailResponse, request.getRequestInfo());
-			 * System.out.println("Holder Info : " + property.toString());
-			 * System.out.println("userDetailResponse : " + userDetailResponse.toString());
-			 */
+			
 		}
 	}
 
@@ -230,31 +195,6 @@ public class UserService {
 				// Assigns value of fields from user got from userDetailResponse to owner object
 				setOwnerFieldsUpdateNew(ownerInfo, userDetailResponse, request.getRequestInfo());
 			});
-			/*
-			 * Property property = request.getWaterConnection().getProperty();
-			 * addUserDefaultFieldsNew(request.getWaterConnection().getTenantId(), role,
-			 * property); UserDetailResponseNew userDetailResponse =
-			 * updateUserExistsNew(property, request.getRequestInfo());
-			 * property.getOwners().get(0).setId(userDetailResponse.getUser().get(0).
-			 * getOwners().get(0).getId());
-			 * property.getOwners().get(0).setUuid(userDetailResponse.getUser().get(0).
-			 * getOwners().get(0).getUuid()); //
-			 * addUserDefaultFields(request.getWaterConnection().getTenantId(), role, //
-			 * holderInfo);
-			 * addUserDefaultFieldsUpdateNew(request.getWaterConnection().getTenantId(),
-			 * role, property);
-			 * 
-			 * StringBuilder uri = new StringBuilder(configuration.getUserHost())
-			 * .append(configuration.getUserContextPath()).append(configuration.
-			 * getUserUpdateEndPoint()); userDetailResponse = updateUserCallNew(new
-			 * ConnectionUserRequestNew(request.getRequestInfo(), property), uri); if
-			 * (userDetailResponse.getUser().get(0).getOwners().get(0).getUuid() == null) {
-			 * throw new CustomException("INVALID USER RESPONSE",
-			 * "The user updated has uuid as null"); } // Assigns value of fields from user
-			 * got from userDetailResponse to owner object setOwnerFieldsUpdateNew(property,
-			 * userDetailResponse, request.getRequestInfo());
-			 */
-
 		}
 	}
 
@@ -636,14 +576,9 @@ public class UserService {
 
 	private void setUserNameNewConnection(OwnerInfo ownerInfo, String mobileNumber) {
 
-		if (mobileNumber.contains(ownerInfo.getMobileNumber())) {
-			ownerInfo.setUserName(ownerInfo.getMobileNumber());
-			// Once mobileNumber is set as userName it is removed from the list
-			// mobileNumber.remove(property.getOwners().get(0).getMobileNumber());
-		} else {
-			String username = UUID.randomUUID().toString();
-			ownerInfo.setUserName(username);
-		}
+		String username = UUID.randomUUID().toString();
+		ownerInfo.setUserName(username);
+
 	}
 
 	/**
