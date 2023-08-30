@@ -120,6 +120,8 @@ public class WaterServiceImpl implements WaterService {
 		Property property = validateProperty.getOrValidateProperty(waterConnectionRequest);
 		enrichmentService.enrichWaterConnection(waterConnectionRequest);
 		userService.createUser(waterConnectionRequest);
+		
+		System.out.println("Water Connection Request : " + waterConnectionRequest.toString());
 		// call work-flow
 		if (config.getIsExternalWorkFlowEnabled())
 			wfIntegrator.callWorkFlow(waterConnectionRequest, property);
