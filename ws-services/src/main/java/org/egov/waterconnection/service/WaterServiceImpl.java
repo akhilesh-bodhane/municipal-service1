@@ -125,6 +125,12 @@ public class WaterServiceImpl implements WaterService {
 			wfIntegrator.callWorkFlow(waterConnectionRequest, property);
 		waterConnectionRequest.getWaterConnection().getWaterApplication().setApplicationStatus(
 				waterConnectionRequest.getWaterConnection().getApplicationStatus());
+		waterConnectionRequest.getWaterConnection()
+				.setSameuservalid(waterConnectionRequest.getWaterConnection().getSameuservalid());
+		waterConnectionRequest.getWaterConnection()
+				.setSubmitBy(waterConnectionRequest.getRequestInfo().getUserInfo().getUuid());
+		waterConnectionRequest.getWaterConnection()
+				.setSubmitByName(waterConnectionRequest.getRequestInfo().getUserInfo().getName());
 		waterDao.saveWaterConnection(waterConnectionRequest);
 		return Arrays.asList(waterConnectionRequest.getWaterConnection());
 	}
