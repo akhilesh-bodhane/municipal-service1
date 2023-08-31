@@ -125,14 +125,6 @@ public class WaterServiceImpl implements WaterService {
 		// call work-flow
 		if (config.getIsExternalWorkFlowEnabled())
 			wfIntegrator.callWorkFlow(waterConnectionRequest, property);
-		waterConnectionRequest.getWaterConnection().getWaterApplication().setApplicationStatus(
-				waterConnectionRequest.getWaterConnection().getApplicationStatus());
-		waterConnectionRequest.getWaterConnection()
-				.setSameuservalid(waterConnectionRequest.getWaterConnection().getSameuservalid());
-		waterConnectionRequest.getWaterConnection()
-				.setSubmitBy(waterConnectionRequest.getRequestInfo().getUserInfo().getUuid());
-		waterConnectionRequest.getWaterConnection()
-				.setSubmitByName(waterConnectionRequest.getRequestInfo().getUserInfo().getName());
 		waterDao.saveWaterConnection(waterConnectionRequest);
 		return Arrays.asList(waterConnectionRequest.getWaterConnection());
 	}
@@ -199,6 +191,19 @@ public class WaterServiceImpl implements WaterService {
 		Property property = validateProperty.getOrValidateProperty(waterConnectionRequest);
 		waterConnectionRequest.getWaterConnection().setProperty(property);
 		validateProperty.validatePropertyCriteria(property);
+		waterConnectionRequest.getWaterConnection()
+				.setSameuservalid(waterConnectionRequest.getWaterConnection().getSameuservalid());
+		waterConnectionRequest.getWaterConnection()
+				.setSubmitBy(waterConnectionRequest.getWaterConnection().getSubmitBy());
+		waterConnectionRequest.getWaterConnection()
+				.setSubmitByName(waterConnectionRequest.getWaterConnection().getSubmitByName());
+		
+		waterConnectionRequest.getWaterConnection().getConnectionHolders().get(0)
+				.setSameuservalid(waterConnectionRequest.getWaterConnection().getSameuservalid());
+		waterConnectionRequest.getWaterConnection().getConnectionHolders().get(0)
+				.setSubmitBy(waterConnectionRequest.getWaterConnection().getSubmitBy());
+		waterConnectionRequest.getWaterConnection().getConnectionHolders().get(0)
+				.setSubmitByName(waterConnectionRequest.getWaterConnection().getSubmitByName());
 		boolean isStateUpdatable = true;
 		BusinessService businessService = null;
 		if (WCConstants.ACTION_INITIATE.equalsIgnoreCase(
@@ -230,12 +235,6 @@ public class WaterServiceImpl implements WaterService {
 			//Enrich file store Id After payment
 			enrichmentService.enrichFileStoreIds(waterConnectionRequest);
 			// Comment in Local
-			waterConnectionRequest.getWaterConnection()
-					.setSameuservalid(waterConnectionRequest.getWaterConnection().getSameuservalid());
-			waterConnectionRequest.getWaterConnection()
-					.setSubmitBy(waterConnectionRequest.getRequestInfo().getUserInfo().getUuid());
-			waterConnectionRequest.getWaterConnection()
-					.setSubmitByName(waterConnectionRequest.getRequestInfo().getUserInfo().getName());
 			userService.updateUser(waterConnectionRequest, searchResult);
 			isStateUpdatable = waterServiceUtil.getStatusForUpdate(businessService, previousApplicationStatus);
 		}
