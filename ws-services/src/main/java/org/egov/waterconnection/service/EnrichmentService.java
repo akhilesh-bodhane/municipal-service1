@@ -96,7 +96,7 @@ public class EnrichmentService {
 		waterConnectionRequest.getWaterConnection().getConnectionHolders().get(0)
 				.setSubmitBy(waterConnectionRequest.getWaterConnection().getSubmitBy());
 		waterConnectionRequest.getWaterConnection().getConnectionHolders().get(0)
-				.setSubmitByName(waterConnectionRequest.getWaterConnection().getSubmitBy());
+				.setSubmitByName(waterConnectionRequest.getWaterConnection().getSubmitByName());
 		
 		if(null==waterConnectionRequest.getWaterConnection().getWaterProperty().getUsageCategory() ||
 				waterConnectionRequest.getWaterConnection().getWaterProperty().getUsageCategory().isEmpty()) {
