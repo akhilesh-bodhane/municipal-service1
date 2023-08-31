@@ -83,6 +83,20 @@ public class EnrichmentService {
 		waterApplication.setAction(waterConnectionRequest.getWaterConnection().getProcessInstance().getAction());
 		waterConnectionRequest.getWaterConnection().setWaterApplication(waterApplication);
 		waterConnectionRequest.getWaterConnection().getWaterProperty().setId(UUID.randomUUID().toString());
+		waterConnectionRequest.getWaterConnection().getWaterApplication().setApplicationStatus(
+				waterConnectionRequest.getWaterConnection().getApplicationStatus());
+		waterConnectionRequest.getWaterConnection()
+				.setSameuservalid(waterConnectionRequest.getWaterConnection().getSameuservalid());
+		waterConnectionRequest.getWaterConnection()
+				.setSubmitBy(waterConnectionRequest.getRequestInfo().getUserInfo().getUuid());
+		waterConnectionRequest.getWaterConnection()
+				.setSubmitByName(waterConnectionRequest.getRequestInfo().getUserInfo().getName());
+		waterConnectionRequest.getWaterConnection().getConnectionHolders().get(0)
+				.setSameuservalid(waterConnectionRequest.getWaterConnection().getSameuservalid());
+		waterConnectionRequest.getWaterConnection().getConnectionHolders().get(0)
+				.setSubmitBy(waterConnectionRequest.getWaterConnection().getSubmitBy());
+		waterConnectionRequest.getWaterConnection().getConnectionHolders().get(0)
+				.setSubmitByName(waterConnectionRequest.getWaterConnection().getSubmitBy());
 		
 		if(null==waterConnectionRequest.getWaterConnection().getWaterProperty().getUsageCategory() ||
 				waterConnectionRequest.getWaterConnection().getWaterProperty().getUsageCategory().isEmpty()) {

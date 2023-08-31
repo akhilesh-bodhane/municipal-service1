@@ -206,6 +206,12 @@ public class WaterServiceImpl implements WaterService {
 			waterConnectionRequest.getWaterConnection().setDocuments(null);
 			enrichmentService.enrichWaterApplication(waterConnectionRequest);
 			enrichmentService.enrichUpdateWaterConnection(waterConnectionRequest);
+			waterConnectionRequest.getWaterConnection()
+					.setSameuservalid(waterConnectionRequest.getWaterConnection().getSameuservalid());
+			waterConnectionRequest.getWaterConnection()
+					.setSubmitBy(waterConnectionRequest.getRequestInfo().getUserInfo().getUuid());
+			waterConnectionRequest.getWaterConnection()
+					.setSubmitByName(waterConnectionRequest.getRequestInfo().getUserInfo().getName());
 			waterConnectionRequest.getWaterConnection().setApplicationStatus(WCConstants.STATUS_INITIATED);
 		}else {
 			businessService = workflowService.getBusinessService(waterConnectionRequest.getWaterConnection().getTenantId(), 
@@ -224,6 +230,12 @@ public class WaterServiceImpl implements WaterService {
 			//Enrich file store Id After payment
 			enrichmentService.enrichFileStoreIds(waterConnectionRequest);
 			// Comment in Local
+			waterConnectionRequest.getWaterConnection()
+					.setSameuservalid(waterConnectionRequest.getWaterConnection().getSameuservalid());
+			waterConnectionRequest.getWaterConnection()
+					.setSubmitBy(waterConnectionRequest.getRequestInfo().getUserInfo().getUuid());
+			waterConnectionRequest.getWaterConnection()
+					.setSubmitByName(waterConnectionRequest.getRequestInfo().getUserInfo().getName());
 			userService.updateUser(waterConnectionRequest, searchResult);
 			isStateUpdatable = waterServiceUtil.getStatusForUpdate(businessService, previousApplicationStatus);
 		}
