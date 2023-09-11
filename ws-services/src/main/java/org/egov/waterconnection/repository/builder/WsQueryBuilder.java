@@ -52,6 +52,8 @@ public class WsQueryBuilder {
 			+ "  FROM eg_ws_savebilling where concat(divsdiv,consumercode) = ?;";
 	private static final String INNER_JOIN_STRING = " INNER JOIN ";
 	private static final String LEFT_OUTER_JOIN_STRING = " LEFT OUTER JOIN ";
+	
+	private static final String LEFT_JOIN_STRING = " LEFT JOIN ";
 
 	private static String holderSelectValues = "connectionholder.tenantid as holdertenantid, connectionholder.connectionid as holderapplicationId, userid, connectionholder.status as holderstatus, isprimaryholder, connectionholdertype,connectionholder.correspondance_address as holdercorrepondanceaddress, holdershippercentage, connectionholder.relationship as holderrelationship,connectionholder.name as holdername,connectionholder.proposed_mobile_no as proposedMobileNo ,connectionholder.proposed_name as  proposedName,connectionholder.proposed_gender as proposedGender ,connectionholder.proposed_guardian_name as proposedGuardianName ,connectionholder.proposed_correspondance_address as  proposedCorrespondanceAddress , connectionholder.createdby as holdercreatedby, connectionholder.createdtime as holdercreatedtime, connectionholder.lastmodifiedby as holderlastmodifiedby,"
 			+ " connectionholder.lastmodifiedtime as holderlastmodifiedtime, connectionholder.ws_application_id, connectionholder.sameuservalid, connectionholder.submitby, connectionholder.submitbyname,";
@@ -75,14 +77,14 @@ public class WsQueryBuilder {
 			+ " property.id as waterpropertyid, property.usagecategory, property.usagesubcategory,property.plotareatt as ploatAreaTT,pta.doorno as propertyplotno,pta.locality as propertysectorno "
 			+ " FROM eg_ws_connection conn " + INNER_JOIN_STRING + "eg_ws_service wc ON wc.connection_id = conn.id"
 			+ INNER_JOIN_STRING + "eg_pt_address pta ON conn.property_id = pta.propertyid" + INNER_JOIN_STRING
-			+ "eg_ws_application application ON application.wsid = conn.id" + LEFT_OUTER_JOIN_STRING
+			+ "eg_ws_application application ON application.wsid = conn.id" + INNER_JOIN_STRING
+			+ "eg_ws_property property ON property.wsid = conn.id" + INNER_JOIN_STRING
+			+ "eg_ws_connectionholder connectionholder ON connectionholder.connectionid = conn.id" + LEFT_OUTER_JOIN_STRING
 			+ "egcl_bill bl  on  application.applicationno = bl.consumercode" + LEFT_OUTER_JOIN_STRING
 			+ "egcl_paymentdetail pyd on pyd.billid = bl.id" + LEFT_OUTER_JOIN_STRING
-			+ "egcl_payment py on py.id= pyd.paymentid" + INNER_JOIN_STRING
-			+ "eg_ws_property property ON property.wsid = conn.id" + LEFT_OUTER_JOIN_STRING
+			+ "egcl_payment py on py.id= pyd.paymentid" + LEFT_OUTER_JOIN_STRING
 			+ "eg_ws_applicationdocument document ON document.applicationid = application.id" + LEFT_OUTER_JOIN_STRING
-			+ "eg_ws_plumberinfo plumber ON plumber.wsid = conn.id" + LEFT_OUTER_JOIN_STRING
-			+ "eg_ws_connectionholder connectionholder ON connectionholder.connectionid = conn.id";
+			+ "eg_ws_plumberinfo plumber ON plumber.wsid = conn.id";
 	// + LEFT_OUTER_JOIN_STRING
 	// + "eg_ws_connection_mapping cm ON cm.wsid = conn.id";
 
