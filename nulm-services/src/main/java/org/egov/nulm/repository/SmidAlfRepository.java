@@ -48,45 +48,49 @@ public class SmidAlfRepository {
 	private ColumnsRowMapper columnsRowMapper;
 	private ShgMemberRowMapper shgMemberRowMapper;
 	private ShgMemberListRowMapper shgMemberListRowMapper;
+	
 
 	@Autowired
 	public SmidAlfRepository(JdbcTemplate jdbcTemplate, Producer producer, NULMConfiguration config,
-			ShgRowMapper shgrowMapper, ColumnsRowMapper columnsRowMapper, ShgMemberRowMapper shgMemberRowMapper,
-			ShgMemberListRowMapper shgMemberListRowMapper) {
+			ShgRowMapper shgrowMapper,ColumnsRowMapper columnsRowMapper,ShgMemberRowMapper shgMemberRowMapper,ShgMemberListRowMapper shgMemberListRowMapper) {
 		this.jdbcTemplate = jdbcTemplate;
 		this.producer = producer;
 		this.config = config;
 		this.shgrowMapper = shgrowMapper;
-		this.columnsRowMapper = columnsRowMapper;
-		this.shgMemberRowMapper = shgMemberRowMapper;
-		this.shgMemberListRowMapper = shgMemberListRowMapper;
+		this.columnsRowMapper=columnsRowMapper;
+		this.shgMemberRowMapper=shgMemberRowMapper;
+		this.shgMemberListRowMapper=shgMemberListRowMapper;
 	}
 
 	public void createGroup(SmidAlfApplication shg) {
 		NulmSmidAlfRequest infoWrapper = NulmSmidAlfRequest.builder().nulmSmidAlfRequest(shg).build();
 		producer.push(config.getSMIDALFSaveTopic(), infoWrapper);
 	}
-
+	
 	public void updateAlfApplication(SmidAlfApplication shg) {
 		NulmSmidAlfRequest infoWrapper = NulmSmidAlfRequest.builder().nulmSmidAlfRequest(shg).build();
 		producer.push(config.getSMIDALFUpdateTopic(), infoWrapper);
 	}
-
+	
 	public List<SmidAlfApplication> getAlfApplication(SmidAlfApplication alfApplication, List<Role> role, Long userId) {
 		List<SmidAlfApplication> sep = new ArrayList<>();
-		boolean isEmployee = false;
+		boolean isEmployee=false;
 		try {
 			for (Role roleobj : role) {
 				if ((roleobj.getCode()).equalsIgnoreCase(config.getRoleEmployee())) {
-					isEmployee = true;
+					isEmployee=true;
 				}
 			}
 			return sep = jdbcTemplate.query(NULMQueryBuilder.GET_ALF_APPLICATION_QUERY,
-					new Object[] { alfApplication.getId(), alfApplication.getId(), isEmployee ? "" : userId.toString(),
-							isEmployee ? "" : userId.toString(), alfApplication.getFromDate(),
-							alfApplication.getFromDate(), alfApplication.getToDate(), alfApplication.getToDate()
-
-					}, columnsRowMapper);
+					new Object[] {  alfApplication.getId(), 
+							        alfApplication.getId(), 
+									isEmployee ? "" : userId.toString(), 
+									isEmployee ? "" : userId.toString(),
+									isEmployee ? "" : alfApplication.getTenantId(),
+									isEmployee ? "" : alfApplication.getTenantId(),
+			                        alfApplication.getFromDate(), alfApplication.getFromDate(),alfApplication.getToDate(),alfApplication.getToDate()
+								
+								 }, columnsRowMapper);
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new CustomException(CommonConstants.ROLE, e.getMessage());
@@ -94,4 +98,7 @@ public class SmidAlfRepository {
 
 	}
 
+	
+	
+	
 }

@@ -12,7 +12,9 @@ import org.egov.nulm.model.SuhLogMaintenance;
 import org.egov.nulm.producer.Producer;
 import org.egov.nulm.repository.builder.NULMQueryBuilder;
 import org.egov.nulm.repository.rowmapper.SuhLogRowMapper;
+import org.egov.nulm.repository.rowmapper.SuhRowMapper;
 import org.egov.tracer.model.CustomException;
+import org.omg.PortableInterceptor.USER_EXCEPTION;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -47,25 +49,24 @@ public class SuhLogRepository {
 		NulmSuhLogRequest infoWrapper = NulmSuhLogRequest.builder().nulmSuhLogRequest(log).build();
 		producer.push(config.getSuhLogSaveTopic(), infoWrapper);
 	}
-
 	public List<SuhLogMaintenance> getSuhLog(SuhLogMaintenance suhLog, List<Role> role, Long userId) {
 		List<SuhLogMaintenance> log = new ArrayList<>();
 		try {
 			for (Role roleobj : role) {
 				if ((roleobj.getCode()).equalsIgnoreCase(config.getRoleEmployee())) {
 					return log = jdbcTemplate.query(NULMQueryBuilder.GET_SUH_LOG_QUERY,
-							new Object[] { suhLog.getLogUuid(), suhLog.getLogUuid(), "", "", suhLog.getName(),
-									suhLog.getName(), suhLog.getNameOfShelter(), suhLog.getNameOfShelter(),
-									suhLog.getFromDate(), suhLog.getFromDate(), suhLog.getToDate(),
-									suhLog.getToDate() },
-							suhLogrowMapper);
-				}
+							new Object[] {suhLog.getLogUuid(),suhLog.getLogUuid(),"","",
+									suhLog.getName(),suhLog.getName(),suhLog.getNameOfShelter(),suhLog.getNameOfShelter(),
+									suhLog.getFromDate(),suhLog.getFromDate(),suhLog.getToDate(),suhLog.getToDate(),
+									suhLog.getTenantId() },
+							suhLogrowMapper);				}
 			}
 
-			return log = jdbcTemplate.query(NULMQueryBuilder.GET_SUH_LOG_QUERY,
-					new Object[] { suhLog.getLogUuid(), suhLog.getLogUuid(), userId.toString(), userId.toString(),
-							suhLog.getName(), suhLog.getName(), suhLog.getNameOfShelter(), suhLog.getNameOfShelter(),
-							suhLog.getFromDate(), suhLog.getFromDate(), suhLog.getToDate(), suhLog.getToDate() },
+			return	log = jdbcTemplate.query(NULMQueryBuilder.GET_SUH_LOG_QUERY,
+					new Object[] {suhLog.getLogUuid(),suhLog.getLogUuid(),userId.toString(),userId.toString(),
+							suhLog.getName(),suhLog.getName(),suhLog.getNameOfShelter(),suhLog.getNameOfShelter(),
+							suhLog.getFromDate(),suhLog.getFromDate(),suhLog.getToDate(),suhLog.getToDate(),
+							suhLog.getTenantId() },
 					suhLogrowMapper);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -73,10 +74,11 @@ public class SuhLogRepository {
 		}
 
 	}
-
 	public void deleteSuhLog(SuhLogMaintenance log) {
 		NulmSuhLogRequest infoWrapper = NulmSuhLogRequest.builder().nulmSuhLogRequest(log).build();
 		producer.push(config.getSuhLogDeleteTopic(), infoWrapper);
 	}
-
+	
+	
+	
 }

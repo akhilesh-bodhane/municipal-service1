@@ -29,7 +29,7 @@ public class SepRepository {
 	private NULMConfiguration config;
 
 	private SEPRowMapper seprowMapper;
-
+	
 	@Autowired
 	private ApplicationCount applicationCounttt;
 
@@ -49,51 +49,64 @@ public class SepRepository {
 
 	public List<SepApplication> getSEPApplication(SepApplication sepApplication, List<Role> role, Long userId) {
 		List<SepApplication> sep = new ArrayList<>();
-		boolean isEmployee = false;
+		boolean isEmployee=false;
 		try {
 			for (Role roleobj : role) {
 				if ((roleobj.getCode()).equalsIgnoreCase(config.getRoleEmployee())) {
-					isEmployee = true;
+					isEmployee=true;
 				}
 			}
 			return sep = jdbcTemplate.query(NULMQueryBuilder.GET_SEP_APPLICATION_QUERY,
-					new Object[] { sepApplication.getApplicationId(), sepApplication.getApplicationId(),
-							isEmployee ? "" : userId.toString(), isEmployee ? "" : userId.toString(),
-							sepApplication.getApplicationStatus() == null ? ""
-									: sepApplication.getApplicationStatus().toString(),
-							sepApplication.getApplicationStatus() == null ? ""
-									: sepApplication.getApplicationStatus().toString(),
-							sepApplication.getFromDate(), sepApplication.getFromDate(), sepApplication.getToDate(),
-							sepApplication.getToDate(), sepApplication.getName(), sepApplication.getName(),
-							isEmployee ? SepApplication.StatusEnum.DRAFTED.toString() : "" },
-					seprowMapper);
+					new Object[] {  sepApplication.getApplicationId(), 
+									sepApplication.getApplicationId(), 
+									isEmployee ? "" : userId.toString(), 
+									isEmployee ? "" : userId.toString(),
+									isEmployee ? "" : sepApplication.getTenantId(),
+									isEmployee ? "" : sepApplication.getTenantId(),
+									sepApplication.getApplicationStatus() == null ? "" : sepApplication.getApplicationStatus().toString(),
+									sepApplication.getApplicationStatus() == null ? "" : sepApplication.getApplicationStatus().toString(),
+									sepApplication.getFromDate(), 
+									sepApplication.getFromDate(),
+									sepApplication.getToDate(),
+									sepApplication.getToDate(),
+									sepApplication.getName(),
+									sepApplication.getName(),
+									isEmployee ? SepApplication.StatusEnum.DRAFTED.toString() : ""
+								 }, seprowMapper);
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new CustomException(CommonConstants.ROLE, e.getMessage());
 		}
 
 	}
-
+	
+	
 	public List<ApplicationCountt> getSEPApplicationCount(SepApplication sepApplication, List<Role> role, Long userId) {
 		List<ApplicationCountt> sep = new ArrayList<>();
-		boolean isEmployee = false;
+		boolean isEmployee=false;
 		try {
 			for (Role roleobj : role) {
 				if ((roleobj.getCode()).equalsIgnoreCase(config.getRoleEmployee())) {
-					isEmployee = true;
+					isEmployee=true;
 				}
 			}
 			return sep = jdbcTemplate.query(NULMQueryBuilder.GET_SEP_APPLICATION_QUERY,
-					new Object[] { sepApplication.getApplicationId(), sepApplication.getApplicationId(),
-							isEmployee ? "" : userId.toString(), isEmployee ? "" : userId.toString(),
-							sepApplication.getApplicationStatus() == null ? ""
-									: sepApplication.getApplicationStatus().toString(),
-							sepApplication.getApplicationStatus() == null ? ""
-									: sepApplication.getApplicationStatus().toString(),
-							sepApplication.getFromDate(), sepApplication.getFromDate(), sepApplication.getToDate(),
-							sepApplication.getToDate(), sepApplication.getName(), sepApplication.getName(),
-							isEmployee ? SepApplication.StatusEnum.DRAFTED.toString() : "" },
-					applicationCounttt);
+					new Object[] {  sepApplication.getApplicationId(), 
+									sepApplication.getApplicationId(), 
+									isEmployee ? "" : userId.toString(), 
+									isEmployee ? "" : userId.toString(),
+									isEmployee ? "" : sepApplication.getTenantId(),
+									isEmployee ? "" : sepApplication.getTenantId(),
+									sepApplication.getApplicationStatus() == null ? "" : sepApplication.getApplicationStatus().toString(),
+									sepApplication.getApplicationStatus() == null ? "" : sepApplication.getApplicationStatus().toString(),
+									sepApplication.getFromDate(), 
+									sepApplication.getFromDate(),
+									sepApplication.getToDate(),
+									sepApplication.getToDate(),
+									sepApplication.getName(),
+									sepApplication.getName(),
+									isEmployee ? SepApplication.StatusEnum.DRAFTED.toString() : ""
+								 }, applicationCounttt);
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new CustomException(CommonConstants.ROLE, e.getMessage());
@@ -109,7 +122,7 @@ public class SepRepository {
 	public int checkDocExist(SepApplicationDocument sepApplication, String appId, String tenantId) {
 
 		return jdbcTemplate.queryForObject(NULMQueryBuilder.GET_SEP_DOCUMENT_QUERY,
-				new Object[] { appId, sepApplication.getFilestoreId(), sepApplication.getDocumentType() },
+				new Object[] { appId, tenantId, sepApplication.getFilestoreId(), sepApplication.getDocumentType() },
 				Integer.class);
 	}
 

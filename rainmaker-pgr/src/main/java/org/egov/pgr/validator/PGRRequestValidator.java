@@ -271,6 +271,7 @@ public class PGRRequestValidator {
 //				&& criteria.getStartDate().compareTo(criteria.getEndDate()) > 0) {
 //			errorMap.put(ErrorConstants.INVALID_START_DATE_CODE, ErrorConstants.INVALID_START_DATE_MSG);
 //		}
+		
 		if(!CollectionUtils.isEmpty(criteria.getServiceRequestId()) &&
 				criteria.getServiceRequestId().size() == 1) {
 			if(criteria.getServiceRequestId().get(0).length() < 6) {

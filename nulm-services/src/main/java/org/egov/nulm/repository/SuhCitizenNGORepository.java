@@ -1,17 +1,21 @@
 
 package org.egov.nulm.repository;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.egov.common.contract.request.Role;
 import org.egov.nulm.common.CommonConstants;
 import org.egov.nulm.config.NULMConfiguration;
 import org.egov.nulm.model.NulmSuhCitizenNGORequest;
 import org.egov.nulm.model.SuhCitizenNGOApplication;
 import org.egov.nulm.producer.Producer;
 import org.egov.nulm.repository.builder.NULMQueryBuilder;
+import org.egov.nulm.repository.rowmapper.ColumnsRowMapper;
 import org.egov.nulm.repository.rowmapper.SuhCitizenNGORowMapper;
+import org.egov.nulm.repository.rowmapper.SuhRowMapper;
 import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;

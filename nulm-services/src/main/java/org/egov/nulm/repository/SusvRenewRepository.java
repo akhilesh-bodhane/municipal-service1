@@ -48,7 +48,7 @@ public class SusvRenewRepository {
 		Map<String, String> errorMap = new HashMap<>();
 		int i = 0;
 		i = jdbcTemplate.queryForObject(NULMQueryBuilder.GET_COV_NO_QUERY,
-				new Object[] {suh.getCovNo() }, Integer.class);
+				new Object[] {suh.getCovNo(),suh.getTenantId() }, Integer.class);
 
 		if (i > 0) {
 			errorMap.put(CommonConstants.INVALID_SUSV_REQUEST, CommonConstants.DIPLICATE_COV_NO_MESSAGE);
@@ -76,6 +76,7 @@ public class SusvRenewRepository {
 
 	public List<SusvRenewApplication> getSusvRenewApplication(SusvRenewApplication request, String userType, Long userId) {
 		Map<String, Object> paramValues = new HashMap<>();
+		paramValues.put("tenantId", request.getTenantId());
 		paramValues.put("fromDate", request.getFromDate());
 		paramValues.put("toDate", request.getToDate());
 //		paramValues.put("nameOfApplicant", request.getNameOfApplicant());

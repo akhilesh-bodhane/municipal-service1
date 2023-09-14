@@ -36,7 +36,7 @@ public class SmidShgMemberRepository {
 	private JdbcTemplate jdbcTemplate;
 
 	private Producer producer;
-
+	
 	private final ObjectMapper objectMapper;
 
 	private NULMConfiguration config;
@@ -48,8 +48,8 @@ public class SmidShgMemberRepository {
 	public NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
 	@Autowired
-	public SmidShgMemberRepository(JdbcTemplate jdbcTemplate, Producer producer, NULMConfiguration config,
-			ObjectMapper objectMapper, ShgMemberRowMapper shgMemberRowMapper, ColumnsRowMapper columnsRowMapper) {
+	public SmidShgMemberRepository(JdbcTemplate jdbcTemplate, Producer producer, NULMConfiguration config,ObjectMapper objectMapper,
+			ShgMemberRowMapper shgMemberRowMapper, ColumnsRowMapper columnsRowMapper) {
 		this.jdbcTemplate = jdbcTemplate;
 		this.producer = producer;
 		this.config = config;
@@ -57,53 +57,56 @@ public class SmidShgMemberRepository {
 		this.shgMemberRowMapper = shgMemberRowMapper;
 		this.columnsRowMapper = columnsRowMapper;
 	}
+	
+public List<SmidShgMemberApplication> saveGuest(List<SmidShgMemberApplication> userList, NulmShgMemberRequest memberrequest) {
+	
 
-	public List<SmidShgMemberApplication> saveGuest(List<SmidShgMemberApplication> userList,
-			NulmShgMemberRequest memberrequest) {
 
-		memberrequest.setSmidShgMemberApplication(userList);
-		producer.push(config.getSmidShgMemberHardDeleteTopic(), memberrequest);
-		producer.push(config.getSmidShgMemberSaveTopic(), memberrequest);
+	memberrequest.setSmidShgMemberApplication(userList);
+	producer.push(config.getSmidShgMemberHardDeleteTopic(),memberrequest);
+	producer.push(config.getSmidShgMemberSaveTopic(), memberrequest);
 
 ////		inviteGuests.addAll(existing);
-		return userList;
-	}
+	return userList;
+}
 
 	public void createMembers(SmidShgMemberApplication smidApplication) {
 		List<SmidShgMemberApplication> list = new ArrayList<>();
 		list.add(smidApplication);
-
-		NulmShgMemberRequest infoWrapper = NulmShgMemberRequest.builder().smidShgMemberApplication(list)
-				.auditDetails(smidApplication.getAuditDetails()).build();
+		
+		NulmShgMemberRequest infoWrapper = NulmShgMemberRequest.builder().smidShgMemberApplication(list).auditDetails(smidApplication.getAuditDetails())
+				.build();
 		producer.push(config.getSmidShgMemberSaveTopic(), infoWrapper);
 	}
 
 	public void updateMembers(SmidShgMemberApplication smidApplication) {
 		List<SmidShgMemberApplication> list = new ArrayList<>();
 		list.add(smidApplication);
-		NulmShgMemberRequest infoWrapper = NulmShgMemberRequest.builder().smidShgMemberApplication(list).build();
+		NulmShgMemberRequest infoWrapper = NulmShgMemberRequest.builder().smidShgMemberApplication(list)
+				.build();
 		producer.push(config.getSmidShgMemberUpdateTopic(), infoWrapper);
 	}
 
 	public void deleteMembers(SmidShgMemberApplication smidApplication) {
 		List<SmidShgMemberApplication> list = new ArrayList<>();
 		list.add(smidApplication);
-		NulmShgMemberRequest infoWrapper = NulmShgMemberRequest.builder().smidShgMemberApplication(list).build();
+		NulmShgMemberRequest infoWrapper = NulmShgMemberRequest.builder().smidShgMemberApplication(list)
+				.build();
 		producer.push(config.getSmidShgMemberDeleteTopic(), infoWrapper);
 	}
-
 	public void hardDeleteMembers(SmidShgMemberApplication smidApplication) {
 		List<SmidShgMemberApplication> list = new ArrayList<>();
 		list.add(smidApplication);
-		NulmShgMemberRequest infoWrapper = NulmShgMemberRequest.builder().smidShgMemberApplication(list).build();
+		NulmShgMemberRequest infoWrapper = NulmShgMemberRequest.builder().smidShgMemberApplication(list)
+				.build();
 		producer.push(config.getSmidShgMemberHardDeleteTopic(), infoWrapper);
 	}
-
+	
 	public void checkShgUuid(SmidShgMemberApplication smidapplication) {
 		Map<String, String> errorMap = new HashMap<>();
 		int i = 0;
 		i = jdbcTemplate.queryForObject(NULMQueryBuilder.SHG_UUID_EXIST_QUERY,
-				new Object[] { smidapplication.getShgUuid() }, Integer.class);
+				new Object[] { smidapplication.getShgUuid(), smidapplication.getTenantId() }, Integer.class);
 
 		if (i == 0) {
 			errorMap.put(CommonConstants.INVALID_SHG_UUID, CommonConstants.INVALID_SHG_UUID_MESSAGE);
@@ -115,7 +118,7 @@ public class SmidShgMemberRepository {
 		Map<String, String> errorMap = new HashMap<>();
 		int i = 0;
 		i = jdbcTemplate.queryForObject(NULMQueryBuilder.MEMBER_UUID_EXIST_QUERY,
-				new Object[] { smidapplication.getApplicationUuid() }, Integer.class);
+				new Object[] { smidapplication.getApplicationUuid(), smidapplication.getTenantId() }, Integer.class);
 
 		if (i == 0) {
 			errorMap.put(CommonConstants.INVALID_MEMBER_UUID, CommonConstants.INVALID_MEMBER_UUID_MESSAGE);
@@ -128,6 +131,7 @@ public class SmidShgMemberRepository {
 		Map<String, Object> paramValues = new HashMap<>();
 
 		try {
+			paramValues.put("tenantId", shg.getTenantId());
 			paramValues.put("applicationUuid", shg.getApplicationUuid());
 
 			return smid = namedParameterJdbcTemplate.query(NULMQueryBuilder.GET_MEMBER_STATUS_QUERY, paramValues,
@@ -139,48 +143,64 @@ public class SmidShgMemberRepository {
 
 	}
 
-	public List<SmidShgMemberApplication> getMembers(SmidShgMemberApplication shg, List<Role> role, Long userId) {
+	public List<SmidShgMemberApplication> getMembers(SmidShgMemberApplication shg, List<Role> role,
+			Long userId) {
 		List<SmidShgMemberApplication> smid = new ArrayList<>();
 		try {
 			for (Role roleobj : role) {
 				if ((roleobj.getCode()).equalsIgnoreCase(config.getRoleEmployee())) {
-					smid = jdbcTemplate.query(NULMQueryBuilder.GET_SHG_MEMBER_QUERY,
+					 smid = jdbcTemplate.query(NULMQueryBuilder.GET_SHG_MEMBER_QUERY,
 //							new Object[] { memberrequest.getApplicationId(), memberrequest.getApplicationId(), "",
-							new Object[] { shg.getApplicationId(), shg.getApplicationId(), "",
+									new Object[] { shg.getApplicationId(), shg.getApplicationId(), "",
 //							new Object[] { shg[0].getShgUuid(), shg[0].getShgUuid(), "",
-									"", shg.getApplicationStatus() == null ? "" : shg.getApplicationStatus().toString(),
-									shg.getApplicationStatus() == null ? "" : shg.getApplicationStatus().toString(),
-									shg.getFromDate(), shg.getFromDate(), shg.getToDate(), shg.getToDate(),
-									shg.getGroupName(), shg.getGroupName(), shg.getName(), shg.getName(),
-									shg.getShgId(), shg.getShgId() },
+									"", shg.getTenantId(),
+									
+									shg.getApplicationStatus() == null ? ""
+											: shg.getApplicationStatus().toString(),
+									shg.getApplicationStatus() == null ? ""
+											: shg.getApplicationStatus().toString(),
+											shg.getFromDate(), shg.getFromDate(),
+											shg.getToDate(), shg.getToDate(),
+											shg.getGroupName(),shg.getGroupName(),
+											shg.getName(),shg.getName(),
+											shg.getShgId(),shg.getShgId()
+											},
 							shgMemberRowMapper);
-					List<SmidShgMemberApplication> smidd = new ArrayList<>();
-
-					for (SmidShgMemberApplication smidShgMemberApplication : smid) {
-						String shgUuid = smidShgMemberApplication.getShgUuid();
-						String shgId = smidShgMemberApplication.getShgId();
-						if (shgUuid.equals(shg.getShgUuid())) {
-
-							smidd.add(smidShgMemberApplication);
-
-						}
-
+						List<SmidShgMemberApplication> smidd = new ArrayList<>(); 
+				
+				for (SmidShgMemberApplication smidShgMemberApplication : smid) {
+					String shgUuid = smidShgMemberApplication.getShgUuid();
+					String shgId = smidShgMemberApplication.getShgId();
+					if (shgUuid.equals(shg.getShgUuid()) ) {
+						
+						smidd.add(smidShgMemberApplication);
+						
 					}
-					for (SmidShgMemberApplication smidShgMemberApplication : smidd) {
-						System.out.println(smidShgMemberApplication.getName());
-					}
+					
+				}
+				for (SmidShgMemberApplication smidShgMemberApplication : smidd) {
+					System.out.println(smidShgMemberApplication.getName());
+				}
 
+							  
+					
 					return smidd;
 
 				}
 			}
 			return smid = jdbcTemplate.query(NULMQueryBuilder.GET_SHG_MEMBER_QUERY,
 //					new Object[] { memberrequest.getApplicationId(), memberrequest.getApplicationId(),
-					new Object[] { shg.getShgUuid(), shg.getShgUuid(), userId.toString(), userId.toString(),
-							shg.getApplicationStatus() == null ? "" : shg.getApplicationStatus().toString(),
-							shg.getApplicationStatus() == null ? "" : shg.getApplicationStatus().toString(),
-							shg.getFromDate(), shg.getFromDate(), shg.getToDate(), shg.getToDate(), shg.getGroupName(),
-							shg.getGroupName(), shg.getName(), shg.getName(), shg.getShgId(), shg.getShgId() },
+					new Object[] { shg.getShgUuid(), shg.getShgUuid(),
+							userId.toString(), userId.toString(), shg.getTenantId(),
+							shg.getApplicationStatus() == null ? ""
+									: shg.getApplicationStatus().toString(),
+							shg.getApplicationStatus() == null ? ""
+									: shg.getApplicationStatus().toString(),
+									shg.getFromDate(), shg.getFromDate(),
+									shg.getToDate(), shg.getToDate(),
+									shg.getGroupName(),shg.getGroupName(),
+									shg.getName(),shg.getName(),
+									shg.getShgId(),shg.getShgId()},
 					shgMemberRowMapper);
 
 		} catch (Exception e) {
@@ -189,15 +209,17 @@ public class SmidShgMemberRepository {
 		}
 
 	}
-
+	
 	public List<SmidShgMemberApplication> getMemberCount(SmidShgMemberApplication member) {
 		List<SmidShgMemberApplication> suhApp = new ArrayList<>();
 		Map<String, Object> paramValues = new HashMap<>();
+		paramValues.put("tenantId", member.getTenantId());
 		paramValues.put("shgUuid", member.getShgUuid());
-		try {
-			return suhApp = namedParameterJdbcTemplate.query(NULMQueryBuilder.GET_MEMBER_COUNT_QUERY, paramValues,
-					columnsRowMapper);
+				try {
+					return suhApp = namedParameterJdbcTemplate.query(NULMQueryBuilder.GET_MEMBER_COUNT_QUERY, paramValues,
+							columnsRowMapper);
 
+				
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new CustomException(CommonConstants.ROLE, e.getMessage());
@@ -210,4 +232,5 @@ public class SmidShgMemberRepository {
 //		return null;
 //	}
 
+	
 }

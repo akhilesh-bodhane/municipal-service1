@@ -45,44 +45,48 @@ public class SmidShgRepository {
 	private ColumnsRowMapper columnsRowMapper;
 	private ShgMemberRowMapper shgMemberRowMapper;
 	private ShgMemberListRowMapper shgMemberListRowMapper;
+	
 
 	@Autowired
 	public SmidShgRepository(JdbcTemplate jdbcTemplate, Producer producer, NULMConfiguration config,
-			ShgRowMapper shgrowMapper, ColumnsRowMapper columnsRowMapper, ShgMemberRowMapper shgMemberRowMapper,
-			ShgMemberListRowMapper shgMemberListRowMapper) {
+			ShgRowMapper shgrowMapper,ColumnsRowMapper columnsRowMapper,ShgMemberRowMapper shgMemberRowMapper,ShgMemberListRowMapper shgMemberListRowMapper) {
 		this.jdbcTemplate = jdbcTemplate;
 		this.producer = producer;
 		this.config = config;
 		this.shgrowMapper = shgrowMapper;
-		this.columnsRowMapper = columnsRowMapper;
-		this.shgMemberRowMapper = shgMemberRowMapper;
-		this.shgMemberListRowMapper = shgMemberListRowMapper;
+		this.columnsRowMapper=columnsRowMapper;
+		this.shgMemberRowMapper=shgMemberRowMapper;
+		this.shgMemberListRowMapper=shgMemberListRowMapper;
 	}
 
 	public void createGroup(SmidShgGroup shg) {
 		NulmShgRequest infoWrapper = NulmShgRequest.builder().nulmShgRequest(shg).build();
 		producer.push(config.getSMIDSHGSaveTopic(), infoWrapper);
 	}
-
+	
+	
 	public JSONArray getGroupStatus(SmidShgGroup shg) {
-		JSONArray smid = new JSONArray();
+	JSONArray smid = new JSONArray();
 		Map<String, Object> paramValues = new HashMap<>();
-
+		
 		try {
+			paramValues.put("tenantId", shg.getTenantId());
 			paramValues.put("shgUuid", shg.getShgUuid());
+			
+					return smid = namedParameterJdbcTemplate.query(NULMQueryBuilder.GET_SHG_STATUS_QUERY, paramValues,
+							columnsRowMapper);
 
-			return smid = namedParameterJdbcTemplate.query(NULMQueryBuilder.GET_SHG_STATUS_QUERY, paramValues,
-					columnsRowMapper);
+			
 
 		} catch (Exception e) {
-			throw new CustomException(CommonConstants.ROLE, e.getMessage());
+						throw new CustomException(CommonConstants.ROLE, e.getMessage());
 		}
 
 	}
-
 	public List<SmidShgGroup> getGroup(SmidShgGroup shg, List<Role> role, Long userId) {
 		List<SmidShgGroup> smid = new ArrayList<>();
 		Map<String, Object> paramValues = new HashMap<>();
+		paramValues.put("tenantId", shg.getTenantId());
 		paramValues.put("fromDate", shg.getFromDate());
 		paramValues.put("toDate", shg.getToDate());
 		paramValues.put("name", shg.getName());
@@ -101,7 +105,7 @@ public class SmidShgRepository {
 						statusEmplyee.add(SmidShgGroup.StatusEnum.UPDATED.toString());
 					} else {
 						statusEmplyee.add(shg.getStatus().toString());
-					}
+					}					
 					status.add(SmidShgMemberApplication.StatusEnum.APPROVED.toString());
 					status.add(SmidShgMemberApplication.StatusEnum.AWAITINGFORAPPROVAL.toString());
 					status.add(SmidShgMemberApplication.StatusEnum.DELETED.toString());
@@ -141,8 +145,8 @@ public class SmidShgRepository {
 			status.add(SmidShgMemberApplication.StatusEnum.UPDATED.toString());
 			status.add(SmidShgMemberApplication.StatusEnum.DELETIONINPROGRESS.toString());
 			status.add(SmidShgMemberApplication.StatusEnum.AWAITINGFORDELETION.toString());
-
-			paramValues.put("applicationStatus", status);
+	
+			paramValues.put("applicationStatus",status);
 			paramValues.put("status", statusCitizen);
 			paramValues.put("createdBy", userId.toString());
 			paramValues.put("shgId", shg.getShgId());
@@ -170,19 +174,18 @@ public class SmidShgRepository {
 		NulmShgRequest infoWrapper = NulmShgRequest.builder().nulmShgRequest(shg).build();
 		producer.push(config.getSMIDSHGUpdateStatusTopic(), infoWrapper);
 	}
-
 	public void updateMemberStatus(SmidShgMemberApplication smidApplication) {
 		List<SmidShgMemberApplication> list = new ArrayList<>();
 		list.add(smidApplication);
-		NulmShgMemberRequest infoWrapper = NulmShgMemberRequest.builder().smidShgMemberApplication(list).build();
+		NulmShgMemberRequest infoWrapper = NulmShgMemberRequest.builder().smidShgMemberApplication(list)
+				.build();
 		producer.push(config.getSmidShgMemberDeleteTopic(), infoWrapper);
 	}
-
 	public void checkMemberCount(SmidShgGroup shg) {
 		Map<String, String> errorMap = new HashMap<>();
 		int i = 0;
-		i = jdbcTemplate.queryForObject(NULMQueryBuilder.GET_SHG_MEMBER_COUNT_QUERY, new Object[] { shg.getShgUuid() },
-				Integer.class);
+		i = jdbcTemplate.queryForObject(NULMQueryBuilder.GET_SHG_MEMBER_COUNT_QUERY,
+				new Object[] { shg.getShgUuid(), shg.getTenantId() }, Integer.class);
 
 		if (i < 10) {
 			errorMap.put(CommonConstants.INVALID_SHG_REQUEST, CommonConstants.INVALID_SHG_REQUEST_MESSAGE);
@@ -193,29 +196,32 @@ public class SmidShgRepository {
 	public void checkShgUuid(SmidShgGroup shg) {
 		Map<String, String> errorMap = new HashMap<>();
 		int i = 0;
-		i = jdbcTemplate.queryForObject(NULMQueryBuilder.SHG_UUID_EXIST_QUERY, new Object[] { shg.getShgUuid() },
-				Integer.class);
+		i = jdbcTemplate.queryForObject(NULMQueryBuilder.SHG_UUID_EXIST_QUERY,
+				new Object[] { shg.getShgUuid(), shg.getTenantId() }, Integer.class);
 
 		if (i == 0) {
 			errorMap.put(CommonConstants.INVALID_SHG_UUID, CommonConstants.INVALID_SHG_UUID_MESSAGE);
 			throw new CustomException(errorMap);
 		}
 	}
-
 	public List<SmidShgMemberApplication> getMemmberList(SmidShgGroup shg) {
 		List<SmidShgMemberApplication> smid = new ArrayList<>();
-		Map<String, Object> paramValues = new HashMap<>();
+			Map<String, Object> paramValues = new HashMap<>();
+			
+			try {
+				paramValues.put("tenantId", shg.getTenantId());
+				paramValues.put("shgUuid", shg.getShgUuid());
+				
+						return smid = namedParameterJdbcTemplate.query(NULMQueryBuilder.GET_SHG_MEMBER_STATUS_QUERY, paramValues,
+								shgMemberListRowMapper);
 
-		try {
-			paramValues.put("shgUuid", shg.getShgUuid());
+				
 
-			return smid = namedParameterJdbcTemplate.query(NULMQueryBuilder.GET_SHG_MEMBER_STATUS_QUERY, paramValues,
-					shgMemberListRowMapper);
+			} catch (Exception e) {
+							throw new CustomException(CommonConstants.ROLE, e.getMessage());
+			}
 
-		} catch (Exception e) {
-			throw new CustomException(CommonConstants.ROLE, e.getMessage());
 		}
-
-	}
-
+	
+	
 }
