@@ -30,17 +30,18 @@ public class OrganizationRepository {
 	private Producer producer;
 
 	private NULMConfiguration config;
-	
+
 	private OrganizationRowMapper organizationRowMapper;
-	
+
 	@Autowired
-	public OrganizationRepository(JdbcTemplate jdbcTemplate, Producer producer, NULMConfiguration config, OrganizationRowMapper organizationRowMapper
+	public OrganizationRepository(JdbcTemplate jdbcTemplate, Producer producer, NULMConfiguration config,
+			OrganizationRowMapper organizationRowMapper
 
 	) {
 		this.jdbcTemplate = jdbcTemplate;
 		this.producer = producer;
 		this.config = config;
-		this.organizationRowMapper=organizationRowMapper;
+		this.organizationRowMapper = organizationRowMapper;
 
 	}
 
@@ -53,7 +54,7 @@ public class OrganizationRepository {
 		Map<String, String> errorMap = new HashMap<>();
 		int i = 0;
 		i = jdbcTemplate.queryForObject(NULMQueryBuilder.GET_ORGANIZATION_MOBILE_NO_QUERY,
-				new Object[] { /* request.getTenantId(), */ request.getMobileNo() }, Integer.class);
+				new Object[] { request.getMobileNo() }, Integer.class);
 
 		if (i > 0) {
 			errorMap.put(CommonConstants.INVALID_ORGANIZATION_REQUEST,
@@ -66,7 +67,7 @@ public class OrganizationRepository {
 		Map<String, String> errorMap = new HashMap<>();
 		int i = 0;
 		i = jdbcTemplate.queryForObject(NULMQueryBuilder.GET_ORGANIZATION_NAME_QUERY,
-				new Object[] { /* request.getTenantId(), */ request.getOrganizationName() }, Integer.class);
+				new Object[] { request.getOrganizationName() }, Integer.class);
 
 		if (i > 0) {
 			errorMap.put(CommonConstants.INVALID_ORGANIZATION_REQUEST,
@@ -74,24 +75,21 @@ public class OrganizationRepository {
 			throw new CustomException(errorMap);
 		}
 	}
-	public List<Organization> getOrganization(Organization request, List<Role> role,
-			Long userId) {
+
+	public List<Organization> getOrganization(Organization request, List<Role> role, Long userId) {
 		List<Organization> smid = new ArrayList<>();
 		try {
 			for (Role roleobj : role) {
 				if ((roleobj.getCode()).equalsIgnoreCase(config.getRoleEmployee())) {
-					 smid = jdbcTemplate.query(NULMQueryBuilder.GET_ORGANIZATION_QUERY,
-								new Object[] {
-										/* request.getTenantId(), */request.getOrganizationUuid(),request.getOrganizationUuid(),
-									request.getOrganizationName(),request.getOrganizationName(),
-									request.getRegistrationNo(),request.getRegistrationNo(),
-									request.getFromDate(),request.getFromDate(),
-									request.getToDate(),request.getToDate()},
+					smid = jdbcTemplate.query(NULMQueryBuilder.GET_ORGANIZATION_QUERY,
+							new Object[] { request.getOrganizationUuid(), request.getOrganizationUuid(),
+									request.getOrganizationName(), request.getOrganizationName(),
+									request.getRegistrationNo(), request.getRegistrationNo(), request.getFromDate(),
+									request.getFromDate(), request.getToDate(), request.getToDate() },
 							organizationRowMapper);
 
 				}
 			}
-			
 
 		} catch (Exception e) {
 			e.printStackTrace();

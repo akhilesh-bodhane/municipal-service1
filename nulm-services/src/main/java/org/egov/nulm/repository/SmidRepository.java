@@ -66,10 +66,8 @@ public class SmidRepository {
 							smidApplication.getApplicationId(), smidApplication.getApplicationId(), "", "",
 							smidApplication.getApplicationStatus() == null ? ""
 									: smidApplication.getApplicationStatus().toString(),
-
 							smidApplication.getApplicationStatus() == null ? ""
 									: smidApplication.getApplicationStatus().toString(),
-
 							smidApplication.getFromDate(), smidApplication.getFromDate(), smidApplication.getToDate(),
 							smidApplication.getToDate(), smidApplication.getName(), smidApplication.getName(),
 							smidApplication.getApplicationStatus() == null
@@ -81,7 +79,7 @@ public class SmidRepository {
 
 			return smid = jdbcTemplate.query(NULMQueryBuilder.GET_SMID_APPLICATION_QUERY,
 					new Object[] { smidApplication.getApplicationId(), smidApplication.getApplicationId(),
-							userId.toString(), userId.toString(), 
+							userId.toString(), userId.toString(),
 							smidApplication.getApplicationStatus() == null ? ""
 									: smidApplication.getApplicationStatus().toString(),
 							smidApplication.getApplicationStatus() == null ? ""
@@ -103,26 +101,24 @@ public class SmidRepository {
 		try {
 			for (Role roleobj : role) {
 				if ((roleobj.getCode()).equalsIgnoreCase(config.getRoleEmployee())) {
-					return smid = jdbcTemplate.query(NULMQueryBuilder.GET_SMID_APPLICATION_QUERY,
-							new Object[] { smidApplication.getApplicationId(), smidApplication.getApplicationId(), "",
-									"", smidApplication.getTenantId(),
-									smidApplication.getApplicationStatus() == null ? ""
-											: smidApplication.getApplicationStatus().toString(),
-									smidApplication.getApplicationStatus() == null ? ""
-											: smidApplication.getApplicationStatus().toString(),
-									smidApplication.getFromDate(), smidApplication.getFromDate(),
-									smidApplication.getToDate(), smidApplication.getToDate(), smidApplication.getName(),
-									smidApplication.getName(),
-									smidApplication.getApplicationStatus() == null
-											? SmidApplication.StatusEnum.DRAFTED.toString()
-											: "" },
+					return smid = jdbcTemplate.query(NULMQueryBuilder.GET_SMID_APPLICATION_QUERY, new Object[] {
+							smidApplication.getApplicationId(), smidApplication.getApplicationId(), "", "",
+							smidApplication.getApplicationStatus() == null ? ""
+									: smidApplication.getApplicationStatus().toString(),
+							smidApplication.getApplicationStatus() == null ? ""
+									: smidApplication.getApplicationStatus().toString(),
+							smidApplication.getFromDate(), smidApplication.getFromDate(), smidApplication.getToDate(),
+							smidApplication.getToDate(), smidApplication.getName(), smidApplication.getName(),
+							smidApplication.getApplicationStatus() == null
+									? SmidApplication.StatusEnum.DRAFTED.toString()
+									: "" },
 							smidrowMapperCount);
 				}
 			}
 
 			return smid = jdbcTemplate.query(NULMQueryBuilder.GET_SMID_APPLICATION_QUERY,
 					new Object[] { smidApplication.getApplicationId(), smidApplication.getApplicationId(),
-							userId.toString(), userId.toString(), smidApplication.getTenantId(),
+							userId.toString(), userId.toString(),
 							smidApplication.getApplicationStatus() == null ? ""
 									: smidApplication.getApplicationStatus().toString(),
 							smidApplication.getApplicationStatus() == null ? ""

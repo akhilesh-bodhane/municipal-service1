@@ -12,31 +12,19 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 @RestController
 @RequestMapping("/v1/susv")
 public class SusvController {
 
 	private final SusvService service;
-	
-	private final ObjectMapper objectMapper;
 
 	@Autowired
-	public SusvController(SusvService service, ObjectMapper objectMapper) {
+	public SusvController(SusvService service) {
 		this.service = service;
-		this.objectMapper = objectMapper;
 	}
 	
 	@PostMapping(value = "/_create")
 	public ResponseEntity<ResponseInfoWrapper> createSusvApplication(@Valid @RequestBody NulmSusvRequest request) {
-		try {
-			System.out.println("createSusvApplication Controller Requet : " + objectMapper.writeValueAsString(request));
-		} catch (JsonProcessingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 		return service.createSusvApplication(request);
 	}
 	
