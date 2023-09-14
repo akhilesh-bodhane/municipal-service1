@@ -70,8 +70,6 @@ public class SusvService {
 
 	public ResponseEntity<ResponseInfoWrapper> createSusvApplication(NulmSusvRequest request) {
 		try {
-			System.out.println("createSusvApplication Requet : " + objectMapper.writeValueAsString(request));
-			
 			SusvApplication susvApplication = objectMapper.convertValue(request.getNulmSusvRequest(),
 					SusvApplication.class);
 
@@ -172,9 +170,7 @@ public class SusvService {
 
 			List<ProcessInstance> processList = Arrays.asList(processInstances);
 			workflowRequest.setProcessInstances(processList);
-			
 			System.out.println("WorkFlow Requet : " + objectMapper.writeValueAsString(workflowRequest));
-			
 			workflowResponse = workFlowRepository.createWorkflowRequest(workflowRequest);
 
 		} catch (Exception e) {

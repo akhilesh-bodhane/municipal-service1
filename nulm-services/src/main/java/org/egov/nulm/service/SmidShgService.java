@@ -94,7 +94,9 @@ public class SmidShgService {
 			throw new CustomException(CommonConstants.SMID_SHG_APPLICATION_EXCEPTION_CODE, e.getMessage());
 		}
 	}
-
+	
+	
+	
 	public ResponseEntity<ResponseInfoWrapper> updateGroup(NulmShgRequest shgrequest) {
 		try {
 			SmidShgGroup shg = objectMapper.convertValue(shgrequest.getNulmShgRequest(), SmidShgGroup.class);
@@ -195,62 +197,51 @@ public class SmidShgService {
 					}
 
 				}
-			}
+			}			
 			shg.setStatus(SmidShgGroup.StatusEnum.fromValue(shg.getStatus().toString()));
 			shg.setIsActive(true);
-			shg.setAuditDetails(
-					auditDetailsUtil.getAuditDetails(shgrequest.getRequestInfo(), CommonConstants.ACTION_UPDATE));
+			shg.setAuditDetails(auditDetailsUtil.getAuditDetails(shgrequest.getRequestInfo(), CommonConstants.ACTION_UPDATE));
 			repository.updateGroupStatus(shg);
-			List<SmidShgMemberApplication> memberlist = repository.getMemmberList(shg);
-			for (Role roleobj : role) {
+		   List<SmidShgMemberApplication> memberlist=repository.getMemmberList(shg);
+		   for (Role roleobj : role) {
 				if ((roleobj.getCode()).equalsIgnoreCase(config.getRoleEmployee())) {
-
+	
 					memberlist.stream().forEach(element -> {
-						String elementStatus = element.getApplicationStatus() != null
-								? element.getApplicationStatus().toString()
-								: "";
+						String elementStatus=element.getApplicationStatus().toString();
 						if (reqStatus.equalsIgnoreCase(SmidShgMemberApplication.StatusEnum.APPROVED.toString())) {
-							if (elementStatus.equalsIgnoreCase(
-									SmidShgMemberApplication.StatusEnum.AWAITINGFORAPPROVAL.toString())) {
+							if (elementStatus.equalsIgnoreCase(SmidShgMemberApplication.StatusEnum.AWAITINGFORAPPROVAL.toString())) {
 								element.setApplicationStatus(SmidShgMemberApplication.StatusEnum.APPROVED);
 								element.setIsActive(true);
-								element.setAuditDetails(auditDetailsUtil.getAuditDetails(shgrequest.getRequestInfo(),
-										CommonConstants.ACTION_UPDATE));
+								element.setAuditDetails(auditDetailsUtil.getAuditDetails(shgrequest.getRequestInfo(), CommonConstants.ACTION_UPDATE));
 								repository.updateMemberStatus(element);
 							}
-							if (elementStatus.equalsIgnoreCase(
-									SmidShgMemberApplication.StatusEnum.AWAITINGFORDELETION.toString())) {
+							if (elementStatus.equalsIgnoreCase(SmidShgMemberApplication.StatusEnum.AWAITINGFORDELETION.toString())) {
 								element.setApplicationStatus(SmidShgMemberApplication.StatusEnum.DELETED);
 								element.setIsActive(true);
-								element.setAuditDetails(auditDetailsUtil.getAuditDetails(shgrequest.getRequestInfo(),
-										CommonConstants.ACTION_UPDATE));
+								element.setAuditDetails(auditDetailsUtil.getAuditDetails(shgrequest.getRequestInfo(), CommonConstants.ACTION_UPDATE));
 								repository.updateMemberStatus(element);
 							}
 						}
 						if (reqStatus.equalsIgnoreCase(SmidShgMemberApplication.StatusEnum.REJECTED.toString())) {
-							if (elementStatus.equalsIgnoreCase(
-									SmidShgMemberApplication.StatusEnum.AWAITINGFORAPPROVAL.toString())) {
+							if (elementStatus.equalsIgnoreCase(SmidShgMemberApplication.StatusEnum.AWAITINGFORAPPROVAL.toString())) {
 								element.setApplicationStatus(SmidShgMemberApplication.StatusEnum.REJECTED);
 								element.setIsActive(true);
-								element.setAuditDetails(auditDetailsUtil.getAuditDetails(shgrequest.getRequestInfo(),
-										CommonConstants.ACTION_UPDATE));
+								element.setAuditDetails(auditDetailsUtil.getAuditDetails(shgrequest.getRequestInfo(), CommonConstants.ACTION_UPDATE));
 								repository.updateMemberStatus(element);
 							}
-							if (elementStatus.equalsIgnoreCase(
-									SmidShgMemberApplication.StatusEnum.AWAITINGFORDELETION.toString())) {
+							if (elementStatus.equalsIgnoreCase(SmidShgMemberApplication.StatusEnum.AWAITINGFORDELETION.toString())) {
 								element.setApplicationStatus(SmidShgMemberApplication.StatusEnum.DELETED);
 								element.setIsActive(true);
-								element.setAuditDetails(auditDetailsUtil.getAuditDetails(shgrequest.getRequestInfo(),
-										CommonConstants.ACTION_UPDATE));
+								element.setAuditDetails(auditDetailsUtil.getAuditDetails(shgrequest.getRequestInfo(), CommonConstants.ACTION_UPDATE));
 								repository.updateMemberStatus(element);
 							}
 						}
-
-					});
-
+						
+					});			
+					
 				}
-			}
-
+			}	
+			
 			return new ResponseEntity<>(ResponseInfoWrapper.builder()
 					.responseInfo(ResponseInfo.builder().status(CommonConstants.SUCCESS).build()).responseBody(shg)
 					.build(), HttpStatus.OK);
@@ -259,37 +250,35 @@ public class SmidShgService {
 			throw new CustomException(CommonConstants.SMID_SHG_APPLICATION_EXCEPTION_CODE, e.getMessage());
 		}
 	}
-
 	public ResponseEntity<ResponseInfoWrapper> forwardToApproval(NulmShgRequest shgrequest) {
 		try {
 			SmidShgGroup shg = objectMapper.convertValue(shgrequest.getNulmShgRequest(), SmidShgGroup.class);
 			repository.checkShgUuid(shg);
-			shg.setStatus(SmidShgGroup.StatusEnum.AWAITINGFORAPPROVAL);
+			shg.setStatus(SmidShgGroup.StatusEnum.AWAITINGFORAPPROVAL);									
 			shg.setIsActive(true);
-			shg.setAuditDetails(
-					auditDetailsUtil.getAuditDetails(shgrequest.getRequestInfo(), CommonConstants.ACTION_UPDATE));
+			shg.setAuditDetails(auditDetailsUtil.getAuditDetails(shgrequest.getRequestInfo(), CommonConstants.ACTION_UPDATE));
 			repository.updateGroupStatus(shg);
-			List<SmidShgMemberApplication> memberlist = repository.getMemmberList(shg);
+		   List<SmidShgMemberApplication> memberlist=repository.getMemmberList(shg);
 			memberlist.stream().forEach(element -> {
-				String elementStatus = element.getApplicationStatus().toString();
-
-				if (elementStatus.equalsIgnoreCase(SmidShgMemberApplication.StatusEnum.DELETIONINPROGRESS.toString())) {
-					element.setApplicationStatus(SmidShgMemberApplication.StatusEnum.AWAITINGFORDELETION);
-					element.setIsActive(true);
-					element.setAuditDetails(auditDetailsUtil.getAuditDetails(shgrequest.getRequestInfo(),
-							CommonConstants.ACTION_UPDATE));
-					repository.updateMemberStatus(element);
-				} else if (!elementStatus.equalsIgnoreCase(SmidShgMemberApplication.StatusEnum.APPROVED.toString())
-						&& !elementStatus.equalsIgnoreCase(SmidShgMemberApplication.StatusEnum.DELETED.toString())) {
-					element.setApplicationStatus(SmidShgMemberApplication.StatusEnum.AWAITINGFORAPPROVAL);
-					element.setIsActive(true);
-					element.setAuditDetails(auditDetailsUtil.getAuditDetails(shgrequest.getRequestInfo(),
-							CommonConstants.ACTION_UPDATE));
-					repository.updateMemberStatus(element);
-				}
-
-			});
-
+						String elementStatus=element.getApplicationStatus().toString();
+					
+							if (elementStatus.equalsIgnoreCase(SmidShgMemberApplication.StatusEnum.DELETIONINPROGRESS.toString())) {
+								element.setApplicationStatus(SmidShgMemberApplication.StatusEnum.AWAITINGFORDELETION);
+								element.setIsActive(true);
+								element.setAuditDetails(auditDetailsUtil.getAuditDetails(shgrequest.getRequestInfo(), CommonConstants.ACTION_UPDATE));
+								repository.updateMemberStatus(element);
+							}
+							else if(!elementStatus.equalsIgnoreCase(SmidShgMemberApplication.StatusEnum.APPROVED.toString()) &&
+									!elementStatus.equalsIgnoreCase(SmidShgMemberApplication.StatusEnum.DELETED.toString())){
+								element.setApplicationStatus(SmidShgMemberApplication.StatusEnum.AWAITINGFORAPPROVAL);
+								element.setIsActive(true);
+								element.setAuditDetails(auditDetailsUtil.getAuditDetails(shgrequest.getRequestInfo(), CommonConstants.ACTION_UPDATE));
+								repository.updateMemberStatus(element);
+							}
+							
+						
+					});			
+				
 			return new ResponseEntity<>(ResponseInfoWrapper.builder()
 					.responseInfo(ResponseInfo.builder().status(CommonConstants.SUCCESS).build()).responseBody(shg)
 					.build(), HttpStatus.OK);
