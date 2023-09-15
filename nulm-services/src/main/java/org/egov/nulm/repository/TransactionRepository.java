@@ -33,7 +33,7 @@ public class TransactionRepository {
 	private NULMConfiguration config;
 
 	private TransactionRowMapper transactionRowMapper;
-	
+
 	@Autowired
 	public NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
@@ -47,35 +47,37 @@ public class TransactionRepository {
 	}
 
 	public void createTransaction(Transaction trans) {
-		NulmSusvTransactionRequest infoWrapper = NulmSusvTransactionRequest.builder().nulmTransactionRequest(trans).build();
+		NulmSusvTransactionRequest infoWrapper = NulmSusvTransactionRequest.builder().nulmTransactionRequest(trans)
+				.build();
 		producer.push(config.getSusvTransactionSaveTopic(), infoWrapper);
 	}
-	
+
 	public void updateTransaction(Transaction trans) {
-		NulmSusvTransactionRequest infoWrapper = NulmSusvTransactionRequest.builder().nulmTransactionRequest(trans).build();
+		NulmSusvTransactionRequest infoWrapper = NulmSusvTransactionRequest.builder().nulmTransactionRequest(trans)
+				.build();
 		producer.push(config.getSusvTransactionUpdateTopic(), infoWrapper);
 	}
-	public List<Transaction> getTransaction(Transaction trans, List<Role> role,Long userId) {
+
+	public List<Transaction> getTransaction(Transaction trans, List<Role> role, Long userId) {
 		List<Transaction> result = new ArrayList<>();
 		Map<String, Object> paramValues = new HashMap<>();
-		paramValues.put("tenantId", trans.getTenantId());
 		paramValues.put("fromDate", trans.getFromDate());
 		paramValues.put("toDate", trans.getToDate());
 		paramValues.put("transactionType", trans.getTransactionType());
 		paramValues.put("uuid", trans.getUuid());
 		try {
 			for (Role roleobj : role) {
-				if ((roleobj.getCode()).equalsIgnoreCase(config.getRoleEmployee())) {					
+				if ((roleobj.getCode()).equalsIgnoreCase(config.getRoleEmployee())) {
 					paramValues.put("createdBy", "");
 
-					return result = namedParameterJdbcTemplate.query(NULMQueryBuilder.GET_SUSV_TRANSACTOIN_QUERY, paramValues,
-							transactionRowMapper);
+					return result = namedParameterJdbcTemplate.query(NULMQueryBuilder.GET_SUSV_TRANSACTOIN_QUERY,
+							paramValues, transactionRowMapper);
 
 				}
-				}
+			}
 			paramValues.put("createdBy", userId.toString());
-			return result = namedParameterJdbcTemplate.query(NULMQueryBuilder.GET_SUSV_TRANSACTOIN_QUERY, paramValues, transactionRowMapper);
-		
+			return result = namedParameterJdbcTemplate.query(NULMQueryBuilder.GET_SUSV_TRANSACTOIN_QUERY, paramValues,
+					transactionRowMapper);
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -83,5 +85,5 @@ public class TransactionRepository {
 		}
 
 	}
-	
+
 }

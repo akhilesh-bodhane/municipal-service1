@@ -38,10 +38,10 @@ public class SusvRepository {
 	private NULMConfiguration config;
 
 	private SusvRowMapper susvrowMapper;
-	
+
 	@Autowired
 	private SusvRowMapperCount susvrowMapperCount;
-	
+
 	@Autowired
 	public NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
@@ -53,11 +53,12 @@ public class SusvRepository {
 		this.config = config;
 		this.susvrowMapper = susvrowMapper;
 	}
+
 	public void checkCovNo(SusvApplication request) {
 		Map<String, String> errorMap = new HashMap<>();
 		int i = 0;
-		i = jdbcTemplate.queryForObject(NULMQueryBuilder.GET_COV_NO_QUERY,
-				new Object[] {request.getCovNo(),request.getTenantId() }, Integer.class);
+		i = jdbcTemplate.queryForObject(NULMQueryBuilder.GET_COV_NO_QUERY, new Object[] { request.getCovNo() },
+				Integer.class);
 
 		if (i > 0) {
 			errorMap.put(CommonConstants.INVALID_SUSV_REQUEST, CommonConstants.DIPLICATE_COV_NO_MESSAGE);
@@ -69,21 +70,20 @@ public class SusvRepository {
 		NulmSusvRequest infoWrapper = NulmSusvRequest.builder().nulmSusvRequest(susvApplication).build();
 		producer.push(config.getSusvApplicationSaveTopic(), infoWrapper);
 	}
-	
+
 	public void updateSusvApplication(SusvApplication susvApplication) {
 		NulmSusvRequest infoWrapper = NulmSusvRequest.builder().nulmSusvRequest(susvApplication).build();
 		producer.push(config.getSusvApplicationUpdateTopic(), infoWrapper);
 	}
+
 	public void updateSusvApplicationStatus(SusvApplication susvApplication) {
 		NulmSusvRequest infoWrapper = NulmSusvRequest.builder().nulmSusvRequest(susvApplication).build();
 		producer.push(config.getSusvApplicationUpdateStatusTopic(), infoWrapper);
 	}
-	
-	public List<SusvApplication> getSusvApplication(SusvApplication request, List<Role> role,
-			Long userId) {
+
+	public List<SusvApplication> getSusvApplication(SusvApplication request, List<Role> role, Long userId) {
 		List<SusvApplication> susv = new ArrayList<>();
 		Map<String, Object> paramValues = new HashMap<>();
-		paramValues.put("tenantId", request.getTenantId());
 		paramValues.put("fromDate", request.getFromDate());
 		paramValues.put("toDate", request.getToDate());
 		paramValues.put("nameOfApplicant", request.getNameOfApplicant());
@@ -91,8 +91,8 @@ public class SusvRepository {
 		try {
 			for (Role roleobj : role) {
 				if ((roleobj.getCode()).equalsIgnoreCase(config.getRoleCitizenUser())) {
-					
-					paramValues.put("createdBy",userId.toString());
+
+					paramValues.put("createdBy", userId.toString());
 					paramValues.put("applicationId", request.getApplicationId());
 					paramValues.put("applicationId", request.getApplicationId());
 					List<Object> statusEmplyee = new ArrayList<>();
@@ -107,11 +107,11 @@ public class SusvRepository {
 						statusEmplyee.add(SusvApplication.StatusEnum.REASSIGNTOJA.toString());
 						statusEmplyee.add(SusvApplication.StatusEnum.REASSIGNTOSDO.toString());
 						statusEmplyee.add(SusvApplication.StatusEnum.REASSIGNTOCITIZEN.toString());
-						
+
 					} else {
 						statusEmplyee.add(request.getApplicationStatus().toString());
 					}
-					paramValues.put("applicationStaus",statusEmplyee);
+					paramValues.put("applicationStaus", statusEmplyee);
 					return susv = namedParameterJdbcTemplate.query(NULMQueryBuilder.GET_SUSV_QUERY, paramValues,
 							susvrowMapper);
 				}
@@ -127,16 +127,15 @@ public class SusvRepository {
 				statusEmplyee.add(SusvApplication.StatusEnum.REASSIGNTOJA.toString());
 				statusEmplyee.add(SusvApplication.StatusEnum.REASSIGNTOSDO.toString());
 				statusEmplyee.add(SusvApplication.StatusEnum.REASSIGNTOCITIZEN.toString());
-				
+
 			} else {
 				statusEmplyee.add(request.getApplicationStatus().toString());
 			}
-			paramValues.put("applicationStaus",statusEmplyee);
-			paramValues.put("createdBy","");
+			paramValues.put("applicationStaus", statusEmplyee);
+			paramValues.put("createdBy", "");
 			paramValues.put("covNo", request.getCovNo());
 			paramValues.put("applicationId", request.getApplicationId());
 			return susv = namedParameterJdbcTemplate.query(NULMQueryBuilder.GET_SUSV_QUERY, paramValues, susvrowMapper);
-		
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -144,12 +143,10 @@ public class SusvRepository {
 		}
 
 	}
-	
-	public List<SusvApplicationCount> getSusvApplicationCount(SusvApplication request, List<Role> role,
-			Long userId) {
+
+	public List<SusvApplicationCount> getSusvApplicationCount(SusvApplication request, List<Role> role, Long userId) {
 		List<SusvApplicationCount> susv = new ArrayList<>();
 		Map<String, Object> paramValues = new HashMap<>();
-		paramValues.put("tenantId", request.getTenantId());
 		paramValues.put("fromDate", request.getFromDate());
 		paramValues.put("toDate", request.getToDate());
 		paramValues.put("nameOfApplicant", request.getNameOfApplicant());
@@ -157,8 +154,8 @@ public class SusvRepository {
 		try {
 			for (Role roleobj : role) {
 				if ((roleobj.getCode()).equalsIgnoreCase(config.getRoleCitizenUser())) {
-					
-					paramValues.put("createdBy",userId.toString());
+
+					paramValues.put("createdBy", userId.toString());
 					paramValues.put("applicationId", request.getApplicationId());
 					paramValues.put("applicationId", request.getApplicationId());
 					List<Object> statusEmplyee = new ArrayList<>();
@@ -173,11 +170,11 @@ public class SusvRepository {
 						statusEmplyee.add(SusvApplication.StatusEnum.REASSIGNTOJA.toString());
 						statusEmplyee.add(SusvApplication.StatusEnum.REASSIGNTOSDO.toString());
 						statusEmplyee.add(SusvApplication.StatusEnum.REASSIGNTOCITIZEN.toString());
-						
+
 					} else {
 						statusEmplyee.add(request.getApplicationStatus().toString());
 					}
-					paramValues.put("applicationStaus",statusEmplyee);
+					paramValues.put("applicationStaus", statusEmplyee);
 					return susv = namedParameterJdbcTemplate.query(NULMQueryBuilder.GET_SUSV_QUERY_COUNT, paramValues,
 							susvrowMapperCount);
 				}
@@ -193,16 +190,16 @@ public class SusvRepository {
 				statusEmplyee.add(SusvApplication.StatusEnum.REASSIGNTOJA.toString());
 				statusEmplyee.add(SusvApplication.StatusEnum.REASSIGNTOSDO.toString());
 				statusEmplyee.add(SusvApplication.StatusEnum.REASSIGNTOCITIZEN.toString());
-				
+
 			} else {
 				statusEmplyee.add(request.getApplicationStatus().toString());
 			}
-			paramValues.put("applicationStaus",statusEmplyee);
-			paramValues.put("createdBy","");
+			paramValues.put("applicationStaus", statusEmplyee);
+			paramValues.put("createdBy", "");
 			paramValues.put("covNo", request.getCovNo());
 			paramValues.put("applicationId", request.getApplicationId());
-			return susv = namedParameterJdbcTemplate.query(NULMQueryBuilder.GET_SUSV_QUERY_COUNT, paramValues, susvrowMapperCount);
-		
+			return susv = namedParameterJdbcTemplate.query(NULMQueryBuilder.GET_SUSV_QUERY_COUNT, paramValues,
+					susvrowMapperCount);
 
 		} catch (Exception e) {
 			e.printStackTrace();

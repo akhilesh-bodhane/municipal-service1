@@ -61,8 +61,6 @@ public class SepRepository {
 									sepApplication.getApplicationId(), 
 									isEmployee ? "" : userId.toString(), 
 									isEmployee ? "" : userId.toString(),
-									isEmployee ? "" : sepApplication.getTenantId(),
-									isEmployee ? "" : sepApplication.getTenantId(),
 									sepApplication.getApplicationStatus() == null ? "" : sepApplication.getApplicationStatus().toString(),
 									sepApplication.getApplicationStatus() == null ? "" : sepApplication.getApplicationStatus().toString(),
 									sepApplication.getFromDate(), 
@@ -95,8 +93,6 @@ public class SepRepository {
 									sepApplication.getApplicationId(), 
 									isEmployee ? "" : userId.toString(), 
 									isEmployee ? "" : userId.toString(),
-									isEmployee ? "" : sepApplication.getTenantId(),
-									isEmployee ? "" : sepApplication.getTenantId(),
 									sepApplication.getApplicationStatus() == null ? "" : sepApplication.getApplicationStatus().toString(),
 									sepApplication.getApplicationStatus() == null ? "" : sepApplication.getApplicationStatus().toString(),
 									sepApplication.getFromDate(), 
@@ -122,7 +118,7 @@ public class SepRepository {
 	public int checkDocExist(SepApplicationDocument sepApplication, String appId, String tenantId) {
 
 		return jdbcTemplate.queryForObject(NULMQueryBuilder.GET_SEP_DOCUMENT_QUERY,
-				new Object[] { appId, tenantId, sepApplication.getFilestoreId(), sepApplication.getDocumentType() },
+				new Object[] { appId, sepApplication.getFilestoreId(), sepApplication.getDocumentType() },
 				Integer.class);
 	}
 

@@ -49,24 +49,25 @@ public class SuhLogRepository {
 		NulmSuhLogRequest infoWrapper = NulmSuhLogRequest.builder().nulmSuhLogRequest(log).build();
 		producer.push(config.getSuhLogSaveTopic(), infoWrapper);
 	}
+
 	public List<SuhLogMaintenance> getSuhLog(SuhLogMaintenance suhLog, List<Role> role, Long userId) {
 		List<SuhLogMaintenance> log = new ArrayList<>();
 		try {
 			for (Role roleobj : role) {
 				if ((roleobj.getCode()).equalsIgnoreCase(config.getRoleEmployee())) {
 					return log = jdbcTemplate.query(NULMQueryBuilder.GET_SUH_LOG_QUERY,
-							new Object[] {suhLog.getLogUuid(),suhLog.getLogUuid(),"","",
-									suhLog.getName(),suhLog.getName(),suhLog.getNameOfShelter(),suhLog.getNameOfShelter(),
-									suhLog.getFromDate(),suhLog.getFromDate(),suhLog.getToDate(),suhLog.getToDate(),
-									suhLog.getTenantId() },
-							suhLogrowMapper);				}
+							new Object[] { suhLog.getLogUuid(), suhLog.getLogUuid(), "", "", suhLog.getName(),
+									suhLog.getName(), suhLog.getNameOfShelter(), suhLog.getNameOfShelter(),
+									suhLog.getFromDate(), suhLog.getFromDate(), suhLog.getToDate(),
+									suhLog.getToDate() },
+							suhLogrowMapper);
+				}
 			}
 
-			return	log = jdbcTemplate.query(NULMQueryBuilder.GET_SUH_LOG_QUERY,
-					new Object[] {suhLog.getLogUuid(),suhLog.getLogUuid(),userId.toString(),userId.toString(),
-							suhLog.getName(),suhLog.getName(),suhLog.getNameOfShelter(),suhLog.getNameOfShelter(),
-							suhLog.getFromDate(),suhLog.getFromDate(),suhLog.getToDate(),suhLog.getToDate(),
-							suhLog.getTenantId() },
+			return log = jdbcTemplate.query(NULMQueryBuilder.GET_SUH_LOG_QUERY,
+					new Object[] { suhLog.getLogUuid(), suhLog.getLogUuid(), userId.toString(), userId.toString(),
+							suhLog.getName(), suhLog.getName(), suhLog.getNameOfShelter(), suhLog.getNameOfShelter(),
+							suhLog.getFromDate(), suhLog.getFromDate(), suhLog.getToDate(), suhLog.getToDate() },
 					suhLogrowMapper);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -74,11 +75,10 @@ public class SuhLogRepository {
 		}
 
 	}
+
 	public void deleteSuhLog(SuhLogMaintenance log) {
 		NulmSuhLogRequest infoWrapper = NulmSuhLogRequest.builder().nulmSuhLogRequest(log).build();
 		producer.push(config.getSuhLogDeleteTopic(), infoWrapper);
 	}
-	
-	
-	
+
 }
