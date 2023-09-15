@@ -44,11 +44,12 @@ public class SusvRenewRepository {
 		this.config = config;
 		this.susvRenewRowMapper = susvRenewRowMapper;
 	}
+
 	public void checkCovNo(SusvRenewApplication suh) {
 		Map<String, String> errorMap = new HashMap<>();
 		int i = 0;
-		i = jdbcTemplate.queryForObject(NULMQueryBuilder.GET_COV_NO_QUERY,
-				new Object[] {suh.getCovNo(),suh.getTenantId() }, Integer.class);
+		i = jdbcTemplate.queryForObject(NULMQueryBuilder.GET_COV_NO_QUERY, new Object[] { suh.getCovNo() },
+				Integer.class);
 
 		if (i > 0) {
 			errorMap.put(CommonConstants.INVALID_SUSV_REQUEST, CommonConstants.DIPLICATE_COV_NO_MESSAGE);
@@ -74,9 +75,9 @@ public class SusvRenewRepository {
 		producer.push(config.getSusvRenewApplicationUpdateStatusTopic(), infoWrapper);
 	}
 
-	public List<SusvRenewApplication> getSusvRenewApplication(SusvRenewApplication request, String userType, Long userId) {
+	public List<SusvRenewApplication> getSusvRenewApplication(SusvRenewApplication request, String userType,
+			Long userId) {
 		Map<String, Object> paramValues = new HashMap<>();
-		paramValues.put("tenantId", request.getTenantId());
 		paramValues.put("fromDate", request.getFromDate());
 		paramValues.put("toDate", request.getToDate());
 //		paramValues.put("nameOfApplicant", request.getNameOfApplicant());
@@ -97,13 +98,13 @@ public class SusvRenewRepository {
 					statusEmplyee.add(SusvRenewApplication.StatusEnum.REASSIGNTOJA.toString());
 					statusEmplyee.add(SusvRenewApplication.StatusEnum.REASSIGNTOSDO.toString());
 					statusEmplyee.add(SusvRenewApplication.StatusEnum.REASSIGNTOCITIZEN.toString());
-					
+
 				} else {
 					statusEmplyee.add(request.getApplicationStatus().toString());
 				}
 				paramValues.put("covNo", request.getCovNo());
 				paramValues.put("applicationStaus", statusEmplyee);
-				return  namedParameterJdbcTemplate.query(NULMQueryBuilder.GET_SUSV_RENEW_QUERY, paramValues,
+				return namedParameterJdbcTemplate.query(NULMQueryBuilder.GET_SUSV_RENEW_QUERY, paramValues,
 						susvRenewRowMapper);
 			}
 			List<Object> statusEmplyee = new ArrayList<>();
@@ -117,15 +118,16 @@ public class SusvRenewRepository {
 				statusEmplyee.add(SusvRenewApplication.StatusEnum.REASSIGNTOJA.toString());
 				statusEmplyee.add(SusvRenewApplication.StatusEnum.REASSIGNTOSDO.toString());
 				statusEmplyee.add(SusvRenewApplication.StatusEnum.REASSIGNTOCITIZEN.toString());
-				
+
 			} else {
 				statusEmplyee.add(request.getApplicationStatus().toString());
 			}
 			paramValues.put("covNo", request.getCovNo());
-			paramValues.put("applicationStaus",statusEmplyee);
+			paramValues.put("applicationStaus", statusEmplyee);
 			paramValues.put("createdBy", "");
 			paramValues.put("applicationId", request.getApplicationId());
-			return namedParameterJdbcTemplate.query(NULMQueryBuilder.GET_SUSV_RENEW_QUERY, paramValues, susvRenewRowMapper);
+			return namedParameterJdbcTemplate.query(NULMQueryBuilder.GET_SUSV_RENEW_QUERY, paramValues,
+					susvRenewRowMapper);
 
 		} catch (Exception e) {
 			throw new CustomException(CommonConstants.ROLE, e.getMessage());
