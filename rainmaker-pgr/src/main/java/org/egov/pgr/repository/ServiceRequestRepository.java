@@ -487,10 +487,10 @@ public class ServiceRequestRepository {
 //		}
 
 		if (serviceReqSearchCriteria.getStartDate() != null && serviceReqSearchCriteria.getStartDate() != 0) {
-			whereStr.append(" and pg.createdtime >=").append(serviceReqSearchCriteria.getStartDate());
+			whereStr.append(" and pg.lastmodifiedtime >=").append(serviceReqSearchCriteria.getStartDate());
 		}
 		if (serviceReqSearchCriteria.getEndDate() != null && serviceReqSearchCriteria.getEndDate() != 0) {
-			whereStr.append(" and pg.createdtime <=").append(serviceReqSearchCriteria.getEndDate());
+			whereStr.append(" and pg.lastmodifiedtime <=").append(serviceReqSearchCriteria.getEndDate());
 		}
 
 		if (serviceReqSearchCriteria.getStatus() != null && !serviceReqSearchCriteria.getStatus().isEmpty()) {
