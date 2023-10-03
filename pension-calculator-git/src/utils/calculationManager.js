@@ -12,82 +12,89 @@ const math = require("mathjs");
 let selectedRules = [];
 export const calculateBenefit = (rules, employee, mdms) => {
   selectedRules.length = 0;
-  for (var i = 0; i < rules.benefits.length; i++) {
-    
-    getBenefitFormula(rules.benefits[i], employee, mdms);
+  try {
+    for (var i = 0; i < rules.benefits.length; i++) {
 
-    let benefitValue;
-    let benefitFormulaExpression = "";
-    switch (selectedRules[i].benefitCode) {
-      case envVariables.EGOV_PENSION_BENEFIT_CODE_FAMILY_PENSION_1_START_DATE:
-      case envVariables.EGOV_PENSION_BENEFIT_CODE_FAMILY_PENSION_1_END_DATE:
-      case envVariables.EGOV_PENSION_BENEFIT_CODE_FAMILY_PENSION_2_START_DATE:
-        benefitValue = new Date(formatFormulaForDate(selectedRules[i].benefitFormula, employee, mdms));
-        break;
-      case envVariables.EGOV_PENSION_BENEFIT_CODE_ONE_FORTH_HALF_YEAR_OF_SERVICE:
-        benefitValue = formatFormula(selectedRules[i].benefitFormula, employee, mdms);
-        benefitFormulaExpression = formatFormulaToExpression(selectedRules[i].benefitFormula, employee, mdms);
-        break;
-      case envVariables.EGOV_PENSION_BENEFIT_CODE_IR:
-      case envVariables.EGOV_PENSION_BENEFIT_CODE_DA:
-      case envVariables.EGOV_PENSION_BENEFIT_CODE_PENSION_IR:
-      case envVariables.EGOV_PENSION_BENEFIT_CODE_PENSION_DA:
-        //benefitValue=formatFormula(selectedRules[i].benefitFormula ,employee,mdms);
-        //benefitFormulaExpression=formatFormulaToExpression(selectedRules[i].benefitFormula ,employee,mdms);
-        if (selectedRules[i].benefitFormula != null) {
-          if (isNaN(Number(selectedRules[i].benefitFormula))) {
-            //benefitValue=formatFormula(selectedRules[i].benefitFormula ,employee,mdms);                         
-            benefitValue = Math.round(formatFormula(selectedRules[i].benefitFormula, employee, mdms));
+      getBenefitFormula(rules.benefits[i], employee, mdms);
+  
+      let benefitValue;
+      let benefitFormulaExpression = "";
+      switch (selectedRules[i].benefitCode) {
+        case envVariables.EGOV_PENSION_BENEFIT_CODE_FAMILY_PENSION_1_START_DATE:
+        case envVariables.EGOV_PENSION_BENEFIT_CODE_FAMILY_PENSION_1_END_DATE:
+        case envVariables.EGOV_PENSION_BENEFIT_CODE_FAMILY_PENSION_2_START_DATE:
+          benefitValue = new Date(formatFormulaForDate(selectedRules[i].benefitFormula, employee, mdms));
+          break;
+        case envVariables.EGOV_PENSION_BENEFIT_CODE_ONE_FORTH_HALF_YEAR_OF_SERVICE:
+          benefitValue = formatFormula(selectedRules[i].benefitFormula, employee, mdms);
+          benefitFormulaExpression = formatFormulaToExpression(selectedRules[i].benefitFormula, employee, mdms);
+          break;
+        case envVariables.EGOV_PENSION_BENEFIT_CODE_IR:
+        case envVariables.EGOV_PENSION_BENEFIT_CODE_DA:
+        case envVariables.EGOV_PENSION_BENEFIT_CODE_PENSION_IR:
+        case envVariables.EGOV_PENSION_BENEFIT_CODE_PENSION_DA:
+          //benefitValue=formatFormula(selectedRules[i].benefitFormula ,employee,mdms);
+          //benefitFormulaExpression=formatFormulaToExpression(selectedRules[i].benefitFormula ,employee,mdms);
+          if (selectedRules[i].benefitFormula != null) {
+            if (isNaN(Number(selectedRules[i].benefitFormula))) {
+              //benefitValue=formatFormula(selectedRules[i].benefitFormula ,employee,mdms);                         
+              benefitValue = Math.round(formatFormula(selectedRules[i].benefitFormula, employee, mdms));
+            }
+            else {
+              benefitValue = selectedRules[i].benefitFormula;
+            }
           }
           else {
-            benefitValue = selectedRules[i].benefitFormula;
+            benefitValue = 0;
           }
-        }
-        else {
-          benefitValue = 0;
-        }
-        benefitFormulaExpression = formatFormulaToExpression(selectedRules[i].benefitFormula, employee, mdms);
-        break;
-      default:
-        //benefitValue=formatFormula(selectedRules[i].benefitFormula ,employee,mdms);
-        //benefitFormulaExpression=formatFormulaToExpression(selectedRules[i].benefitFormula ,employee,mdms);
-        if (selectedRules[i].benefitFormula != null) {
-          if (isNaN(Number(selectedRules[i].benefitFormula))) {
-            //benefitValue=formatFormula(selectedRules[i].benefitFormula ,employee,mdms);                         
-            benefitValue = Math.ceil(formatFormula(selectedRules[i].benefitFormula, employee, mdms));
+          benefitFormulaExpression = formatFormulaToExpression(selectedRules[i].benefitFormula, employee, mdms);
+          break;
+        default:
+          //benefitValue=formatFormula(selectedRules[i].benefitFormula ,employee,mdms);
+          //benefitFormulaExpression=formatFormulaToExpression(selectedRules[i].benefitFormula ,employee,mdms);
+          if (selectedRules[i].benefitFormula != null) {
+            if (isNaN(Number(selectedRules[i].benefitFormula))) {
+              //benefitValue=formatFormula(selectedRules[i].benefitFormula ,employee,mdms);                         
+              benefitValue = Math.ceil(formatFormula(selectedRules[i].benefitFormula, employee, mdms));
+            }
+            else {
+              benefitValue = selectedRules[i].benefitFormula;
+            }
           }
           else {
-            benefitValue = selectedRules[i].benefitFormula;
+            benefitValue = 0;
           }
-        }
-        else {
-          benefitValue = 0;
-        }
-        benefitFormulaExpression = formatFormulaToExpression(selectedRules[i].benefitFormula, employee, mdms);
-        break;
-
-    }
-
-    selectedRules[i].benefitValue = benefitValue;
-    selectedRules[i].finalBenefitValue = benefitValue;
-    selectedRules[i].benefitFormulaExpression = benefitFormulaExpression;
-
-    //apply adjustments
-    /*
-    if(selectedRules[i].adjustments && selectedRules[i].adjustments.length>0){
-      for (var j = 0; j < selectedRules[i].adjustments.length; j++) { 
-        let adjustment=selectedRules[i].adjustments[j];
-        let adjustmentValue=formatFormula(adjustment.adjustmentFormula ,employee,mdms);
-        selectedRules[i].adjustments[j].adjustmentValue=adjustmentValue;
-        selectedRules[i].finalBenefitValue=getAdjustedValue(selectedRules[i].finalBenefitValue,
-                                          adjustment.adjustmentType,
-                                          adjustmentValue)
+          benefitFormulaExpression = formatFormulaToExpression(selectedRules[i].benefitFormula, employee, mdms);
+          break;
+  
       }
+  
+      selectedRules[i].benefitValue = benefitValue;
+      selectedRules[i].finalBenefitValue = benefitValue;
+      selectedRules[i].benefitFormulaExpression = benefitFormulaExpression;
+  
+      //apply adjustments
+      /*
+      if(selectedRules[i].adjustments && selectedRules[i].adjustments.length>0){
+        for (var j = 0; j < selectedRules[i].adjustments.length; j++) { 
+          let adjustment=selectedRules[i].adjustments[j];
+          let adjustmentValue=formatFormula(adjustment.adjustmentFormula ,employee,mdms);
+          selectedRules[i].adjustments[j].adjustmentValue=adjustmentValue;
+          selectedRules[i].finalBenefitValue=getAdjustedValue(selectedRules[i].finalBenefitValue,
+                                            adjustment.adjustmentType,
+                                            adjustmentValue)
+        }
+      }
+      */
+  
     }
-    */
-
+  } catch(error){
+    console.log(error.message)
   }
+  
+
   for (var i = 0; i < selectedRules.length; i++) {
+
     switch (selectedRules[i].benefitCode) {
       case envVariables.EGOV_PENSION_BENEFIT_CODE_FAMILY_PENSION_1_START_DATE:
       case envVariables.EGOV_PENSION_BENEFIT_CODE_FAMILY_PENSION_1_END_DATE:
@@ -111,7 +118,7 @@ export const calculateBenefit = (rules, employee, mdms) => {
 
 
 export const getBenefitFormula = (benefit, employee, mdms) => {
-    
+
   let f = evaluatePreConditions(benefit.preConditions, employee, mdms);
   //conditions satisfied
   if (f != null) {
@@ -239,7 +246,7 @@ export const evaluatePostConditions = (postConditions,  employee,mdms) => {
 };
 */
 export const calculateConditionExpression = (preConditions, employee, mdms) => {
-  
+
 
   let isPreCondition = false;
   let sb = "";
@@ -273,7 +280,7 @@ export const calculateConditionExpression = (preConditions, employee, mdms) => {
     }
 
     sb = `${sb}'${conditionKey}' ${conditionOperator} '${conditionValue}'`;
-          
+
     switch (conditionOperator) {
       case "==":
         if (conditionKey == conditionValue) {
@@ -455,7 +462,7 @@ export const formatFormula = (expression, employee, mdms) => {
       }
 
     }
-    
+
     expressionValue = calculateBenefitExpression(expression);
 
   }
@@ -705,7 +712,7 @@ export const getNotifications = (employee, mdms) => {
 
 let notificationText = null;
 export const evaluateNotificationPreConditions = (conditions, employee, mdms) => {
-   
+
   let isPreConditions = false;
   for (var i = 0; i < conditions.length; i++) {
     if (conditions[i].preConditions != null) {
@@ -828,7 +835,7 @@ export const evaluateDependentEligibilityPreCondition = (condition, dependent, d
 };
 
 export const calculateConditionExpressionForDependentEligibility = (preConditions, dependent, dependents) => {
-  
+
 
   let isPreCondition = false;
 
@@ -837,7 +844,7 @@ export const calculateConditionExpressionForDependentEligibility = (preCondition
     let conditionOperator = preConditions[i].operator;
     let conditionValue = preConditions[i].value;
 
-          
+
     switch (conditionOperator) {
       case "==":
         if (conditionKey == conditionValue) {
@@ -909,8 +916,8 @@ export const formatFormulaForDate = (expression, employee, mdms) => {
     let op = strParameters[3];
     let value = Number(strParameters[5]);
     let value2 = 0;
-    if(strParameters.length>7){
-     value2 = Number(strParameters[7]);
+    if (strParameters.length > 7) {
+      value2 = Number(strParameters[7]);
     }
     switch (op) {
       case "+D":
@@ -953,7 +960,7 @@ export const calculateRevisedPension = (rules, benefits) => {
 
   let selectedRules = getPensionRevisionRulesByConditions(rules);
 
-  
+
 
   for (var i = 0; i < selectedRules.length; i++) {
     let benefitValue = formatFormulaForPensionRevision(selectedRules[i].benefitFormula, benefits, selectedRules);
@@ -978,11 +985,11 @@ export const calculateRevisedPension = (rules, benefits) => {
 };
 
 export const getPensionRevisionRulesByConditions = (rules) => {
-  
+
   let benefits = [];
 
   for (var i = 0; i < rules.length; i++) {
-    
+
     let benefitFormula = evaluatePreConditions(rules[i].preConditions);
     //conditions satisfied
     if (benefitFormula != null) {
@@ -1070,7 +1077,7 @@ export const formatFormulaForPensionRevision = (expression, benefits, selectedRu
       }
 
     }
-    
+
     expressionValue = calculateBenefitExpression(expression);
 
   }
