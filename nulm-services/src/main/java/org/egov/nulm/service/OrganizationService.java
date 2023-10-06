@@ -26,54 +26,54 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @Service
 public class OrganizationService {
 	private final ObjectMapper objectMapper;
-	private UserUtil userUtil;	
+	private UserUtil userUtil;
 	private OrganizationRepository repository;
 	private AuditDetailsUtil auditDetailsUtil;
-	
+
 	@Autowired
-	public OrganizationService(OrganizationRepository repository, ObjectMapper objectMapper,
-			NULMConfiguration config,AuditDetailsUtil auditDetailsUtil, UserUtil userUtil) {
+	public OrganizationService(OrganizationRepository repository, ObjectMapper objectMapper, NULMConfiguration config,
+			AuditDetailsUtil auditDetailsUtil, UserUtil userUtil) {
 		this.objectMapper = objectMapper;
 		this.repository = repository;
-		this.auditDetailsUtil=auditDetailsUtil;
-		this.userUtil=userUtil;
+		this.auditDetailsUtil = auditDetailsUtil;
+		this.userUtil = userUtil;
 
 	}
 
 	public ResponseEntity<ResponseInfoWrapper> createOrganization(OrganizationRequest request) {
 		try {
-			Organization organization = objectMapper.convertValue(request.getOrganizationRequest(),
-					Organization.class);
+			Organization organization = objectMapper.convertValue(request.getOrganizationRequest(), Organization.class);
 			repository.checkMobileNo(organization);
 			repository.checkOrganizationName(organization);
-		    UserDetailResponse userDetailResponse =userUtil.createUser(request);
-			
+			UserDetailResponse userDetailResponse = userUtil.createUser(request);
+
 			if (userDetailResponse.getUser().get(0) != null && userDetailResponse.getUser().get(0).getId() != null)
-				organization.setUserId(userDetailResponse.getUser().get(0).getId() );
+				organization.setUserId(userDetailResponse.getUser().get(0).getId());
 			else
 				throw new CustomException(HttpStatus.INTERNAL_SERVER_ERROR.toString(), CommonConstants.USER_CREATION);
-			 
+
 			String sepid = UUID.randomUUID().toString();
 			organization.setOrganizationUuid(sepid);
 			organization.setIsActive(true);
-			organization.setAuditDetails(auditDetailsUtil.getAuditDetails(request.getRequestInfo(), CommonConstants.ACTION_CREATE));
-		   	repository.createOrganization(organization);
+			organization.setAuditDetails(
+					auditDetailsUtil.getAuditDetails(request.getRequestInfo(), CommonConstants.ACTION_CREATE));
+			repository.createOrganization(organization);
 
 			return new ResponseEntity<>(ResponseInfoWrapper.builder()
 					.responseInfo(ResponseInfo.builder().status(CommonConstants.SUCCESS).build())
 					.responseBody(organization).build(), HttpStatus.CREATED);
 
 		} catch (Exception e) {
-			throw new CustomException(CommonConstants.ORGANIZATION_EXCEPTION_CODE, e.getMessage());
+			throw new RuntimeException(e.getMessage());
 		}
 	}
-	
+
 	public ResponseEntity<ResponseInfoWrapper> getOrganization(OrganizationRequest request) {
 		try {
-			Organization organization = objectMapper.convertValue(request.getOrganizationRequest(),
-					Organization.class);
-			List<Role> role=request.getRequestInfo().getUserInfo().getRoles();
-			List<Organization> orgresult = repository.getOrganization(organization,role,request.getRequestInfo().getUserInfo().getId());
+			Organization organization = objectMapper.convertValue(request.getOrganizationRequest(), Organization.class);
+			List<Role> role = request.getRequestInfo().getUserInfo().getRoles();
+			List<Organization> orgresult = repository.getOrganization(organization, role,
+					request.getRequestInfo().getUserInfo().getId());
 			return new ResponseEntity<>(ResponseInfoWrapper.builder()
 					.responseInfo(ResponseInfo.builder().status(CommonConstants.SUCCESS).build())
 					.responseBody(orgresult).build(), HttpStatus.OK);
@@ -83,5 +83,4 @@ public class OrganizationService {
 		}
 	}
 
-	
 }
