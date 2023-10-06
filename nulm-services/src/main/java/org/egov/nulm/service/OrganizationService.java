@@ -1,7 +1,9 @@
 
 package org.egov.nulm.service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import org.egov.common.contract.request.Role;
@@ -64,7 +66,9 @@ public class OrganizationService {
 					.responseBody(organization).build(), HttpStatus.CREATED);
 
 		} catch (Exception e) {
-			throw new RuntimeException(e.getMessage());
+			Map<String, String> erros = new HashMap<String, String>();
+			erros.put(CommonConstants.ORGANIZATION_EXCEPTION_CODE, e.getMessage());
+			throw new CustomException(erros);
 		}
 	}
 
