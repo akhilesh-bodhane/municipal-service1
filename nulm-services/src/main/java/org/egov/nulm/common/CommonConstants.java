@@ -25,7 +25,7 @@ public class CommonConstants {
 	public static final String  INVALID_SUH_LOG_UUID_REQUEST_MESSAGE="please provide valid log UUid";
 	public static final String WORKFLOW_MESSAGE = "Failed to Create Tender or Invalid User Action";
 	public static final String INVALID_ORGANIZATION_REQUEST="INVALID_ORGANIZATION_REQUEST";
-	public static final String INVALID_ORGANIZATION_REQUEST_MOBILE_MESSAGE="Mobile No already Exists";
+	public static final String INVALID_ORGANIZATION_REQUEST_MOBILE_MESSAGE="Mobile No already linked with another organization";
 	public static final String INVALID_ORGANIZATION_REQUEST_ORG_NAME_MESSAGE="Organization Name already Exists";
 	
 	public static final String USER_CREATION = "User creation  Failed";
