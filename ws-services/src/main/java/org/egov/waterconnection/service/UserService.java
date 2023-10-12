@@ -140,7 +140,7 @@ public class UserService {
 				} else {
 					System.out.println("Inside create else if condition");
 					System.out.println("Request body else condition : " + request.toString());
-					updateUser(request);
+					updateUserNew(request);
 				}
 				// Assigns value of fields from user got from userDetailResponse to owner object
 				setOwnerFieldsNew(ownerInfo, userDetailResponse, request.getRequestInfo());
@@ -184,6 +184,9 @@ public class UserService {
 				UserDetailResponseNew userDetailResponse = updateUserExistsNew(ownerInfo, request.getRequestInfo());
 				ownerInfo.setId(userDetailResponse.getUser().get(0).getId());
 				ownerInfo.setUuid(userDetailResponse.getUser().get(0).getUuid());
+				ownerInfo.setMobileNumber(request.getRequestInfo().getUserInfo().getMobileNumber());
+				ownerInfo.setName(request.getWaterConnection().getConnectionHolders().get(0).getName());
+				System.out.println("Owner Info Mobile Number :" + ownerInfo.toString());
 				// addUserDefaultFields(request.getWaterConnection().getTenantId(), role,
 				// holderInfo);
 				addUserDefaultFieldsUpdateNew(request.getWaterConnection().getTenantId(), role, ownerInfo);
@@ -617,7 +620,10 @@ public class UserService {
 		ownerInfo.setLastModifiedBy(requestInfo.getUserInfo().getUuid());
 		ownerInfo.setLastModifiedDate(System.currentTimeMillis());
 		ownerInfo.setActive(userDetailResponse.getUser().get(0).getActive());
+		ownerInfo.setMobileNumber(requestInfo.getUserInfo().getMobileNumber());
+		ownerInfo.setName(userDetailResponse.getUser().get(0).getName());
 	}
+	
 
 	/**
 	 *
@@ -631,6 +637,7 @@ public class UserService {
 		holderInfo.setUuid(userDetailResponse.getUser().get(0).getUuid());
 		holderInfo.setId(userDetailResponse.getUser().get(0).getId());
 		holderInfo.setUserName((userDetailResponse.getUser().get(0).getUserName()));
+		//holderInfo.setMobileNumber(requestInfo.getUserInfo().getMobileNumber());
 		holderInfo.setCreatedBy(requestInfo.getUserInfo().getUuid());
 		holderInfo.setCreatedDate(System.currentTimeMillis());
 		holderInfo.setLastModifiedBy(requestInfo.getUserInfo().getUuid());
@@ -649,6 +656,7 @@ public class UserService {
 		ownerInfo.setLastModifiedBy(requestInfo.getUserInfo().getUuid());
 		ownerInfo.setLastModifiedDate(System.currentTimeMillis());
 		ownerInfo.setActive(userDetailResponse.getUser().get(0).getActive());
+		ownerInfo.setMobileNumber(userDetailResponse.getUser().get(0).getMobileNumber());
 	}
 
 	/**
