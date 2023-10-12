@@ -139,7 +139,7 @@ public class UserService {
 
 				} else {
 					System.out.println("Inside create else if condition");
-					System.out.println("Request body else : " + request.toString());)
+					System.out.println("Request body else condition : " + request.toString());
 					updateUser(request);
 				}
 				// Assigns value of fields from user got from userDetailResponse to owner object
