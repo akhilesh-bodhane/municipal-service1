@@ -185,7 +185,7 @@ public class UserService {
 				ownerInfo.setId(userDetailResponse.getUser().get(0).getId());
 				ownerInfo.setUuid(userDetailResponse.getUser().get(0).getUuid());
 				ownerInfo.setMobileNumber(request.getRequestInfo().getUserInfo().getMobileNumber());
-				ownerInfo.setName(request.getWaterConnection().getConnectionHolders().get(0).getName());
+				//ownerInfo.setName(request.getWaterConnection().getConnectionHolders().get(0).getName());
 				System.out.println("Owner Info Mobile Number :" + ownerInfo.toString());
 				// addUserDefaultFields(request.getWaterConnection().getTenantId(), role,
 				// holderInfo);
