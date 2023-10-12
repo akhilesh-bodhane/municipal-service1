@@ -40,6 +40,8 @@ import org.springframework.util.ObjectUtils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import ch.qos.logback.core.net.SyslogOutputStream;
+import ch.qos.logback.core.recovery.ResilientSyslogOutputStream;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -137,7 +139,8 @@ public class UserService {
 
 				} else {
 					System.out.println("Inside create else if condition");
-					updateUserNew(request);
+					System.out.println("Request body else : " + request.toString());)
+					updateUser(request);
 				}
 				// Assigns value of fields from user got from userDetailResponse to owner object
 				setOwnerFieldsNew(ownerInfo, userDetailResponse, request.getRequestInfo());
