@@ -51,7 +51,12 @@ public class ViolationDetailRowMapperV2 implements ResultSetExtractor<List<Viola
 							.challanAmount((rs.getString("fineamount"))).penaltyAmount((rs.getString("penaltyamount")))
 							.violatorName((rs.getString("violator_name") == null ? "" : rs.getString("violator_name")))
 							.sector((rs.getString("sector") == null ? "" : rs.getString("sector")))
-							.siName((rs.getString("si_name") == null ? "" : rs.getString("si_name"))).build();
+							.siName((rs.getString("si_name") == null ? "" : rs.getString("si_name")))
+							.createdTime(rs.getString("created_time") == null ? null
+									: (Long.parseLong(rs.getString("created_time"))))
+							.lastModifiedTime(rs.getString("last_modified_time") == null ? null
+									: (Long.parseLong(rs.getString("last_modified_time"))))
+							.build();
 
 					String violationItem = rs.getString("violation_item");
 					List<ViolationItem> listtoaddItem = new ArrayList<ViolationItem>();
