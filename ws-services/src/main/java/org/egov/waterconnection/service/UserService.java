@@ -157,6 +157,8 @@ public class UserService {
 			request.getWaterConnection().getConnectionHolders().forEach(holderInfo -> {
 				addUserDefaultFields(request.getWaterConnection().getTenantId(), role, holderInfo);
 				UserDetailResponse userDetailResponse = updateUserExists(holderInfo, request.getRequestInfo());
+				
+				System.out.println("UserDetailResponse : " + userDetailResponse.toString());
 				holderInfo.setId(userDetailResponse.getUser().get(0).getId());
 				holderInfo.setUuid(userDetailResponse.getUser().get(0).getUuid());
 				// addUserDefaultFields(request.getWaterConnection().getTenantId(), role,
