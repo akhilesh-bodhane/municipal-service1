@@ -145,7 +145,7 @@ public class UserService {
 				// Assigns value of fields from user got from userDetailResponse to owner object
 				setOwnerFieldsNew(ownerInfo, userDetailResponse, request.getRequestInfo());
 				System.out.println("Owner Info : " + ownerInfo.toString());
-				System.out.println("userDetailResponse : " + userDetailResponse.toString());
+				System.out.println("userDetailResponse : " + userDetailResponse);
 			});
 			
 		}
@@ -158,8 +158,8 @@ public class UserService {
 				addUserDefaultFields(request.getWaterConnection().getTenantId(), role, holderInfo);
 				UserDetailResponse userDetailResponse = updateUserExists(holderInfo, request.getRequestInfo());
 				
-				System.out.println("UserDetailResponse : " + userDetailResponse.toString());
-				System.out.println("User id : " + userDetailResponse.getUser().get(0).getId());
+				System.out.println("UserDetailResponse : " + userDetailResponse);
+				System.out.println("User id : " + userDetailResponse.getUser().toString());
 				
 				
 				holderInfo.setId(userDetailResponse.getUser().get(0).getId());
