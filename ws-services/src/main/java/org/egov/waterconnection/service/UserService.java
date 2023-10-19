@@ -539,6 +539,7 @@ public class UserService {
 		userSearchRequest.setName(connectionHolderInfo.getName());
 		StringBuilder uri = new StringBuilder(configuration.getUserHost())
 				.append(configuration.getUserSearchEndpoint());
+		System.out.println("User search request : " + userSearchRequest.toString());
 		return updateUserCall(userSearchRequest, uri);
 	}
 
