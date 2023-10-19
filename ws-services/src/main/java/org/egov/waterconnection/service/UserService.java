@@ -529,6 +529,7 @@ public class UserService {
 	private UserDetailResponse updateUserExists(ConnectionHolderInfo connectionHolderInfo, RequestInfo requestInfo) {
 		
 		System.out.println("Connectionholder Info : " + connectionHolderInfo.toString());
+		System.out.println("Connection holder name : " + connectionHolderInfo.getName());
 		UserSearchRequest userSearchRequest = getBaseUserSearchRequest(connectionHolderInfo.getTenantId(), requestInfo);
 		userSearchRequest.setMobileNumber(connectionHolderInfo.getMobileNumber());
 		// userSearchRequest.setUserType(connectionHolderInfo.getType());
