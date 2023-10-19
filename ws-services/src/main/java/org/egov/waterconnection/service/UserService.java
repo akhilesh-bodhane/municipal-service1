@@ -327,6 +327,7 @@ public class UserService {
 		else if (uri.toString().contains(configuration.getUserCreateEndPoint()))
 			dobFormat = "dd/MM/yyyy";
 		try {
+			System.out.println("User Request : " + userRequest.toString());
 			LinkedHashMap<String, Object> responseMap = (LinkedHashMap<String, Object>) serviceRequestRepository
 					.fetchResult(uri, userRequest);
 			System.out.println("Response Map : " + responseMap.toString());
