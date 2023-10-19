@@ -158,11 +158,11 @@ public class UserService {
 				addUserDefaultFields(request.getWaterConnection().getTenantId(), role, holderInfo);
 				UserDetailResponse userDetailResponse = updateUserExists(holderInfo, request.getRequestInfo());
 				
-				System.out.println("UserDetailResponse : " + userDetailResponse);
-				System.out.println("User id : " + userDetailResponse.getUser().toString());
+				System.out.println("UserDetailResponse : " + userDetailResponse.toString());
+				System.out.println("User id : " + userDetailResponse.getUser().get(0).getUuid());
 				
 				
-				holderInfo.setId(userDetailResponse.getUser().get(0).getId());
+				//holderInfo.setId(userDetailResponse.getUser().get(0).getId());
 				holderInfo.setUuid(userDetailResponse.getUser().get(0).getUuid());
 				// addUserDefaultFields(request.getWaterConnection().getTenantId(), role,
 				// holderInfo);
