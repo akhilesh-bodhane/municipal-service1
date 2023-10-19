@@ -160,9 +160,7 @@ public class UserService {
 				
 				System.out.println("UserDetailResponse : " + userDetailResponse.toString());
 				System.out.println("User id : " + userDetailResponse.getUser().get(0).getUuid());
-				
-				
-				//holderInfo.setId(userDetailResponse.getUser().get(0).getId());
+				holderInfo.setId(userDetailResponse.getUser().get(0).getId());
 				holderInfo.setUuid(userDetailResponse.getUser().get(0).getUuid());
 				// addUserDefaultFields(request.getWaterConnection().getTenantId(), role,
 				// holderInfo);
@@ -331,10 +329,13 @@ public class UserService {
 		try {
 			LinkedHashMap<String, Object> responseMap = (LinkedHashMap<String, Object>) serviceRequestRepository
 					.fetchResult(uri, userRequest);
+			System.out.println("Response Map : " + responseMap.toString());
 			if (!CollectionUtils.isEmpty(responseMap)) {
+				System.out.println("Inside update user if condition");
 				parseResponse(responseMap, dobFormat);
 				return mapper.convertValue(responseMap, UserDetailResponse.class);
 			} else {
+				System.out.println("Inside update user else condition");
 				return new UserDetailResponse();
 			}
 		}
