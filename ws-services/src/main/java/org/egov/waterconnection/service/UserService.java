@@ -527,6 +527,8 @@ public class UserService {
 	 *         responseInfo
 	 */
 	private UserDetailResponse updateUserExists(ConnectionHolderInfo connectionHolderInfo, RequestInfo requestInfo) {
+		
+		System.out.println("Connectionholder Info : " + connectionHolderInfo.toString());
 		UserSearchRequest userSearchRequest = getBaseUserSearchRequest(connectionHolderInfo.getTenantId(), requestInfo);
 		userSearchRequest.setMobileNumber(connectionHolderInfo.getMobileNumber());
 		// userSearchRequest.setUserType(connectionHolderInfo.getType());
