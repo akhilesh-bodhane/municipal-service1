@@ -526,7 +526,7 @@ public class ServiceRequestRepository {
 			whereStr.append(" offset ").append(serviceReqSearchCriteria.getOffset());
 		}
 		
-		if (serviceReqSearchCriteria.getLimit() != null && serviceReqSearchCriteria.getLimit() > -1) {
+		if (serviceReqSearchCriteria.getLimit() != null && serviceReqSearchCriteria.getLimit() > 0) {
 			whereStr.append(" limit ").append(serviceReqSearchCriteria.getLimit());
 		}
 		
