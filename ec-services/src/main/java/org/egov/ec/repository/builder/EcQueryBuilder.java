@@ -41,17 +41,44 @@ public class EcQueryBuilder {
 
 	public static final String GET_FINE_PENALTY_AMOUNT = "select penalty_amount from egec_fine_master where encroachment_type = ?::varchar and number_of_violation=?::varchar  and is_active = 'TRUE'::boolean and now()::date BETWEEN effective_start_date \n"
 			+ "                 AND effective_end_date::date and approval_status = 'APPROVED'";
+	/*
+	 * public static final String GET_VIOLATION_MASTER_SEARCH =
+	 * "select (select case when ((select count(*) from egec_store_item_register store where store.violation_uuid=violation.violation_uuid) > 0) and  challan.challan_status='CLOSED' then 'RELEASED FROM STORE' when challan.challan_status='CLOSED' and ((select count(*) from egec_store_item_register store where store.violation_uuid=violation.violation_uuid) = 0) then 'RELEASED ON GROUND' else challan.challan_status end  )as challan_status,\n"
+	 * +
+	 * "			payment.last_modified_time as last_modified_time,*,(select head_amount from egec_challan_detail ch where ch.budget_head ='FINE_AMOUNT' and ch.challan_uuid=challan.challan_uuid) as fineAmount,\n"
+	 * +
+	 * "			(select head_amount from egec_challan_detail ch where ch.budget_head ='PENALTY_AMOUNT' and ch.challan_uuid=challan.challan_uuid) as penaltyAmount \n"
+	 * + "			 from egec_violation_master violation \n" +
+	 * "			join egec_challan_master challan on violation.violation_uuid=challan.violation_uuid \n"
+	 * +
+	 * "			join egec_payment payment on violation.violation_uuid = payment.violation_uuid \n"
+	 * +
+	 * "    		left join egec_violation_detail item on violation.violation_uuid = item.violation_uuid \n"
+	 * +
+	 * "    		left join egec_document doc on violation.violation_uuid = doc.violation_uuid \n"
+	 * +
+	 * "    		where violation.contact_number ilike ? or challan.challan_id ilike ? or challan.challan_uuid ilike ? \n"
+	 * +
+	 * "    		or violation.violator_name ilike ? or violation.license_no_cov ilike ? or violation.si_name ilike ? \n"
+	 * +
+	 * "    		or violation.sector ilike ? or violation.encroachment_type ilike ? and violation.tenant_id=? order by violation.last_modified_time desc"
+	 * ;
+	 */
+	
 	public static final String GET_VIOLATION_MASTER_SEARCH = "select (select case when ((select count(*) from egec_store_item_register store where store.violation_uuid=violation.violation_uuid) > 0) and  challan.challan_status='CLOSED' then 'RELEASED FROM STORE' when challan.challan_status='CLOSED' and ((select count(*) from egec_store_item_register store where store.violation_uuid=violation.violation_uuid) = 0) then 'RELEASED ON GROUND' else challan.challan_status end  )as challan_status,\n"
-			+ "			payment.last_modified_time as last_modified_time,*,(select head_amount from egec_challan_detail ch where ch.budget_head ='FINE_AMOUNT' and ch.challan_uuid=challan.challan_uuid) as fineAmount,\n"
-			+ "			(select head_amount from egec_challan_detail ch where ch.budget_head ='PENALTY_AMOUNT' and ch.challan_uuid=challan.challan_uuid) as penaltyAmount \n"
-			+ "			 from egec_violation_master violation \n"
+			+ "			payment.last_modified_time as last_modified_time,*,fine.head_amount as fineAmount,\n"
+			+ "			pen.head_amount as penaltyAmount \n"
+			+ "			from egec_violation_master violation \n"
 			+ "			join egec_challan_master challan on violation.violation_uuid=challan.violation_uuid \n"
 			+ "			join egec_payment payment on violation.violation_uuid = payment.violation_uuid \n"
 			+ "    		left join egec_violation_detail item on violation.violation_uuid = item.violation_uuid \n"
 			+ "    		left join egec_document doc on violation.violation_uuid = doc.violation_uuid \n"
+			+ "			left join egec_challan_detail fine on fine.challan_uuid = challan.challan_uuid and fine.budget_head = 'FINE_AMOUNT' \n"
+			+ " 		left join egec_challan_detail pen on pen.challan_uuid = challan.challan_uuid and pen.budget_head = 'PENALTY_AMOUNT' \n"
 			+ "    		where violation.contact_number ilike ? or challan.challan_id ilike ? or challan.challan_uuid ilike ? \n"
 			+ "    		or violation.violator_name ilike ? or violation.license_no_cov ilike ? or violation.si_name ilike ? \n"
 			+ "    		or violation.sector ilike ? or violation.encroachment_type ilike ? and violation.tenant_id=? order by violation.last_modified_time desc";
+
 
 	public static final String EG_PF_TRANSACTION_DATA = "select txn_id from eg_pg_transactions ep where ep.consumer_code =?";
 	public static final String GET_PENALTY_VIOLATIONS = "select vm.violation_uuid as violationUuid,cm.challan_Uuid as challanUuid,((current_date - vs.item_store_deposit_date)-6) * coalesce(fm.storage_charges,0) as storageCharges from egec_store_item_register  vs inner join egec_violation_master vm on vm.violation_uuid = vs.violation_uuid inner join egec_violation_detail vd on vm.violation_uuid = vd.violation_uuid inner join egec_fine_master fm on vd.item_type = fm.number_of_violation  inner join egec_payment ep on ep.violation_uuid = vm.violation_uuid and vd.violation_uuid = ep.violation_uuid  inner join egec_challan_master cm on cm.violation_uuid = vm.violation_uuid where ((current_date - vs.item_store_deposit_date)-6) > 0 and vm.violation_date < now()- interval '7 days' and vm.encroachment_type = 'Seizure of Vehicles' and ep.payment_status = 'PENDING'  and cm.challan_status !='CLOSED' and now()::date between fm.effective_start_date and fm.effective_end_date and vm.tenant_id = ?";
