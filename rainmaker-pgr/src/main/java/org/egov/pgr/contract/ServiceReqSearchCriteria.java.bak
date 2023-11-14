@@ -68,9 +68,6 @@ public class ServiceReqSearchCriteria {
 	@JsonProperty("offset")
 	private Long offset;
 	
-	@JsonProperty("limit")
-	private Long limit;
-	
 	@JsonProperty("category")
 	private List<String> category;
 	
