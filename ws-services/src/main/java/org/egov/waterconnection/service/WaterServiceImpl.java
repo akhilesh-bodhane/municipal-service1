@@ -1,6 +1,5 @@
 package org.egov.waterconnection.service;
 
-
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -55,63 +54,64 @@ public class WaterServiceImpl implements WaterService {
 
 	@Autowired
 	private WaterDao waterDao;
-	
+
 	@Autowired
 	private WaterConnectionValidator waterConnectionValidator;
 
 	@Autowired
 	private ValidateProperty validateProperty;
-	
+
 	@Autowired
 	private MDMSValidator mDMSValidator;
 
 	@Autowired
 	private EnrichmentService enrichmentService;
-	
+
 	@Autowired
 	private WorkflowIntegrator wfIntegrator;
-	
+
 	@Autowired
 	private WSConfiguration config;
-	
+
 	@Autowired
 	private WorkflowService workflowService;
-	
+
 	@Autowired
 	private ActionValidator actionValidator;
-	
+
 	@Autowired
 	private WaterServicesUtil waterServiceUtil;
-	
+
 	@Autowired
 	private CalculationService calculationService;
-	
+
 	@Autowired
 	private WaterDaoImpl waterDaoImpl;
-	
+
 	@Autowired
 	private ObjectMapper mapper;
-	
+
 	@Autowired
 	private UserService userService;
-	
+
 	@Autowired
 	private WaterServicesUtil wsUtil;
-	
+
 	@Autowired
 	private WaterConnectionProducer wcProducer;
-	
+
 	@Autowired
 	private NotificationUtil notificationUtil;
-	
-	public static final String TEMPLATE_NAME_SITE_INSPECTOR="siteInspector";
-	public static final String TEMPLATE_NAME_CITIZEN_CASE1="citizen.case1";
-	public static final String TEMPLATE_NAME_CITIZEN_CASE2="citizen.case2";
-	public static final String TEMPLATE_NAME_CITIZEN_CASE3="citizen.case3";
-	
+
+	public static final String TEMPLATE_NAME_SITE_INSPECTOR = "siteInspector";
+	public static final String TEMPLATE_NAME_CITIZEN_CASE1 = "citizen.case1";
+	public static final String TEMPLATE_NAME_CITIZEN_CASE2 = "citizen.case2";
+	public static final String TEMPLATE_NAME_CITIZEN_CASE3 = "citizen.case3";
+
 	/**
 	 * 
-	 * @param waterConnectionRequest WaterConnectionRequest contains water connection to be created
+	 * @param waterConnectionRequest WaterConnectionRequest contains water
+	 *                               connection to be created
 	 * @return List of WaterConnection after create
 	 */
 	@Override
@@ -120,7 +120,7 @@ public class WaterServiceImpl implements WaterService {
 		Property property = validateProperty.getOrValidateProperty(waterConnectionRequest);
 		enrichmentService.enrichWaterConnection(waterConnectionRequest);
 		userService.createUser(waterConnectionRequest);
-		
+
 		System.out.println("Water Connection Request : " + waterConnectionRequest.toString());
 		// call work-flow
 		if (config.getIsExternalWorkFlowEnabled())
@@ -128,10 +128,12 @@ public class WaterServiceImpl implements WaterService {
 		waterDao.saveWaterConnection(waterConnectionRequest);
 		return Arrays.asList(waterConnectionRequest.getWaterConnection());
 	}
+
 	/**
 	 * 
-	 * @param criteria WaterConnectionSearchCriteria contains search criteria on water connection
-	 * @param requestInfo 
+	 * @param criteria    WaterConnectionSearchCriteria contains search criteria on
+	 *                    water connection
+	 * @param requestInfo
 	 * @return List of matching water connection
 	 */
 	public List<WaterConnection> search(SearchCriteria criteria, RequestInfo requestInfo) {
@@ -141,20 +143,23 @@ public class WaterServiceImpl implements WaterService {
 		enrichmentService.enrichConnectionHolderDeatils(waterConnectionList, criteria, requestInfo);
 		return waterConnectionList;
 	}
+
 	/**
 	 * 
-	 * @param criteria WaterConnectionSearchCriteria contains search criteria on water connection
-	 * @param requestInfo 
+	 * @param criteria    WaterConnectionSearchCriteria contains search criteria on
+	 *                    water connection
+	 * @param requestInfo
 	 * @return List of matching water connection
 	 */
-	public List<WaterConnection> getWaterConnectionsList(SearchCriteria criteria,
-			RequestInfo requestInfo) {
+	public List<WaterConnection> getWaterConnectionsList(SearchCriteria criteria, RequestInfo requestInfo) {
 		return waterDao.getWaterConnectionList(criteria, requestInfo);
 	}
+
 	/**
 	 * 
-	 * @param criteria WaterConnectionSearchCriteria contains search criteria on water connection
-	 * @param requestInfo 
+	 * @param criteria    WaterConnectionSearchCriteria contains search criteria on
+	 *                    water connection
+	 * @param requestInfo
 	 * @return List(Count) of matching water connection
 	 */
 	public List<WaterConnectionCount> searchCount(SearchCriteria criteria, RequestInfo requestInfo) {
@@ -162,19 +167,22 @@ public class WaterServiceImpl implements WaterService {
 		waterConnectionList = getWaterConnectionsListCount(criteria, requestInfo);
 		return waterConnectionList;
 	}
+
 	/**
 	 * 
-	 * @param criteria WaterConnectionSearchCriteria contains search criteria on water connection
-	 * @param requestInfo 
+	 * @param criteria    WaterConnectionSearchCriteria contains search criteria on
+	 *                    water connection
+	 * @param requestInfo
 	 * @return List(Count) of matching water connection
 	 */
-	public List<WaterConnectionCount> getWaterConnectionsListCount(SearchCriteria criteria,
-			RequestInfo requestInfo) {
+	public List<WaterConnectionCount> getWaterConnectionsListCount(SearchCriteria criteria, RequestInfo requestInfo) {
 		return waterDao.getWaterConnectionListCount(criteria, requestInfo);
 	}
+
 	/**
 	 * 
-	 * @param waterConnectionRequest WaterConnectionRequest contains water connection to be updated
+	 * @param waterConnectionRequest WaterConnectionRequest contains water
+	 *                               connection to be updated
 	 * @return List of WaterConnection after update
 	 */
 	@Override
@@ -182,12 +190,12 @@ public class WaterServiceImpl implements WaterService {
 		log.info("Update WaterConnection: {}", waterConnectionRequest.getWaterConnection());
 		waterConnectionValidator.validateWaterConnection(waterConnectionRequest, true);
 		mDMSValidator.validateMasterData(waterConnectionRequest);
-		
-		if(null==waterConnectionRequest.getWaterConnection().getWaterProperty().getUsageCategory() ||
-				waterConnectionRequest.getWaterConnection().getWaterProperty().getUsageCategory().isEmpty()) {
+
+		if (null == waterConnectionRequest.getWaterConnection().getWaterProperty().getUsageCategory()
+				|| waterConnectionRequest.getWaterConnection().getWaterProperty().getUsageCategory().isEmpty()) {
 			waterConnectionRequest.getWaterConnection().getWaterProperty().setUsageCategory("TEMPORARY_CONSTRUCTION");
 		}
-		
+
 		Property property = validateProperty.getOrValidateProperty(waterConnectionRequest);
 		waterConnectionRequest.getWaterConnection().setProperty(property);
 		validateProperty.validatePropertyCriteria(property);
@@ -197,7 +205,7 @@ public class WaterServiceImpl implements WaterService {
 				.setSubmitBy(waterConnectionRequest.getWaterConnection().getSubmitBy());
 		waterConnectionRequest.getWaterConnection()
 				.setSubmitByName(waterConnectionRequest.getWaterConnection().getSubmitByName());
-		
+
 		waterConnectionRequest.getWaterConnection().getConnectionHolders().get(0)
 				.setSameuservalid(waterConnectionRequest.getWaterConnection().getSameuservalid());
 		waterConnectionRequest.getWaterConnection().getConnectionHolders().get(0)
@@ -206,8 +214,8 @@ public class WaterServiceImpl implements WaterService {
 				.setSubmitByName(waterConnectionRequest.getWaterConnection().getSubmitByName());
 		boolean isStateUpdatable = true;
 		BusinessService businessService = null;
-		if (WCConstants.ACTION_INITIATE.equalsIgnoreCase(
-				waterConnectionRequest.getWaterConnection().getProcessInstance().getAction())) {
+		if (WCConstants.ACTION_INITIATE
+				.equalsIgnoreCase(waterConnectionRequest.getWaterConnection().getProcessInstance().getAction())) {
 			waterConnectionRequest.getWaterConnection().setDocuments(null);
 			enrichmentService.enrichWaterApplication(waterConnectionRequest);
 			enrichmentService.enrichUpdateWaterConnection(waterConnectionRequest);
@@ -218,59 +226,66 @@ public class WaterServiceImpl implements WaterService {
 			waterConnectionRequest.getWaterConnection()
 					.setSubmitByName(waterConnectionRequest.getRequestInfo().getUserInfo().getName());
 			waterConnectionRequest.getWaterConnection().setApplicationStatus(WCConstants.STATUS_INITIATED);
-		}else {
-			businessService = workflowService.getBusinessService(waterConnectionRequest.getWaterConnection().getTenantId(), 
-					waterConnectionRequest.getRequestInfo(), waterConnectionRequest.getWaterConnection().getActivityType());
-			log.info("businessService: {},Business: {}",businessService.getBusinessService(),businessService.getBusiness());
-			WaterConnection searchResult = getConnectionForUpdateRequest(waterConnectionRequest.getWaterConnection().getWaterApplication().getId(), waterConnectionRequest.getRequestInfo());
-			String previousApplicationStatus = workflowService.getApplicationStatus(waterConnectionRequest.getRequestInfo(),
+		} else {
+			businessService = workflowService.getBusinessService(
+					waterConnectionRequest.getWaterConnection().getTenantId(), waterConnectionRequest.getRequestInfo(),
+					waterConnectionRequest.getWaterConnection().getActivityType());
+			log.info("businessService: {},Business: {}", businessService.getBusinessService(),
+					businessService.getBusiness());
+			WaterConnection searchResult = getConnectionForUpdateRequest(
+					waterConnectionRequest.getWaterConnection().getWaterApplication().getId(),
+					waterConnectionRequest.getRequestInfo());
+			String previousApplicationStatus = workflowService.getApplicationStatus(
+					waterConnectionRequest.getRequestInfo(),
 					waterConnectionRequest.getWaterConnection().getApplicationNo(),
-					waterConnectionRequest.getWaterConnection().getTenantId(),wfIntegrator.getBusinessService(waterConnectionRequest.getWaterConnection().getActivityType()));
+					waterConnectionRequest.getWaterConnection().getTenantId(),
+					wfIntegrator.getBusinessService(waterConnectionRequest.getWaterConnection().getActivityType()));
 			enrichmentService.enrichUpdateWaterConnection(waterConnectionRequest);
 			actionValidator.validateUpdateRequest(waterConnectionRequest, businessService, previousApplicationStatus);
 			waterConnectionValidator.validateUpdate(waterConnectionRequest, searchResult);
-			calculationService.calculateFeeAndGenerateDemand(waterConnectionRequest, property);		
-			//check for edit and send edit notification
+			calculationService.calculateFeeAndGenerateDemand(waterConnectionRequest, property);
+			// check for edit and send edit notification
 			waterDaoImpl.pushForEditNotification(waterConnectionRequest);
-			//Enrich file store Id After payment
+			// Enrich file store Id After payment
 			enrichmentService.enrichFileStoreIds(waterConnectionRequest);
 			// Comment in Local
 			userService.updateUser(waterConnectionRequest, searchResult);
 			isStateUpdatable = waterServiceUtil.getStatusForUpdate(businessService, previousApplicationStatus);
 		}
-		//Call workflow
-		//Comment in Local
+		// Call workflow
+		// Comment in Local
 		wfIntegrator.callWorkFlow(waterConnectionRequest, property);
-	        if(WCConstants.WS_APPLY_FOR_TEMPORARY_CON.equalsIgnoreCase(waterConnectionRequest.getWaterConnection().getActivityType())) {
+		if (WCConstants.WS_APPLY_FOR_TEMPORARY_CON
+				.equalsIgnoreCase(waterConnectionRequest.getWaterConnection().getActivityType())) {
 			enrichmentService.postStatusEnrichment(waterConnectionRequest, property);
 		}
-	
-		waterConnectionRequest.getWaterConnection().getWaterApplication().setApplicationStatus(
-				waterConnectionRequest.getWaterConnection().getApplicationStatus());
-		waterConnectionRequest.getWaterConnection().getWaterApplication().setAction(
-				waterConnectionRequest.getWaterConnection().getProcessInstance().getAction());
-		
-		log.info("Next applicationStatus: {}",waterConnectionRequest.getWaterConnection().getApplicationStatus());
-		
-		boolean isTerminateState = workflowService.isTerminateState(waterConnectionRequest.getWaterConnection().getApplicationStatus(), businessService);
-		if(isTerminateState) {
+
+		waterConnectionRequest.getWaterConnection().getWaterApplication()
+				.setApplicationStatus(waterConnectionRequest.getWaterConnection().getApplicationStatus());
+		waterConnectionRequest.getWaterConnection().getWaterApplication()
+				.setAction(waterConnectionRequest.getWaterConnection().getProcessInstance().getAction());
+
+		log.info("Next applicationStatus: {}", waterConnectionRequest.getWaterConnection().getApplicationStatus());
+
+		boolean isTerminateState = workflowService
+				.isTerminateState(waterConnectionRequest.getWaterConnection().getApplicationStatus(), businessService);
+		if (isTerminateState) {
 			waterConnectionRequest.getWaterConnection().setInWorkflow(false);
 		}
 		waterDao.updateWaterConnection(waterConnectionRequest, isStateUpdatable);
-		
-	//	enrichmentService.postForMeterReading(waterConnectionRequest);
+
+		// enrichmentService.postForMeterReading(waterConnectionRequest);
 		return Arrays.asList(waterConnectionRequest.getWaterConnection());
 	}
-	
 
 	@Override
 	public List<WaterConnection> deactivateConnection(WaterConnectionRequest waterConnectionRequest) {
 
 		waterDao.updateWaterConnection(waterConnectionRequest, false);
-		
-		return  Arrays.asList(waterConnectionRequest.getWaterConnection());
+
+		return Arrays.asList(waterConnectionRequest.getWaterConnection());
 	}
-	
+
 	/**
 	 * Search Water connection to be update
 	 * 
@@ -279,7 +294,7 @@ public class WaterServiceImpl implements WaterService {
 	 * @return water connection
 	 */
 	public WaterConnection getConnectionForUpdateRequest(String id, RequestInfo requestInfo) {
-		log.info("Water Application Id:{}",id);
+		log.info("Water Application Id:{}", id);
 		Set<String> ids = new HashSet<>(Arrays.asList(id));
 		SearchCriteria criteria = new SearchCriteria();
 		criteria.setIds(ids);
@@ -289,19 +304,21 @@ public class WaterServiceImpl implements WaterService {
 			builder.append("WATER CONNECTION NOT FOUND FOR: ").append(id).append(" :ID");
 			throw new CustomException("INVALID_WATERCONNECTION_SEARCH", builder.toString());
 		}
-			
+
 		return connections.get(0);
 	}
+
 	@Override
 	public List<WaterConnection> deleteConnectionMapping(WaterConnectionRequest waterConnectionRequest) {
 		waterDao.deleteConnectionMapping(waterConnectionRequest);
-		return  Arrays.asList(waterConnectionRequest.getWaterConnection());
+		return Arrays.asList(waterConnectionRequest.getWaterConnection());
 	}
+
 	@Override
 	public List<WaterConnection> addConnectionMapping(WaterConnectionRequest waterConnectionRequest) {
-		//Added Application Data for changes in water connection holder changes 
+		// Added Application Data for changes in water connection holder changes
 		AuditDetails auditDetails = wsUtil
-				.getAuditDetails(waterConnectionRequest.getRequestInfo().getUserInfo().getUuid(), true);		 
+				.getAuditDetails(waterConnectionRequest.getRequestInfo().getUserInfo().getUuid(), true);
 		waterConnectionRequest.getWaterConnection().setAuditDetails(auditDetails);
 		WaterApplication waterApplication = new WaterApplication();
 		waterApplication.setId(UUID.randomUUID().toString());
@@ -312,100 +329,110 @@ public class WaterServiceImpl implements WaterService {
 				.setSubmitBy(waterConnectionRequest.getRequestInfo().getUserInfo().getUuid());
 		waterConnectionRequest.getWaterConnection()
 				.setSubmitByName(waterConnectionRequest.getRequestInfo().getUserInfo().getName());
-		
-		
-		if(waterConnectionRequest.getWaterConnection().getSameuservalid().equals(true)) {
+
+		if (waterConnectionRequest.getWaterConnection().getSameuservalid().equals(true)) {
 			Property property = validateProperty.getOrValidateProperty(waterConnectionRequest);
 			waterConnectionRequest.getWaterConnection().setProperty(property);
 			validateProperty.validatePropertyCriteria(property);
 			userService.createUserNewConnection(waterConnectionRequest);
-			waterConnectionRequest.getWaterConnection().setUserName(waterConnectionRequest.getWaterConnection().getProperty().getOwners().get(0).getUuid());
+			waterConnectionRequest.getWaterConnection().setUserName(
+					waterConnectionRequest.getWaterConnection().getProperty().getOwners().get(0).getUuid());
+			waterConnectionRequest.getWaterConnection()
+					.setMobileNumberOwner(waterConnectionRequest.getWaterConnection().getMobileNumberOwner());
 		} else {
-			waterConnectionRequest.getWaterConnection().setUserName(waterConnectionRequest.getWaterConnection().getAuditDetails().getCreatedBy());
+			waterConnectionRequest.getWaterConnection()
+					.setUserName(waterConnectionRequest.getWaterConnection().getAuditDetails().getCreatedBy());
+			waterConnectionRequest.getWaterConnection()
+					.setMobileNumberOwner(waterConnectionRequest.getRequestInfo().getUserInfo().getMobileNumber());
 		}
-		
+
 		System.out.println("Water Connection Request : " + waterConnectionRequest.toString());
 		waterDao.addConnectionMapping(waterConnectionRequest);
-		
-		return  Arrays.asList(waterConnectionRequest.getWaterConnection());
+
+		return Arrays.asList(waterConnectionRequest.getWaterConnection());
 	}
-	
+
 	@Override
 	public void sendSms(WaterNotificationRequest waterNotificationRequest) {
-		WaterNotication wn  = waterNotificationRequest.getWaterNotication();
+		WaterNotication wn = waterNotificationRequest.getWaterNotication();
 //		String template = config.getNotificationTemplate();
 //		template  = template.replace("<#var1>", wn.getApplication_no()).replace("<#var2>", wn.getConsumer_name()).replace("<#var3>",
 //				wn.getHouse_no()).replace("<#var4>", wn.getSector_village()).replace("<#var5>", wn.getPhone_no()).replace("<#var6>", wn.getApplication_type())
 //				.replace("<#var7>",wn.getApplication_status()).replace("<#var8>", wn.getAmount());
-		String template=getTemplate(wn);
+		String template = getTemplate(wn);
 		SMSRequest smsTemplate = SMSRequest.builder().message(template).mobileNumber(wn.getPhone_no()).build();
 		notificationUtil.sendSMS(Arrays.asList(smsTemplate));
 	}
-	
+
 	private String getTemplate(WaterNotication wn) {
 		String template = null;
-		
-		if(wn.getTemplateName()==null) {
+
+		if (wn.getTemplateName() == null) {
 			template = config.getNotificationTemplate();
-			template  = template.replace("<#var1>", wn.getApplication_no()).replace("<#var2>", wn.getConsumer_name()).replace("<#var3>",
-					wn.getHouse_no()).replace("<#var4>", wn.getSector_village()).replace("<#var5>", wn.getPhone_no()).replace("<#var6>", wn.getApplication_type())
-					.replace("<#var7>",wn.getApplication_status()).replace("<#var8>", wn.getAmount());
-		}else {
+			template = template.replace("<#var1>", wn.getApplication_no()).replace("<#var2>", wn.getConsumer_name())
+					.replace("<#var3>", wn.getHouse_no()).replace("<#var4>", wn.getSector_village())
+					.replace("<#var5>", wn.getPhone_no()).replace("<#var6>", wn.getApplication_type())
+					.replace("<#var7>", wn.getApplication_status()).replace("<#var8>", wn.getAmount());
+		} else {
 			switch (wn.getTemplateName()) {
 			case TEMPLATE_NAME_SITE_INSPECTOR:
-				template=config.getNotificationTemplateSiteInspector();
-				template  = template.replace("<#var1>", wn.getApplication_no()).replace("<#var2>", wn.getConsumer_name()).replace("<#var3>",
-						wn.getHouse_no()).replace("<#var4>", wn.getSector_village()).replace("<#var5>", wn.getPhone_no()).replace("<#var6>", wn.getApplication_type())
-						.replace("<#var7>",wn.getApplication_status()).replace("<#var8>", wn.getAmount());
+				template = config.getNotificationTemplateSiteInspector();
+				template = template.replace("<#var1>", wn.getApplication_no()).replace("<#var2>", wn.getConsumer_name())
+						.replace("<#var3>", wn.getHouse_no()).replace("<#var4>", wn.getSector_village())
+						.replace("<#var5>", wn.getPhone_no()).replace("<#var6>", wn.getApplication_type())
+						.replace("<#var7>", wn.getApplication_status()).replace("<#var8>", wn.getAmount());
 				break;
 			case TEMPLATE_NAME_CITIZEN_CASE1:
-				template=config.getNotificationTemplateCitizenCase1();
-				template=template.replace("<#var1>", wn.getApplication_no()).replaceAll("<#var2>", wn.getSubdivision());
+				template = config.getNotificationTemplateCitizenCase1();
+				template = template.replace("<#var1>", wn.getApplication_no()).replaceAll("<#var2>",
+						wn.getSubdivision());
 				break;
 			case TEMPLATE_NAME_CITIZEN_CASE2:
-				template=config.getNotificationTemplateCitizenCase2();
-				template=template.replace("<#var1>", wn.getAmount()).replace("<#var2>", wn.getApplication_no());
+				template = config.getNotificationTemplateCitizenCase2();
+				template = template.replace("<#var1>", wn.getAmount()).replace("<#var2>", wn.getApplication_no());
 				break;
 			case TEMPLATE_NAME_CITIZEN_CASE3:
-				template=config.getNotificationTemplateCitizenCase3();
-				template=template.replace("<#var1>", wn.getApplication_no());
+				template = config.getNotificationTemplateCitizenCase3();
+				template = template.replace("<#var1>", wn.getApplication_no());
 				break;
 			}
 		}
-		
+
 		return template;
 	}
-	
 
-	
 	/**
 	 * 
-	 * @param criteria WaterConnectionSearchCriteria contains search criteria on water & sewerage connection
-	 * @param requestInfo 
+	 * @param criteria    WaterConnectionSearchCriteria contains search criteria on
+	 *                    water & sewerage connection
+	 * @param requestInfo
 	 * @return List(Count) of matching water & sewerage connection
 	 */
-	public metrics searchTotalCollectionCountNIUA(SearchTotalCollectionCriteria SearchTotalCollectionCriteria, RequestInfo requestInfo) {
+	public metrics searchTotalCollectionCountNIUA(SearchTotalCollectionCriteria SearchTotalCollectionCriteria,
+			RequestInfo requestInfo) {
 		metrics waterConnectionList;
-		waterConnectionList = getWaterConnectionsTotalCollectionListCountNIUA(SearchTotalCollectionCriteria, requestInfo);
+		waterConnectionList = getWaterConnectionsTotalCollectionListCountNIUA(SearchTotalCollectionCriteria,
+				requestInfo);
 		return waterConnectionList;
 	}
-	
+
 	/**
 	 * 
-	 * @param criteria WaterConnectionSearchCriteria contains search criteria on water & sewerage connection
-	 * @param requestInfo 
+	 * @param criteria    WaterConnectionSearchCriteria contains search criteria on
+	 *                    water & sewerage connection
+	 * @param requestInfo
 	 * @return List(Count) of matching water & sewerage connection
 	 */
-	public metrics getWaterConnectionsTotalCollectionListCountNIUA(SearchTotalCollectionCriteria SearchTotalCollectionCriteria,
-			RequestInfo requestInfo) {
+	public metrics getWaterConnectionsTotalCollectionListCountNIUA(
+			SearchTotalCollectionCriteria SearchTotalCollectionCriteria, RequestInfo requestInfo) {
 		return waterDao.getWaterConnectionTotalCollectionListCountNIUA(SearchTotalCollectionCriteria, requestInfo);
 	}
-	
-	
+
 	/**
 	 * 
-	 * @param criteria WaterConnectionSearchCriteria contains search criteria on water connection
-	 * @param requestInfo 
+	 * @param criteria    WaterConnectionSearchCriteria contains search criteria on
+	 *                    water connection
+	 * @param requestInfo
 	 * @return List of matching water connection
 	 */
 	public List<WaterConnection> getAPI(SearchCriteria criteria, RequestInfo requestInfo) {
@@ -415,22 +442,23 @@ public class WaterServiceImpl implements WaterService {
 		enrichmentService.enrichConnectionHolderDeatils(waterConnectionList, criteria, requestInfo);
 		return waterConnectionList;
 	}
+
 	/**
 	 * 
-	 * @param criteria WaterConnectionSearchCriteria contains search criteria on water connection
-	 * @param requestInfo 
+	 * @param criteria    WaterConnectionSearchCriteria contains search criteria on
+	 *                    water connection
+	 * @param requestInfo
 	 * @return List of matching water connection
 	 */
-	public List<WaterConnection> getWaterConnectionsListForGetAPI(SearchCriteria criteria,
-			RequestInfo requestInfo) {
+	public List<WaterConnection> getWaterConnectionsListForGetAPI(SearchCriteria criteria, RequestInfo requestInfo) {
 		return waterDao.getAPI(criteria, requestInfo);
 	}
-	
-	
+
 	/**
 	 * 
-	 * @param criteria WaterConnectionSearchCriteria contains search criteria on water & sewerage connection
-	 * @param requestInfo 
+	 * @param criteria    WaterConnectionSearchCriteria contains search criteria on
+	 *                    water & sewerage connection
+	 * @param requestInfo
 	 * @return List(Count) of matching water & sewerage connection
 	 */
 	public ResponseData searchPublicDashBoardCount(PublicDashBoardSearchCritieria SearchTotalCollectionCriteria) {
@@ -438,11 +466,12 @@ public class WaterServiceImpl implements WaterService {
 		waterConnectionList = getPublicDashBoardSearchCount(SearchTotalCollectionCriteria);
 		return waterConnectionList;
 	}
-	
+
 	/**
 	 * 
-	 * @param criteria WaterConnectionSearchCriteria contains search criteria on water & sewerage connection
-	 * @param requestInfo 
+	 * @param criteria    WaterConnectionSearchCriteria contains search criteria on
+	 *                    water & sewerage connection
+	 * @param requestInfo
 	 * @return List(Count) of matching water & sewerage connection
 	 */
 	public ResponseData getPublicDashBoardSearchCount(PublicDashBoardSearchCritieria SearchTotalCollectionCriteria) {

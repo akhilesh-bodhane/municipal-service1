@@ -31,7 +31,6 @@ import lombok.ToString;
 @NoArgsConstructor
 @Builder
 @ToString
-
 @javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2020-03-11T12:10:14.583+05:30[Asia/Kolkata]")
 public class WaterConnection extends Connection {
 
@@ -178,7 +177,13 @@ public class WaterConnection extends Connection {
 	
 	@JsonProperty("userName")
 	private String userName = null;
-	 
+	
+	
+	
+	@JsonProperty("mobileNumberOwner")
+	private String mobileNumberOwner = null;	 
+	
+	
 	
 	public String getContractValue() {
 		return contractValue;
