@@ -58,6 +58,9 @@ public class OwnerInfo extends User {
 	@JsonProperty("status")
 	private Status status;
 
+	@JsonProperty("mobileNumberOwner")
+	private String mobileNumberOwner;
+	
 	@JsonProperty("documents")
 	@Valid
 	private List<Document> documents;
