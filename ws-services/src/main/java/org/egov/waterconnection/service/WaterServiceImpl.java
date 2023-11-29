@@ -337,13 +337,24 @@ public class WaterServiceImpl implements WaterService {
 			userService.createUserNewConnection(waterConnectionRequest);
 			waterConnectionRequest.getWaterConnection().setUserName(
 					waterConnectionRequest.getWaterConnection().getProperty().getOwners().get(0).getUuid());
-			waterConnectionRequest.getWaterConnection()
-					.setMobileNumberOwner(waterConnectionRequest.getWaterConnection().getMobileNumberOwner());
+
+			if (waterConnectionRequest.getWaterConnection().getMobileNumberOwner() != null) {
+				waterConnectionRequest.getWaterConnection()
+						.setMobileNumberOwner(waterConnectionRequest.getWaterConnection().getMobileNumberOwner());
+			} else {
+				waterConnectionRequest.getWaterConnection()
+						.setMobileNumberOwner(waterConnectionRequest.getWaterConnection().getUserName());
+			}
 		} else {
 			waterConnectionRequest.getWaterConnection()
 					.setUserName(waterConnectionRequest.getWaterConnection().getAuditDetails().getCreatedBy());
-			waterConnectionRequest.getWaterConnection()
-					.setMobileNumberOwner(waterConnectionRequest.getRequestInfo().getUserInfo().getMobileNumber());
+			if (waterConnectionRequest.getRequestInfo().getUserInfo().getMobileNumber() != null) {
+				waterConnectionRequest.getWaterConnection()
+						.setMobileNumberOwner(waterConnectionRequest.getRequestInfo().getUserInfo().getMobileNumber());
+			} else {
+				waterConnectionRequest.getWaterConnection()
+						.setMobileNumberOwner(waterConnectionRequest.getWaterConnection().getUserName());
+			}
 		}
 
 		System.out.println("Water Connection Request : " + waterConnectionRequest.toString());
