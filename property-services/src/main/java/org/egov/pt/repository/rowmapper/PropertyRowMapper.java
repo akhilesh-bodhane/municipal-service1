@@ -255,7 +255,7 @@ public class PropertyRowMapper implements ResultSetExtractor<List<Property>> {
 				.ownerShipPercentage(ownerShipPercentage)
 				.tenantId(rs.getString("owntenantid"))
 				.ownerType(rs.getString("ownerType"))
-				.mobileNumber(rs.getString("mobilenumberowner"))
+				.mobileNumberOwner(rs.getString("mobilenumown"))
 				.isPrimaryOwner(isPrimaryOwner).name(rs.getString("owner_name")).correspondenceAddress(rs.getString("correspondance_address"))
 				.uuid(uuid)
 				.build();
