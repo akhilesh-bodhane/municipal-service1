@@ -29,7 +29,7 @@ public class OwnerInfo extends User {
 
 	@JsonProperty("ownerInfoUuid")
 	private String ownerInfoUuid;
-	
+
 	@NotNull
 	@JsonProperty("mobileNumber")
 	private String mobileNumber;
@@ -54,13 +54,13 @@ public class OwnerInfo extends User {
 
 	@JsonProperty("institutionId")
 	private String institutionId;
-	
+
 	@JsonProperty("status")
 	private Status status;
 
 	@JsonProperty("mobileNumberOwner")
 	private String mobileNumberOwner;
-	
+
 	@JsonProperty("documents")
 	@Valid
 	private List<Document> documents;
@@ -89,7 +89,7 @@ public class OwnerInfo extends User {
 		this.setUserName(user.getUserName());
 		this.setPassword(user.getPassword());
 		this.setSalutation(user.getSalutation());
-	//	this.setName(user.getName());
+		// this.setName(user.getName());
 		this.setGender(user.getGender());
 		this.setMobileNumber(user.getMobileNumber());
 		this.setEmailId(user.getEmailId());
@@ -99,7 +99,7 @@ public class OwnerInfo extends User {
 		this.setPermanentAddress(user.getPermanentAddress());
 		this.setPermanentCity(user.getPermanentCity());
 		this.setPermanentPincode(user.getPermanentPincode());
-		//this.setCorrespondenceAddress(user.getCorrespondenceAddress());
+		// this.setCorrespondenceAddress(user.getCorrespondenceAddress());
 		this.setCorrespondenceCity(user.getCorrespondenceCity());
 		this.setCorrespondencePincode(user.getCorrespondencePincode());
 		this.setActive(user.getActive());
@@ -114,6 +114,9 @@ public class OwnerInfo extends User {
 		this.setIdentificationMark(user.getIdentificationMark());
 		this.setPhoto(user.getPhoto());
 		this.setTenantId(user.getTenantId());
+		this.setMobileNumberOwner(this.getMobileNumberOwner() != null && !this.getMobileNumberOwner().isEmpty()
+				? this.getMobileNumberOwner()
+				: user.getMobileNumber());
 	}
 
 	@Builder
@@ -126,7 +129,8 @@ public class OwnerInfo extends User {
 			String createdBy, Long createdDate, String lastModifiedBy, Long lastModifiedDate, String tenantId,
 			String ownerInfoUuid, String mobileNumber2, String gender2, String fatherOrHusbandName2,
 			String correspondenceAddress2, Boolean isPrimaryOwner, Double ownerShipPercentage, String ownerType,
-			String institutionId, Status status, List<Document> documents, Relationship relationship,String mobileNumberOwner) {
+			String institutionId, Status status, List<Document> documents, Relationship relationship,
+			String mobileNumberOwner) {
 		super(id, uuid, userName, password, salutation, name, gender, mobileNumber, emailId, altContactNumber, pan,
 				aadhaarNumber, permanentAddress, permanentCity, permanentPincode, correspondenceCity,
 				correspondencePincode, correspondenceAddress, active, dob, pwdExpiryDate, locale, type, signature,
