@@ -52,7 +52,7 @@ public class WsQueryBuilder {
 			+ "  FROM eg_ws_savebilling where concat(divsdiv,consumercode) = ?;";
 	private static final String INNER_JOIN_STRING = " INNER JOIN ";
 	private static final String LEFT_OUTER_JOIN_STRING = " LEFT OUTER JOIN ";
-	
+
 	private static final String LEFT_JOIN_STRING = " LEFT JOIN ";
 
 	private static String holderSelectValues = "connectionholder.tenantid as holdertenantid, connectionholder.connectionid as holderapplicationId, userid, connectionholder.status as holderstatus, isprimaryholder, connectionholdertype,connectionholder.correspondance_address as holdercorrepondanceaddress, holdershippercentage, connectionholder.relationship as holderrelationship,connectionholder.name as holdername,connectionholder.proposed_mobile_no as proposedMobileNo ,connectionholder.proposed_name as  proposedName,connectionholder.proposed_gender as proposedGender ,connectionholder.proposed_guardian_name as proposedGuardianName ,connectionholder.proposed_correspondance_address as  proposedCorrespondanceAddress , connectionholder.createdby as holdercreatedby, connectionholder.createdtime as holdercreatedtime, connectionholder.lastmodifiedby as holderlastmodifiedby,"
@@ -79,9 +79,37 @@ public class WsQueryBuilder {
 			+ INNER_JOIN_STRING + "eg_pt_address pta ON conn.property_id = pta.propertyid" + INNER_JOIN_STRING
 			+ "eg_ws_application application ON application.wsid = conn.id" + INNER_JOIN_STRING
 			+ "eg_ws_property property ON property.wsid = conn.id" + INNER_JOIN_STRING
-			+ "eg_ws_connectionholder connectionholder ON connectionholder.connectionid = conn.id" + LEFT_OUTER_JOIN_STRING
-			+ "egcl_bill bl  on  application.applicationno = bl.consumercode" + LEFT_OUTER_JOIN_STRING
-			+ "egcl_paymentdetail pyd on pyd.billid = bl.id" + LEFT_OUTER_JOIN_STRING
+			+ "eg_ws_connectionholder connectionholder ON connectionholder.connectionid = conn.id"
+			+ LEFT_OUTER_JOIN_STRING + "egcl_bill bl  on  application.applicationno = bl.consumercode"
+			+ LEFT_OUTER_JOIN_STRING + "egcl_paymentdetail pyd on pyd.billid = bl.id" + LEFT_OUTER_JOIN_STRING
+			+ "egcl_payment py on py.id= pyd.paymentid" + LEFT_OUTER_JOIN_STRING
+			+ "eg_ws_applicationdocument document ON document.applicationid = application.id" + LEFT_OUTER_JOIN_STRING
+			+ "eg_ws_plumberinfo plumber ON plumber.wsid = conn.id";
+
+	private static final String WATER_SEARCH_QUERY_APPLICATION = "SELECT "
+			/* + " conn.*, wc.*, document.*, plumber.*, application.*, property.*, " */
+			+ " wc.connectionCategory, wc.connectionType, wc.waterSource, wc.meterCount, wc.meterRentCode, wc.mfrCode, wc.meterDigits, wc.meterUnit, wc.sanctionedCapacity,"
+			+ " wc.meterId, wc.meterInstallationDate, wc.pipeSize, wc.noOfTaps, wc.proposedPipeSize, wc.proposedTaps, wc.connection_id as connection_Id, wc.connectionExecutionDate, wc.initialmeterreading,wc.lastmeterreading, wc.appCreatedDate,wc.proposed_meterid, wc.proposed_meterinstallationdate,wc.proposed_initialmeterreading,wc.proposed_lastmeterreading,wc.proposed_metercount,wc.proposed_meterrentcode,wc.proposed_mfrcode,wc.proposed_meterdigits,  wc.proposed_sanctionedcapacity,wc.proposed_meterunit,"
+			+ " wc.detailsprovidedby, wc.estimationfileStoreId , wc.sanctionfileStoreId , wc.estimationLetterDate, py.paymentmode,py.lastmodifiedtime as paymentdate ,"
+			+ " conn.id as conn_id, conn.tenantid, conn.applicationNo, conn.applicationStatus, conn.status, conn.connectionNo, conn.oldConnectionNo, conn.property_id, conn.roadcuttingarea,"
+			+ " conn.aadharNo, conn.ferruleSize, conn.action, conn.adhocpenalty, conn.adhocrebate, conn.adhocpenaltyreason, conn.applicationType, conn.dateEffectiveFrom,"
+			+ " conn.adhocpenaltycomment, conn.adhocrebatereason, conn.adhocrebatecomment, conn.cccode, conn.div, conn.subdiv, conn.ledger_no,conn.ledgergroup, conn.createdBy as ws_createdBy, conn.lastModifiedBy as ws_lastModifiedBy,"
+			+ " conn.createdTime as ws_createdTime, conn.lastModifiedTime as ws_lastModifiedTime, "
+			+ " conn.roadtype,conn.proposedUsage_category, conn.waterApplicationType, conn.securityCharge, conn.connectionusagestype, conn.inworkflow, conn.billGroup, conn.contract_value, "
+			+ " document.id as doc_Id, document.documenttype, document.filestoreid, document.active as doc_active, plumber.id as plumber_id,"
+			+ " plumber.name as plumber_name, plumber.licenseno,"
+			+ " plumber.mobilenumber as plumber_mobileNumber, plumber.gender as plumber_gender, plumber.fatherorhusbandname, plumber.correspondenceaddress,"
+			+ " plumber.relationship, " + holderSelectValues
+			+ " application.id as application_id, application.applicationno as app_applicationno, application.activitytype as app_activitytype, application.applicationstatus as app_applicationstatus, application.action as app_action, application.comments as app_comments, application.is_ferrule_applicable as app_ferrule, application.security_charges as app_securitycharge, application.total_amount_paid, application.additionalcharges, application.constructioncharges, application.outstandingcharges,  application.ismeterstolen,application.application_code,application.waterchargestt as waterChargesTT,"
+			+ " application.createdBy as app_createdBy, application.lastModifiedBy as app_lastModifiedBy, application.createdTime as app_createdTime, application.lastModifiedTime as app_lastModifiedTime,application.location,connectionholder.sameuservalid, connectionholder.submitby, connectionholder.submitbyname, "
+			+ " property.id as waterpropertyid, property.usagecategory, property.usagesubcategory,property.plotareatt as ploatAreaTT,pta.doorno as propertyplotno,pta.locality as propertysectorno "
+			+ " FROM eg_ws_connection conn " + INNER_JOIN_STRING + "eg_ws_service wc ON wc.connection_id = conn.id"
+			+ INNER_JOIN_STRING + "eg_pt_address pta ON conn.property_id = pta.propertyid" + INNER_JOIN_STRING
+			+ "eg_ws_application application ON application.wsid = conn.id" + INNER_JOIN_STRING
+			+ "eg_ws_property property ON property.wsid = conn.id" + INNER_JOIN_STRING
+			+ "eg_ws_connectionholder connectionholder ON connectionholder.ws_application_id = application.id"
+			+ LEFT_OUTER_JOIN_STRING + "egcl_bill bl  on  application.applicationno = bl.consumercode"
+			+ LEFT_OUTER_JOIN_STRING + "egcl_paymentdetail pyd on pyd.billid = bl.id" + LEFT_OUTER_JOIN_STRING
 			+ "egcl_payment py on py.id= pyd.paymentid" + LEFT_OUTER_JOIN_STRING
 			+ "eg_ws_applicationdocument document ON document.applicationid = application.id" + LEFT_OUTER_JOIN_STRING
 			+ "eg_ws_plumberinfo plumber ON plumber.wsid = conn.id";
@@ -491,14 +519,13 @@ public class WsQueryBuilder {
 			+ "			application.createdTime as app_createdTime,\r\n"
 			+ "			application.lastModifiedTime as app_lastModifiedTime,\r\n" + "			userid,\r\n"
 			+ "		connectionholder.ws_application_id,\r\n" + "		holdershippercentage,\r\n"
-			 + "		isprimaryholder,\r\n" 
+			+ "		isprimaryholder,\r\n"
 			/* + "		connectionholder.relationship as holderrelationship,\r\n" */
 			/* + "		connectionholder.status as holderstatus,\r\n" */
 			/* + "		connectionholdertype,\r\n" */
 			/* + "		connectionholder.tenantid as holdertenantid,\r\n" */
 			/* + "		connectionholder.name as holdername,\r\n" */
-			+ "	'WATER' as service,\r\n" 
-			+ "	application.total_amount_paid as paidamount,\r\n"
+			+ "	'WATER' as service,\r\n" + "	application.total_amount_paid as paidamount,\r\n"
 			+ "	connectionholder.correspondance_address as holdercorrepondanceaddress\r\n"
 			/*
 			 * +
@@ -561,7 +588,13 @@ public class WsQueryBuilder {
 			RequestInfo requestInfo) {
 		if (criteria.isEmpty())
 			return null;
-		StringBuilder query = new StringBuilder(WATER_SEARCH_QUERY);
+		StringBuilder query = new StringBuilder();
+
+		if (criteria.getApplicationNumber() != null && !criteria.getApplicationNumber().isEmpty()) {
+			query = new StringBuilder(WATER_SEARCH_QUERY_APPLICATION);
+		} else {
+			query = new StringBuilder(WATER_SEARCH_QUERY);
+		}
 		boolean propertyIdsPresent = false;
 		/*
 		 * if (!StringUtils.isEmpty(criteria.getMobileNumber())) { Set<String>
