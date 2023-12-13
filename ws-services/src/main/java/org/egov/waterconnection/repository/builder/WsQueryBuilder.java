@@ -607,16 +607,21 @@ public class WsQueryBuilder {
 		 * propertyIdsPresent = true; } }
 		 */
 		if (!StringUtils.isEmpty(criteria.getMobileNumber())) {
-			Set<String> uuids = userService.getUUIDForUsers(criteria.getMobileNumber(), criteria.getTenantId(),
-					requestInfo);
-			boolean userIdsPresent = false;
-			if (!CollectionUtils.isEmpty(uuids)) {
-				addORClauseIfRequired(preparedStatement, query);
-				if (!propertyIdsPresent)
-					query.append("(");
-				query.append(" connectionholder.userid in (").append(createQuery(uuids)).append(" ))");
-				addToPreparedStatement(preparedStatement, uuids);
-				userIdsPresent = true;
+			if (requestInfo.getUserInfo() != null && requestInfo.getUserInfo().getRoles().contains("CITIZEN")) {
+				query.append(" connectionholder.mobile_no = ? ");
+				preparedStatement.add(criteria.getMobileNumber());
+			} else {
+				Set<String> uuids = userService.getUUIDForUsers(criteria.getMobileNumber(), criteria.getTenantId(),
+						requestInfo);
+				boolean userIdsPresent = false;
+				if (!CollectionUtils.isEmpty(uuids)) {
+					addORClauseIfRequired(preparedStatement, query);
+					if (!propertyIdsPresent)
+						query.append("(");
+					query.append(" connectionholder.userid in (").append(createQuery(uuids)).append(" ))");
+					addToPreparedStatement(preparedStatement, uuids);
+					userIdsPresent = true;
+				}
 			}
 			/*
 			 * if(propertyIdsPresent && !userIdsPresent){ query.append(")"); }
