@@ -35,5 +35,6 @@ public interface WaterDao {
 	
 	public ResponseData searchPublicDashBoardCount(PublicDashBoardSearchCritieria SearchTotalCollectionCriteria);
 
+	public List<WaterConnection> getWaterConnectionListCitizen(SearchCriteria criteria,RequestInfo requestInfo);
 
 }

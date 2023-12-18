@@ -151,8 +151,34 @@ public class WaterServiceImpl implements WaterService {
 	 * @param requestInfo
 	 * @return List of matching water connection
 	 */
+	public List<WaterConnection> searchCitizen(SearchCriteria criteria, RequestInfo requestInfo) {
+		List<WaterConnection> waterConnectionList;
+		waterConnectionList = getWaterConnectionsListCitizen(criteria, requestInfo);
+		waterConnectionValidator.validatePropertyForConnection(waterConnectionList);
+		enrichmentService.enrichConnectionHolderDeatils(waterConnectionList, criteria, requestInfo);
+		return waterConnectionList;
+	}
+	
+	/**
+	 * 
+	 * @param criteria    WaterConnectionSearchCriteria contains search criteria on
+	 *                    water connection
+	 * @param requestInfo
+	 * @return List of matching water connection
+	 */
 	public List<WaterConnection> getWaterConnectionsList(SearchCriteria criteria, RequestInfo requestInfo) {
 		return waterDao.getWaterConnectionList(criteria, requestInfo);
+	}
+
+	/**
+	 * 
+	 * @param criteria    WaterConnectionSearchCriteria contains search criteria on
+	 *                    water connection
+	 * @param requestInfo
+	 * @return List of matching water connection
+	 */
+	public List<WaterConnection> getWaterConnectionsListCitizen(SearchCriteria criteria, RequestInfo requestInfo) {
+		return waterDao.getWaterConnectionListCitizen(criteria, requestInfo);
 	}
 
 	/**

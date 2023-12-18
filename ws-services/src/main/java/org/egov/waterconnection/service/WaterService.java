@@ -38,5 +38,7 @@ public interface WaterService {
 			SearchTotalCollectionCriteria searchTotalCollectionCriteria, RequestInfo requestInfo);
 	
 	public ResponseData searchPublicDashBoardCount(PublicDashBoardSearchCritieria SearchTotalCollectionCriteria);
+	
+	public List<WaterConnection> searchCitizen(SearchCriteria criteria, RequestInfo requestInfo);
 
 }
