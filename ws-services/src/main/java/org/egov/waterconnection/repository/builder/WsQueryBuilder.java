@@ -590,11 +590,172 @@ public class WsQueryBuilder {
 			return null;
 		StringBuilder query = new StringBuilder();
 
-		if (criteria.getApplicationNumber() != null && !criteria.getApplicationNumber().isEmpty()) {
-			query = new StringBuilder(WATER_SEARCH_QUERY_APPLICATION);
-		} else {
-			query = new StringBuilder(WATER_SEARCH_QUERY);
+		query = new StringBuilder(WATER_SEARCH_QUERY);
+		
+		boolean propertyIdsPresent = false;
+		/*
+		 * if (!StringUtils.isEmpty(criteria.getMobileNumber())) { Set<String>
+		 * propertyIds = new HashSet<>(); List<Property> propertyList =
+		 * waterServicesUtil.propertySearchOnCriteria(criteria, requestInfo);
+		 * propertyList.forEach(property -> propertyIds.add(property.getId())); if
+		 * (!propertyIds.isEmpty()) { addClauseIfRequired(preparedStatement, query);
+		 * query.append(" (conn.property_id in (").append(createQuery(propertyIds)).
+		 * append(" )"); addToPreparedStatement(preparedStatement, propertyIds);
+		 * propertyIdsPresent = true; } }
+		 */
+		if (!StringUtils.isEmpty(criteria.getMobileNumber())) {
+			if (requestInfo.getUserInfo() != null && requestInfo.getUserInfo().getRoles().contains("CITIZEN")) {
+				query.append(" connectionholder.mobile_no = ? ");
+				preparedStatement.add(criteria.getMobileNumber());
+			} else {
+				Set<String> uuids = userService.getUUIDForUsers(criteria.getMobileNumber(), criteria.getTenantId(),
+						requestInfo);
+				boolean userIdsPresent = false;
+				if (!CollectionUtils.isEmpty(uuids)) {
+					addORClauseIfRequired(preparedStatement, query);
+					if (!propertyIdsPresent)
+						query.append("(");
+					query.append(" connectionholder.userid in (").append(createQuery(uuids)).append(" ))");
+					addToPreparedStatement(preparedStatement, uuids);
+					userIdsPresent = true;
+				}
+			}
+			/*
+			 * if(propertyIdsPresent && !userIdsPresent){ query.append(")"); }
+			 */
 		}
+		if (!StringUtils.isEmpty(criteria.getTenantId())) {
+			addClauseIfRequired(preparedStatement, query);
+			query.append(" conn.tenantid = ? ");
+			preparedStatement.add(criteria.getTenantId());
+		}
+//		if (!StringUtils.isEmpty(criteria.getPropertyId())) {
+//			addClauseIfRequired(preparedStatement, query);
+//			query.append(" conn.property_id = ? ");
+//			preparedStatement.add(criteria.getPropertyId());
+//		}
+		if (!CollectionUtils.isEmpty(criteria.getIds())) {
+			addClauseIfRequired(preparedStatement, query);
+			query.append(" application.id in (").append(createQuery(criteria.getIds())).append(" )");
+			addToPreparedStatement(preparedStatement, criteria.getIds());
+		}
+		if (!StringUtils.isEmpty(criteria.getOldConnectionNumber())) {
+			addClauseIfRequired(preparedStatement, query);
+			query.append(" conn.oldconnectionno = ? ");
+			preparedStatement.add(criteria.getOldConnectionNumber());
+		}
+		if (!StringUtils.isEmpty(criteria.getPlotNo())) {
+			addClauseIfRequired(preparedStatement, query);
+			query.append(" pta.doorno = ? ");
+			preparedStatement.add(criteria.getPlotNo());
+		}
+		if (!StringUtils.isEmpty(criteria.getSectorNo())) {
+			addClauseIfRequired(preparedStatement, query);
+			query.append(" pta.locality = ? ");
+			preparedStatement.add(criteria.getSectorNo());
+		}
+		if (!StringUtils.isEmpty(criteria.getGroupNo())) {
+			addClauseIfRequired(preparedStatement, query);
+			query.append(" conn.billgroup = ? ");
+			preparedStatement.add(criteria.getGroupNo());
+		}
+		if (!StringUtils.isEmpty(criteria.getLedgerGroup())) {
+			addClauseIfRequired(preparedStatement, query);
+			query.append(" conn.ledgergroup = ? ");
+			preparedStatement.add(criteria.getLedgerGroup());
+		}
+		if (!StringUtils.isEmpty(criteria.getSubDivision())) {
+			addClauseIfRequired(preparedStatement, query);
+			query.append(" conn.subdiv = ? ");
+			preparedStatement.add(criteria.getSubDivision());
+		}
+		if (!StringUtils.isEmpty(criteria.getDivision())) {
+			addClauseIfRequired(preparedStatement, query);
+			query.append(" conn.div = ? ");
+			preparedStatement.add(criteria.getDivision());
+		}
+
+		if (!StringUtils.isEmpty(criteria.getConnectionNumber())) {
+			addClauseIfRequired(preparedStatement, query);
+			query.append(" conn.connectionno = ? ");
+			preparedStatement.add(criteria.getConnectionNumber());
+		}
+		if (!StringUtils.isEmpty(criteria.getStatus())) {
+			addClauseIfRequired(preparedStatement, query);
+			query.append(" conn.status = ? ");
+			preparedStatement.add(criteria.getStatus());
+		}
+		if (!StringUtils.isEmpty(criteria.getApplicationNumber())) {
+			addClauseIfRequired(preparedStatement, query);
+			query.append(" application.applicationno = ? ");
+			preparedStatement.add(criteria.getApplicationNumber());
+		}
+		if (!StringUtils.isEmpty(criteria.getApplicationNumberSearch())) {
+			addClauseIfRequired(preparedStatement, query);
+			query.append(" application.applicationno ilike ? ");
+			preparedStatement.add("%" + criteria.getApplicationNumberSearch());
+		}
+		if (!StringUtils.isEmpty(criteria.getApplicationStatus())) {
+			addClauseIfRequired(preparedStatement, query);
+			query.append(" application.applicationStatus = ? ");
+			preparedStatement.add(criteria.getApplicationStatus());
+		}
+		if (criteria.getFromDate() != null) {
+			addClauseIfRequired(preparedStatement, query);
+			query.append("  application.createdTime >= ? ");
+			preparedStatement.add(criteria.getFromDate());
+		}
+		if (criteria.getToDate() != null) {
+			addClauseIfRequired(preparedStatement, query);
+			query.append("  application.createdTime <= ? ");
+			preparedStatement.add(criteria.getToDate());
+		}
+		if (criteria.getAppFromDate() != null) {
+			addClauseIfRequired(preparedStatement, query);
+			query.append("  application.lastModifiedTime >= ?  ");
+			preparedStatement.add(criteria.getAppFromDate());
+		}
+		if (criteria.getAppToDate() != null) {
+			addClauseIfRequired(preparedStatement, query);
+			query.append("  application.lastModifiedTime <= ? ");
+			preparedStatement.add(criteria.getAppToDate());
+		}
+		if (criteria.getAppFromDate() != null || criteria.getAppToDate() != null) {
+			addClauseIfRequired(preparedStatement, query);
+			query.append("  application.applicationStatus in (").append(createQuery(WCConstants.APPROVED_ACTIONS))
+					.append(" )");
+			addToPreparedStatement(preparedStatement, WCConstants.APPROVED_ACTIONS);
+		}
+		if (!StringUtils.isEmpty(criteria.getApplicationType())) {
+			addClauseIfRequired(preparedStatement, query);
+			query.append(" application.activitytype = ? ");
+			preparedStatement.add(criteria.getApplicationType());
+		}
+		/*
+		 * if (!StringUtils.isEmpty(criteria.getConnectionUserId())) {
+		 * addORClauseIfRequired(preparedStatement, query);
+		 * query.append(" cm.user_id = ? ");
+		 * preparedStatement.add(criteria.getConnectionUserId()); }
+		 */
+		query.append(ORDER_BY_CLAUSE);
+		return addPaginationWrapper(query.toString(), preparedStatement, criteria);
+	}
+	
+	/**
+	 * 
+	 * @param criteria          The WaterCriteria
+	 * @param preparedStatement The Array Of Object
+	 * @param requestInfo       The Request Info
+	 * @return query as a string
+	 */
+	public String getSearchQueryStringCitizen(SearchCriteria criteria, List<Object> preparedStatement,
+			RequestInfo requestInfo) {
+		if (criteria.isEmpty())
+			return null;
+		StringBuilder query = new StringBuilder();
+
+		query = new StringBuilder(WATER_SEARCH_QUERY_APPLICATION);
+		
 		boolean propertyIdsPresent = false;
 		/*
 		 * if (!StringUtils.isEmpty(criteria.getMobileNumber())) { Set<String>
