@@ -61,7 +61,7 @@ public class WCConstants {
     
     public static final String ACTION_ACTIVATE_TT_CONNECTION  = "CLOSED_CONNECTION_FROM_DIV_SUPERINTENDENT";
     
-
+    public static final String ACTION_CHANGE_CONNECTION_HOLDER  = "CHANGE_CONNECTION_HOLDER";
 
     public static final String STATUS_INITIATED = "INITIATED";
 
