@@ -265,4 +265,7 @@ public class WSConfiguration {
 	@Value("${create.ws.tt.workflow.name}")
 	private String businessServiceTTValue;
 	
+	@Value("${egov.waterservice.deactive.conholder}")
+	private String deactiveConnectionHolder;
+	
 }

@@ -59,120 +59,110 @@ public class WaterDaoImpl implements WaterDao {
 	private WaterRowMapper waterRowMapper;
 
 	@Autowired
-	private WaterNIUARowMapper waterNIUARowMapper ;
-	
+	private WaterNIUARowMapper waterNIUARowMapper;
 
 	@Autowired
-	private WaterGetAPIRowMapper waterGetAPIRowMapper ;
-	
-	
+	private WaterGetAPIRowMapper waterGetAPIRowMapper;
+
 	@Autowired
 	private WaterRowMapperCount waterRowMapperCount;
-	
+
 	@Autowired
 	private WSConfiguration wsConfiguration;
-	
 
 	@Value("${egov.waterservice.createwaterconnection}")
 	private String createWaterConnection;
 
 	@Value("${egov.waterservice.updatewaterconnection}")
 	private String updateWaterConnection;
-	
+
 	@Value("${egov.waterservice.createwatersubactivity}")
 	private String createWaterSubActivity;
 
-	
-	
 	@Override
 	public void saveWaterConnection(WaterConnectionRequest waterConnectionRequest) {
 		waterConnectionProducer.push(createWaterConnection, waterConnectionRequest);
 	}
 
 	@Override
-	public List<WaterConnection> getWaterConnectionList(SearchCriteria criteria,
-			RequestInfo requestInfo) {
+	public List<WaterConnection> getWaterConnectionList(SearchCriteria criteria, RequestInfo requestInfo) {
 		List<Object> preparedStatement = new ArrayList<>();
 		String query = wsQueryBuilder.getSearchQueryString(criteria, preparedStatement, requestInfo);
-		
-		//log.info("Query-->"+query);
-		
+
+		// log.info("Query-->"+query);
+
 		StringBuilder str = new StringBuilder("Water query: ").append(query);
-		//log.info(str.toString());
+		// log.info(str.toString());
 		if (query == null)
 			return Collections.emptyList();
 //		if (log.isDebugEnabled()) {
-	//		StringBuilder str = new StringBuilder("Water query: ").append(query);
+		// StringBuilder str = new StringBuilder("Water query: ").append(query);
 //			log.info(str.toString());
 //		}
-		
-	//	log.info(jdbcTemplate.query(query, preparedStatement.toArray(),waterRowMapper).toString());
-		
+
+		// log.info(jdbcTemplate.query(query,
+		// preparedStatement.toArray(),waterRowMapper).toString());
+
 		List<WaterConnection> waterConnectionList = jdbcTemplate.query(query, preparedStatement.toArray(),
 				waterRowMapper);
-		
+
 		System.out.println(preparedStatement.toArray());
-	    System.out.println(preparedStatement);
+		System.out.println(preparedStatement);
 		System.out.println(waterRowMapper.toString());
 		System.out.println("WaterConnectionList" + waterConnectionList.toString());
-		
+
 		if (waterConnectionList == null) {
 			return Collections.emptyList();
 		}
 
 		return waterConnectionList;
 	}
-	
+
 	@Override
-	public List<WaterConnection> getWaterConnectionListCitizen(SearchCriteria criteria,
-			RequestInfo requestInfo) {
+	public List<WaterConnection> getWaterConnectionListCitizen(SearchCriteria criteria, RequestInfo requestInfo) {
 		List<Object> preparedStatement = new ArrayList<>();
 		String query = wsQueryBuilder.getSearchQueryStringCitizen(criteria, preparedStatement, requestInfo);
-		
-		//log.info("Query-->"+query);
-		
+
+		// log.info("Query-->"+query);
+
 		if (query == null)
 			return Collections.emptyList();
 //		if (log.isDebugEnabled()) {
-	//		StringBuilder str = new StringBuilder("Water query: ").append(query);
+		// StringBuilder str = new StringBuilder("Water query: ").append(query);
 //			log.info(str.toString());
 //		}
-		
-	//	log.info(jdbcTemplate.query(query, preparedStatement.toArray(),waterRowMapper).toString());
-		
+
+		// log.info(jdbcTemplate.query(query,
+		// preparedStatement.toArray(),waterRowMapper).toString());
+
 		List<WaterConnection> waterConnectionList = jdbcTemplate.query(query, preparedStatement.toArray(),
 				waterRowMapper);
-		
+
 		System.out.println(preparedStatement.toArray());
-	    System.out.println(preparedStatement);
+		System.out.println(preparedStatement);
 		System.out.println(waterRowMapper.toString());
 		System.out.println("WaterConnectionList" + waterConnectionList.toString());
-		
+
 		if (waterConnectionList == null) {
 			return Collections.emptyList();
 		}
 
 		return waterConnectionList;
 	}
-	
+
 	@Override
-	public List<WaterConnectionCount> getWaterConnectionListCount(SearchCriteria criteria,
-			RequestInfo requestInfo) {
+	public List<WaterConnectionCount> getWaterConnectionListCount(SearchCriteria criteria, RequestInfo requestInfo) {
 		List<Object> preparedStatement = new ArrayList<>();
 		String query = wsQueryBuilder.getSearchQueryStringCount(criteria, preparedStatement, requestInfo);
-		
-	
-		
+
 		StringBuilder str = new StringBuilder("Water query: ").append(query);
-		
+
 		if (query == null)
 			return Collections.emptyList();
 
-		
 		List<WaterConnectionCount> waterConnectionList = jdbcTemplate.query(query, preparedStatement.toArray(),
 				waterRowMapperCount);
-		
-		
+
 		if (waterConnectionList == null) {
 			return Collections.emptyList();
 		}
@@ -182,8 +172,9 @@ public class WaterDaoImpl implements WaterDao {
 
 	@Override
 	public void updateWaterConnection(WaterConnectionRequest waterConnectionRequest, boolean isStateUpdatable) {
-		if(log.isInfoEnabled()) {
-			log.info("UpdateWaterConnection: isStateUpdatable ? {}, WaterConnection: {}",isStateUpdatable, waterConnectionRequest.getWaterConnection());
+		if (log.isInfoEnabled()) {
+			log.info("UpdateWaterConnection: isStateUpdatable ? {}, WaterConnection: {}", isStateUpdatable,
+					waterConnectionRequest.getWaterConnection());
 		}
 		if (isStateUpdatable) {
 			waterConnectionProducer.push(updateWaterConnection, waterConnectionRequest);
@@ -191,7 +182,7 @@ public class WaterDaoImpl implements WaterDao {
 			waterConnectionProducer.push(wsConfiguration.getWorkFlowUpdateTopic(), waterConnectionRequest);
 		}
 	}
-	
+
 	/**
 	 * push object to create meter reading
 	 * 
@@ -210,11 +201,11 @@ public class WaterDaoImpl implements WaterDao {
 	public void pushForEditNotification(WaterConnectionRequest waterConnectionRequest) {
 		if (!WCConstants.EDIT_NOTIFICATION_STATE
 				.contains(waterConnectionRequest.getWaterConnection().getProcessInstance().getAction())) {
-			//to uncommentte in commit
+			// to uncommentte in commit
 			waterConnectionProducer.push(wsConfiguration.getEditNotificationTopic(), waterConnectionRequest);
 		}
 	}
-	
+
 	/**
 	 * Enrich file store Id's
 	 * 
@@ -223,7 +214,7 @@ public class WaterDaoImpl implements WaterDao {
 	public void enrichFileStoreIds(WaterConnectionRequest waterConnectionRequest) {
 		waterConnectionProducer.push(wsConfiguration.getFileStoreIdsTopic(), waterConnectionRequest);
 	}
-	
+
 	/**
 	 * Save file store Id's
 	 * 
@@ -236,157 +227,157 @@ public class WaterDaoImpl implements WaterDao {
 	@Override
 	public void addConnectionMapping(WaterConnectionRequest waterConnectionRequest) {
 		waterConnectionProducer.push(wsConfiguration.getAddConnectionMapping(), waterConnectionRequest);
-		
+
 	}
 
 	@Override
 	public void deleteConnectionMapping(WaterConnectionRequest waterConnectionRequest) {
-		waterConnectionProducer.push(wsConfiguration.getDeleteConnectionMapping(), waterConnectionRequest);		
+		waterConnectionProducer.push(wsConfiguration.getDeleteConnectionMapping(), waterConnectionRequest);
 	}
 
 	@Override
 	public void updatebillingstatus(BillGeneration billingData) {
 		BillGenerationRequest billReq = BillGenerationRequest.builder().billGeneration(billingData).build();
 		waterConnectionProducer.push(wsConfiguration.getUpdateBillPayment(), billReq);
-		
-	}
-	
 
-	
-	
-	
+	}
+
 	@Override
-	public  metrics getWaterConnectionTotalCollectionListCountNIUA(SearchTotalCollectionCriteria SearchTotalCollectionCriteria,
-			RequestInfo requestInfo) {
+	public void deactiveConnectionHolder(WaterConnectionRequest waterConnectionRequest) {
+		waterConnectionProducer.push(wsConfiguration.getDeactiveConnectionHolder(), waterConnectionRequest);
+	}
+
+	@Override
+	public metrics getWaterConnectionTotalCollectionListCountNIUA(
+			SearchTotalCollectionCriteria SearchTotalCollectionCriteria, RequestInfo requestInfo) {
 		List<Object> preparedStatement = new ArrayList<>();
-		
-	
+
 		List<String> myList = new ArrayList<>();
-		
+
 		List<String> connectionsCreated = new ArrayList<>();
 		connectionsCreated.add("channelType");
 		connectionsCreated.add("connectionType");
 		myList.addAll(connectionsCreated);
-		
-		
+
 		List<String> todaysCollection = new ArrayList<String>();
 		todaysCollection.add("usageType");
 		todaysCollection.add("paymentChannelType");
 		todaysCollection.add("taxHeads");
 		todaysCollection.add("connectionType");
 		myList.addAll(todaysCollection);
-		
+
 		List<String> sewerageConnections = new ArrayList<String>();
 		sewerageConnections.add("channelType");
 		sewerageConnections.add("usageType");
 		myList.addAll(sewerageConnections);
-		
+
 		List<String> waterConnections = new ArrayList<String>();
 		waterConnections.add("channelType");
 		waterConnections.add("usageType");
 		waterConnections.add("meterType");
 		myList.addAll(waterConnections);
-		
+
 		List<String> pendingConnections = new ArrayList<String>();
 		pendingConnections.add("duration");
 		myList.addAll(pendingConnections);
-		
-		
+
 		List<List<String>> seprate = new ArrayList<List<String>>();
 		seprate.add(connectionsCreated);
 		seprate.add(todaysCollection);
 		seprate.add(sewerageConnections);
 		seprate.add(waterConnections);
 		seprate.add(pendingConnections);
-		
+
 		List<String> sepratee = new ArrayList<String>();
 		sepratee.add("connectionsCreated");
 		sepratee.add("todaysCollection");
 		sepratee.add("sewerageConnections");
 		sepratee.add("waterConnections");
 		sepratee.add("pendingConnections");
-		
+
 		metrics buildd = new metrics();
-		
+
 		List<connectionsCreated> build3 = new ArrayList<>();
 		List<todaysCollection> build4 = new ArrayList<>();
 		List<sewerageConnections> build5 = new ArrayList<>();
 		List<waterConnections> build6 = new ArrayList<>();
 		List<pendingConnections> build7 = new ArrayList<>();
-		
-		
+
 		for (int i = 0; i < seprate.size(); i++) {
-			String string2 = sepratee.get(i); 
-			
-			 			
+			String string2 = sepratee.get(i);
+
 			List<String> list2 = seprate.get(i);
-			
-			
+
 			for (String string : list2) {
-				
+
 				if (string2.equalsIgnoreCase("connectionsCreated")) {
-					
-				connectionsCreated connection = new connectionsCreated();
-				String groupByName = "connectionsCreated";
-					
-					List<buckets> query2 = data(string, groupByName,  SearchTotalCollectionCriteria, preparedStatement, requestInfo);
-					
-				connection.setGroupBy(string);
-				connection.setBuckets(query2);
-				build3.add(connection);
-				
-			}
-				
+
+					connectionsCreated connection = new connectionsCreated();
+					String groupByName = "connectionsCreated";
+
+					List<buckets> query2 = data(string, groupByName, SearchTotalCollectionCriteria, preparedStatement,
+							requestInfo);
+
+					connection.setGroupBy(string);
+					connection.setBuckets(query2);
+					build3.add(connection);
+
+				}
+
 				else if (string2.equalsIgnoreCase("todaysCollection")) {
-					
+
 					todaysCollection connection = new todaysCollection();
 					String groupByName = "todaysCollection";
 
-					List<buckets> query2 = data(string, groupByName , SearchTotalCollectionCriteria, preparedStatement, requestInfo);
-					
-				connection.setGroupBy(string);
-				connection.setBuckets(query2);
-				build4.add(connection);
-				
-			}
-				
+					List<buckets> query2 = data(string, groupByName, SearchTotalCollectionCriteria, preparedStatement,
+							requestInfo);
+
+					connection.setGroupBy(string);
+					connection.setBuckets(query2);
+					build4.add(connection);
+
+				}
+
 				else if (string2.equalsIgnoreCase("sewerageConnections")) {
-					
+
 					sewerageConnections connection = new sewerageConnections();
 					String groupByName = "sewerageConnections";
-						
-						List<buckets> query2 = data(string, groupByName , SearchTotalCollectionCriteria, preparedStatement, requestInfo);
-						
+
+					List<buckets> query2 = data(string, groupByName, SearchTotalCollectionCriteria, preparedStatement,
+							requestInfo);
+
 					connection.setGroupBy(string);
 					connection.setBuckets(query2);
 					build5.add(connection);
-					
+
 				}
-				
+
 				else if (string2.equalsIgnoreCase("waterConnections")) {
-					
+
 					waterConnections connection = new waterConnections();
 					String groupByName = "waterConnections";
-						
-						List<buckets> query2 = data(string, groupByName,  SearchTotalCollectionCriteria, preparedStatement, requestInfo);
-						
+
+					List<buckets> query2 = data(string, groupByName, SearchTotalCollectionCriteria, preparedStatement,
+							requestInfo);
+
 					connection.setGroupBy(string);
 					connection.setBuckets(query2);
 					build6.add(connection);
-					
+
 				}
-				
+
 				else if (string2.equalsIgnoreCase("pendingConnections")) {
-					
+
 					pendingConnections connection = new pendingConnections();
 					String groupByName = "pendingConnections";
-						
-						List<buckets> query2 = data(string, groupByName , SearchTotalCollectionCriteria, preparedStatement, requestInfo);
-						
+
+					List<buckets> query2 = data(string, groupByName, SearchTotalCollectionCriteria, preparedStatement,
+							requestInfo);
+
 					connection.setGroupBy(string);
 					connection.setBuckets(query2);
 					build7.add(connection);
-					
+
 				}
 
 			}
@@ -396,200 +387,209 @@ public class WaterDaoImpl implements WaterDao {
 		String transactions = "transactions";
 		String todaysTotalApplications = "todaysTotalApplications";
 		String todaysClosedApplications = "todaysClosedApplications";
-		metrics build = metrics.builder().connectionsCreated(build3).todaysCollection(build4).sewerageConnections(build5)
-				.waterConnections(build6).pendingConnections(build7).transactions(trsa(transactions ,SearchTotalCollectionCriteria, preparedStatement, requestInfo))
-				.slaCompliance(transactions1).todaysTotalApplications(trsa(todaysTotalApplications ,SearchTotalCollectionCriteria, preparedStatement, requestInfo))
-				.todaysClosedApplications(trsa(todaysClosedApplications ,SearchTotalCollectionCriteria, preparedStatement, requestInfo))
-				.todaysCompletedApplicationsWithinSLA(transactions1).avgDaysForApplicationApproval(averageapprovedDays(SearchTotalCollectionCriteria, preparedStatement))
-				.StipulatedDays(averageapprovedDays(SearchTotalCollectionCriteria, preparedStatement))
-				.build();
-		
-		Gson gson = new Gson();
-        String json = gson.toJson(build);
-		
+		metrics build = metrics.builder().connectionsCreated(build3).todaysCollection(build4)
+				.sewerageConnections(build5).waterConnections(build6).pendingConnections(build7)
+				.transactions(trsa(transactions, SearchTotalCollectionCriteria, preparedStatement, requestInfo))
+				.slaCompliance(transactions1)
+				.todaysTotalApplications(
+						trsa(todaysTotalApplications, SearchTotalCollectionCriteria, preparedStatement, requestInfo))
+				.todaysClosedApplications(
+						trsa(todaysClosedApplications, SearchTotalCollectionCriteria, preparedStatement, requestInfo))
+				.todaysCompletedApplicationsWithinSLA(transactions1)
+				.avgDaysForApplicationApproval(averageapprovedDays(SearchTotalCollectionCriteria, preparedStatement))
+				.StipulatedDays(averageapprovedDays(SearchTotalCollectionCriteria, preparedStatement)).build();
 
+		Gson gson = new Gson();
+		String json = gson.toJson(build);
 
 		return build;
 	}
-	
-	private int  averageapprovedDays(SearchTotalCollectionCriteria searchTotalCollectionCriteria,List<Object> preparedStatement) {
-		
-		String query1 = wsQueryBuilder.getWaterSearchQueryApprovedDaysNIUA(searchTotalCollectionCriteria , preparedStatement);
-		
-		String query2 = wsQueryBuilder.getWaterSearchQueryApprovedTimeTakenDaysNIUA(searchTotalCollectionCriteria , preparedStatement);
-		
-		String query3 = wsQueryBuilder.getSewerageSearchQueryApprovedNIUA(searchTotalCollectionCriteria , preparedStatement);
-		
-		String query4 = wsQueryBuilder.getSewerageSearchQueryApprovedTimeTakenNIUA(searchTotalCollectionCriteria , preparedStatement);
-		
-		Integer waterapprovedapplication = jdbcTemplate.queryForObject(query1,preparedStatement.toArray() , Integer.class);
-		
-		Double watertimetakenforapproval = jdbcTemplate.queryForObject(query2,preparedStatement.toArray() , Double.class);
-		
-		Integer sewerageapprovedapplication = jdbcTemplate.queryForObject(query3,preparedStatement.toArray() , Integer.class);
-		
-		Double seweragetimetakenforapproval = jdbcTemplate.queryForObject(query4,preparedStatement.toArray() , Double.class);
-		
-		if(waterapprovedapplication ==null) {
-			waterapprovedapplication=0;
+
+	private int averageapprovedDays(SearchTotalCollectionCriteria searchTotalCollectionCriteria,
+			List<Object> preparedStatement) {
+
+		String query1 = wsQueryBuilder.getWaterSearchQueryApprovedDaysNIUA(searchTotalCollectionCriteria,
+				preparedStatement);
+
+		String query2 = wsQueryBuilder.getWaterSearchQueryApprovedTimeTakenDaysNIUA(searchTotalCollectionCriteria,
+				preparedStatement);
+
+		String query3 = wsQueryBuilder.getSewerageSearchQueryApprovedNIUA(searchTotalCollectionCriteria,
+				preparedStatement);
+
+		String query4 = wsQueryBuilder.getSewerageSearchQueryApprovedTimeTakenNIUA(searchTotalCollectionCriteria,
+				preparedStatement);
+
+		Integer waterapprovedapplication = jdbcTemplate.queryForObject(query1, preparedStatement.toArray(),
+				Integer.class);
+
+		Double watertimetakenforapproval = jdbcTemplate.queryForObject(query2, preparedStatement.toArray(),
+				Double.class);
+
+		Integer sewerageapprovedapplication = jdbcTemplate.queryForObject(query3, preparedStatement.toArray(),
+				Integer.class);
+
+		Double seweragetimetakenforapproval = jdbcTemplate.queryForObject(query4, preparedStatement.toArray(),
+				Double.class);
+
+		if (waterapprovedapplication == null) {
+			waterapprovedapplication = 0;
 		}
-		if(watertimetakenforapproval ==null) {
-			watertimetakenforapproval=0.0;
+		if (watertimetakenforapproval == null) {
+			watertimetakenforapproval = 0.0;
 		}
-		if(sewerageapprovedapplication ==null) {
-			sewerageapprovedapplication=0;
+		if (sewerageapprovedapplication == null) {
+			sewerageapprovedapplication = 0;
 		}
-		if(seweragetimetakenforapproval ==null) {
-			seweragetimetakenforapproval=0.0;
+		if (seweragetimetakenforapproval == null) {
+			seweragetimetakenforapproval = 0.0;
 		}
-		
-		Double WaterApplicationAverageTimeTaken=0.0;
-		Double sewerageApplicationAverageTimeTaken=0.0;
-		int watertimeTakenForApproval=0;
-		int seweragetimeTakenForApproval=0;
-		int avgDaysForApplicationApproval=0;
-		
-		WaterApplicationAverageTimeTaken= watertimetakenforapproval / waterapprovedapplication;
-		
-		watertimeTakenForApproval =(int)Math.ceil(WaterApplicationAverageTimeTaken);
-		
-		sewerageApplicationAverageTimeTaken= seweragetimetakenforapproval / sewerageapprovedapplication;
-		
-		seweragetimeTakenForApproval =(int)Math.ceil(sewerageApplicationAverageTimeTaken);
-		
-		avgDaysForApplicationApproval=watertimeTakenForApproval + seweragetimeTakenForApproval;
-		
+
+		Double WaterApplicationAverageTimeTaken = 0.0;
+		Double sewerageApplicationAverageTimeTaken = 0.0;
+		int watertimeTakenForApproval = 0;
+		int seweragetimeTakenForApproval = 0;
+		int avgDaysForApplicationApproval = 0;
+
+		WaterApplicationAverageTimeTaken = watertimetakenforapproval / waterapprovedapplication;
+
+		watertimeTakenForApproval = (int) Math.ceil(WaterApplicationAverageTimeTaken);
+
+		sewerageApplicationAverageTimeTaken = seweragetimetakenforapproval / sewerageapprovedapplication;
+
+		seweragetimeTakenForApproval = (int) Math.ceil(sewerageApplicationAverageTimeTaken);
+
+		avgDaysForApplicationApproval = watertimeTakenForApproval + seweragetimeTakenForApproval;
+
 		return avgDaysForApplicationApproval;
-		
+
 	}
 
-	private int  trsa(String str , SearchTotalCollectionCriteria searchTotalCollectionCriteria,
+	private int trsa(String str, SearchTotalCollectionCriteria searchTotalCollectionCriteria,
 			List<Object> preparedStatement, RequestInfo requestInfo) {
-		
-		
-		
-		List<buckets> query2 = data(str, str , searchTotalCollectionCriteria, preparedStatement, requestInfo);
-		  int value = query2.get(0).getValue();
-		  
-		
+
+		List<buckets> query2 = data(str, str, searchTotalCollectionCriteria, preparedStatement, requestInfo);
+		int value = query2.get(0).getValue();
+
 		return value;
 	}
-	
-	private List<buckets> data(String string, String groupByName, SearchTotalCollectionCriteria searchTotalCollectionCriteria,
-			List<Object> preparedStatement, RequestInfo requestInfo) {
-		
-		String query = wsQueryBuilder.getSearchQueryStringTotalCollectionCountNIUA(string , groupByName , searchTotalCollectionCriteria , preparedStatement, requestInfo);
+
+	private List<buckets> data(String string, String groupByName,
+			SearchTotalCollectionCriteria searchTotalCollectionCriteria, List<Object> preparedStatement,
+			RequestInfo requestInfo) {
+
+		String query = wsQueryBuilder.getSearchQueryStringTotalCollectionCountNIUA(string, groupByName,
+				searchTotalCollectionCriteria, preparedStatement, requestInfo);
 //		
-			List<buckets> query2 = jdbcTemplate.query(query, preparedStatement.toArray(),waterNIUARowMapper);
-		
-		
-		
+		List<buckets> query2 = jdbcTemplate.query(query, preparedStatement.toArray(), waterNIUARowMapper);
+
 		return query2;
 	}
-	
-	
+
 	@Override
-	public List<WaterConnection> getAPI(SearchCriteria criteria,
-			RequestInfo requestInfo) {
+	public List<WaterConnection> getAPI(SearchCriteria criteria, RequestInfo requestInfo) {
 		List<Object> preparedStatement = new ArrayList<>();
 		String query = wsQueryBuilder.getAPI(criteria, preparedStatement, requestInfo);
-		
-	//	log.info("Query-->"+query);
-	//	log.info("preparedStatement-->"+preparedStatement);
-		
+
+		// log.info("Query-->"+query);
+		// log.info("preparedStatement-->"+preparedStatement);
+
 		StringBuilder str = new StringBuilder("Water query: ").append(query);
-		//log.info(str.toString());
+		// log.info(str.toString());
 		if (query == null)
 			return Collections.emptyList();
 //		if (log.isDebugEnabled()) {
-	//		StringBuilder str = new StringBuilder("Water query: ").append(query);
+		// StringBuilder str = new StringBuilder("Water query: ").append(query);
 //			log.info(str.toString());
 //		}
-		
-	//	log.info(jdbcTemplate.query(query, preparedStatement.toArray(),waterRowMapper).toString());
-		
+
+		// log.info(jdbcTemplate.query(query,
+		// preparedStatement.toArray(),waterRowMapper).toString());
+
 		List<WaterConnection> waterConnectionList = jdbcTemplate.query(query, preparedStatement.toArray(),
 				waterGetAPIRowMapper);
-		
-		//System.out.println(preparedStatement.toArray());
-		//System.out.println(preparedStatement);
-		//System.out.println(waterRowMapper.toString());
+
+		// System.out.println(preparedStatement.toArray());
+		// System.out.println(preparedStatement);
+		// System.out.println(waterRowMapper.toString());
 		if (waterConnectionList == null) {
 			return Collections.emptyList();
 		}
 
 		return waterConnectionList;
 	}
-	
-	
+
 	@Override
-	public  ResponseData searchPublicDashBoardCount(PublicDashBoardSearchCritieria SearchTotalCollectionCriteria) {
+	public ResponseData searchPublicDashBoardCount(PublicDashBoardSearchCritieria SearchTotalCollectionCriteria) {
 		List<Object> preparedStatement = new ArrayList<>();
-		
-		
-     int ApplicationReceived = publicDashBoardAppicationReceived(SearchTotalCollectionCriteria,preparedStatement);
-     
-     int ApplicationApproved = publicDashBoardApproved(SearchTotalCollectionCriteria,preparedStatement);
-     
-     double ApplicationApprovedTimeTaken = publicDashBoardTimeTaken(SearchTotalCollectionCriteria,preparedStatement);
-     System.out.println("ApplicationApprovedTimeTaken::"+ApplicationApprovedTimeTaken);
-     double ApplicationTimeTaken=0.0;
-     int timeTakenForApproval=0;
-     if(ApplicationApproved > 0) {
-    	 ApplicationTimeTaken= ApplicationApprovedTimeTaken / ApplicationApproved;
-    	 System.out.println("ApplicationTimeTaken::"+ApplicationTimeTaken);
-    	 timeTakenForApproval =(int)Math.ceil(ApplicationTimeTaken);
-    	 System.out.println("timeTakenForApproval::"+timeTakenForApproval);
-     }
-        
-     ResponseData rs=new ResponseData();
-     
-     rs.setTotalApplicationReceived(ApplicationReceived);
-     rs.setTotalApplicationsApproved(ApplicationApproved);
- 	 rs.setTimeTakenForApproval(timeTakenForApproval);
-	
-	return rs;
+
+		int ApplicationReceived = publicDashBoardAppicationReceived(SearchTotalCollectionCriteria, preparedStatement);
+
+		int ApplicationApproved = publicDashBoardApproved(SearchTotalCollectionCriteria, preparedStatement);
+
+		double ApplicationApprovedTimeTaken = publicDashBoardTimeTaken(SearchTotalCollectionCriteria,
+				preparedStatement);
+		System.out.println("ApplicationApprovedTimeTaken::" + ApplicationApprovedTimeTaken);
+		double ApplicationTimeTaken = 0.0;
+		int timeTakenForApproval = 0;
+		if (ApplicationApproved > 0) {
+			ApplicationTimeTaken = ApplicationApprovedTimeTaken / ApplicationApproved;
+			System.out.println("ApplicationTimeTaken::" + ApplicationTimeTaken);
+			timeTakenForApproval = (int) Math.ceil(ApplicationTimeTaken);
+			System.out.println("timeTakenForApproval::" + timeTakenForApproval);
+		}
+
+		ResponseData rs = new ResponseData();
+
+		rs.setTotalApplicationReceived(ApplicationReceived);
+		rs.setTotalApplicationsApproved(ApplicationApproved);
+		rs.setTimeTakenForApproval(timeTakenForApproval);
+
+		return rs;
 	}
-		
-	
-	
+
 	private int publicDashBoardAppicationReceived(PublicDashBoardSearchCritieria SearchTotalCollectionCriteria,
 			List<Object> preparedStatement) {
-		
-		String query = wsQueryBuilder.getSearchQueryStringPublicDashBoard(SearchTotalCollectionCriteria , preparedStatement);
-			
-		Integer applicationreceivedcount = jdbcTemplate.queryForObject(query,preparedStatement.toArray() , Integer.class);
-		
+
+		String query = wsQueryBuilder.getSearchQueryStringPublicDashBoard(SearchTotalCollectionCriteria,
+				preparedStatement);
+
+		Integer applicationreceivedcount = jdbcTemplate.queryForObject(query, preparedStatement.toArray(),
+				Integer.class);
+
 		return applicationreceivedcount;
 	}
-	
+
 	private int publicDashBoardApproved(PublicDashBoardSearchCritieria SearchTotalCollectionCriteria,
 			List<Object> preparedStatement) {
-		
-		String query = wsQueryBuilder.getSearchQueryStringPublicDashBoardApproved(SearchTotalCollectionCriteria , preparedStatement);
-			
-		Integer applicationapprovedcount = jdbcTemplate.queryForObject(query,preparedStatement.toArray(),Integer.class);
-		
-		if(applicationapprovedcount ==null) {
-			applicationapprovedcount=0;
+
+		String query = wsQueryBuilder.getSearchQueryStringPublicDashBoardApproved(SearchTotalCollectionCriteria,
+				preparedStatement);
+
+		Integer applicationapprovedcount = jdbcTemplate.queryForObject(query, preparedStatement.toArray(),
+				Integer.class);
+
+		if (applicationapprovedcount == null) {
+			applicationapprovedcount = 0;
 		}
-		
+
 		return applicationapprovedcount;
 	}
-	
+
 	private Double publicDashBoardTimeTaken(PublicDashBoardSearchCritieria SearchTotalCollectionCriteria,
 			List<Object> preparedStatement) {
-		
-		String query = wsQueryBuilder.getSearchQueryStringPublicDashBoardTimeTaken(SearchTotalCollectionCriteria , preparedStatement);
-		 System.out.println("query::"+query);	
-		Double applicationapprovedtimetaken = jdbcTemplate.queryForObject(query,preparedStatement.toArray() , Double.class);
-		System.out.println("publicDashBoardTimeTaken::"+applicationapprovedtimetaken);
-		if(applicationapprovedtimetaken ==null) {
-			applicationapprovedtimetaken=0.0;
+
+		String query = wsQueryBuilder.getSearchQueryStringPublicDashBoardTimeTaken(SearchTotalCollectionCriteria,
+				preparedStatement);
+		System.out.println("query::" + query);
+		Double applicationapprovedtimetaken = jdbcTemplate.queryForObject(query, preparedStatement.toArray(),
+				Double.class);
+		System.out.println("publicDashBoardTimeTaken::" + applicationapprovedtimetaken);
+		if (applicationapprovedtimetaken == null) {
+			applicationapprovedtimetaken = 0.0;
 		}
-		
+
 		return applicationapprovedtimetaken;
 	}
-	
 
 }

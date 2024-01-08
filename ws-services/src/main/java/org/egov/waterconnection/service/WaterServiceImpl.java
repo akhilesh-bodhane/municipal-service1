@@ -158,7 +158,7 @@ public class WaterServiceImpl implements WaterService {
 		enrichmentService.enrichConnectionHolderDeatils(waterConnectionList, criteria, requestInfo);
 		return waterConnectionList;
 	}
-	
+
 	/**
 	 * 
 	 * @param criteria    WaterConnectionSearchCriteria contains search criteria on
@@ -240,6 +240,12 @@ public class WaterServiceImpl implements WaterService {
 				.setSubmitByName(waterConnectionRequest.getWaterConnection().getSubmitByName());
 		boolean isStateUpdatable = true;
 		BusinessService businessService = null;
+
+		if (WCConstants.ACTION_CHANGE_CONNECTION_HOLDER
+				.equalsIgnoreCase(waterConnectionRequest.getWaterConnection().getProcessInstance().getAction())) {
+			waterDao.deactiveConnectionHolder(waterConnectionRequest);
+		}
+
 		if (WCConstants.ACTION_INITIATE
 				.equalsIgnoreCase(waterConnectionRequest.getWaterConnection().getProcessInstance().getAction())) {
 			waterConnectionRequest.getWaterConnection().setDocuments(null);

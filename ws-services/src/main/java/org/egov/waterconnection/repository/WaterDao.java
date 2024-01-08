@@ -37,4 +37,5 @@ public interface WaterDao {
 
 	public List<WaterConnection> getWaterConnectionListCitizen(SearchCriteria criteria,RequestInfo requestInfo);
 
+	public void deactiveConnectionHolder(WaterConnectionRequest waterConnectionRequest);
 }
