@@ -536,7 +536,7 @@ public class UserService {
 		userSearchRequest.setMobileNumber(connectionHolderInfo.getMobileNumber());
 		// userSearchRequest.setUserType(connectionHolderInfo.getType());
 		userSearchRequest.setUserType("CITIZEN");
-		userSearchRequest.setName(connectionHolderInfo.getName());
+		userSearchRequest.setName(connectionHolderInfo.getName().trim());
 		StringBuilder uri = new StringBuilder(configuration.getUserHost())
 				.append(configuration.getUserSearchEndpoint());
 		System.out.println("User search request : " + userSearchRequest.toString());
