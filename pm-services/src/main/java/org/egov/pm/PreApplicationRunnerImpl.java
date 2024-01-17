@@ -182,12 +182,15 @@ public class PreApplicationRunnerImpl implements ApplicationRunner {
 		DocumentColumn temp = documentColumnList.stream().filter(
 				value -> value.getApplicationType().equals(applicationType) && value.getTenantId().equals(tenantId))
 				.findFirst().orElse(null);
+		System.out.println("Document Column Value : " + temp.toString());
 		if (temp != null) {
+			System.out.println("Inside if condition");
 			if (documentType.equals("certificateData"))
 				sqlQuery = temp.getCertificateDataQuery();
 			else if (documentType.equals("receiptData"))
 				sqlQuery = temp.getReceiptDataQuery();
 		}
+		System.out.println("sql query : " + sqlQuery);
 		return sqlQuery;
 	}
 

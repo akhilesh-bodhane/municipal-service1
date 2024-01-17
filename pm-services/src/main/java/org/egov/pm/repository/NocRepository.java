@@ -298,7 +298,9 @@ public class NocRepository {
 	 */
 	public JSONArray getCertificateData(RequestData requestInfo) {
 		try {
+			System.out.println("Inside getCertificateData method");
 			if (!requestInfo.getApplicationId().isEmpty()) {
+				System.out.println("Inside if condition");
 				String tenantId = requestInfo.getTenantId();
 				String certificateSqlQuery = PreApplicationRunnerImpl.getCertificateSqlQuery(tenantId,
 						requestInfo.getApplicationType(),
