@@ -24,28 +24,28 @@ import org.springframework.util.ObjectUtils;
 @Service
 public class EnrichmentService {
 
+	@Autowired
+	private PropertyUtil propertyutil;
 
-    @Autowired
-    private PropertyUtil propertyutil;
+	@Autowired
+	private BoundaryService boundaryService;
 
-    @Autowired
-    private BoundaryService boundaryService;
+	@Autowired
+	private PropertyConfiguration config;
 
-    @Autowired
-    private PropertyConfiguration config;
-
-
-
-    /**
-     * Assigns UUIDs to all id fields and also assigns acknowledgement-number and assessment-number generated from id-gen
-     * @param request  PropertyRequest received for property creation
-     * @param onlyPropertyDetail if true only the fields related to propertyDetail are enriched(assigned)
-     */
+	/**
+	 * Assigns UUIDs to all id fields and also assigns acknowledgement-number and
+	 * assessment-number generated from id-gen
+	 * 
+	 * @param request            PropertyRequest received for property creation
+	 * @param onlyPropertyDetail if true only the fields related to propertyDetail
+	 *                           are enriched(assigned)
+	 */
 	public void enrichCreateRequest(PropertyRequest request) {
 
 		RequestInfo requestInfo = request.getRequestInfo();
 		Property property = request.getProperty();
-		
+
 		property.setAccountId(requestInfo.getUserInfo().getUuid());
 		enrichUuidsForPropertyCreate(requestInfo, property);
 		setIdgenIds(request);
@@ -53,12 +53,12 @@ public class EnrichmentService {
 	}
 
 	private void enrichUuidsForPropertyCreate(RequestInfo requestInfo, Property property) {
-		
+
 		AuditDetails propertyAuditDetails = propertyutil.getAuditDetails(requestInfo.getUserInfo().getUuid(), true);
-		
+
 		property.setId(UUID.randomUUID().toString());
 		property.setCreationReason(CreationReason.CREATE);
-		
+
 		if (!CollectionUtils.isEmpty(property.getDocuments()))
 			property.getDocuments().forEach(doc -> {
 				doc.setId(UUID.randomUUID().toString());
@@ -72,39 +72,44 @@ public class EnrichmentService {
 			property.getInstitution().setId(UUID.randomUUID().toString());
 
 		property.setAuditDetails(propertyAuditDetails);
-		
+
 		if (!CollectionUtils.isEmpty(property.getUnits()))
 			property.getUnits().forEach(unit -> {
 
 				unit.setId(UUID.randomUUID().toString());
 				unit.setActive(true);
 			});
-		
+
 		property.getOwners().forEach(owner -> {
-			
+
 			owner.setOwnerInfoUuid(UUID.randomUUID().toString());
 			if (!CollectionUtils.isEmpty(owner.getDocuments()))
 				owner.getDocuments().forEach(doc -> {
 					doc.setId(UUID.randomUUID().toString());
 					doc.setStatus(Status.ACTIVE);
 				});
-			
+
 			owner.setStatus(Status.ACTIVE);
+			if (owner.getConnectionOwnerName() == null || owner.getConnectionOwnerName().isEmpty()) {
+				owner.setConnectionOwnerName(owner.getName());
+			}
 		});
 	}
 
-    /**
-     * Assigns UUID for new fields that are added and sets propertyDetail and address id from propertyId
-     * 
-     * @param request  PropertyRequest received for property update
-     * @param propertiesFromResponse Properties returned by calling search based on id in PropertyRequest
-     */
-    public void enrichUpdateRequest(PropertyRequest request,Property propertyFromDb) {
-    	
-    	Property property = request.getProperty();
-        RequestInfo requestInfo = request.getRequestInfo();
-        AuditDetails auditDetails = propertyutil.getAuditDetails(requestInfo.getUserInfo().getUuid().toString(), true);
-        
+	/**
+	 * Assigns UUID for new fields that are added and sets propertyDetail and
+	 * address id from propertyId
+	 * 
+	 * @param request                PropertyRequest received for property update
+	 * @param propertiesFromResponse Properties returned by calling search based on
+	 *                               id in PropertyRequest
+	 */
+	public void enrichUpdateRequest(PropertyRequest request, Property propertyFromDb) {
+
+		Property property = request.getProperty();
+		RequestInfo requestInfo = request.getRequestInfo();
+		AuditDetails auditDetails = propertyutil.getAuditDetails(requestInfo.getUserInfo().getUuid().toString(), true);
+
 		Boolean isWfEnabled = config.getIsWorkflowEnabled();
 		Boolean iswfStarting = propertyFromDb.getStatus().equals(Status.ACTIVE);
 
@@ -116,7 +121,7 @@ public class EnrichmentService {
 		} else if (isWfEnabled && iswfStarting) {
 			enrichPropertyForNewWf(requestInfo, property, false);
 		}
-		
+
 		if (!CollectionUtils.isEmpty(property.getDocuments()))
 			property.getDocuments().forEach(doc -> {
 
@@ -125,19 +130,19 @@ public class EnrichmentService {
 					doc.setStatus(Status.ACTIVE);
 				}
 			});
-				
+
 		Institution institute = property.getInstitution();
 		if (!ObjectUtils.isEmpty(institute) && null == institute.getId())
 			property.getInstitution().setId(UUID.randomUUID().toString());
 
-            property.setAuditDetails(auditDetails);
-            property.setAccountId(propertyFromDb.getAccountId());
-       
+		property.setAuditDetails(auditDetails);
+		property.setAccountId(propertyFromDb.getAccountId());
+
 		property.setAdditionalDetails(
 				propertyutil.jsonMerge(propertyFromDb.getAdditionalDetails(), property.getAdditionalDetails()));
-    }
+	}
 
-    /**
+	/**
 	 * Sets the acknowledgement and assessment Numbers for given PropertyRequest
 	 * 
 	 * @param request PropertyRequest which is to be created
@@ -152,19 +157,23 @@ public class EnrichmentService {
 
 			property.setStatus(Status.ACTIVE);
 		}
-		
-		String pId = propertyutil.getIdList(requestInfo, tenantId, config.getPropertyIdGenName(), config.getPropertyIdGenFormat(), 1).get(0);
-		String ackNo = propertyutil.getIdList(requestInfo, tenantId, config.getAckIdGenName(), config.getAckIdGenFormat(), 1).get(0);
+
+		String pId = propertyutil
+				.getIdList(requestInfo, tenantId, config.getPropertyIdGenName(), config.getPropertyIdGenFormat(), 1)
+				.get(0);
+		String ackNo = propertyutil
+				.getIdList(requestInfo, tenantId, config.getAckIdGenName(), config.getAckIdGenFormat(), 1).get(0);
 		property.setPropertyId(pId);
 		property.setAcknowldgementNumber(ackNo);
 	}
 
-
-    /**
-     * Returns PropertyCriteria with ids populated using propertyids from properties
-     * @param properties properties whose propertyids are to added to propertyCriteria for search
-     * @return propertyCriteria to search on basis of propertyids
-     */
+	/**
+	 * Returns PropertyCriteria with ids populated using propertyids from properties
+	 * 
+	 * @param properties properties whose propertyids are to added to
+	 *                   propertyCriteria for search
+	 * @return propertyCriteria to search on basis of propertyids
+	 */
 	public PropertyCriteria getPropertyCriteriaFromPropertyIds(List<Property> properties) {
 
 		PropertyCriteria criteria = new PropertyCriteria();
@@ -175,21 +184,22 @@ public class EnrichmentService {
 		return criteria;
 	}
 
-    /**
-     *  Enriches the locality object
-     * @param request The propertyRequest received for create or update
-     */
-    public void enrichBoundary(Property property, RequestInfo requestInfo){
-    	
-        boundaryService.getAreaType(property, requestInfo, PTConstants.BOUNDARY_HEIRARCHY_CODE);
-    }
-    
-    /**
-     * 
-     * Enrichment method for mutation request
-     * 
-     * @param request
-     */
+	/**
+	 * Enriches the locality object
+	 * 
+	 * @param request The propertyRequest received for create or update
+	 */
+	public void enrichBoundary(Property property, RequestInfo requestInfo) {
+
+		boundaryService.getAreaType(property, requestInfo, PTConstants.BOUNDARY_HEIRARCHY_CODE);
+	}
+
+	/**
+	 * 
+	 * Enrichment method for mutation request
+	 * 
+	 * @param request
+	 */
 	public void enrichMutationRequest(PropertyRequest request, Property propertyFromSearch) {
 
 		RequestInfo requestInfo = request.getRequestInfo();
@@ -209,7 +219,7 @@ public class EnrichmentService {
 		property.getOwners().forEach(owner -> {
 
 			if (owner.getOwnerInfoUuid() == null) {
-				
+
 				owner.setOwnerInfoUuid(UUID.randomUUID().toString());
 				owner.setStatus(Status.ACTIVE);
 			}
@@ -222,8 +232,8 @@ public class EnrichmentService {
 					}
 				});
 		});
-		 AuditDetails auditDetails = propertyutil.getAuditDetails(requestInfo.getUserInfo().getUuid().toString(), true);
-		 property.setAuditDetails(auditDetails);
+		AuditDetails auditDetails = propertyutil.getAuditDetails(requestInfo.getUserInfo().getUuid().toString(), true);
+		property.setAuditDetails(auditDetails);
 	}
 
 	/**
@@ -233,25 +243,27 @@ public class EnrichmentService {
 	 * @param property
 	 */
 	private void enrichPropertyForNewWf(RequestInfo requestInfo, Property property, Boolean isMutation) {
-		
+
 		String ackNo;
 
 		if (isMutation) {
-			ackNo = propertyutil.getIdList(requestInfo, property.getTenantId(), config.getMutationIdGenName(), config.getMutationIdGenFormat(), 1).get(0);
+			ackNo = propertyutil.getIdList(requestInfo, property.getTenantId(), config.getMutationIdGenName(),
+					config.getMutationIdGenFormat(), 1).get(0);
 		} else
-			ackNo = propertyutil.getIdList(requestInfo, property.getTenantId(), config.getAckIdGenName(), config.getAckIdGenFormat(), 1).get(0);
+			ackNo = propertyutil.getIdList(requestInfo, property.getTenantId(), config.getAckIdGenName(),
+					config.getAckIdGenFormat(), 1).get(0);
 		property.setId(UUID.randomUUID().toString());
 		property.setAcknowldgementNumber(ackNo);
-		
+
 		enrichUuidsForNewUpdate(requestInfo, property);
 	}
-	
+
 	private void enrichUuidsForNewUpdate(RequestInfo requestInfo, Property property) {
-		
+
 		AuditDetails propertyAuditDetails = propertyutil.getAuditDetails(requestInfo.getUserInfo().getUuid(), true);
-		
+
 		property.setId(UUID.randomUUID().toString());
-		
+
 		if (!CollectionUtils.isEmpty(property.getDocuments()))
 			property.getDocuments().forEach(doc -> {
 				doc.setId(UUID.randomUUID().toString());
@@ -266,16 +278,16 @@ public class EnrichmentService {
 			property.getInstitution().setId(UUID.randomUUID().toString());
 
 		property.setAuditDetails(propertyAuditDetails);
-		
+
 		if (!CollectionUtils.isEmpty(property.getUnits()))
 			property.getUnits().forEach(unit -> {
 
 				unit.setId(UUID.randomUUID().toString());
 				unit.setActive(true);
 			});
-		
+
 		property.getOwners().forEach(owner -> {
-			
+
 			owner.setOwnerInfoUuid(UUID.randomUUID().toString());
 			if (!CollectionUtils.isEmpty(owner.getDocuments()))
 				owner.getDocuments().forEach(doc -> {

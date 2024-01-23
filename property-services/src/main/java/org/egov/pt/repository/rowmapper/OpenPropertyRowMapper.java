@@ -105,6 +105,7 @@ public class OpenPropertyRowMapper implements ResultSetExtractor<List<Property>>
 				.ownerType(rs.getString("ownerType"))
 				.uuid(uuid)
 				.mobileNumber(rs.getString("mobile_number_owner"))
+				.connectionOwnerName(rs.getString("connectionownername"))
 				.build();
 		
 		property.addOwnersItem(owner);
