@@ -34,11 +34,9 @@ import lombok.ToString;
 @javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2020-03-11T12:10:14.583+05:30[Asia/Kolkata]")
 public class WaterConnection extends Connection {
 
-	
-
 	@JsonProperty("waterSource")
 	private String waterSource = null;
-	
+
 	@JsonProperty("property")
 	private Property property;
 
@@ -56,19 +54,19 @@ public class WaterConnection extends Connection {
 
 	@JsonProperty("pipeSize")
 	private String pipeSize = null;
-	
+
 	@JsonProperty("ploatAreaTT")
 	private String ploatAreaTT;
 
 	@JsonProperty("noOfTaps")
 	private Integer noOfTaps = null;
-	
+
 	@JsonProperty("waterApplicationType")
 	private String waterApplicationType = null;
-	
+
 	@JsonProperty("securityCharge")
 	private Double securityCharge = null;
-	
+
 	@JsonProperty("connectionUsagesType")
 	private String connectionUsagesType = null;
 
@@ -104,17 +102,16 @@ public class WaterConnection extends Connection {
 
 	@JsonProperty("ledgerGroup")
 	private String ledgerGroup = null;
-	
+
 	@JsonProperty("inWorkflow")
 	private Boolean inWorkflow = false;
-	
+
 	@JsonProperty("activityType")
 	private String activityType = null;
-	
-	
+
 	@JsonProperty("waterChargesTT")
-	private String waterChargesTT ;
-	
+	private String waterChargesTT;
+
 	@JsonProperty("paymentMODE")
 	private String paymentMODE = null;
 
@@ -123,7 +120,7 @@ public class WaterConnection extends Connection {
 
 	@JsonProperty("billGroup")
 	private String billGroup = null;
-	
+
 	@JsonProperty("proposedUsageCategory")
 	private String proposedUsageCategory = null;
 
@@ -132,13 +129,13 @@ public class WaterConnection extends Connection {
 
 	@JsonProperty("ferruleSize")
 	private String ferruleSize = null;
-	
+
 	@JsonProperty("proposedMeterId")
 	private String proposedMeterId = null;
 
 	@JsonProperty("proposedMeterInstallationDate")
 	private Long proposedMeterInstallationDate = null;
-	
+
 	@JsonProperty("proposedMeterCount")
 	private String proposedMeterCount = null;
 
@@ -156,16 +153,16 @@ public class WaterConnection extends Connection {
 
 	@JsonProperty("proposedSanctionedCapacity")
 	private String proposedSanctionedCapacity = null;
-	
+
 	@JsonProperty("proposedInitialMeterReading")
 	private BigDecimal proposedInitialMeterReading = null;
-	
+
 	@JsonProperty("proposedLastMeterReading")
 	private BigDecimal proposedLastMeterReading = null;
-	
+
 	@JsonProperty("location")
 	private String location;
-	
+
 	@JsonProperty("sameuservalid")
 	private Boolean sameuservalid = false;
 
@@ -174,17 +171,16 @@ public class WaterConnection extends Connection {
 
 	@JsonProperty("submitByName")
 	private String submitByName = null;
-	
+
 	@JsonProperty("userName")
 	private String userName = null;
-	
-	
-	
+
 	@JsonProperty("mobileNumberOwner")
-	private String mobileNumberOwner = null;	 
-	
-	
-	
+	private String mobileNumberOwner = null;
+
+	@JsonProperty("connectionOwnerName")
+	private String connectionOwnerName = null;
+
 	public String getContractValue() {
 		return contractValue;
 	}
@@ -200,7 +196,7 @@ public class WaterConnection extends Connection {
 	public void setBillGroup(String billGroup) {
 		this.billGroup = billGroup;
 	}
-	
+
 	public String getPaymentMODE() {
 		return paymentMODE;
 	}
@@ -241,7 +237,7 @@ public class WaterConnection extends Connection {
 	 **/
 	@ApiModelProperty(value = "Unique id of the meter.")
 
-	//@Size(min = 2, max = 64)
+	// @Size(min = 2, max = 64)
 	public String getMeterId() {
 		return meterId;
 	}
@@ -628,6 +624,5 @@ public class WaterConnection extends Connection {
 	public void setProposedLastMeterReading(BigDecimal proposedLastMeterReading) {
 		this.proposedLastMeterReading = proposedLastMeterReading;
 	}
-	
-	
+
 }
