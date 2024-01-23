@@ -127,8 +127,8 @@ public class UserService {
 					 */
 					StringBuilder uri = new StringBuilder(configuration.getUserHost())
 							.append(configuration.getUserContextPath()).append(configuration.getUserCreateEndPoint());
-					setUserNameNewConnection(ownerInfo, mobileNumber,
-							request.getWaterConnection().getConnectionOwnerName());
+					ownerInfo.setName(request.getWaterConnection().getConnectionOwnerName());
+					setUserNameNewConnection(ownerInfo, mobileNumber);
 
 					ConnectionUserRequestNew userRequest = ConnectionUserRequestNew.builder()
 							.requestInfo(request.getRequestInfo()).user(ownerInfo).build();
@@ -524,9 +524,8 @@ public class UserService {
 
 	private UserDetailResponseNew userExistsNewConnection(OwnerInfo ownerInfo, RequestInfo requestInfo,
 			String connectionOwnerName) {
-		String username = connectionOwnerName + ownerInfo.getMobileNumber();
 		UserSearchRequest userSearchRequest = getBaseUserSearchRequest(ownerInfo.getTenantId(), requestInfo);
-		userSearchRequest.setMobileNumber(username);
+		userSearchRequest.setMobileNumber(ownerInfo.getMobileNumber());
 		userSearchRequest.setUserType(ownerInfo.getType());
 		userSearchRequest.setName(connectionOwnerName);
 		StringBuilder uri = new StringBuilder(configuration.getUserHost())
@@ -606,13 +605,12 @@ public class UserService {
 		}
 	}
 
-	private void setUserNameNewConnection(OwnerInfo ownerInfo, String mobileNumber, String connectionOwnerName) {
+	private void setUserNameNewConnection(OwnerInfo ownerInfo, String mobileNumber) {
 
-		// String username = UUID.randomUUID().toString();
-		String username = connectionOwnerName + mobileNumber;
+		String username = UUID.randomUUID().toString();
 		ownerInfo.setUserName(username);
 		ownerInfo.setMobileNumber(mobileNumber);
-		System.out.println("Owner username : " + username);
+
 		System.out.println("Owner Mobile No. : " + mobileNumber);
 
 	}
