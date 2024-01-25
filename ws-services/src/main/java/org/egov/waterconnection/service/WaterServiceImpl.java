@@ -362,11 +362,12 @@ public class WaterServiceImpl implements WaterService {
 		waterConnectionRequest.getWaterConnection()
 				.setSubmitByName(waterConnectionRequest.getRequestInfo().getUserInfo().getName());
 
+		Property property = validateProperty.getOrValidateProperty(waterConnectionRequest);
+		waterConnectionRequest.getWaterConnection().setProperty(property);
+		validateProperty.validatePropertyCriteria(property);
+		userService.createUserNewConnection(waterConnectionRequest);
+		
 		if (waterConnectionRequest.getWaterConnection().getSameuservalid().equals(true)) {
-			Property property = validateProperty.getOrValidateProperty(waterConnectionRequest);
-			waterConnectionRequest.getWaterConnection().setProperty(property);
-			validateProperty.validatePropertyCriteria(property);
-			userService.createUserNewConnection(waterConnectionRequest);
 			waterConnectionRequest.getWaterConnection().setUserName(
 					waterConnectionRequest.getWaterConnection().getProperty().getOwners().get(0).getUuid());
 
