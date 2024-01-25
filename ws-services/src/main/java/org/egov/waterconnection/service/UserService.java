@@ -116,7 +116,7 @@ public class UserService {
 				addUserDefaultFieldsNew(request.getWaterConnection().getTenantId(), role, ownerInfo);
 //				UserDetailResponseNew userDetailResponse = userExistsNewConnection(ownerInfo, request.getRequestInfo());
 				UserDetailResponseNew userDetailResponse = userExistsNewConnection(ownerInfo, request.getRequestInfo(),
-						request.getWaterConnection().getConnectionOwnerName());
+						request.getWaterConnection().getConnectionOwnerName(),mobileNumber);
 				if (CollectionUtils.isEmpty(userDetailResponse.getUser())) {
 					/*
 					 * Sets userName equal to mobileNumber
@@ -523,9 +523,9 @@ public class UserService {
 	}
 
 	private UserDetailResponseNew userExistsNewConnection(OwnerInfo ownerInfo, RequestInfo requestInfo,
-			String connectionOwnerName) {
+			String connectionOwnerName, String mobileNumber) {
 		UserSearchRequest userSearchRequest = getBaseUserSearchRequest(ownerInfo.getTenantId(), requestInfo);
-		userSearchRequest.setMobileNumber(ownerInfo.getMobileNumber());
+		userSearchRequest.setMobileNumber(mobileNumber);
 		userSearchRequest.setUserType(ownerInfo.getType());
 		userSearchRequest.setName(connectionOwnerName);
 		StringBuilder uri = new StringBuilder(configuration.getUserHost())
