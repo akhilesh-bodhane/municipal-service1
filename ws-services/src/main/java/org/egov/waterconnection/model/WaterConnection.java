@@ -181,6 +181,12 @@ public class WaterConnection extends Connection {
 	@JsonProperty("connectionOwnerName")
 	private String connectionOwnerName = null;
 
+	@JsonProperty("proposedMobileNo")
+	private String proposedMobileNo = null;
+
+	@JsonProperty("proposedName")
+	private String proposedName = null;
+
 	public String getContractValue() {
 		return contractValue;
 	}
