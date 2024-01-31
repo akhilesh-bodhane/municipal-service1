@@ -243,6 +243,10 @@ public class WaterServiceImpl implements WaterService {
 
 		if (WCConstants.ACTION_CHANGE_CONNECTION_HOLDER
 				.equalsIgnoreCase(waterConnectionRequest.getWaterConnection().getProcessInstance().getAction())) {
+			waterConnectionRequest.getWaterConnection().setProposedName(
+					waterConnectionRequest.getWaterConnection().getConnectionHolders().get(0).getProposedName());
+			waterConnectionRequest.getWaterConnection().setProposedMobileNo(
+					waterConnectionRequest.getWaterConnection().getConnectionHolders().get(0).getProposedMobileNo());
 			waterDao.deactiveConnectionHolder(waterConnectionRequest);
 		}
 
@@ -366,7 +370,7 @@ public class WaterServiceImpl implements WaterService {
 		waterConnectionRequest.getWaterConnection().setProperty(property);
 		validateProperty.validatePropertyCriteria(property);
 		userService.createUserNewConnection(waterConnectionRequest);
-		
+
 		if (waterConnectionRequest.getWaterConnection().getSameuservalid().equals(true)) {
 			waterConnectionRequest.getWaterConnection().setUserName(
 					waterConnectionRequest.getWaterConnection().getProperty().getOwners().get(0).getUuid());
