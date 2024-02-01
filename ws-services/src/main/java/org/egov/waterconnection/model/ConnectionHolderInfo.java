@@ -17,127 +17,131 @@ import java.util.List;
 @NoArgsConstructor
 public class ConnectionHolderInfo extends User {
 
-    @JsonProperty("ownerInfoUuid")
-    private String ownerInfoUuid;
+	@JsonProperty("ownerInfoUuid")
+	private String ownerInfoUuid;
 
-    @NotNull
-    @JsonProperty("mobileNumber")
-    private String mobileNumber;
+	@NotNull
+	@JsonProperty("mobileNumber")
+	private String mobileNumber;
 
-    @JsonProperty("gender")
-    private String gender;
+	@JsonProperty("gender")
+	private String gender;
 
-    @JsonProperty("fatherOrHusbandName")
-    private String fatherOrHusbandName;
+	@JsonProperty("fatherOrHusbandName")
+	private String fatherOrHusbandName;
 
-    @JsonProperty("correspondenceAddress")
-    private String correspondenceAddress;
+	@JsonProperty("correspondenceAddress")
+	private String correspondenceAddress;
 
-    @JsonProperty("isPrimaryOwner")
-    private Boolean isPrimaryOwner;
+	@JsonProperty("isPrimaryOwner")
+	private Boolean isPrimaryOwner;
 
-    @JsonProperty("ownerShipPercentage")
-    private Double ownerShipPercentage;
+	@JsonProperty("ownerShipPercentage")
+	private Double ownerShipPercentage;
 
-    @NotNull
-    @JsonProperty("ownerType")
-    private String ownerType;
+	@NotNull
+	@JsonProperty("ownerType")
+	private String ownerType;
 
-    @JsonProperty("institutionId")
-    private String institutionId;
+	@JsonProperty("institutionId")
+	private String institutionId;
 
-    @JsonProperty("proposedMobileNo")
-    private String proposedMobileNo;
+	@JsonProperty("proposedMobileNo")
+	private String proposedMobileNo;
 
-    @JsonProperty("proposedName")
-    private String proposedName;
+	@JsonProperty("proposedName")
+	private String proposedName;
 
-    @JsonProperty("proposedGender")
-    private String proposedGender;
+	@JsonProperty("proposedGender")
+	private String proposedGender;
 
-    @JsonProperty("proposedGuardianName")
-    private String proposedGuardianName;
+	@JsonProperty("proposedGuardianName")
+	private String proposedGuardianName;
 
-    @JsonProperty("proposedCorrespondanceAddress")
-    private String proposedCorrespondanceAddress;
+	@JsonProperty("proposedCorrespondanceAddress")
+	private String proposedCorrespondanceAddress;
 
-    @JsonProperty("status")
-    private Status status;
+	@JsonProperty("status")
+	private Status status;
 
-    @JsonProperty("documents")
-    @Valid
-    private List<Document> documents;
+	@JsonProperty("documents")
+	@Valid
+	private List<Document> documents;
 
-    @JsonProperty("relationship")
-    private Relationship relationship;
-     
-    @JsonProperty("ws_application_id")
-    private String ws_application_id;
-    
-    @JsonProperty("sameuservalid")
-    private Boolean sameuservalid = false;
-    
-    @JsonProperty("submitBy")
-    private String submitBy = null;
+	@JsonProperty("relationship")
+	private Relationship relationship;
 
-    @JsonProperty("submitByName")
-    private String submitByName = null;
-    
+	@JsonProperty("ws_application_id")
+	private String ws_application_id;
 
-    @Builder
-    public ConnectionHolderInfo(Long id, String uuid, String userName, String password, String salutation, String name,
-                     String gender, String mobileNumber, String emailId, String altContactNumber, String pan,
-                     String aadhaarNumber, String permanentAddress, String permanentCity, String permanentPincode,
-                     String correspondenceCity, String correspondencePincode, String correspondenceAddress, Boolean active,
-                     Long dob, Long pwdExpiryDate, String locale, String type, String signature, Boolean accountLocked,
-                     List<Role> roles, String fatherOrHusbandName, String bloodGroup, String identificationMark, String photo,
-                     String createdBy, Long createdDate, String lastModifiedBy, Long lastModifiedDate, String tenantId,
-                     String ownerInfoUuid, String mobileNumber2, String gender2, String fatherOrHusbandName2,
-                     String correspondenceAddress2, Boolean isPrimaryOwner, Double ownerShipPercentage, String ownerType,
-                     String proposedName,String proposedMobileNo,String proposedGender,String proposedGuardianName,String proposedCorrespondanceAddress,
-                     String institutionId, Status status, List<Document> documents, Relationship relationship,String ws_application_id, Boolean sameuservalid,
-                     String submitBy, String submitByName) {
-        super(id, uuid, userName, password, salutation, name, gender, mobileNumber, emailId, altContactNumber, pan,
-                aadhaarNumber, permanentAddress, permanentCity, permanentPincode, correspondenceCity,
-                correspondencePincode, correspondenceAddress, active, dob, pwdExpiryDate, locale, type, signature,
-                accountLocked, roles, fatherOrHusbandName, bloodGroup, identificationMark, photo, createdBy,
-                createdDate, lastModifiedBy, lastModifiedDate, tenantId);
-        this.ownerInfoUuid = ownerInfoUuid;
-        this.mobileNumber = mobileNumber2;
-        gender = gender2;
-        fatherOrHusbandName = fatherOrHusbandName2;
-        this.correspondenceAddress = correspondenceAddress;
-        this.isPrimaryOwner = isPrimaryOwner;
-        this.ownerShipPercentage = ownerShipPercentage;
-        this.ownerType = ownerType;
-        this.institutionId = institutionId;
-        this.status = status;
-        this.documents = documents;
-        this.relationship = relationship;
-        this.proposedName=proposedName;
-        this.proposedCorrespondanceAddress=proposedCorrespondanceAddress;
-        this.proposedGender=proposedGender;
-        this.proposedMobileNo=proposedMobileNo;
-        this.proposedGuardianName=proposedGuardianName ;
-        this.ws_application_id=ws_application_id;
-        this.sameuservalid=sameuservalid;
-        this.submitBy=submitBy;
-        this.submitByName=submitByName;
-    }
+	@JsonProperty("sameuservalid")
+	private Boolean sameuservalid = false;
 
-    public ConnectionHolderInfo addDocumentsItem(Document documentsItem) {
-        if (this.documents == null) {
-            this.documents = new ArrayList<>();
-        }
-        this.documents.add(documentsItem);
-        return this;
-    }
+	@JsonProperty("submitBy")
+	private String submitBy = null;
 
-    /**
-     * Populates Owner fields from the given User object
-     *
-     * @param user User object obtained from user service
-     */
+	@JsonProperty("submitByName")
+	private String submitByName = null;
+
+	@JsonProperty("submitByMobileNumber")
+	private String submitByMobileNumber = null;
+
+	@Builder
+	public ConnectionHolderInfo(Long id, String uuid, String userName, String password, String salutation, String name,
+			String gender, String mobileNumber, String emailId, String altContactNumber, String pan,
+			String aadhaarNumber, String permanentAddress, String permanentCity, String permanentPincode,
+			String correspondenceCity, String correspondencePincode, String correspondenceAddress, Boolean active,
+			Long dob, Long pwdExpiryDate, String locale, String type, String signature, Boolean accountLocked,
+			List<Role> roles, String fatherOrHusbandName, String bloodGroup, String identificationMark, String photo,
+			String createdBy, Long createdDate, String lastModifiedBy, Long lastModifiedDate, String tenantId,
+			String ownerInfoUuid, String mobileNumber2, String gender2, String fatherOrHusbandName2,
+			String correspondenceAddress2, Boolean isPrimaryOwner, Double ownerShipPercentage, String ownerType,
+			String proposedName, String proposedMobileNo, String proposedGender, String proposedGuardianName,
+			String proposedCorrespondanceAddress, String institutionId, Status status, List<Document> documents,
+			Relationship relationship, String ws_application_id, Boolean sameuservalid, String submitBy,
+			String submitByName, String submitByMobileNumber) {
+		super(id, uuid, userName, password, salutation, name, gender, mobileNumber, emailId, altContactNumber, pan,
+				aadhaarNumber, permanentAddress, permanentCity, permanentPincode, correspondenceCity,
+				correspondencePincode, correspondenceAddress, active, dob, pwdExpiryDate, locale, type, signature,
+				accountLocked, roles, fatherOrHusbandName, bloodGroup, identificationMark, photo, createdBy,
+				createdDate, lastModifiedBy, lastModifiedDate, tenantId);
+		this.ownerInfoUuid = ownerInfoUuid;
+		this.mobileNumber = mobileNumber2;
+		gender = gender2;
+		fatherOrHusbandName = fatherOrHusbandName2;
+		this.correspondenceAddress = correspondenceAddress;
+		this.isPrimaryOwner = isPrimaryOwner;
+		this.ownerShipPercentage = ownerShipPercentage;
+		this.ownerType = ownerType;
+		this.institutionId = institutionId;
+		this.status = status;
+		this.documents = documents;
+		this.relationship = relationship;
+		this.proposedName = proposedName;
+		this.proposedCorrespondanceAddress = proposedCorrespondanceAddress;
+		this.proposedGender = proposedGender;
+		this.proposedMobileNo = proposedMobileNo;
+		this.proposedGuardianName = proposedGuardianName;
+		this.ws_application_id = ws_application_id;
+		this.sameuservalid = sameuservalid;
+		this.submitBy = submitBy;
+		this.submitByName = submitByName;
+		this.submitByMobileNumber = submitByMobileNumber;
+	}
+
+	public ConnectionHolderInfo addDocumentsItem(Document documentsItem) {
+		if (this.documents == null) {
+			this.documents = new ArrayList<>();
+		}
+		this.documents.add(documentsItem);
+		return this;
+	}
+
+	/**
+	 * Populates Owner fields from the given User object
+	 *
+	 * @param user User object obtained from user service
+	 */
 	/*
 	 * public void addUserDetail(User user) {
 	 * this.setLastModifiedDate(user.getLastModifiedDate());
@@ -167,36 +171,35 @@ public class ConnectionHolderInfo extends User {
 	 * this.setIdentificationMark(user.getIdentificationMark());
 	 * this.setPhoto(user.getPhoto()); this.setTenantId(user.getTenantId()); }
 	 */
-    
-    
-    public void addUserDetail(User user) {
-        this.setLastModifiedDate(user.getLastModifiedDate());
-        this.setLastModifiedBy(user.getLastModifiedBy());
-        this.setCreatedBy(user.getCreatedBy());
-        this.setCreatedDate(user.getCreatedDate());
-        this.setUserName(user.getUserName());        
-        this.setName(user.getName());
-        this.setMobileNumber(user.getMobileNumber());
-        this.setEmailId(user.getEmailId());        
-        this.setAadhaarNumber(user.getAadhaarNumber()); 
-        this.setFatherOrHusbandName(user.getFatherOrHusbandName());
-        this.setActive(user.getActive());
-        this.setDob(user.getDob());        
-        this.setRoles(user.getRoles());
-        this.setTenantId(user.getTenantId());
-    }
-    
-    public org.egov.common.contract.request.User toCommonUser(){
-        org.egov.common.contract.request.User commonUser = new org.egov.common.contract.request.User();
-        commonUser.setId(this.getId());
-        commonUser.setUserName(this.getUserName());
-        commonUser.setName(this.getName());
-        commonUser.setType(this.getType());
-        commonUser.setMobileNumber(this.getMobileNumber());
-        commonUser.setEmailId(this.getEmailId());
-        commonUser.setRoles(this.getRoles());
-        commonUser.setTenantId(this.getTenantId());
-        commonUser.setUuid(this.getUuid());
-        return commonUser;
-    }
+
+	public void addUserDetail(User user) {
+		this.setLastModifiedDate(user.getLastModifiedDate());
+		this.setLastModifiedBy(user.getLastModifiedBy());
+		this.setCreatedBy(user.getCreatedBy());
+		this.setCreatedDate(user.getCreatedDate());
+		this.setUserName(user.getUserName());
+		this.setName(user.getName());
+		this.setMobileNumber(user.getMobileNumber());
+		this.setEmailId(user.getEmailId());
+		this.setAadhaarNumber(user.getAadhaarNumber());
+		this.setFatherOrHusbandName(user.getFatherOrHusbandName());
+		this.setActive(user.getActive());
+		this.setDob(user.getDob());
+		this.setRoles(user.getRoles());
+		this.setTenantId(user.getTenantId());
+	}
+
+	public org.egov.common.contract.request.User toCommonUser() {
+		org.egov.common.contract.request.User commonUser = new org.egov.common.contract.request.User();
+		commonUser.setId(this.getId());
+		commonUser.setUserName(this.getUserName());
+		commonUser.setName(this.getName());
+		commonUser.setType(this.getType());
+		commonUser.setMobileNumber(this.getMobileNumber());
+		commonUser.setEmailId(this.getEmailId());
+		commonUser.setRoles(this.getRoles());
+		commonUser.setTenantId(this.getTenantId());
+		commonUser.setUuid(this.getUuid());
+		return commonUser;
+	}
 }
