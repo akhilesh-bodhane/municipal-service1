@@ -370,11 +370,10 @@ public class WaterServiceImpl implements WaterService {
 		waterConnectionRequest.getWaterConnection().setProperty(property);
 		validateProperty.validatePropertyCriteria(property);
 		userService.createUserNewConnection(waterConnectionRequest);
+		waterConnectionRequest.getWaterConnection()
+				.setUserName(waterConnectionRequest.getWaterConnection().getProperty().getOwners().get(0).getUuid());
 
 		if (waterConnectionRequest.getWaterConnection().getSameuservalid().equals(true)) {
-			waterConnectionRequest.getWaterConnection().setUserName(
-					waterConnectionRequest.getWaterConnection().getProperty().getOwners().get(0).getUuid());
-
 			if (waterConnectionRequest.getWaterConnection().getMobileNumberOwner() != null) {
 				waterConnectionRequest.getWaterConnection()
 						.setMobileNumberOwner(waterConnectionRequest.getWaterConnection().getMobileNumberOwner());
@@ -383,8 +382,6 @@ public class WaterServiceImpl implements WaterService {
 						.setMobileNumberOwner(waterConnectionRequest.getWaterConnection().getUserName());
 			}
 		} else {
-			waterConnectionRequest.getWaterConnection()
-					.setUserName(waterConnectionRequest.getWaterConnection().getAuditDetails().getCreatedBy());
 			if (waterConnectionRequest.getRequestInfo().getUserInfo().getMobileNumber() != null) {
 				waterConnectionRequest.getWaterConnection()
 						.setMobileNumberOwner(waterConnectionRequest.getRequestInfo().getUserInfo().getMobileNumber());
