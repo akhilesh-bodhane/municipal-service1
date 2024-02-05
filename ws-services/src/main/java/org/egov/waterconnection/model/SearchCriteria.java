@@ -29,6 +29,9 @@ public class SearchCriteria {
 
 	@JsonProperty("status")
 	private String status;
+	
+	@JsonProperty("conHolderStatus")
+	private String conHolderStatus;
 
 	@JsonProperty("ids")
 	private Set<String> ids;
