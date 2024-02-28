@@ -10,7 +10,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
-@Setter@AllArgsConstructor
+@Setter
+@AllArgsConstructor
 @NoArgsConstructor
 @Builder
 
@@ -25,12 +26,11 @@ public class WSConfiguration {
 
 	@Value("${egov.waterservice.pagination.max.limit}")
 	private Integer maxLimit;
-	
 
 	// System User
 	@Value("${ws.system.user.uuid}")
 	private String systemUserUUID;
-	
+
 	@Value("${ws.system.user.id}")
 	private String systemUserID;
 
@@ -176,7 +176,7 @@ public class WSConfiguration {
 
 	@Value("${ws.fileStore.upload}")
 	private String fileStoreupload;
-	
+
 	@Value("${ws.consume.filestoreids}")
 	private String fileStoreIdsTopic;
 
@@ -191,7 +191,7 @@ public class WSConfiguration {
 
 	@Value("${create.ws.updatemeterinfo.workflow.name}")
 	private String businessServiceupdateMeterValue;
-	
+
 	@Value("${create.ws.disconnection.workflow.name}")
 	private String businessServiceDisconnectionValue;
 
@@ -206,10 +206,10 @@ public class WSConfiguration {
 
 	@Value("${create.ws.tempdisconnection.workflow.name}")
 	private String businessServiceTempdisconnectValue;
-	
+
 	@Value("${create.ws.reactivate.workflow.name}")
 	private String businessServicereactivateValue;
-	
+
 	@Value("${create.ws.rename.workflow.name}")
 	private String businessServiceRenameValue;
 
@@ -221,16 +221,16 @@ public class WSConfiguration {
 
 	@Value("${create.ws.tubewell.workflow.name}")
 	private String businessServiceTubewellValue;
-	
+
 	@Value("${egov.waterservice.savewaterbilling}")
 	private String saveWaterBilling;
-	
+
 	@Value("${egov.waterservice.addconnectionmapping}")
 	private String addConnectionMapping;
-	
+
 	@Value("${egov.waterservice.deleteconnectionmapping}")
 	private String deleteConnectionMapping;
-	
+
 	@Value("${egov.waterservice.billing.savefilestoreIds}")
 	private String savewaterbillingfile;
 
@@ -239,33 +239,35 @@ public class WSConfiguration {
 
 	@Value("${egov.waterservice.update.billingfilFlag}")
 	private String updateBillfileflag;
-	
+
 	@Value("${create.ws.metertesting.workflow}")
 	private String wsMeterTesting;
-	
-	
+
 	@Value("${ws.sms.notification_template}")
 	private String notificationTemplate;
-	
+
 	@Value("${create.ws.connection.conversion.tariff.workflow}")
 	private String businessServiceConnectionCoversionTraiffValue;
-	
+
 	@Value("${ws.sms.notification_template.siteInspector}")
 	private String notificationTemplateSiteInspector;
-	
+
 	@Value("${ws.sms.notification_template.citizen.case1}")
 	private String notificationTemplateCitizenCase1;
 
 	@Value("${ws.sms.notification_template.citizen.case2}")
 	private String notificationTemplateCitizenCase2;
-	
+
 	@Value("${ws.sms.notification_template.citizen.case3}")
 	private String notificationTemplateCitizenCase3;
-	
+
 	@Value("${create.ws.tt.workflow.name}")
 	private String businessServiceTTValue;
-	
+
 	@Value("${egov.waterservice.deactive.conholder}")
 	private String deactiveConnectionHolder;
-	
+
+	@Value("${egov.waterservice.deactive.conholder.all}")
+	private String deactiveConnectionHolderAll;
+
 }

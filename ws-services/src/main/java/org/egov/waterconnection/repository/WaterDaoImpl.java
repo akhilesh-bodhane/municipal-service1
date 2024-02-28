@@ -239,12 +239,14 @@ public class WaterDaoImpl implements WaterDao {
 	public void updatebillingstatus(BillGeneration billingData) {
 		BillGenerationRequest billReq = BillGenerationRequest.builder().billGeneration(billingData).build();
 		waterConnectionProducer.push(wsConfiguration.getUpdateBillPayment(), billReq);
-
 	}
 
 	@Override
-	public void deactiveConnectionHolder(WaterConnectionRequest waterConnectionRequest) {
-		waterConnectionProducer.push(wsConfiguration.getDeactiveConnectionHolder(), waterConnectionRequest);
+	public void deactiveConnectionHolder(WaterConnectionRequest waterConnectionRequest, Boolean isAll) {
+		if (isAll)
+			waterConnectionProducer.push(wsConfiguration.getDeactiveConnectionHolderAll(), waterConnectionRequest);
+		else
+			waterConnectionProducer.push(wsConfiguration.getDeactiveConnectionHolder(), waterConnectionRequest);
 	}
 
 	@Override

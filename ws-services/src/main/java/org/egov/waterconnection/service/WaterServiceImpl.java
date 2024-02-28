@@ -247,7 +247,12 @@ public class WaterServiceImpl implements WaterService {
 					waterConnectionRequest.getWaterConnection().getConnectionHolders().get(0).getProposedName());
 			waterConnectionRequest.getWaterConnection().setProposedMobileNo(
 					waterConnectionRequest.getWaterConnection().getConnectionHolders().get(0).getProposedMobileNo());
-			waterDao.deactiveConnectionHolder(waterConnectionRequest);
+			waterDao.deactiveConnectionHolder(waterConnectionRequest, false);
+		}
+
+		if (WCConstants.ACTION_TEMPORARY_CLOSE_CONNECTION
+				.equalsIgnoreCase(waterConnectionRequest.getWaterConnection().getProcessInstance().getAction())) {
+			waterDao.deactiveConnectionHolder(waterConnectionRequest, true);
 		}
 
 		if (WCConstants.ACTION_INITIATE
