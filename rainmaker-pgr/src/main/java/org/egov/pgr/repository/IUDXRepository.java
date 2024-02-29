@@ -33,13 +33,16 @@ public class IUDXRepository {
 		StringBuilder queryBuilderWhere = new StringBuilder();
 
 		if (serviceReqSearchCriteria.getStartDate() != null) {
-			queryBuilderWhere.append(" pgr.lastmodifiedtime >= ").append(serviceReqSearchCriteria.getStartDate());
+			queryBuilderWhere.append(" pgr.lastmodifiedtime >= ? ");
+
+			preparedStmtList.add(serviceReqSearchCriteria.getStartDate());
 		}
 		if (queryBuilderWhere.length() > 0)
 			queryBuilderWhere.append(" and ");
 
 		if (serviceReqSearchCriteria.getEndDate() != null) {
-			queryBuilderWhere.append(" pgr.lastmodifiedtime <= ").append(serviceReqSearchCriteria.getEndDate());
+			queryBuilderWhere.append(" pgr.lastmodifiedtime <= ? ");
+			preparedStmtList.add(serviceReqSearchCriteria.getEndDate());
 		}
 
 		if (queryBuilderWhere.length() > 0)
