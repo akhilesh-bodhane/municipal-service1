@@ -51,6 +51,9 @@ public class ErrorConstants {
 
 	public static final String INVALID_START_END_DATE_CODE = "EG_PGR_INVALID_START_END_DATE";
 	public static final String INVALID_START_END_DATE_MSG = "startDate or endDate cannot be greater than currentDate";
+	
+	public static final String INVALID_START_END_DATE_CODE_EMPTY = "EG_PGR_INVALID_START_END_DATE_EMPTY";
+	public static final String INVALID_START_END_DATE_MSG_EMPTY = "startDate or endDate cannot be blank or empty";
 
 	public static final String INVALID_START_DATE_CODE = "EG_PGR_INVALID_START_DATE";
 	public static final String INVALID_START_DATE_MSG = "startDate cannot be greater than endDate";

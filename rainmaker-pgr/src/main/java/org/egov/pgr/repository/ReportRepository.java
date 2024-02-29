@@ -98,6 +98,7 @@ public class ReportRepository {
 				new Object[] { iudxDataRequest.getRequestData().getTenantId(),
 						iudxDataRequest.getRequestData().getFromDate(), iudxDataRequest.getRequestData().getToDate() },
 				iudxDataRowMapper);
+		
 	}
 
 }
