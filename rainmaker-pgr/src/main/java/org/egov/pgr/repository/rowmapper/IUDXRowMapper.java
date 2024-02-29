@@ -23,7 +23,7 @@ public class IUDXRowMapper implements ResultSetExtractor<List<IUDXResponse>> {
 					.department(rs.getString("department") != null ? rs.getString("department") : "")
 					.description(rs.getString("description") != null ? rs.getString("description") : "")
 					.address(rs.getString("address") != null ? rs.getString("address") : "")
-					.location(Location.builder().type("Location")
+					.location(Location.builder().type("Point")
 							.coordinates(Arrays.asList(rs.getString("latitude") != null ? rs.getString("latitude") : "",
 									rs.getString("longitude") != null ? rs.getString("longitude") : ""))
 							.build())
