@@ -287,7 +287,13 @@ public class WaterServiceImpl implements WaterService {
 			waterConnectionValidator.validateUpdate(waterConnectionRequest, searchResult);
 			
 			boolean isConnectionPresent = getConnectionNo(waterConnectionRequest.getWaterConnection().getConnectionNo(), waterConnectionRequest.getRequestInfo());
-			waterConnectionValidator.validateConnectionNo(waterConnectionRequest, searchConnectionNo);			
+			
+			System.out.println("isConnectionPresent : " + isConnectionPresent);
+			
+			if(isConnectionPresent) {
+				waterConnectionValidator.validateConnectionNo(waterConnectionRequest);
+			}
+						
 			
 			calculationService.calculateFeeAndGenerateDemand(waterConnectionRequest, property);
 			// check for edit and send edit notification
