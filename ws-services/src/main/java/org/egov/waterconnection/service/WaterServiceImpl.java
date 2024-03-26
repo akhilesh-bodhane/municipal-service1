@@ -286,7 +286,7 @@ public class WaterServiceImpl implements WaterService {
 			actionValidator.validateUpdateRequest(waterConnectionRequest, businessService, previousApplicationStatus);
 			waterConnectionValidator.validateUpdate(waterConnectionRequest, searchResult);
 			
-			WaterConnection searchConnectionNo = getConnectionNo(waterConnectionRequest.getWaterConnection().getConnectionNo(), waterConnectionRequest.getRequestInfo());
+			boolean isConnectionPresent = getConnectionNo(waterConnectionRequest.getWaterConnection().getConnectionNo(), waterConnectionRequest.getRequestInfo());
 			waterConnectionValidator.validateConnectionNo(waterConnectionRequest, searchConnectionNo);			
 			
 			calculationService.calculateFeeAndGenerateDemand(waterConnectionRequest, property);
@@ -354,20 +354,19 @@ public class WaterServiceImpl implements WaterService {
 		return connections.get(0);
 	}
 	
-	public WaterConnection getConnectionNo(String connectionNo, RequestInfo requestInfo) {
+	public boolean getConnectionNo(String connectionNo, RequestInfo requestInfo) {
 		//log.info("Water Application Id:{}", id);
 		//Set<String> ids = new HashSet<>(Arrays.asList(id));
 		SearchCriteria criteria = new SearchCriteria();
 		criteria.setConnectionNumber(connectionNo);
 		List<WaterConnection> connections = getWaterConnectionsList(criteria, requestInfo);
-		/*
-		 * if (CollectionUtils.isEmpty(connections)) { StringBuilder builder = new
-		 * StringBuilder();
-		 * builder.append("WATER CONNECTION NOT FOUND FOR: ").append(connectionNo).
-		 * append(" : Connection Number"); throw new
-		 * CustomException("INVALID_WATERCONNECTION_SEARCH", builder.toString()); }
-		 */
-		return connections.get(0);
+		
+		if (CollectionUtils.isEmpty(connections)) {
+			return false;
+		} else {
+			return true;
+		}
+		
 	}
 
 	@Override

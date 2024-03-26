@@ -15,6 +15,7 @@ import org.egov.waterconnection.service.MeterInfoValidator;
 import org.egov.waterconnection.service.PropertyValidator;
 import org.egov.waterconnection.service.WaterFieldValidator;
 import org.egov.waterconnection.service.WaterService;
+import org.egov.waterconnection.service.WaterServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
@@ -35,9 +36,6 @@ public class WaterConnectionValidator {
 	
 	@Autowired
 	private MeterInfoValidator meterInfoValidator;
-	
-	@Autowired
-	private WaterService waterService;
 
 
 	/**Used strategy pattern for avoiding multiple if else condition
@@ -94,13 +92,15 @@ public class WaterConnectionValidator {
 		validateAllIds(request.getWaterConnection(), searchResult);
 		setFieldsFromSearch(request, searchResult);
 		validateDuplicateDocuments(request);
+		
+		
 	}
 	
-	public void validateConnectionNo(WaterConnectionRequest request, WaterConnection searchConnectionNo) {
-		System.out.println("Current Action : " + request.getWaterConnection().getProcessInstance().getAction());
-		System.out.println("Search Connection No : " + searchConnectionNo.getConnectionNo());
+	public void validateConnectionNo(WaterConnectionRequest request) {
+		System.out.println("Current Action : " + request.getWaterConnection().getProcessInstance().getAction().toString());
+		System.out.println("Search Connection No : " + request.getWaterConnection().getConnectionNo().toString());
 		if (WCConstants.ACTIVATE_CONNECTION.equals(request.getWaterConnection().getProcessInstance().getAction())){
-			validateConnectioNo(request.getWaterConnection(), searchConnectionNo);
+			validateConnectioNo(request.getWaterConnection());
 		}
 		
 
@@ -122,12 +122,11 @@ public class WaterConnectionValidator {
 	}
 	
 	
-	private void validateConnectioNo(WaterConnection updateWaterConnection, WaterConnection searchResult) {
+	private void validateConnectioNo(WaterConnection updateWaterConnection) {
 		Map<String, String> errorMap = new HashMap<>();		
-		System.out.println("Search Connection No : " + searchResult.getConnectionNo());
 		System.out.println("Update Connection No : " + updateWaterConnection.getConnectionNo());
-		if (updateWaterConnection.getConnectionNo() != null && StatusEnum.ACTIVE.equals(searchResult.getStatus()) && !searchResult.getApplicationStatus().equals("CONNECTION_ACTIVATED"))
-			errorMap.put("CONNECTION NO ALREADY EXISTS", "The connection number " + searchResult.getConnectionNo() + " has already present with active application number.");
+		if (updateWaterConnection.getConnectionNo() != null && StatusEnum.ACTIVE.equals(updateWaterConnection.getStatus()) && (!updateWaterConnection.getApplicationStatus().equals("CONNECTION_ACTIVATED") || !updateWaterConnection.getApplicationStatus().equals("CANCELLED") || !updateWaterConnection.getApplicationStatus().equals("REJECTED")))
+			errorMap.put("CONNECTION NO ALREADY EXISTS", "The connection number " + updateWaterConnection.getConnectionNo() + " has already present with active application number.");
 		if (!CollectionUtils.isEmpty(errorMap))
 			throw new CustomException(errorMap);
 	}
