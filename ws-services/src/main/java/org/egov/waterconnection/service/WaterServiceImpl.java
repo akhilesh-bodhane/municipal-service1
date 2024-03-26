@@ -360,12 +360,13 @@ public class WaterServiceImpl implements WaterService {
 		SearchCriteria criteria = new SearchCriteria();
 		criteria.setConnectionNumber(connectionNo);
 		List<WaterConnection> connections = getWaterConnectionsList(criteria, requestInfo);
-		if (CollectionUtils.isEmpty(connections)) {
-			StringBuilder builder = new StringBuilder();
-			builder.append("WATER CONNECTION NOT FOUND FOR: ").append(connectionNo).append(" : Connection Number");
-			throw new CustomException("INVALID_WATERCONNECTION_SEARCH", builder.toString());
-		}
-
+		/*
+		 * if (CollectionUtils.isEmpty(connections)) { StringBuilder builder = new
+		 * StringBuilder();
+		 * builder.append("WATER CONNECTION NOT FOUND FOR: ").append(connectionNo).
+		 * append(" : Connection Number"); throw new
+		 * CustomException("INVALID_WATERCONNECTION_SEARCH", builder.toString()); }
+		 */
 		return connections.get(0);
 	}
 
