@@ -7,6 +7,7 @@ import java.util.Map;
 
 import org.egov.tracer.model.CustomException;
 import org.egov.waterconnection.constants.WCConstants;
+import org.egov.waterconnection.model.Connection.StatusEnum;
 import org.egov.waterconnection.model.ValidatorResult;
 import org.egov.waterconnection.model.WaterConnection;
 import org.egov.waterconnection.model.WaterConnectionRequest;
@@ -89,6 +90,7 @@ public class WaterConnectionValidator {
 		validateAllIds(request.getWaterConnection(), searchResult);
 		setFieldsFromSearch(request, searchResult);
 		validateDuplicateDocuments(request);
+		validateConnectioNo(request.getWaterConnection(), searchResult);
 
 	}
    
@@ -102,6 +104,18 @@ public class WaterConnectionValidator {
 		Map<String, String> errorMap = new HashMap<>();
 		if (!searchResult.getApplicationNo().equals(updateWaterConnection.getApplicationNo()))
 			errorMap.put("INVALID UPDATE", "The application number from search: " + searchResult.getApplicationNo()
+					+ " and from update: " + updateWaterConnection.getApplicationNo() + " does not match");
+		if (!CollectionUtils.isEmpty(errorMap))
+			throw new CustomException(errorMap);
+	}
+	
+	
+	private void validateConnectioNo(WaterConnection updateWaterConnection, WaterConnection searchResult) {
+		Map<String, String> errorMap = new HashMap<>();		
+		System.out.println("Search Connection No : " + searchResult.getConnectionNo());
+		System.out.println("Update Connection No : " + updateWaterConnection.getConnectionNo());
+		if (searchResult.getConnectionNo() != null && StatusEnum.ACTIVE.equals(searchResult.getStatus()) && !searchResult.getApplicationStatus().equals("CONNECTION_ACTIVATED"))
+			errorMap.put("INVALID UPDATE", "The connection number from search: " + searchResult.getApplicationNo()
 					+ " and from update: " + updateWaterConnection.getApplicationNo() + " does not match");
 		if (!CollectionUtils.isEmpty(errorMap))
 			throw new CustomException(errorMap);
