@@ -90,7 +90,12 @@ public class WaterConnectionValidator {
 		validateAllIds(request.getWaterConnection(), searchResult);
 		setFieldsFromSearch(request, searchResult);
 		validateDuplicateDocuments(request);
-		validateConnectioNo(request.getWaterConnection(), searchResult);
+		
+		System.out.println("Current Action : " + request.getWaterConnection().getProcessInstance().getAction());
+		if (WCConstants.ACTIVATE_CONNECTION.equals(request.getWaterConnection().getProcessInstance().getAction())){
+			validateConnectioNo(request.getWaterConnection(), searchResult);
+		}
+		
 
 	}
    
@@ -115,8 +120,7 @@ public class WaterConnectionValidator {
 		System.out.println("Search Connection No : " + searchResult.getConnectionNo());
 		System.out.println("Update Connection No : " + updateWaterConnection.getConnectionNo());
 		if (searchResult.getConnectionNo() != null && StatusEnum.ACTIVE.equals(searchResult.getStatus()) && !searchResult.getApplicationStatus().equals("CONNECTION_ACTIVATED"))
-			errorMap.put("INVALID UPDATE", "The connection number from search: " + searchResult.getApplicationNo()
-					+ " and from update: " + updateWaterConnection.getApplicationNo() + " does not match");
+			errorMap.put("CONNECTION NO ALREADY EXISTS", "The connection number " + searchResult.getConnectionNo() + " has already present with active application number.");
 		if (!CollectionUtils.isEmpty(errorMap))
 			throw new CustomException(errorMap);
 	}
