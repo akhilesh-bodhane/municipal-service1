@@ -276,6 +276,7 @@ public class WaterServiceImpl implements WaterService {
 			WaterConnection searchResult = getConnectionForUpdateRequest(
 					waterConnectionRequest.getWaterConnection().getWaterApplication().getId(),
 					waterConnectionRequest.getRequestInfo());
+			
 			String previousApplicationStatus = workflowService.getApplicationStatus(
 					waterConnectionRequest.getRequestInfo(),
 					waterConnectionRequest.getWaterConnection().getApplicationNo(),
@@ -284,6 +285,10 @@ public class WaterServiceImpl implements WaterService {
 			enrichmentService.enrichUpdateWaterConnection(waterConnectionRequest);
 			actionValidator.validateUpdateRequest(waterConnectionRequest, businessService, previousApplicationStatus);
 			waterConnectionValidator.validateUpdate(waterConnectionRequest, searchResult);
+			
+			WaterConnection searchConnectionNo = getConnectionNo(waterConnectionRequest.getWaterConnection().getConnectionNo(), waterConnectionRequest.getRequestInfo());
+			waterConnectionValidator.validateConnectionNo(waterConnectionRequest, searchConnectionNo);			
+			
 			calculationService.calculateFeeAndGenerateDemand(waterConnectionRequest, property);
 			// check for edit and send edit notification
 			waterDaoImpl.pushForEditNotification(waterConnectionRequest);
@@ -343,6 +348,21 @@ public class WaterServiceImpl implements WaterService {
 		if (CollectionUtils.isEmpty(connections)) {
 			StringBuilder builder = new StringBuilder();
 			builder.append("WATER CONNECTION NOT FOUND FOR: ").append(id).append(" :ID");
+			throw new CustomException("INVALID_WATERCONNECTION_SEARCH", builder.toString());
+		}
+
+		return connections.get(0);
+	}
+	
+	public WaterConnection getConnectionNo(String connectionNo, RequestInfo requestInfo) {
+		//log.info("Water Application Id:{}", id);
+		//Set<String> ids = new HashSet<>(Arrays.asList(id));
+		SearchCriteria criteria = new SearchCriteria();
+		criteria.setConnectionNumber(connectionNo);
+		List<WaterConnection> connections = getWaterConnectionsList(criteria, requestInfo);
+		if (CollectionUtils.isEmpty(connections)) {
+			StringBuilder builder = new StringBuilder();
+			builder.append("WATER CONNECTION NOT FOUND FOR: ").append(connectionNo).append(" : Connection Number");
 			throw new CustomException("INVALID_WATERCONNECTION_SEARCH", builder.toString());
 		}
 

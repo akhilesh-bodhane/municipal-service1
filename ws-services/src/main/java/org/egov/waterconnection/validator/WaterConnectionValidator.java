@@ -14,6 +14,7 @@ import org.egov.waterconnection.model.WaterConnectionRequest;
 import org.egov.waterconnection.service.MeterInfoValidator;
 import org.egov.waterconnection.service.PropertyValidator;
 import org.egov.waterconnection.service.WaterFieldValidator;
+import org.egov.waterconnection.service.WaterService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
@@ -34,6 +35,9 @@ public class WaterConnectionValidator {
 	
 	@Autowired
 	private MeterInfoValidator meterInfoValidator;
+	
+	@Autowired
+	private WaterService waterService;
 
 
 	/**Used strategy pattern for avoiding multiple if else condition
@@ -90,10 +94,13 @@ public class WaterConnectionValidator {
 		validateAllIds(request.getWaterConnection(), searchResult);
 		setFieldsFromSearch(request, searchResult);
 		validateDuplicateDocuments(request);
-		
+	}
+	
+	public void validateConnectionNo(WaterConnectionRequest request, WaterConnection searchConnectionNo) {
 		System.out.println("Current Action : " + request.getWaterConnection().getProcessInstance().getAction());
+		System.out.println("Search Connection No : " + searchConnectionNo.getConnectionNo());
 		if (WCConstants.ACTIVATE_CONNECTION.equals(request.getWaterConnection().getProcessInstance().getAction())){
-			validateConnectioNo(request.getWaterConnection(), searchResult);
+			validateConnectioNo(request.getWaterConnection(), searchConnectionNo);
 		}
 		
 
@@ -119,7 +126,7 @@ public class WaterConnectionValidator {
 		Map<String, String> errorMap = new HashMap<>();		
 		System.out.println("Search Connection No : " + searchResult.getConnectionNo());
 		System.out.println("Update Connection No : " + updateWaterConnection.getConnectionNo());
-		if (searchResult.getConnectionNo() != null && StatusEnum.ACTIVE.equals(searchResult.getStatus()) && !searchResult.getApplicationStatus().equals("CONNECTION_ACTIVATED"))
+		if (updateWaterConnection.getConnectionNo() != null && StatusEnum.ACTIVE.equals(searchResult.getStatus()) && !searchResult.getApplicationStatus().equals("CONNECTION_ACTIVATED"))
 			errorMap.put("CONNECTION NO ALREADY EXISTS", "The connection number " + searchResult.getConnectionNo() + " has already present with active application number.");
 		if (!CollectionUtils.isEmpty(errorMap))
 			throw new CustomException(errorMap);
