@@ -125,7 +125,7 @@ public class WaterConnectionValidator {
 	private void validateConnectioNo(WaterConnection updateWaterConnection) {
 		Map<String, String> errorMap = new HashMap<>();		
 		System.out.println("Update Connection No : " + updateWaterConnection.getConnectionNo());
-		if (updateWaterConnection.getConnectionNo() != null && StatusEnum.ACTIVE.equals(updateWaterConnection.getStatus()) && (!updateWaterConnection.getApplicationStatus().equals("CONNECTION_ACTIVATED") || !updateWaterConnection.getApplicationStatus().equals("CANCELLED") || !updateWaterConnection.getApplicationStatus().equals("REJECTED")))
+		if (updateWaterConnection.getConnectionNo() != null && StatusEnum.ACTIVE.equals(updateWaterConnection.getStatus()) && !updateWaterConnection.getApplicationStatus().equals("CONNECTION_ACTIVATED"))
 			errorMap.put("CONNECTION NO ALREADY EXISTS", "The connection number " + updateWaterConnection.getConnectionNo() + " has already present with active application number.");
 		if (!CollectionUtils.isEmpty(errorMap))
 			throw new CustomException(errorMap);
