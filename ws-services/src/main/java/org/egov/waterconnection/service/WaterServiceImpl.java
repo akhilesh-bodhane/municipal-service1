@@ -12,6 +12,7 @@ import org.egov.tracer.model.CustomException;
 import org.egov.waterconnection.config.WSConfiguration;
 import org.egov.waterconnection.constants.WCConstants;
 import org.egov.waterconnection.model.AuditDetails;
+import org.egov.waterconnection.model.Connection.StatusEnum;
 import org.egov.waterconnection.model.ConnectionHolderInfo;
 import org.egov.waterconnection.model.Property;
 import org.egov.waterconnection.model.PublicDashBoardSearchCritieria;
@@ -292,6 +293,10 @@ public class WaterServiceImpl implements WaterService {
 			
 			if(isConnectionPresent) {
 				waterConnectionValidator.validateConnectionNo(waterConnectionRequest);
+				//WaterConnection connExists = getConnectionNoExist(waterConnectionRequest.getWaterConnection().getConnectionNo(), waterConnectionRequest.getRequestInfo());
+				waterConnectionRequest.getWaterConnection().setStatus(StatusEnum.INACTIVE);				
+				System.out.println("Water Connection Request : " + waterConnectionRequest.toString());;
+				waterDao.updateWaterConnection(waterConnectionRequest, isStateUpdatable);
 			}
 						
 			
@@ -365,14 +370,21 @@ public class WaterServiceImpl implements WaterService {
 		//Set<String> ids = new HashSet<>(Arrays.asList(id));
 		SearchCriteria criteria = new SearchCriteria();
 		criteria.setConnectionNumber(connectionNo);
-		List<WaterConnection> connections = getWaterConnectionsList(criteria, requestInfo);
-		
+		List<WaterConnection> connections = getWaterConnectionsList(criteria, requestInfo);	
 		if (CollectionUtils.isEmpty(connections)) {
 			return false;
 		} else {
 			return true;
-		}
-		
+		}		
+	}
+	
+	public WaterConnection getConnectionNoExist(String connectionNo, RequestInfo requestInfo) {
+		//log.info("Water Application Id:{}", id);
+		//Set<String> ids = new HashSet<>(Arrays.asList(id));
+		SearchCriteria criteria = new SearchCriteria();
+		criteria.setConnectionNumber(connectionNo);
+		List<WaterConnection> connections = getWaterConnectionsList(criteria, requestInfo);
+		return connections.get(0);		
 	}
 
 	@Override
