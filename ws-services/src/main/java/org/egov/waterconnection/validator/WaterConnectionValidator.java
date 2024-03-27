@@ -96,11 +96,11 @@ public class WaterConnectionValidator {
 		
 	}
 	
-	public void validateConnectionNo(WaterConnectionRequest request) {
+	public void validateConnectionNo(WaterConnectionRequest request, WaterConnection searchResult) {
 		System.out.println("Current Action : " + request.getWaterConnection().getProcessInstance().getAction().toString());
 		System.out.println("Search Connection No : " + request.getWaterConnection().getConnectionNo().toString());
 		if (WCConstants.ACTIVATE_CONNECTION.equals(request.getWaterConnection().getProcessInstance().getAction())){
-			validateConnectioNo(request.getWaterConnection());
+			validateConnectioNo(request.getWaterConnection(), searchResult);
 		}
 		
 
@@ -122,11 +122,12 @@ public class WaterConnectionValidator {
 	}
 	
 	
-	private void validateConnectioNo(WaterConnection updateWaterConnection) {
+	private void validateConnectioNo(WaterConnection updateWaterConnection, WaterConnection searchResult) {
 		Map<String, String> errorMap = new HashMap<>();		
 		System.out.println("Update Connection No : " + updateWaterConnection.getConnectionNo());
 		System.out.println("Update Connection Details : " + updateWaterConnection.toString());
-		if (updateWaterConnection.getConnectionNo() != null && StatusEnum.ACTIVE.equals(updateWaterConnection.getStatus()) && !updateWaterConnection.getApplicationStatus().equals("CONNECTION_ACTIVATED"))
+		System.out.println("Search Result Connection No : " + searchResult.toString());
+		if (searchResult.getConnectionNo() != null && StatusEnum.ACTIVE.equals(searchResult.getStatus()) && (!searchResult.getApplicationStatus().equals("CONNECTION_ACTIVATED") || !searchResult.getApplicationStatus().equals("REJECTED") || !searchResult.getApplicationStatus().equals("CANCELLED")))
 			errorMap.put("CONNECTION NO ALREADY EXISTS", "The connection number " + updateWaterConnection.getConnectionNo() + " has already present with active application number.");
 		if (!CollectionUtils.isEmpty(errorMap))
 			throw new CustomException(errorMap);

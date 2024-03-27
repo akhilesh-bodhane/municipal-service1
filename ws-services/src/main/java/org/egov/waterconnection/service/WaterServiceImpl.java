@@ -292,7 +292,7 @@ public class WaterServiceImpl implements WaterService {
 			System.out.println("isConnectionPresent : " + isConnectionPresent);
 			
 			if(isConnectionPresent) {
-				waterConnectionValidator.validateConnectionNo(waterConnectionRequest);
+				waterConnectionValidator.validateConnectionNo(waterConnectionRequest, searchResult);
 				//WaterConnection connExists = getConnectionNoExist(waterConnectionRequest.getWaterConnection().getConnectionNo(), waterConnectionRequest.getRequestInfo());
 				waterConnectionRequest.getWaterConnection().setStatus(StatusEnum.INACTIVE);				
 				System.out.println("Water Connection Request : " + waterConnectionRequest.toString());;
