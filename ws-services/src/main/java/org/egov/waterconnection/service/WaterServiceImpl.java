@@ -300,11 +300,14 @@ public class WaterServiceImpl implements WaterService {
 						waterConnectionRequest.getWaterConnection().getConnectionNo(),
 						waterConnectionRequest.getRequestInfo());
 				System.out.println("Search Result 2 : " + searchResult2.toString());
-				waterConnectionValidator.validateConnectionNo(waterConnectionRequest, searchResult);
+				waterConnectionValidator.validateConnectionNo(waterConnectionRequest, searchResult2);
 				//WaterConnection connExists = getConnectionNoExist(waterConnectionRequest.getWaterConnection().getConnectionNo(), waterConnectionRequest.getRequestInfo());
+				WaterConnectionRequest waterConnectionRequest2 = new WaterConnectionRequest();
+				waterConnectionRequest2.setRequestInfo(waterConnectionRequest.getRequestInfo());
+				waterConnectionRequest2.setWaterConnection(searchResult2);
 				waterConnectionRequest.getWaterConnection().setStatus(StatusEnum.INACTIVE);				
-				System.out.println("Water Connection Request : " + waterConnectionRequest.toString());;
-				waterDao.updateWaterConnection(waterConnectionRequest, isStateUpdatable);
+				System.out.println("Water Connection Request 2 : " + waterConnectionRequest2.toString());;
+				waterDao.updateWaterConnection(waterConnectionRequest2, isStateUpdatable);
 			}
 						
 			
