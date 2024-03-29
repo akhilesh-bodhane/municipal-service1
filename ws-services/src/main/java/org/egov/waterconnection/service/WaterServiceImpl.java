@@ -278,12 +278,9 @@ public class WaterServiceImpl implements WaterService {
 					waterConnectionRequest.getWaterConnection().getWaterApplication().getId(),
 					waterConnectionRequest.getRequestInfo());
 			
-			WaterConnection searchResult2 = getConnectionForUpdateRequest(
-					waterConnectionRequest.getWaterConnection().getConnectionNo(),
-					waterConnectionRequest.getRequestInfo());			
+						
 			
 			System.out.println("Search Result 1 : " + searchResult.toString());
-			System.out.println("Search Result 2 : " + searchResult2.toString());
 			
 			String previousApplicationStatus = workflowService.getApplicationStatus(
 					waterConnectionRequest.getRequestInfo(),
@@ -299,6 +296,10 @@ public class WaterServiceImpl implements WaterService {
 			System.out.println("isConnectionPresent : " + isConnectionPresent);
 			
 			if(isConnectionPresent) {
+				WaterConnection searchResult2 = getConnectionNoExist(
+						waterConnectionRequest.getWaterConnection().getConnectionNo(),
+						waterConnectionRequest.getRequestInfo());
+				System.out.println("Search Result 2 : " + searchResult2.toString());
 				waterConnectionValidator.validateConnectionNo(waterConnectionRequest, searchResult);
 				//WaterConnection connExists = getConnectionNoExist(waterConnectionRequest.getWaterConnection().getConnectionNo(), waterConnectionRequest.getRequestInfo());
 				waterConnectionRequest.getWaterConnection().setStatus(StatusEnum.INACTIVE);				
