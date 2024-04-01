@@ -301,7 +301,9 @@ public class WSCalculationConstant {
 	
 	public static final String ADHOC_REBATE = "adhocRebate";
 	
-	public static final Long APPLICATION_FEE_DEMAND_END_DATE = 157784760000l;
+	//public static final Long APPLICATION_FEE_DEMAND_END_DATE = 157784760000l;
+	
+	public static final Long APPLICATION_FEE_DEMAND_END_DATE = 1869676199000;
 	
 	public static final Long APPLICATION_FEE_DEMAND_EXP_DATE = 220898664000l;
 	

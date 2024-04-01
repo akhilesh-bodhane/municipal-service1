@@ -102,6 +102,7 @@ public class WSCalculationServiceImpl implements WSCalculationService {
 				System.out.println("Inside Fin Yr 2024-25");				
 				Map<String, Object> masterData = masterDataService.loadExemptionMaster(request.getRequestInfo(),
 						request.getCalculationCriteria().get(0).getTenantId());
+				log.info("master data is " + masterData.toString());
 				calculations = getFeeCalculation(request, masterData);
 				demandService.generateDemand(request.getRequestInfo(), calculations, masterData,
 						request.getIsconnectionCalculation());
