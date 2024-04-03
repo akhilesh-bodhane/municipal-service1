@@ -127,9 +127,10 @@ public class WaterConnectionValidator {
 		System.out.println("Update Connection No : " + updateWaterConnection.getConnectionNo());
 		System.out.println("Update Connection Details : " + updateWaterConnection.toString());
 		System.out.println("Search Result Connection No : " + searchResult.toString());
+		System.out.println("Search Application Status : " + searchResult.getApplicationStatus());
 		if (searchResult.getConnectionNo() != null && StatusEnum.ACTIVE.equals(searchResult.getStatus())) {			
-			if(!searchResult.getApplicationStatus().equals("CONNECTION_ACTIVATED") || !searchResult.getApplicationStatus().equals("REJECTED") || !searchResult.getApplicationStatus().equals("CANCELLED")) {
-				errorMap.put("CONNECTION NO ALREADY EXISTS", "The connection number " + updateWaterConnection.getConnectionNo() + " has already present with active application number.");
+			if(searchResult.getApplicationStatus() != "CONNECTION_ACTIVATED" || searchResult.getApplicationStatus() != "REJECTED" || searchResult.getApplicationStatus() != "CANCELLED") {
+				errorMap.put("CONNECTION NO ALREADY EXISTS", "The connection number " + searchResult.getConnectionNo() + " has already present with active application number.");
 			}
 			
 		} 
