@@ -127,13 +127,9 @@ public class WaterConnectionValidator {
 		System.out.println("Update Connection No : " + updateWaterConnection.getConnectionNo());
 		System.out.println("Update Connection Details : " + updateWaterConnection.toString());
 		System.out.println("Search Result Connection No : " + searchResult.toString());
-		if (searchResult.getConnectionNo() != null && StatusEnum.ACTIVE.equals(searchResult.getStatus()) && !searchResult.getApplicationStatus().equals("CONNECTION_ACTIVATED")) {
+		if (searchResult.getConnectionNo() != null && StatusEnum.ACTIVE.equals(searchResult.getStatus()) && (!searchResult.getApplicationStatus().equals("CONNECTION_ACTIVATED") || !searchResult.getApplicationStatus().equals("REJECTED") || !searchResult.getApplicationStatus().equals("CANCELLED"))) {
 			errorMap.put("CONNECTION NO ALREADY EXISTS", "The connection number " + updateWaterConnection.getConnectionNo() + " has already present with active application number.");
-		} else if (searchResult.getConnectionNo() != null && StatusEnum.ACTIVE.equals(searchResult.getStatus()) && !searchResult.getApplicationStatus().equals("REJECTED")) {
-			errorMap.put("CONNECTION NO ALREADY EXISTS", "The connection number " + updateWaterConnection.getConnectionNo() + " has already present with active application number.");
-		} else if (searchResult.getConnectionNo() != null && StatusEnum.ACTIVE.equals(searchResult.getStatus()) && !searchResult.getApplicationStatus().equals("CANCELLED")) {
-			errorMap.put("CONNECTION NO ALREADY EXISTS", "The connection number " + updateWaterConnection.getConnectionNo() + " has already present with active application number.");
-		}
+		} 
 		if (!CollectionUtils.isEmpty(errorMap)) {
 			throw new CustomException(errorMap);
 		}
