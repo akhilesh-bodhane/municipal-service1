@@ -132,7 +132,7 @@ public class WaterConnectionValidator {
 			if(!"CONNECTION_ACTIVATED".equals(searchResult.getApplicationStatus())){
 				if(!"REJECTED".equals(searchResult.getApplicationStatus())) {
 					if(!"CANCELLED".equals(searchResult.getApplicationStatus())) {
-						errorMap.put("CONNECTION NO ALREADY EXISTS", "The connection number " + searchResult.getConnectionNo() + " has already present with active application number.");
+						errorMap.put("CONNECTION NO ALREADY EXISTS", "Water connection " + searchResult.getConnectionNo() + "  is already linked with another user account. Please close/permanently disconnect/ temporarily disconnect the existing water connection to proceed application " + searchResult.getApplicationNo() +" for a new water connection raised by new user.");
 					}
 				}
 			} 
