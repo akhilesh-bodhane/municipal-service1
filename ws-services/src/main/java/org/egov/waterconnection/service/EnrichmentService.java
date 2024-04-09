@@ -295,7 +295,7 @@ public class EnrichmentService {
 			doorNo = doorNo.replaceAll("[^a-zA-Z0-9]", "0");
 			System.out.println("Spcl character replace Door No : " + doorNo);
 			if(doorNo.length() > 4) {
-				doorNo = doorNo.substring(0, 3);
+				doorNo = doorNo.substring(0, 4);
 			}
 		}
 		
