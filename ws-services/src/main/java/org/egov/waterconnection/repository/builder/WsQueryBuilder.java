@@ -107,7 +107,8 @@ public class WsQueryBuilder {
 			+ INNER_JOIN_STRING + "eg_pt_address pta ON conn.property_id = pta.propertyid" + INNER_JOIN_STRING
 			+ "eg_ws_application application ON application.wsid = conn.id" + INNER_JOIN_STRING
 			+ "eg_ws_property property ON property.wsid = conn.id" + INNER_JOIN_STRING
-			+ "eg_ws_connectionholder connectionholder ON connectionholder.ws_application_id = application.id"
+			//changes done for initiated application not seen in citizen 
+			+ "eg_ws_connectionholder connectionholder ON connectionholder.connectionid  = application.wsid"
 			+ LEFT_OUTER_JOIN_STRING + "egcl_bill bl  on  application.applicationno = bl.consumercode"
 			+ LEFT_OUTER_JOIN_STRING + "egcl_paymentdetail pyd on pyd.billid = bl.id" + LEFT_OUTER_JOIN_STRING
 			+ "egcl_payment py on py.id= pyd.paymentid" + LEFT_OUTER_JOIN_STRING
