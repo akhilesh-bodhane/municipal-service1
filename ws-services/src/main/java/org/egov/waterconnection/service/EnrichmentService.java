@@ -288,9 +288,20 @@ public class EnrichmentService {
 	private void setConnectionNO(WaterConnectionRequest request, Property property) {
 
 		WaterConnection connection = request.getWaterConnection();
+		String doorNo = property.getAddress().getDoorNo();
+		
+		System.out.println("Initial Door No : " + doorNo);
+		if(doorNo.contains("-")||doorNo.contains("/")) {
+			doorNo = doorNo.replaceAll("[^a-zA-Z0-9]", "0");
+			System.out.println("Spcl character replace Door No : " + doorNo);
+			if(doorNo.length() > 4) {
+				doorNo = doorNo.substring(0, 3);
+			}
+		}
+		
 		String connectionId = connection.getDiv().concat(connection.getSubdiv())
 				.concat(property.getAddress().getLocality().getCode()).concat(connection.getLedgerNo())
-				.concat(property.getAddress().getDoorNo()).concat(property.getAddress().getFloorNo()).concat("0");
+				.concat(doorNo).concat(property.getAddress().getFloorNo()).concat("0");
 
 		Random r = new Random();
 		char c = (char) (r.nextInt(26) + 'A');
