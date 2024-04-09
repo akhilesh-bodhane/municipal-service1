@@ -296,6 +296,7 @@ public class EnrichmentService {
 			System.out.println("Spcl character replace Door No : " + doorNo);
 			if(doorNo.length() > 4) {
 				doorNo = doorNo.substring(0, 4);
+				System.out.println("Final Door No : " + doorNo);
 			}
 		}
 		
