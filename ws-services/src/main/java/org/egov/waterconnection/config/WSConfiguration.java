@@ -227,6 +227,9 @@ public class WSConfiguration {
 
 	@Value("${egov.waterservice.addconnectionmapping}")
 	private String addConnectionMapping;
+	
+	@Value("${egov.waterservice.updateuserdetail}")
+	private String updateUserDetail;
 
 	@Value("${egov.waterservice.deleteconnectionmapping}")
 	private String deleteConnectionMapping;

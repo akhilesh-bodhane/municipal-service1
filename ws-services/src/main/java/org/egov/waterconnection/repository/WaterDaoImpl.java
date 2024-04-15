@@ -229,6 +229,12 @@ public class WaterDaoImpl implements WaterDao {
 		waterConnectionProducer.push(wsConfiguration.getAddConnectionMapping(), waterConnectionRequest);
 
 	}
+	
+	@Override
+	public void updateUserDetail(WaterConnectionRequest waterConnectionRequest) {
+		waterConnectionProducer.push(wsConfiguration.getUpdateUserDetail(), waterConnectionRequest);
+
+	}
 
 	@Override
 	public void deleteConnectionMapping(WaterConnectionRequest waterConnectionRequest) {

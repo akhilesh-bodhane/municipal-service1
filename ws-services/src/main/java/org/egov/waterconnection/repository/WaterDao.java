@@ -26,6 +26,8 @@ public interface WaterDao {
 	public void updateWaterConnection(WaterConnectionRequest waterConnectionRequest, boolean isStateUpdatable);
 
 	public void addConnectionMapping(WaterConnectionRequest waterConnectionRequest);
+	
+	public void updateUserDetail(WaterConnectionRequest waterConnectionRequest);
 
 	public void deleteConnectionMapping(WaterConnectionRequest waterConnectionRequest);
 
