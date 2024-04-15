@@ -14,6 +14,7 @@ import org.egov.waterconnection.constants.WCConstants;
 import org.egov.waterconnection.model.AuditDetails;
 import org.egov.waterconnection.model.Connection.StatusEnum;
 import org.egov.waterconnection.model.ConnectionHolderInfo;
+import org.egov.waterconnection.model.OwnerInfo;
 import org.egov.waterconnection.model.Property;
 import org.egov.waterconnection.model.PublicDashBoardSearchCritieria;
 import org.egov.waterconnection.model.ResponseData;
@@ -29,6 +30,8 @@ import org.egov.waterconnection.model.WaterNotication;
 import org.egov.waterconnection.model.WaterNotificationRequest;
 import org.egov.waterconnection.model.WaterTotalCollections;
 import org.egov.waterconnection.model.metrics;
+import org.egov.waterconnection.model.users.UserDetailResponse;
+import org.egov.waterconnection.model.users.UserDetailResponseNew;
 import org.egov.waterconnection.model.workflow.BusinessService;
 import org.egov.waterconnection.producer.WaterConnectionProducer;
 import org.egov.waterconnection.repository.WaterDao;
@@ -431,6 +434,18 @@ public class WaterServiceImpl implements WaterService {
 			if (waterConnectionRequest.getWaterConnection().getMobileNumberOwner() != null) {
 				waterConnectionRequest.getWaterConnection()
 						.setMobileNumberOwner(waterConnectionRequest.getWaterConnection().getMobileNumberOwner());
+				waterConnectionRequest.getWaterConnection().getProperty().getOwners().forEach(ownerInfo -> {
+					UserDetailResponseNew userCheckResponse = userService.userExistsNewConnection(ownerInfo, waterConnectionRequest.getRequestInfo(),waterConnectionRequest.getWaterConnection().getMobileNumberOwner());
+					if (CollectionUtils.isEmpty(userCheckResponse.getUser())) {
+						System.out.println("Inside Username set to mobile number method");
+						waterConnectionRequest.getWaterConnection().setUserName2(waterConnectionRequest.getWaterConnection().getMobileNumberOwner());
+						System.out.println("Username 2 if : " + waterConnectionRequest.getWaterConnection().getUserName2());
+					} else {
+						waterConnectionRequest.getWaterConnection().setUserName2(waterConnectionRequest.getWaterConnection().getUserName());
+						System.out.println("Username 2 else : " + waterConnectionRequest.getWaterConnection().getUserName2());
+					}
+				});
+				
 			} else {
 				waterConnectionRequest.getWaterConnection()
 						.setMobileNumberOwner(waterConnectionRequest.getWaterConnection().getUserName());

@@ -114,7 +114,6 @@ public class UserService {
 			request.getWaterConnection().getProperty().getOwners().forEach(ownerInfo -> {
 				System.out.println("Property Owner Mobile No. Inside : " + mobileNumber);
 				addUserDefaultFieldsNew(request.getWaterConnection().getTenantId(), role, ownerInfo);
-//				UserDetailResponseNew userDetailResponse = userExistsNewConnection(ownerInfo, request.getRequestInfo());
 				UserDetailResponseNew userDetailResponse = userExistsNewConnection(ownerInfo, request.getRequestInfo(),
 						request.getWaterConnection().getConnectionOwnerName(),mobileNumber);
 				if (CollectionUtils.isEmpty(userDetailResponse.getUser())) {
@@ -512,11 +511,12 @@ public class UserService {
 		return userCall(userSearchRequest, uri);
 	}
 
-	private UserDetailResponseNew userExistsNewConnection(OwnerInfo ownerInfo, RequestInfo requestInfo) {
+	public UserDetailResponseNew userExistsNewConnection(OwnerInfo ownerInfo, RequestInfo requestInfo, String mobileNumber) {
 		UserSearchRequest userSearchRequest = getBaseUserSearchRequest(ownerInfo.getTenantId(), requestInfo);
-		userSearchRequest.setMobileNumber(ownerInfo.getMobileNumber());
-		userSearchRequest.setUserType(ownerInfo.getType());
-		userSearchRequest.setName(ownerInfo.getName());
+		System.out.println("Mobile number for User Search : " + mobileNumber + "Owner type : " + ownerInfo.getType());
+		userSearchRequest.setUserName(mobileNumber);
+		userSearchRequest.setUserType("CITIZEN");
+		//userSearchRequest.setName(ownerInfo.getName());
 		StringBuilder uri = new StringBuilder(configuration.getUserHost())
 				.append(configuration.getUserSearchEndpoint());
 		return userCallNew(userSearchRequest, uri);
