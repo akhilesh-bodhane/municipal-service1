@@ -449,14 +449,17 @@ public class WaterServiceImpl implements WaterService {
 			} else {
 				waterConnectionRequest.getWaterConnection()
 						.setMobileNumberOwner(waterConnectionRequest.getWaterConnection().getUserName());
+				waterConnectionRequest.getWaterConnection().setUserName2(waterConnectionRequest.getWaterConnection().getUserName());
 			}
 		} else {
 			if (waterConnectionRequest.getRequestInfo().getUserInfo().getMobileNumber() != null) {
 				waterConnectionRequest.getWaterConnection()
 						.setMobileNumberOwner(waterConnectionRequest.getRequestInfo().getUserInfo().getMobileNumber());
+				waterConnectionRequest.getWaterConnection().setUserName2(waterConnectionRequest.getWaterConnection().getUserName());
 			} else {
 				waterConnectionRequest.getWaterConnection()
 						.setMobileNumberOwner(waterConnectionRequest.getWaterConnection().getUserName());
+				waterConnectionRequest.getWaterConnection().setUserName2(waterConnectionRequest.getWaterConnection().getUserName());
 			}
 		}
 
