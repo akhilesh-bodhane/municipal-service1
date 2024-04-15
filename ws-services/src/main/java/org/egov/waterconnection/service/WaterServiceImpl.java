@@ -438,8 +438,8 @@ public class WaterServiceImpl implements WaterService {
 					UserDetailResponseNew userCheckResponse = userService.userExistsNewConnection(ownerInfo, waterConnectionRequest.getRequestInfo(),waterConnectionRequest.getWaterConnection().getMobileNumberOwner());
 					if (CollectionUtils.isEmpty(userCheckResponse.getUser())) {
 						System.out.println("Inside Username set to mobile number method");
-						waterConnectionRequest.getWaterConnection().setUserName(waterConnectionRequest.getWaterConnection().getMobileNumberOwner());
-						System.out.println("Username 2 if : " + waterConnectionRequest.getWaterConnection().getUserName());
+						waterConnectionRequest.getWaterConnection().setUserName2(waterConnectionRequest.getWaterConnection().getMobileNumberOwner());
+						System.out.println("Username 2 if : " + waterConnectionRequest.getWaterConnection().getUserName2());
 					} 
 				});
 				
