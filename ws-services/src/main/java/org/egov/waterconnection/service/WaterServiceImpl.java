@@ -438,28 +438,23 @@ public class WaterServiceImpl implements WaterService {
 					UserDetailResponseNew userCheckResponse = userService.userExistsNewConnection(ownerInfo, waterConnectionRequest.getRequestInfo(),waterConnectionRequest.getWaterConnection().getMobileNumberOwner());
 					if (CollectionUtils.isEmpty(userCheckResponse.getUser())) {
 						System.out.println("Inside Username set to mobile number method");
-						waterConnectionRequest.getWaterConnection().setUserName2(waterConnectionRequest.getWaterConnection().getMobileNumberOwner());
-						System.out.println("Username 2 if : " + waterConnectionRequest.getWaterConnection().getUserName2());
-					} else {
-						waterConnectionRequest.getWaterConnection().setUserName2(waterConnectionRequest.getWaterConnection().getUserName());
-						System.out.println("Username 2 else : " + waterConnectionRequest.getWaterConnection().getUserName2());
-					}
+						waterConnectionRequest.getWaterConnection().setUserName(waterConnectionRequest.getWaterConnection().getMobileNumberOwner());
+						System.out.println("Username 2 if : " + waterConnectionRequest.getWaterConnection().getUserName());
+					} 
 				});
 				
 			} else {
 				waterConnectionRequest.getWaterConnection()
 						.setMobileNumberOwner(waterConnectionRequest.getWaterConnection().getUserName());
-				waterConnectionRequest.getWaterConnection().setUserName2(waterConnectionRequest.getWaterConnection().getUserName());
+				
 			}
 		} else {
 			if (waterConnectionRequest.getRequestInfo().getUserInfo().getMobileNumber() != null) {
 				waterConnectionRequest.getWaterConnection()
 						.setMobileNumberOwner(waterConnectionRequest.getRequestInfo().getUserInfo().getMobileNumber());
-				waterConnectionRequest.getWaterConnection().setUserName2(waterConnectionRequest.getWaterConnection().getUserName());
 			} else {
 				waterConnectionRequest.getWaterConnection()
 						.setMobileNumberOwner(waterConnectionRequest.getWaterConnection().getUserName());
-				waterConnectionRequest.getWaterConnection().setUserName2(waterConnectionRequest.getWaterConnection().getUserName());
 			}
 		}
 
