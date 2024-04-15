@@ -261,9 +261,12 @@ public class WaterServiceImpl implements WaterService {
 
 		if (WCConstants.ACTION_INITIATE
 				.equalsIgnoreCase(waterConnectionRequest.getWaterConnection().getProcessInstance().getAction())) {
+			System.out.println("Inside initiate state if condition");
 			waterConnectionRequest.getWaterConnection().setDocuments(null);
 			enrichmentService.enrichWaterApplication(waterConnectionRequest);
 			enrichmentService.enrichUpdateWaterConnection(waterConnectionRequest);
+			waterConnectionRequest.getWaterConnection().getConnectionHolders().get(0).setWs_application_id(waterConnectionRequest.getWaterConnection().getWaterApplication().getId());
+			System.out.println("ws_application_id : " + waterConnectionRequest.getWaterConnection().getConnectionHolders().get(0).setWs_application_id().toString());
 			waterConnectionRequest.getWaterConnection()
 					.setSameuservalid(waterConnectionRequest.getWaterConnection().getSameuservalid());
 			waterConnectionRequest.getWaterConnection()
