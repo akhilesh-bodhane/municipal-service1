@@ -80,7 +80,7 @@ public class WsQueryBuilder {
 			+ "eg_ws_application application ON application.wsid = conn.id" + INNER_JOIN_STRING
 			+ "eg_ws_property property ON property.wsid = conn.id" + INNER_JOIN_STRING
 			//change to resolve proposed owner null issue
-			+ "eg_ws_connectionholder connectionholder ON connectionholder.ws_application_id  = application.id "
+			+ "eg_ws_connectionholder connectionholder ON connectionholder.connectionid = conn.id "
 			+ LEFT_OUTER_JOIN_STRING + "egcl_bill bl  on  application.applicationno = bl.consumercode"
 			+ LEFT_OUTER_JOIN_STRING + "egcl_paymentdetail pyd on pyd.billid = bl.id" + LEFT_OUTER_JOIN_STRING
 			+ "egcl_payment py on py.id= pyd.paymentid" + LEFT_OUTER_JOIN_STRING
