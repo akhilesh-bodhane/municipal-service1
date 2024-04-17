@@ -243,6 +243,7 @@ public class EnrichmentService {
 		waterConnectionrequest.getWaterConnection().getWaterApplication().setId(UUID.randomUUID().toString());
 		waterConnectionrequest.getWaterConnection().getWaterApplication()
 				.setActivityType(waterConnectionrequest.getWaterConnection().getActivityType());
+		waterConnectionrequest.getWaterConnection().setApplicationStatus(waterConnectionrequest.getWaterConnection().getApplicationStatus());
 
 		setApplicationIdgenIds(waterConnectionrequest);
 
@@ -340,6 +341,7 @@ public class EnrichmentService {
 		if (waterConnectionRequest.getWaterConnection().getProcessInstance().getAction()
 				.equalsIgnoreCase(WCConstants.ACTION_INITIATE)) {
 			waterConnectionRequest.getWaterConnection().setApplicationStatus(WCConstants.STATUS_INITIATED);
+			waterConnectionRequest.getWaterConnection().getWaterApplication().setApplicationStatus(WCConstants.STATUS_INITIATED);
 		}
 	}
 
