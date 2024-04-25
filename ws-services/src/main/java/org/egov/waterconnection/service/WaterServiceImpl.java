@@ -215,6 +215,7 @@ public class WaterServiceImpl implements WaterService {
 	 *                               connection to be updated
 	 * @return List of WaterConnection after update
 	 */
+	@SuppressWarnings("unlikely-arg-type")
 	@Override
 	public List<WaterConnection> updateWaterConnection(WaterConnectionRequest waterConnectionRequest) {
 		log.info("Update WaterConnection: {}", waterConnectionRequest.getWaterConnection());
@@ -299,20 +300,27 @@ public class WaterServiceImpl implements WaterService {
 			
 			boolean isConnectionPresent = getConnectionNo(waterConnectionRequest.getWaterConnection().getConnectionNo(), waterConnectionRequest.getRequestInfo());
 			
-			System.out.println("isConnectionPresent : " + isConnectionPresent);
+			System.out.println("isConnectionPresent : " + isConnectionPresent + "Activity Type : " + waterConnectionRequest.getWaterConnection().getActivityType() + "Action : " + waterConnectionRequest.getWaterConnection().getProcessInstance().getAction());
 			
-			if(isConnectionPresent) {
+			if (isConnectionPresent
+					&& WCConstants.ACTIVITY_TYPE_NEW_CONN
+							.equals(waterConnectionRequest.getWaterConnection().getActivityType())
+					&& WCConstants.ACTIVATE_CONNECTION
+							.equals(waterConnectionRequest.getWaterConnection().getProcessInstance().getAction())) {
 				WaterConnection searchResult2 = getConnectionNoExist(
 						waterConnectionRequest.getWaterConnection().getConnectionNo(),
 						waterConnectionRequest.getRequestInfo());
 				System.out.println("Search Result 2 : " + searchResult2.toString());
 				waterConnectionValidator.validateConnectionNo(waterConnectionRequest, searchResult2);
-				//WaterConnection connExists = getConnectionNoExist(waterConnectionRequest.getWaterConnection().getConnectionNo(), waterConnectionRequest.getRequestInfo());
+				// WaterConnection connExists =
+				// getConnectionNoExist(waterConnectionRequest.getWaterConnection().getConnectionNo(),
+				// waterConnectionRequest.getRequestInfo());
 				WaterConnectionRequest waterConnectionRequest2 = new WaterConnectionRequest();
 				waterConnectionRequest2.setRequestInfo(waterConnectionRequest.getRequestInfo());
 				waterConnectionRequest2.setWaterConnection(searchResult2);
-				waterConnectionRequest2.getWaterConnection().setStatus(StatusEnum.INACTIVE);				
-				System.out.println("Water Connection Request 2 : " + waterConnectionRequest2.toString());;
+				waterConnectionRequest2.getWaterConnection().setStatus(StatusEnum.INACTIVE);
+				System.out.println("Water Connection Request 2 : " + waterConnectionRequest2.toString());
+				;
 				waterDao.updateWaterConnection(waterConnectionRequest2, isStateUpdatable);
 			}
 						
