@@ -159,6 +159,7 @@ public class WaterServiceImpl implements WaterService {
 		List<WaterConnection> waterConnectionList;
 		waterConnectionList = getWaterConnectionsListCitizen(criteria, requestInfo);		
 		if(CollectionUtils.isEmpty(waterConnectionList)) {
+			System.out.println("Inside search empty water connection list");
 			search(criteria, requestInfo);
 		}
 		waterConnectionValidator.validatePropertyForConnection(waterConnectionList);
