@@ -157,7 +157,10 @@ public class WaterServiceImpl implements WaterService {
 	 */
 	public List<WaterConnection> searchCitizen(SearchCriteria criteria, RequestInfo requestInfo) {
 		List<WaterConnection> waterConnectionList;
-		waterConnectionList = getWaterConnectionsListCitizen(criteria, requestInfo);
+		waterConnectionList = getWaterConnectionsListCitizen(criteria, requestInfo);		
+		if(CollectionUtils.isEmpty(waterConnectionList)) {
+			search(criteria, requestInfo);
+		}
 		waterConnectionValidator.validatePropertyForConnection(waterConnectionList);
 		enrichmentService.enrichConnectionHolderDeatils(waterConnectionList, criteria, requestInfo);
 		return waterConnectionList;
