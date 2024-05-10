@@ -528,7 +528,8 @@ public class UserService {
 			String connectionOwnerName, String mobileNumber) {
 		UserSearchRequest userSearchRequest = getBaseUserSearchRequest(ownerInfo.getTenantId(), requestInfo);
 		userSearchRequest.setMobileNumber(mobileNumber);
-		userSearchRequest.setUserType(ownerInfo.getType());
+		//userSearchRequest.setUserType(ownerInfo.getType());
+		userSearchRequest.setUserType("CITIZEN");
 		userSearchRequest.setName(connectionOwnerName);
 		StringBuilder uri = new StringBuilder(configuration.getUserHost())
 				.append(configuration.getUserSearchEndpoint());
