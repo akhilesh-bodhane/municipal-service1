@@ -21,13 +21,16 @@ import org.egov.waterconnection.model.ConnectionHolderInfo;
 import org.egov.waterconnection.model.ConnectionHolderInfoV2;
 import org.egov.waterconnection.model.ConnectionUserRequest;
 import org.egov.waterconnection.model.ConnectionUserRequestNew;
+import org.egov.waterconnection.model.ConnectionUserRequestNewCon;
 import org.egov.waterconnection.model.ConnectionUserRequestV2;
 import org.egov.waterconnection.model.OwnerInfo;
 import org.egov.waterconnection.model.Property;
 import org.egov.waterconnection.model.Status;
 import org.egov.waterconnection.model.WaterConnection;
 import org.egov.waterconnection.model.WaterConnectionRequest;
+import org.egov.waterconnection.model.users.User;
 import org.egov.waterconnection.model.users.UserDetailResponse;
+import org.egov.waterconnection.model.users.UserDetailResponseConMap;
 import org.egov.waterconnection.model.users.UserDetailResponseNew;
 import org.egov.waterconnection.model.users.UserDetailResponseV2;
 import org.egov.waterconnection.model.users.UserSearchRequest;
@@ -155,6 +158,52 @@ public class UserService {
 
 		}
 	}
+	
+	public void createUserConMap(WaterConnectionRequest request) {
+		if (!StringUtils.isEmpty(request.getWaterConnection().getMobileNumberOwner())) {
+			User user = null;
+			System.out.println("Inside Create New User Connection Mapping Method");
+			Role role = getCitizenRole();
+			String mobileNumber = request.getWaterConnection().getMobileNumberOwner();
+			System.out.println("Owner Mobile No. : " + mobileNumber);
+			addUserDefaultFieldsNewConMap(request.getWaterConnection().getTenantId(), role, user);
+			UserDetailResponseConMap userDetailResponse = userExistsNewConnectionMap(request.getRequestInfo(),
+					request.getWaterConnection().getConnectionOwnerName(), mobileNumber);
+			System.out.println("UserdetailResponse : " + userDetailResponse.toString());
+			if (CollectionUtils.isEmpty(userDetailResponse.getUser())) {
+				/*
+				 * Sets userName equal to mobileNumber
+				 *
+				 * If mobileNumber already assigned as user-name for another user
+				 *
+				 * then random uuid is assigned as user-name
+				 */
+				StringBuilder uri = new StringBuilder(configuration.getUserHost())
+						.append(configuration.getUserContextPath()).append(configuration.getUserCreateEndPoint());
+				user.setName(request.getWaterConnection().getConnectionOwnerName());
+				setUserNameNewConnectionMap(user, mobileNumber);
+
+				ConnectionUserRequestNewCon userRequest = ConnectionUserRequestNewCon.builder()
+						.requestInfo(request.getRequestInfo()).user(user).build();
+
+				userDetailResponse = userCallNewConMap(userRequest, uri);
+
+				if (ObjectUtils.isEmpty(userDetailResponse)) {
+					throw new CustomException("INVALID USER RESPONSE",
+							"The user create has failed for the mobileNumber : " + user.getUserName());
+				}
+
+			} else {
+				System.out.println("Inside create else if condition");
+				System.out.println("Request body else condition : " + request.toString());
+				updateUserNew(request);
+			}
+			// Assigns value of fields from user got from userDetailResponse to owner object
+			setOwnerFieldsNewConMap(user, userDetailResponse, request.getRequestInfo());
+			System.out.println("Owner Info : " + user.toString());
+			System.out.println("userDetailResponse : " + userDetailResponse);
+		}
+	}
 
 	public void updateUser(WaterConnectionRequest request) {
 		if (!CollectionUtils.isEmpty(request.getWaterConnection().getConnectionHolders())) {
@@ -209,6 +258,34 @@ public class UserService {
 				// Assigns value of fields from user got from userDetailResponse to owner object
 				setOwnerFieldsUpdateNew(ownerInfo, userDetailResponse, request.getRequestInfo());
 			});
+		}
+	}
+	
+	
+	public void updateUserNewConMap(WaterConnectionRequest request) {
+		if (!StringUtils.isEmpty(request.getWaterConnection().getProperty().getId())) {
+			User user = null;
+			Role role = getCitizenRole();
+			
+			addUserDefaultFieldsNewConMap(request.getWaterConnection().getTenantId(), role, user);
+			UserDetailResponseConMap userDetailResponse = updateUserExistsNewConMap(user, request.getRequestInfo());
+			user.setId(userDetailResponse.getUser().get(0).getId());
+			user.setUuid(userDetailResponse.getUser().get(0).getUuid());
+			user.setMobileNumber(request.getRequestInfo().getUserInfo().getMobileNumber());
+			
+			System.out.println("Owner Info Mobile Number :" + user.toString());
+		
+			addUserDefaultFieldsUpdateNewConMap(request.getWaterConnection().getTenantId(), role, user);
+
+			StringBuilder uri = new StringBuilder(configuration.getUserHost())
+					.append(configuration.getUserContextPath()).append(configuration.getUserUpdateEndPoint());
+			userDetailResponse = updateUserCallNewConMap(
+					new ConnectionUserRequestNewCon(request.getRequestInfo(), user), uri);
+			if (userDetailResponse.getUser().get(0).getUuid() == null) {
+				throw new CustomException("INVALID USER RESPONSE", "The user updated has uuid as null");
+			}
+			// Assigns value of fields from user got from userDetailResponse to owner object
+			setOwnerFieldsUpdateNewConMap(user, userDetailResponse, request.getRequestInfo());
 		}
 	}
 
@@ -315,6 +392,31 @@ public class UserService {
 			throw new CustomException("IllegalArgumentException", "ObjectMapper not able to convertValue in userCall");
 		}
 	}
+	
+	
+	@SuppressWarnings("unchecked")
+	private UserDetailResponseConMap userCallNewConMap(Object userRequest, StringBuilder uri) {
+		String dobFormat = null;
+		if (uri.toString().contains(configuration.getUserSearchEndpoint())
+				|| uri.toString().contains(configuration.getUserUpdateEndPoint()))
+			dobFormat = "yyyy-MM-dd";
+		else if (uri.toString().contains(configuration.getUserCreateEndPoint()))
+			dobFormat = "dd/MM/yyyy";
+		try {
+			LinkedHashMap<String, Object> responseMap = (LinkedHashMap<String, Object>) serviceRequestRepository
+					.fetchResult(uri, userRequest);
+			if (!CollectionUtils.isEmpty(responseMap)) {
+				parseResponse(responseMap, dobFormat);
+				return mapper.convertValue(responseMap, UserDetailResponseConMap.class);
+			} else {
+				return new UserDetailResponseConMap();
+			}
+		}
+		// Which Exception to throw?
+		catch (IllegalArgumentException e) {
+			throw new CustomException("IllegalArgumentException", "ObjectMapper not able to convertValue in userCall");
+		}
+	}
 
 	/**
 	 * Returns UserDetailResponse by calling user service with given uri and object
@@ -374,6 +476,32 @@ public class UserService {
 			throw new CustomException("IllegalArgumentException", "ObjectMapper not able to convertValue in userCall");
 		}
 	}
+	
+	@SuppressWarnings("unchecked")
+	private UserDetailResponseConMap updateUserCallNewConMap(Object userRequest, StringBuilder uri) {
+		String dobFormat = null;
+		if (uri.toString().contains(configuration.getUserSearchEndpoint())
+				|| uri.toString().contains(configuration.getUserUpdateEndPoint()))
+			dobFormat = "yyyy-MM-dd";
+		else if (uri.toString().contains(configuration.getUserCreateEndPoint()))
+			dobFormat = "dd/MM/yyyy";
+		try {
+			LinkedHashMap<String, Object> responseMap = (LinkedHashMap<String, Object>) serviceRequestRepository
+					.fetchResult(uri, userRequest);
+			if (!CollectionUtils.isEmpty(responseMap)) {
+				parseResponse(responseMap, dobFormat);
+				return mapper.convertValue(responseMap, UserDetailResponseConMap.class);
+			} else {
+				return new UserDetailResponseConMap();
+			}
+		}
+		// Which Exception to throw?
+		catch (IllegalArgumentException e) {
+			throw new CustomException("IllegalArgumentException", "ObjectMapper not able to convertValue in userCall");
+		}
+	}
+	
+	
 
 	/**
 	 * Parses date formats to long for all users in responseMap
@@ -455,6 +583,17 @@ public class UserService {
 		ownerInfo.setLastModifiedDate(null);
 		ownerInfo.setLastModifiedBy(null);
 	}
+	
+	private void addUserDefaultFieldsNewConMap(String tenantId, Role role, User user) {
+		user.setActive(true);
+		user.setTenantId(tenantId);
+		user.setRoles(Collections.singletonList(role));
+		user.setType("CITIZEN");
+		user.setCreatedDate(null);
+		user.setCreatedBy(null);
+		user.setLastModifiedDate(null);
+		user.setLastModifiedBy(null);
+	}
 
 	/**
 	 * Sets the role,type,active and tenantId for a Citizen
@@ -493,6 +632,18 @@ public class UserService {
 		ownerInfo.setCreatedBy(null);
 		ownerInfo.setLastModifiedDate(null);
 		ownerInfo.setLastModifiedBy(null);
+	}
+	
+	
+	private void addUserDefaultFieldsUpdateNewConMap(String tenantId, Role role, User user) {
+		user.setActive(true);
+		user.setTenantId(tenantId);
+		user.setRoles(Collections.singletonList(role));
+		user.setType("CITIZEN");
+		user.setCreatedDate(null);
+		user.setCreatedBy(null);
+		user.setLastModifiedDate(null);
+		user.setLastModifiedBy(null);
 	}
 
 	/**
@@ -536,6 +687,18 @@ public class UserService {
 				.append(configuration.getUserSearchEndpoint());
 		return userCallNew(userSearchRequest, uri);
 	}
+	
+	private UserDetailResponseConMap userExistsNewConnectionMap(RequestInfo requestInfo,
+			String connectionOwnerName, String mobileNumber) {
+		UserSearchRequest userSearchRequest = getBaseUserSearchRequest(requestInfo.getUserInfo().getTenantId(), requestInfo);
+		userSearchRequest.setMobileNumber(mobileNumber);
+		//userSearchRequest.setUserType(ownerInfo.getType());
+		userSearchRequest.setUserType("CITIZEN");
+		userSearchRequest.setName(connectionOwnerName);
+		StringBuilder uri = new StringBuilder(configuration.getUserHost())
+				.append(configuration.getUserSearchEndpoint());
+		return userCallNewConMap(userSearchRequest, uri);
+	}
 
 	/**
 	 * Searches if the connection holder is already created. Search is based on name
@@ -570,6 +733,18 @@ public class UserService {
 		StringBuilder uri = new StringBuilder(configuration.getUserHost())
 				.append(configuration.getUserSearchEndpoint());
 		return updateUserCallNew(userSearchRequest, uri);
+	}
+	
+	
+	private UserDetailResponseConMap updateUserExistsNewConMap(User user, RequestInfo requestInfo) {
+		UserSearchRequest userSearchRequest = getBaseUserSearchRequest(requestInfo.getUserInfo().getTenantId(), requestInfo);
+		userSearchRequest.setMobileNumber(user.getMobileNumber());
+		// userSearchRequest.setUserType(connectionHolderInfo.getType());
+		userSearchRequest.setUserType("CITIZEN");
+		userSearchRequest.setName(user.getName());
+		StringBuilder uri = new StringBuilder(configuration.getUserHost())
+				.append(configuration.getUserSearchEndpoint());
+		return updateUserCallNewConMap(userSearchRequest, uri);
 	}
 
 	/**
@@ -618,6 +793,16 @@ public class UserService {
 		System.out.println("Owner Mobile No. : " + mobileNumber);
 
 	}
+	
+	private void setUserNameNewConnectionMap(User user, String mobileNumber) {
+
+		String username = UUID.randomUUID().toString();
+		user.setUserName(username);
+		user.setMobileNumber(mobileNumber);
+
+		System.out.println("Owner User Mobile No. : " + mobileNumber);
+
+	}
 
 	/**
 	 *
@@ -652,6 +837,21 @@ public class UserService {
 		ownerInfo.setMobileNumber(requestInfo.getUserInfo().getMobileNumber());
 		ownerInfo.setName(userDetailResponse.getUser().get(0).getName());
 	}
+	
+	private void setOwnerFieldsNewConMap(User user, UserDetailResponseConMap userDetailResponse,
+			RequestInfo requestInfo) {
+
+		user.setUuid(userDetailResponse.getUser().get(0).getUuid());
+		user.setId(userDetailResponse.getUser().get(0).getId());
+		user.setUserName((userDetailResponse.getUser().get(0).getUserName()));
+		user.setCreatedBy(requestInfo.getUserInfo().getUuid());
+		user.setCreatedDate(System.currentTimeMillis());
+		user.setLastModifiedBy(requestInfo.getUserInfo().getUuid());
+		user.setLastModifiedDate(System.currentTimeMillis());
+		user.setActive(userDetailResponse.getUser().get(0).getActive());
+		user.setMobileNumber(requestInfo.getUserInfo().getMobileNumber());
+		user.setName(userDetailResponse.getUser().get(0).getName());
+	}
 
 	/**
 	 *
@@ -685,6 +885,20 @@ public class UserService {
 		ownerInfo.setLastModifiedDate(System.currentTimeMillis());
 		ownerInfo.setActive(userDetailResponse.getUser().get(0).getActive());
 		ownerInfo.setMobileNumber(userDetailResponse.getUser().get(0).getMobileNumber());
+	}
+	
+	private void setOwnerFieldsUpdateNewConMap(User user, UserDetailResponseConMap userDetailResponse,
+			RequestInfo requestInfo) {
+
+		user.setUuid(userDetailResponse.getUser().get(0).getUuid());
+		user.setId(userDetailResponse.getUser().get(0).getId());
+		user.setUserName((userDetailResponse.getUser().get(0).getUserName()));
+		user.setCreatedBy(requestInfo.getUserInfo().getUuid());
+		user.setCreatedDate(System.currentTimeMillis());
+		user.setLastModifiedBy(requestInfo.getUserInfo().getUuid());
+		user.setLastModifiedDate(System.currentTimeMillis());
+		user.setActive(userDetailResponse.getUser().get(0).getActive());
+		user.setMobileNumber(userDetailResponse.getUser().get(0).getMobileNumber());
 	}
 
 	/**
