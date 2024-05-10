@@ -118,6 +118,7 @@ public class UserService {
 				UserDetailResponseNew userDetailResponse = userExistsNewConnection(ownerInfo, request.getRequestInfo(),
 						request.getWaterConnection().getConnectionOwnerName(),mobileNumber);
 				System.out.println("Owner Info 2 : " + ownerInfo.toString());
+				System.out.println("UserdetailResponse : " + userDetailResponse.toString());
 				if (CollectionUtils.isEmpty(userDetailResponse.getUser())) {
 					/*
 					 * Sets userName equal to mobileNumber
