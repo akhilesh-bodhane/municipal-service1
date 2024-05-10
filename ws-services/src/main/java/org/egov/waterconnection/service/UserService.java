@@ -675,6 +675,17 @@ public class UserService {
 				.append(configuration.getUserSearchEndpoint());
 		return userCallNew(userSearchRequest, uri);
 	}
+	
+	public UserDetailResponseConMap userExistsNewConnectionMap(OwnerInfo ownerInfo, RequestInfo requestInfo, String mobileNumber) {
+		UserSearchRequest userSearchRequest = getBaseUserSearchRequest(ownerInfo.getTenantId(), requestInfo);
+		System.out.println("Mobile number for User Search : " + mobileNumber + "Owner type : " + ownerInfo.getType());
+		userSearchRequest.setUserName(mobileNumber);
+		userSearchRequest.setUserType("CITIZEN");
+		//userSearchRequest.setName(ownerInfo.getName());
+		StringBuilder uri = new StringBuilder(configuration.getUserHost())
+				.append(configuration.getUserSearchEndpoint());
+		return userCallNewConMap(userSearchRequest, uri);
+	}
 
 	private UserDetailResponseNew userExistsNewConnection(OwnerInfo ownerInfo, RequestInfo requestInfo,
 			String connectionOwnerName, String mobileNumber) {
@@ -688,7 +699,7 @@ public class UserService {
 		return userCallNew(userSearchRequest, uri);
 	}
 	
-	private UserDetailResponseConMap userExistsNewConnectionMap(RequestInfo requestInfo,
+	public UserDetailResponseConMap userExistsNewConnectionMap(RequestInfo requestInfo,
 			String connectionOwnerName, String mobileNumber) {
 		UserSearchRequest userSearchRequest = getBaseUserSearchRequest(requestInfo.getUserInfo().getTenantId(), requestInfo);
 		userSearchRequest.setMobileNumber(mobileNumber);
