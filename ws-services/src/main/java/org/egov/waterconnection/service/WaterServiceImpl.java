@@ -445,7 +445,7 @@ public class WaterServiceImpl implements WaterService {
 		//userService.createUserNewConnection(waterConnectionRequest);
 		userService.createUserConMap(waterConnectionRequest);
 		waterConnectionRequest.getWaterConnection()
-				.setUserName(waterConnectionRequest.getWaterConnection().getProperty().getOwners().get(0).getUuid());
+				.setUserName(waterConnectionRequest.getWaterConnection().getUserName());
 
 		if (waterConnectionRequest.getWaterConnection().getSameuservalid().equals(true)) {
 			if (waterConnectionRequest.getWaterConnection().getMobileNumberOwner() != null) {

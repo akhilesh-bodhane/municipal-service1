@@ -202,6 +202,7 @@ public class UserService {
 			setOwnerFieldsNewConMap(user, userDetailResponse, request.getRequestInfo());
 			System.out.println("Owner Info : " + user.toString());
 			System.out.println("userDetailResponse : " + userDetailResponse);
+			request.getWaterConnection().setUserName(userDetailResponse.getUser().get(0).getUuid());
 		}
 	}
 
