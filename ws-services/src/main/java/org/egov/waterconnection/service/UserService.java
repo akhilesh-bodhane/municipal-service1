@@ -114,8 +114,10 @@ public class UserService {
 			request.getWaterConnection().getProperty().getOwners().forEach(ownerInfo -> {
 				System.out.println("Property Owner Mobile No. Inside : " + mobileNumber);
 				addUserDefaultFieldsNew(request.getWaterConnection().getTenantId(), role, ownerInfo);
+				System.out.println("Owner Info 1 : " + ownerInfo.toString());
 				UserDetailResponseNew userDetailResponse = userExistsNewConnection(ownerInfo, request.getRequestInfo(),
 						request.getWaterConnection().getConnectionOwnerName(),mobileNumber);
+				System.out.println("Owner Info 2 : " + ownerInfo.toString());
 				if (CollectionUtils.isEmpty(userDetailResponse.getUser())) {
 					/*
 					 * Sets userName equal to mobileNumber
