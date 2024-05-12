@@ -196,6 +196,7 @@ public class UserService {
 			} else {
 				System.out.println("Inside create else if condition");
 				System.out.println("Request body else condition : " + request.toString());
+				System.out.println("Inside Create User Else details : " + user.toString());
 				updateUserNewConMap(request, user);
 			}
 			// Assigns value of fields from user got from userDetailResponse to owner object
@@ -264,7 +265,7 @@ public class UserService {
 	
 	
 	public void updateUserNewConMap(WaterConnectionRequest request, User user) {
-		if (!StringUtils.isEmpty(request.getWaterConnection().getProperty().getId())) {
+		if (!StringUtils.isEmpty(request.getWaterConnection().getMobileNumberOwner())) {
 			Role role = getCitizenRole();
 			
 			addUserDefaultFieldsNewConMap(request.getWaterConnection().getTenantId(), role, user);
