@@ -44,6 +44,9 @@ public class IUDXResponse {
 
 	@JsonProperty("status")
 	public String status;
+	
+	@JsonProperty("comments")
+	public String comments;
 
 	@JsonProperty("media")
 	public String media;

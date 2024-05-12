@@ -33,6 +33,7 @@ public class IUDXRowMapper implements ResultSetExtractor<List<IUDXResponse>> {
 					.reportID(rs.getString("servicerequestid") != null ? rs.getString("servicerequestid") : "")
 					.reportingMode(rs.getString("source") != null ? rs.getString("source") : "")
 					.status(rs.getString("status") != null ? rs.getString("status") : "")
+					.comments(rs.getString("comments") != null ? rs.getString("comments") : "")
 					.wardName(rs.getString("locality") != null ? rs.getString("locality") : "").build());
 		}
 		return list;
