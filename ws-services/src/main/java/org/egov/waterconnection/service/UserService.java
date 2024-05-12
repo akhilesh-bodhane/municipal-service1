@@ -268,9 +268,14 @@ public class UserService {
 		if (!StringUtils.isEmpty(request.getWaterConnection().getMobileNumberOwner())) {
 			User user = new User();
 			Role role = getCitizenRole();
-			
+			user.setMobileNumber(mobileNumber);
+			user.setName(connectionOwnerName);
 			addUserDefaultFieldsNewConMap(request.getWaterConnection().getTenantId(), role, user);
-			UserDetailResponseConMap userDetailResponse = updateUserExistsNewConMap(request.getRequestInfo(), connectionOwnerName, mobileNumber);			
+			UserDetailResponseConMap userDetailResponse = updateUserExistsNewConMap(user, request.getRequestInfo());
+			user.setId(userDetailResponse.getUser().get(0).getId());
+			user.setUuid(userDetailResponse.getUser().get(0).getUuid());
+			user.setMobileNumber(request.getRequestInfo().getUserInfo().getMobileNumber());
+			System.out.println("update userDetailResponse : "+ userDetailResponse.toString());
 			System.out.println("Owner Info Mobile Number :" + user.toString());
 		
 			addUserDefaultFieldsUpdateNewConMap(request.getWaterConnection().getTenantId(), role, user);
@@ -745,12 +750,13 @@ public class UserService {
 	}
 	
 	
-	private UserDetailResponseConMap updateUserExistsNewConMap(RequestInfo requestInfo, String connectionOwnerName, String mobileNumber) {
+	private UserDetailResponseConMap updateUserExistsNewConMap(User user, RequestInfo requestInfo) {
+		System.out.println("Update RequestInfo : " + requestInfo.toString());
 		UserSearchRequest userSearchRequest = getBaseUserSearchRequest(requestInfo.getUserInfo().getTenantId(), requestInfo);
-		userSearchRequest.setMobileNumber(mobileNumber);
+		userSearchRequest.setMobileNumber(user.getMobileNumber()
 		// userSearchRequest.setUserType(connectionHolderInfo.getType());
 		userSearchRequest.setUserType("CITIZEN");
-		userSearchRequest.setName(connectionOwnerName);
+		userSearchRequest.setName(user.getName());
 		StringBuilder uri = new StringBuilder(configuration.getUserHost())
 				.append(configuration.getUserSearchEndpoint());
 		return updateUserCallNewConMap(userSearchRequest, uri);
