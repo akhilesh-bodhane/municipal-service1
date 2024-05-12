@@ -196,10 +196,8 @@ public class UserService {
 			} else {
 				System.out.println("Inside create else if condition");
 				System.out.println("Request body else condition : " + request.toString());
-				user.setMobileNumber(mobileNumber);
-				user.setName(request.getWaterConnection().getConnectionOwnerName());
 				System.out.println("Inside Create User Else details : " + user.toString());
-				updateUserNewConMap(request, user);
+				updateUserNewConMap(request, request.getWaterConnection().getConnectionOwnerName(), mobileNumber);
 			}
 			// Assigns value of fields from user got from userDetailResponse to owner object
 			setOwnerFieldsNewConMap(user, userDetailResponse, request.getRequestInfo());
@@ -266,12 +264,13 @@ public class UserService {
 	}
 	
 	
-	public void updateUserNewConMap(WaterConnectionRequest request, User user) {
+	public void updateUserNewConMap(WaterConnectionRequest request, String connectionOwnerName, String mobileNumber) {
 		if (!StringUtils.isEmpty(request.getWaterConnection().getMobileNumberOwner())) {
+			User user = new User();
 			Role role = getCitizenRole();
 			
 			addUserDefaultFieldsNewConMap(request.getWaterConnection().getTenantId(), role, user);
-			UserDetailResponseConMap userDetailResponse = updateUserExistsNewConMap(user, request.getRequestInfo());			
+			UserDetailResponseConMap userDetailResponse = updateUserExistsNewConMap(request.getRequestInfo(), connectionOwnerName, mobileNumber);			
 			System.out.println("Owner Info Mobile Number :" + user.toString());
 		
 			addUserDefaultFieldsUpdateNewConMap(request.getWaterConnection().getTenantId(), role, user);
@@ -746,12 +745,12 @@ public class UserService {
 	}
 	
 	
-	private UserDetailResponseConMap updateUserExistsNewConMap(User user, RequestInfo requestInfo) {
-		UserSearchRequest userSearchRequest = getBaseUserSearchRequest(user.getTenantId(), requestInfo);
-		userSearchRequest.setMobileNumber(user.getMobileNumber());
+	private UserDetailResponseConMap updateUserExistsNewConMap(RequestInfo requestInfo, String connectionOwnerName, String mobileNumber) {
+		UserSearchRequest userSearchRequest = getBaseUserSearchRequest(requestInfo.getUserInfo().getTenantId(), requestInfo);
+		userSearchRequest.setMobileNumber(mobileNumber);
 		// userSearchRequest.setUserType(connectionHolderInfo.getType());
 		userSearchRequest.setUserType("CITIZEN");
-		userSearchRequest.setName(user.getName());
+		userSearchRequest.setName(connectionOwnerName);
 		StringBuilder uri = new StringBuilder(configuration.getUserHost())
 				.append(configuration.getUserSearchEndpoint());
 		return updateUserCallNewConMap(userSearchRequest, uri);
