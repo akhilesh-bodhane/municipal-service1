@@ -196,6 +196,8 @@ public class UserService {
 			} else {
 				System.out.println("Inside create else if condition");
 				System.out.println("Request body else condition : " + request.toString());
+				user.setMobileNumber(mobileNumber);
+				user.setName(request.getWaterConnection().getConnectionOwnerName());
 				System.out.println("Inside Create User Else details : " + user.toString());
 				updateUserNewConMap(request, user);
 			}
@@ -203,7 +205,7 @@ public class UserService {
 			setOwnerFieldsNewConMap(user, userDetailResponse, request.getRequestInfo());
 			System.out.println("Owner Info : " + user.toString());
 			System.out.println("userDetailResponse : " + userDetailResponse);
-			request.getWaterConnection().setUserName(userDetailResponse.getUser().get(0).getUuid());
+ 			request.getWaterConnection().setUserName(userDetailResponse.getUser().get(0).getUuid());
 		}
 	}
 
@@ -269,11 +271,7 @@ public class UserService {
 			Role role = getCitizenRole();
 			
 			addUserDefaultFieldsNewConMap(request.getWaterConnection().getTenantId(), role, user);
-			UserDetailResponseConMap userDetailResponse = updateUserExistsNewConMap(user, request.getRequestInfo());
-			user.setId(userDetailResponse.getUser().get(0).getId());
-			user.setUuid(userDetailResponse.getUser().get(0).getUuid());
-			user.setMobileNumber(request.getRequestInfo().getUserInfo().getMobileNumber());
-			
+			UserDetailResponseConMap userDetailResponse = updateUserExistsNewConMap(user, request.getRequestInfo());			
 			System.out.println("Owner Info Mobile Number :" + user.toString());
 		
 			addUserDefaultFieldsUpdateNewConMap(request.getWaterConnection().getTenantId(), role, user);
