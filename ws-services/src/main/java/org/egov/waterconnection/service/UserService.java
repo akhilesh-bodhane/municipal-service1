@@ -753,7 +753,7 @@ public class UserService {
 	private UserDetailResponseConMap updateUserExistsNewConMap(User user, RequestInfo requestInfo) {
 		System.out.println("Update RequestInfo : " + requestInfo.toString());
 		UserSearchRequest userSearchRequest = getBaseUserSearchRequest(requestInfo.getUserInfo().getTenantId(), requestInfo);
-		userSearchRequest.setMobileNumber(user.getMobileNumber()
+		userSearchRequest.setMobileNumber(user.getMobileNumber());
 		// userSearchRequest.setUserType(connectionHolderInfo.getType());
 		userSearchRequest.setUserType("CITIZEN");
 		userSearchRequest.setName(user.getName());
