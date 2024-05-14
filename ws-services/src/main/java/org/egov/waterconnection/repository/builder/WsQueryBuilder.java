@@ -124,7 +124,9 @@ public class WsQueryBuilder {
 			+ "(SELECT *, DENSE_RANK() OVER (ORDER BY conn_id desc) offset_ FROM " + "({})" + " result) result_offset "
 			+ "WHERE offset_ > ? AND offset_ <= ?";
 
-	private static final String ORDER_BY_CLAUSE = " ORDER BY conn.id DESC";
+	//private static final String ORDER_BY_CLAUSE = " ORDER BY conn.id DESC";
+	
+	private static final String ORDER_BY_CLAUSE = " ORDER BY connectionholder.lastmodifiedtime DESC";
 
 	public static final String GET_PIECHART_DATA = "SELECT id, cccode, divsdiv, consumercode, billcycle, billgroup, subgroup, \r\n"
 			+ "       billtype, name, address, cesscharge, netamount, grossamount, \r\n"
