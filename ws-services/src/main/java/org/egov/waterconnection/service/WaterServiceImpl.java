@@ -279,6 +279,10 @@ public class WaterServiceImpl implements WaterService {
 					.setSubmitBy(waterConnectionRequest.getRequestInfo().getUserInfo().getUuid());
 			waterConnectionRequest.getWaterConnection()
 					.setSubmitByName(waterConnectionRequest.getRequestInfo().getUserInfo().getName());
+			waterConnectionRequest.getWaterConnection().getConnectionHolders().get(0)
+					.setUuid(waterConnectionRequest.getRequestInfo().getUserInfo().getUuid());
+			
+			System.out.println("Connection Holder uuid : " + waterConnectionRequest.getWaterConnection().getConnectionHolders().get(0).getUuid());
 			waterConnectionRequest.getWaterConnection().setApplicationStatus(WCConstants.STATUS_INITIATED);
 		} else {
 			businessService = workflowService.getBusinessService(
@@ -454,6 +458,8 @@ public class WaterServiceImpl implements WaterService {
 						.setMobileNumberOwner(waterConnectionRequest.getWaterConnection().getMobileNumberOwner());
 				waterConnectionRequest.getWaterConnection().setConnectionOwnerName(waterConnectionRequest.getWaterConnection().getConnectionOwnerName());
 				UserDetailResponseConMap userCheckResponse = userService.userExistsNewConnectionMap(waterConnectionRequest.getRequestInfo(),waterConnectionRequest.getWaterConnection().getConnectionOwnerName(),waterConnectionRequest.getWaterConnection().getMobileNumberOwner());
+				
+				System.out.println("User Check Response : " + userCheckResponse.toString());
 				if (CollectionUtils.isEmpty(userCheckResponse.getUser())) {
 					System.out.println("Inside Username set to mobile number method");
 					waterConnectionRequest.getWaterConnection().setUserName2(waterConnectionRequest.getWaterConnection().getMobileNumberOwner());
