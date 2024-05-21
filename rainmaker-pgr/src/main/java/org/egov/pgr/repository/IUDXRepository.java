@@ -27,14 +27,13 @@ public class IUDXRepository {
 	public List<IUDXResponse> search(RequestInfo requestInfo, ServiceReqSearchCriteria serviceReqSearchCriteria) {
 		List<Object> preparedStmtList = new ArrayList<>();
 
-		String query = "select des.department,des.locality,to_timestamp(pgr.lastmodifiedtime/1000) as lastmodifiedtime,pgr.servicerequestid,pgr.source,pgr.category,des.description,concat(adds.housenoandstreetname,' ', adds.mohalla,' ', adds.landmark) as address,adds.latitude,adds.longitude,pgr.status,act.\"comments\" from eg_pgr_service pgr inner join eg_pgr_discription_report des on pgr.servicerequestid = des.servicerequestid inner join eg_pgr_action act on pgr.servicerequestid = act.businesskey and pgr.status = act.status left join eg_pgr_address adds on pgr.addressid = adds.uuid ";
+		String query = "select des.department,des.locality,to_timestamp(pgr.lastmodifiedtime/1000) as lastmodifiedtime,pgr.servicerequestid,pgr.source,pgr.category,des.description,concat(adds.housenoandstreetname,' ', adds.mohalla,' ', adds.landmark) as address,split_part(pgr.location,',',1) as latitude,split_part(pgr.location,',',2) as longitude,pgr.status,act.\"comments\" from eg_pgr_service pgr inner join eg_pgr_discription_report des on pgr.servicerequestid = des.servicerequestid inner join eg_pgr_action act on pgr.servicerequestid = act.businesskey and pgr.status = act.status left join eg_pgr_address adds on pgr.addressid = adds.uuid ";
 
 		StringBuilder queryBuilder = new StringBuilder(query);
 		StringBuilder queryBuilderWhere = new StringBuilder();
 
 		if (serviceReqSearchCriteria.getStartDate() != null) {
 			queryBuilderWhere.append(" pgr.lastmodifiedtime >= ? ");
-
 			preparedStmtList.add(serviceReqSearchCriteria.getStartDate());
 		}
 		if (queryBuilderWhere.length() > 0)
