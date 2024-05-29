@@ -1,5 +1,6 @@
 package org.egov.waterconnection.model;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -36,6 +37,7 @@ public class ResponseData {
 	@JsonProperty("timeTakenForApproval")
     private int timeTakenForApproval ;
 	
-	
+	@JsonProperty("totalCollection")
+    private BigDecimal totalCollection ;
 
 }

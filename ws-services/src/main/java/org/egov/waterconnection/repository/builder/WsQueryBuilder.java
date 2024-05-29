@@ -567,6 +567,8 @@ public class WsQueryBuilder {
 	private static final String WATER_SEARCH_QUERY_NIUA19 = " select SUM(case when ewa.applicationstatus in ('SEWERAGE_CONNECTION_ACTIVATED') then to_timestamp(ewa.lastmodifiedtime / 1000)::date - to_timestamp(ewa.createdtime / 1000)::date else 0 end) approveddays from eg_sw_connection ewa";
 
 	private static final String PUBLIC_DASHBOARD_WATER_SEARCH = "select count(*) from eg_ws_application ewa ";
+	
+	private static final String PUBLIC_DASHBOARD_WATER_TOTAL_COLLECTION = "select sum(ept.txn_amount) from eg_ws_application ewa inner join eg_pg_transactions ept on ewa.applicationno = ept.consumer_code where ept.txn_status = 'SUCCESS' and ewa.activitytype = ?";
 
 	private static final String PUBLIC_DASHBOARD_WATER_SEARCH_APPROVED = "select SUM(case when ewa.applicationstatus in ('CONNECTION_ACTIVATED','METER_UPDATED',"
 			+ "'CONNECTION_TYPE_CHANGED','TUBEWELL_CONNECTION_ACTIVATED','CONNECTION_REACTIVATED','CONNECTION_EXTENDED',"
@@ -1428,6 +1430,35 @@ public class WsQueryBuilder {
 		preparedStatement.clear();
 		StringBuilder query = null;
 		query = new StringBuilder(PUBLIC_DASHBOARD_WATER_SEARCH_TIME_TAKEN_APPROVED);
+		if (SearchTotalCollectionCriteria.getDataPayload().getFromDate() != null) {
+			addClauseIfRequired(preparedStatement, query);
+			query.append("  ewa.createdtime >= ?  ");
+			preparedStatement.add(SearchTotalCollectionCriteria.getDataPayload().getFromDate());
+		}
+		if (SearchTotalCollectionCriteria.getDataPayload().getToDate() != null) {
+			addClauseIfRequired(preparedStatement, query);
+			query.append("  ewa.createdtime <= ? ");
+			preparedStatement.add(SearchTotalCollectionCriteria.getDataPayload().getToDate());
+		}
+		if (SearchTotalCollectionCriteria.getDataPayload().getServicetype() != null) {
+			addClauseIfRequired(preparedStatement, query);
+			if ("CONNECTION_CONVERSION".equals(SearchTotalCollectionCriteria.getDataPayload().getServicetype())) {
+				query.append("  ewa.activitytype in('CONNECTION_CONVERSION_TARIFF','CONNECTION_CONVERSION') ");
+			} else {
+				query.append("  ewa.activitytype = ? ");
+				preparedStatement.add(SearchTotalCollectionCriteria.getDataPayload().getServicetype());
+			}
+		}
+
+		return query.toString();
+
+	}
+	
+	public String getSearchQueryStringPublicDashBoardTotalCollection(
+			PublicDashBoardSearchCritieria SearchTotalCollectionCriteria, List<Object> preparedStatement) {
+		preparedStatement.clear();
+		StringBuilder query = null;
+		query = new StringBuilder(PUBLIC_DASHBOARD_WATER_TOTAL_COLLECTION);
 		if (SearchTotalCollectionCriteria.getDataPayload().getFromDate() != null) {
 			addClauseIfRequired(preparedStatement, query);
 			query.append("  ewa.createdtime >= ?  ");

@@ -1,5 +1,6 @@
 package org.egov.waterconnection.repository;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -534,6 +535,8 @@ public class WaterDaoImpl implements WaterDao {
 		int ApplicationReceived = publicDashBoardAppicationReceived(SearchTotalCollectionCriteria, preparedStatement);
 
 		int ApplicationApproved = publicDashBoardApproved(SearchTotalCollectionCriteria, preparedStatement);
+		
+		BigDecimal TotalCollection = publicDashBoardTotalCollection(SearchTotalCollectionCriteria, preparedStatement);
 
 		double ApplicationApprovedTimeTaken = publicDashBoardTimeTaken(SearchTotalCollectionCriteria,
 				preparedStatement);
@@ -552,6 +555,7 @@ public class WaterDaoImpl implements WaterDao {
 		rs.setTotalApplicationReceived(ApplicationReceived);
 		rs.setTotalApplicationsApproved(ApplicationApproved);
 		rs.setTimeTakenForApproval(timeTakenForApproval);
+		rs.setTotalCollection(TotalCollection);
 
 		return rs;
 	}
@@ -598,6 +602,23 @@ public class WaterDaoImpl implements WaterDao {
 		}
 
 		return applicationapprovedtimetaken;
+	}
+	
+	private BigDecimal publicDashBoardTotalCollection(PublicDashBoardSearchCritieria SearchTotalCollectionCriteria,
+			List<Object> preparedStatement) {
+		
+		String query = wsQueryBuilder.getSearchQueryStringPublicDashBoardTotalCollection(SearchTotalCollectionCriteria,
+				preparedStatement);
+		System.out.println("query::" + query);
+		BigDecimal applicationtotalcollection = jdbcTemplate.queryForObject(query, preparedStatement.toArray(),
+				BigDecimal.class);
+		System.out.println("publicDashBoardTimeTaken::" + applicationtotalcollection);
+		if (applicationtotalcollection == null) {
+			applicationtotalcollection = BigDecimal.ZERO;
+		}
+
+		return applicationtotalcollection;
+		
 	}
 
 }
