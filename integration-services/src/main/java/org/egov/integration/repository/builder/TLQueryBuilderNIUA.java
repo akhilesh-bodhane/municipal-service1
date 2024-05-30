@@ -14,7 +14,9 @@ public class TLQueryBuilderNIUA {
 			+ "	count(case when ett.status = 'APPROVED' then 1 end) totalApplicationsApproved,\r\n"
 			+ "	ceil(SUM(case when ett.status = 'APPROVED' then to_timestamp(ett.lastmodifiedtime / 1000)::date - to_timestamp(ett.createdtime / 1000)::date end)/ count(case when ett.status = 'APPROVED' then 1 end)) timeTakenForApproval\r\n"
 			+ "from\r\n" + "	eg_tl_tradelicense ett\r\n" + " where\r\n" + "	ett.tenantid = 'ch.chandigarh'\r\n"
-			+ "	and ett.createdtime >= ?\r\n" + " and ett.createdtime <= ? ) as Datas";
+			+ "	) as Datas";
+	
+	private static final String PUBLIC_DASHBOARD_TL_TOTAL_COLLECTION = "select sum(ept.txn_amount) from eg_tl_tradelicense ett join eg_pg_transactions ept on ept.consumer_code = ett.applicationnumber where ept.txn_status = 'SUCCESS'";
 
 	public static final String QUERY_NIUA_UPDATED = "select\r\n" + "	tl.businessservice tradeType,\r\n"
 			+ "	COUNT(case when tl.status = 'APPROVED' then 1 end) approvedLicense,\r\n" + "	tl.status,\r\n"
@@ -201,8 +203,21 @@ public class TLQueryBuilderNIUA {
 	public String getTLPublicDashboardSearchQuery(TLPublicDashboardRequest tlPublicDashboardRequest,
 			List<Object> preparedStmtList) {
 		StringBuilder builder = new StringBuilder(QUERY_TL_PUBLIC_DASHBOARD);
-		preparedStmtList.add(tlPublicDashboardRequest.getFromDate());
-		preparedStmtList.add(tlPublicDashboardRequest.getToDate());
+		/*
+		 * preparedStmtList.add(tlPublicDashboardRequest.getFromDate());
+		 * preparedStmtList.add(tlPublicDashboardRequest.getToDate());
+		 */
 		return builder.toString();
 	}
+	
+	public String getSearchQueryStringPublicDashBoardTotalCollection(TLPublicDashboardRequest tlPublicDashboardRequest,
+			List<Object> preparedStmtList) {
+		StringBuilder builder = new StringBuilder(PUBLIC_DASHBOARD_TL_TOTAL_COLLECTION);
+		/*
+		 * preparedStmtList.add(tlPublicDashboardRequest.getFromDate());
+		 * preparedStmtList.add(tlPublicDashboardRequest.getToDate());
+		 */
+		return builder.toString();
+	}
+	
 }

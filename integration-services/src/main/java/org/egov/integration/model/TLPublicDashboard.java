@@ -1,5 +1,7 @@
 package org.egov.integration.model;
 
+import java.math.BigDecimal;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
@@ -25,4 +27,7 @@ public class TLPublicDashboard {
 
 	@JsonProperty("timeTakenForApproval")
 	private String timeTakenForApproval;
+	
+	@JsonProperty("totalCollection")
+	private BigDecimal totalCollection;
 }

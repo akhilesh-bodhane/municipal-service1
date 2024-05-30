@@ -1,6 +1,7 @@
 
 package org.egov.integration.repository;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -63,10 +64,30 @@ public class TLniuaRepository {
 
 	public TLPublicDashboard publicDashboard(TLPublicDashboardRequest tlPublicDashboardRequest) {
 		TLPublicDashboard dashboard = null;
+		List<Object> preparedStatement = new ArrayList<>();
+		BigDecimal TotalCollection = publicDashBoardTotalCollection(tlPublicDashboardRequest, preparedStatement);
 		List<Object> preparedStmtList = new ArrayList<>();
 		String query = queryBuilder.getTLPublicDashboardSearchQuery(tlPublicDashboardRequest, preparedStmtList);
 		dashboard = jdbcTemplate.query(query, preparedStmtList.toArray(), dashboardRowMapper);
+		dashboard.setTotalCollection(TotalCollection);
 		return dashboard;
+	}
+	
+	private BigDecimal publicDashBoardTotalCollection(TLPublicDashboardRequest tlPublicDashboardRequest,
+			List<Object> preparedStatement) {
+		
+		String query = queryBuilder.getSearchQueryStringPublicDashBoardTotalCollection(tlPublicDashboardRequest,
+				preparedStatement);
+		System.out.println("query::" + query);
+		BigDecimal applicationtotalcollection = jdbcTemplate.queryForObject(query, preparedStatement.toArray(),
+				BigDecimal.class);
+		System.out.println("publicDashBoardTimeTaken::" + applicationtotalcollection);
+		if (applicationtotalcollection == null) {
+			applicationtotalcollection = BigDecimal.ZERO;
+		}
+
+		return applicationtotalcollection;
+		
 	}
 
 	public List<TLNIUAModel> getLicensesNIUAUpdated(RequestData criteria) {
