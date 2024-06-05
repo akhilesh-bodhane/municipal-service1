@@ -147,6 +147,7 @@ public class EnrichmentService {
 		publicDashboardFilestore.setCreatedBy(publicDashboardFilestoreRequest.getRequestInfo().getUserInfo().getUuid());
 		publicDashboardFilestore.setLastModifiedTime(time);
 		publicDashboardFilestore.setLastModifiedBy(publicDashboardFilestoreRequest.getRequestInfo().getUserInfo().getUuid());
+		System.out.println("Public Dashboard Filestore : " + publicDashboardFilestore.toString());
 	}
 
 	@SuppressWarnings("unchecked")

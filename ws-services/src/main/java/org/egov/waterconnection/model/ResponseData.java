@@ -39,5 +39,8 @@ public class ResponseData {
 	
 	@JsonProperty("totalCollection")
     private BigDecimal totalCollection;
+	
+	@JsonProperty("filestoreId")
+    private String filestoreId;
 
 }

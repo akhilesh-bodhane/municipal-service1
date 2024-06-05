@@ -546,6 +546,8 @@ public class WaterDaoImpl implements WaterDao {
 		int ApplicationApproved = publicDashBoardApproved(SearchTotalCollectionCriteria, preparedStatement);
 		
 		BigDecimal TotalCollection = publicDashBoardTotalCollection(SearchTotalCollectionCriteria, preparedStatement);
+		
+		String filestoreId = getpublicDashboardFilestoreId(SearchTotalCollectionCriteria, preparedStatement);
 
 		double ApplicationApprovedTimeTaken = publicDashBoardTimeTaken(SearchTotalCollectionCriteria,
 				preparedStatement);
@@ -565,7 +567,7 @@ public class WaterDaoImpl implements WaterDao {
 		rs.setTotalApplicationsApproved(ApplicationApproved);
 		rs.setTimeTakenForApproval(timeTakenForApproval);
 		rs.setTotalCollection(TotalCollection);
-
+		rs.setFilestoreId(filestoreId);
 		return rs;
 	}
 
@@ -627,6 +629,20 @@ public class WaterDaoImpl implements WaterDao {
 		}
 
 		return applicationtotalcollection;
+		
+	}
+	
+	private String getpublicDashboardFilestoreId(PublicDashBoardSearchCritieria SearchTotalCollectionCriteria,
+			List<Object> preparedStatement) {
+		
+		String query = wsQueryBuilder.getSearchQueryStringPublicDashBoardTotalCollection(SearchTotalCollectionCriteria,
+				preparedStatement);
+		System.out.println("query::" + query);
+		String filestoreId = jdbcTemplate.queryForObject(query, preparedStatement.toArray(),
+				String.class);
+		System.out.println("filestoreId :: " + filestoreId);
+
+		return filestoreId;
 		
 	}
 
