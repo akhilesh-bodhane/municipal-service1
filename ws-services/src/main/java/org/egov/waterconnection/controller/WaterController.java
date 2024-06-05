@@ -5,6 +5,9 @@ import java.util.List;
 import javax.validation.Valid;
 
 import org.egov.waterconnection.model.PublicDashBoardSearchCritieria;
+import org.egov.waterconnection.model.PublicDashboardFilestore;
+import org.egov.waterconnection.model.PublicDashboardFilestoreRequest;
+import org.egov.waterconnection.model.PublicDashboardFilestoreResponse;
 import org.egov.waterconnection.model.PublicDashboardResponse;
 import org.egov.waterconnection.model.RequestInfoWrapper;
 import org.egov.waterconnection.model.ResponseData;
@@ -25,6 +28,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -171,10 +175,17 @@ public class WaterController {
 				
 		ResponseData searchTotalCollectionCount = waterService.searchPublicDashBoardCount(SearchTotalCollectionCriteria);	
 		
-			PublicDashboardResponse metricsResponsebody = PublicDashboardResponse.builder().responseData(searchTotalCollectionCount).build();
+		PublicDashboardResponse metricsResponsebody = PublicDashboardResponse.builder().responseData(searchTotalCollectionCount).build();
 
-         return new ResponseEntity<>( metricsResponsebody , HttpStatus.OK);
+        return new ResponseEntity<>( metricsResponsebody , HttpStatus.OK);
 	}
 	
+	@RequestMapping(value = "/_saveFilestoreIdsPublicDashboard", method = RequestMethod.POST, produces = "application/json")
+	public ResponseEntity<PublicDashboardFilestoreResponse> saveFilestoreIdPublicDashboard(
+			@Valid @RequestBody PublicDashboardFilestoreRequest publicDashboardFilestoreRequest) {
+		PublicDashboardFilestore publicDashboardFilestore = waterService.saveFilestoreId(publicDashboardFilestoreRequest);
+		PublicDashboardFilestoreResponse response = PublicDashboardFilestoreResponse.builder().publicDashboardFilestore(publicDashboardFilestore).build();
+		return new ResponseEntity<>(response, HttpStatus.OK);
+	}
 	
 }

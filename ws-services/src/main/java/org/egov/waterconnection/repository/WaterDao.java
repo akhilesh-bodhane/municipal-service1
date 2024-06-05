@@ -5,6 +5,7 @@ import java.util.List;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.waterconnection.model.BillGeneration;
 import org.egov.waterconnection.model.PublicDashBoardSearchCritieria;
+import org.egov.waterconnection.model.PublicDashboardFilestoreRequest;
 import org.egov.waterconnection.model.ResponseData;
 import org.egov.waterconnection.model.SearchCriteria;
 import org.egov.waterconnection.model.SearchTotalCollectionCriteria;
@@ -17,6 +18,8 @@ import org.egov.waterconnection.model.collection.PaymentRequest;
 
 public interface WaterDao {
 	public void saveWaterConnection(WaterConnectionRequest waterConnectionRequest);
+	
+	public void savePublicDashboardFileStore(PublicDashboardFilestoreRequest publicDashboardFilestoreRequest);
 
 	public List<WaterConnection> getWaterConnectionList(SearchCriteria criteria,RequestInfo requestInfo);
 	

@@ -24,6 +24,8 @@ import org.egov.waterconnection.model.AuditDetails;
 import org.egov.waterconnection.model.Connection.StatusEnum;
 import org.egov.waterconnection.model.ConnectionHolderInfo;
 import org.egov.waterconnection.model.Property;
+import org.egov.waterconnection.model.PublicDashboardFilestore;
+import org.egov.waterconnection.model.PublicDashboardFilestoreRequest;
 import org.egov.waterconnection.model.SearchCriteria;
 import org.egov.waterconnection.model.Status;
 import org.egov.waterconnection.model.WaterApplication;
@@ -135,6 +137,16 @@ public class EnrichmentService {
 		}
 		setApplicationIdgenIds(waterConnectionRequest);
 		setStatusForCreate(waterConnectionRequest);
+	}
+	
+	public void enrichPublicDashboardFileStore(PublicDashboardFilestoreRequest publicDashboardFilestoreRequest) {
+		Long time = System.currentTimeMillis();
+		PublicDashboardFilestore publicDashboardFilestore = new PublicDashboardFilestore();
+		publicDashboardFilestore.setFileStoreId(publicDashboardFilestoreRequest.getPublicDashboardFilestore().getFileStoreId());
+		publicDashboardFilestore.setCreatedTime(time);
+		publicDashboardFilestore.setCreatedBy(publicDashboardFilestoreRequest.getRequestInfo().getUserInfo().getUuid());
+		publicDashboardFilestore.setLastModifiedTime(time);
+		publicDashboardFilestore.setLastModifiedBy(publicDashboardFilestoreRequest.getRequestInfo().getUserInfo().getUuid());
 	}
 
 	@SuppressWarnings("unchecked")

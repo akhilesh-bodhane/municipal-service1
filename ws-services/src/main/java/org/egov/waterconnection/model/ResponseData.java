@@ -29,15 +29,15 @@ import lombok.ToString;
 public class ResponseData {
 	
 	@JsonProperty("totalApplicationsReceived")
-    private int totalApplicationReceived ;
+    private int totalApplicationReceived;
 	
 	@JsonProperty("totalApplicationsApproved")
-    private int totalApplicationsApproved ;
+    private int totalApplicationsApproved;
 	
 	@JsonProperty("timeTakenForApproval")
-    private int timeTakenForApproval ;
+    private int timeTakenForApproval;
 	
 	@JsonProperty("totalCollection")
-    private BigDecimal totalCollection ;
+    private BigDecimal totalCollection;
 
 }

@@ -4,6 +4,8 @@ import java.util.List;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.waterconnection.model.PublicDashBoardSearchCritieria;
+import org.egov.waterconnection.model.PublicDashboardFilestore;
+import org.egov.waterconnection.model.PublicDashboardFilestoreRequest;
 import org.egov.waterconnection.model.ResponseData;
 import org.egov.waterconnection.model.SearchCriteria;
 import org.egov.waterconnection.model.SearchTotalCollectionCriteria;
@@ -17,6 +19,8 @@ import org.egov.waterconnection.model.metrics;
 public interface WaterService {
 
 	public List<WaterConnection> createWaterConnection(WaterConnectionRequest waterConnectionRequest);
+	
+	public PublicDashboardFilestore saveFilestoreId(PublicDashboardFilestoreRequest publicDashboardFilestoreRequest);
 
 	public List<WaterConnection> search(SearchCriteria criteria, RequestInfo requestInfo);
 	

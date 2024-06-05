@@ -17,6 +17,8 @@ import org.egov.waterconnection.model.ConnectionHolderInfo;
 import org.egov.waterconnection.model.OwnerInfo;
 import org.egov.waterconnection.model.Property;
 import org.egov.waterconnection.model.PublicDashBoardSearchCritieria;
+import org.egov.waterconnection.model.PublicDashboardFilestore;
+import org.egov.waterconnection.model.PublicDashboardFilestoreRequest;
 import org.egov.waterconnection.model.ResponseData;
 import org.egov.waterconnection.model.SMSRequest;
 import org.egov.waterconnection.model.SMSRequest.SMSRequestBuilder;
@@ -132,6 +134,14 @@ public class WaterServiceImpl implements WaterService {
 			wfIntegrator.callWorkFlow(waterConnectionRequest, property);
 		waterDao.saveWaterConnection(waterConnectionRequest);
 		return Arrays.asList(waterConnectionRequest.getWaterConnection());
+	}
+	
+	@Override
+	public PublicDashboardFilestore saveFilestoreId(PublicDashboardFilestoreRequest publicDashboardFilestoreRequest) {
+		enrichmentService.enrichPublicDashboardFileStore(publicDashboardFilestoreRequest);
+		waterDao.savePublicDashboardFileStore(publicDashboardFilestoreRequest);
+		System.out.println("Public Dashboard Request : " + publicDashboardFilestoreRequest.toString());
+		return publicDashboardFilestoreRequest.getPublicDashboardFilestore();
 	}
 
 	/**

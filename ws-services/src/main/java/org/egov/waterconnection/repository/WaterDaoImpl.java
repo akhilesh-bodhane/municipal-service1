@@ -12,6 +12,7 @@ import org.egov.waterconnection.constants.WCConstants;
 import org.egov.waterconnection.model.BillGeneration;
 import org.egov.waterconnection.model.BillGenerationRequest;
 import org.egov.waterconnection.model.PublicDashBoardSearchCritieria;
+import org.egov.waterconnection.model.PublicDashboardFilestoreRequest;
 import org.egov.waterconnection.model.PublicDashboardResponse;
 import org.egov.waterconnection.model.ResponseData;
 import org.egov.waterconnection.model.SearchCriteria;
@@ -73,6 +74,9 @@ public class WaterDaoImpl implements WaterDao {
 
 	@Value("${egov.waterservice.createwaterconnection}")
 	private String createWaterConnection;
+	
+	@Value("${egov.public.dashboard.filestore.save}")
+	private String savePublicDashboardFilestoreId;
 
 	@Value("${egov.waterservice.updatewaterconnection}")
 	private String updateWaterConnection;
@@ -83,6 +87,11 @@ public class WaterDaoImpl implements WaterDao {
 	@Override
 	public void saveWaterConnection(WaterConnectionRequest waterConnectionRequest) {
 		waterConnectionProducer.push(createWaterConnection, waterConnectionRequest);
+	}
+	
+	@Override
+	public void savePublicDashboardFileStore(PublicDashboardFilestoreRequest publicDashboardFilestoreRequest) {
+		waterConnectionProducer.push(savePublicDashboardFilestoreId, publicDashboardFilestoreRequest);
 	}
 
 	@Override
