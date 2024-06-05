@@ -635,7 +635,7 @@ public class WaterDaoImpl implements WaterDao {
 	private String getpublicDashboardFilestoreId(PublicDashBoardSearchCritieria SearchTotalCollectionCriteria,
 			List<Object> preparedStatement) {
 		
-		String query = wsQueryBuilder.getSearchQueryStringPublicDashBoardTotalCollection(SearchTotalCollectionCriteria,
+		String query = wsQueryBuilder.getSearchQueryStringPublicDashBoardFilestoreId(SearchTotalCollectionCriteria,
 				preparedStatement);
 		System.out.println("query::" + query);
 		String filestoreId = jdbcTemplate.queryForObject(query, preparedStatement.toArray(),
