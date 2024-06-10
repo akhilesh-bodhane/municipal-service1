@@ -141,6 +141,7 @@ public class EnrichmentService {
 	
 	public void enrichPublicDashboardFileStore(PublicDashboardFilestoreRequest publicDashboardFilestoreRequest) {
 		Long time = System.currentTimeMillis();
+		System.out.println("Current time in epoch : " + time);
 		PublicDashboardFilestore publicDashboardFilestore = new PublicDashboardFilestore();
 		publicDashboardFilestore.setFileStoreId(publicDashboardFilestoreRequest.getPublicDashboardFilestore().getFileStoreId());
 		publicDashboardFilestore.setCreatedTime(time);

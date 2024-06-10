@@ -42,5 +42,8 @@ public class ResponseData {
 	
 	@JsonProperty("filestoreId")
     private String filestoreId;
+	
+	@JsonProperty("createdTime")
+    private Long createdTime;
 
 }
