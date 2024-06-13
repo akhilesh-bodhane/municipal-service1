@@ -173,6 +173,9 @@ public class WaterServiceImpl implements WaterService {
 			System.out.println("Inside search empty water connection list");
 			waterConnectionList = search(criteria, requestInfo);
 			System.out.println("Water Connection List : " + waterConnectionList.toString());
+			System.out.println("Ws Application id Old : " + waterConnectionList.get(0).getConnectionHolders().get(0).getWs_application_id());
+			waterConnectionList.get(0).getConnectionHolders().get(0).setWs_application_id(waterConnectionList.get(0).getWaterApplication().getId());
+			System.out.println("Ws Application id New : " + waterConnectionList.get(0).getConnectionHolders().get(0).getWs_application_id());
 		}
 		waterConnectionValidator.validatePropertyForConnection(waterConnectionList);
 		enrichmentService.enrichConnectionHolderDeatils(waterConnectionList, criteria, requestInfo);
