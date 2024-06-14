@@ -11,8 +11,8 @@ public class TLQueryBuilderNIUA {
 
 	public static final String QUERY_TL_PUBLIC_DASHBOARD = "select totalApplicationsReceived, totalApplicationsApproved, case when timeTakenForApproval <=0 then 1 else timeTakenForApproval end as timeTakenForApproval\r\n"
 			+ "from \r\n" + "(select\r\n" + "	count(1) totalApplicationsReceived,\r\n"
-			+ "	count(case when ett.action = 'APPROVE' or ett.status = 'PENDINGPAYMENT' then 1 end) totalApplicationsApproved,\r\n"
-			+ "	ceil(SUM(case when ett.action = 'APPROVE' or ett.status = 'PENDINGPAYMENT' then to_timestamp(ett.lastmodifiedtime / 1000)::date - to_timestamp(ett.createdtime / 1000)::date end)/ count(case when ett.action = 'APPROVE' or ett.status = 'PENDINGPAYMENT' then 1 end)) timeTakenForApproval\r\n"
+			+ "	count(case when ett.action = 'APPROVE' or ett.status = 'APPROVED' then 1 end) totalApplicationsApproved,\r\n"
+			+ "	ceil(SUM(case when ett.action = 'APPROVE' or ett.status = 'APPROVED' then to_timestamp(ett.lastmodifiedtime / 1000)::date - to_timestamp(ett.createdtime / 1000)::date end)/ count(case when ett.action = 'APPROVE' or ett.status = 'APPROVED' then 1 end)) timeTakenForApproval\r\n"
 			+ "from\r\n" + "	eg_tl_tradelicense ett\r\n" + " where\r\n" + "	ett.tenantid = 'ch.chandigarh'\r\n"
 			+ "	) as Datas";
 	
