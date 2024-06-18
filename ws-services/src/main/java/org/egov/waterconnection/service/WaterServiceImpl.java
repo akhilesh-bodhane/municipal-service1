@@ -477,7 +477,7 @@ public class WaterServiceImpl implements WaterService {
 					waterConnectionRequest.getWaterConnection().setUserName2(waterConnectionRequest.getWaterConnection().getMobileNumberOwner());
 					System.out.println("Username 2 if : " + waterConnectionRequest.getWaterConnection().getUserName2());
 					waterDao.updateUserDetail(waterConnectionRequest);
-				} 				
+				}
 			} else {
 				waterConnectionRequest.getWaterConnection()
 						.setMobileNumberOwner(waterConnectionRequest.getWaterConnection().getUserName());

@@ -269,7 +269,7 @@ public class UserService {
 			User user = new User();
 			Role role = getCitizenRole();
 			user.setMobileNumber(mobileNumber);
-			user.setName(connectionOwnerName);
+			//user.setName(connectionOwnerName);
 			addUserDefaultFieldsNewConMap(request.getWaterConnection().getTenantId(), role, user);
 			UserDetailResponseConMap userDetailResponse = updateUserExistsNewConMap(user, request.getRequestInfo());
 			user.setId(userDetailResponse.getUser().get(0).getId());
@@ -754,10 +754,11 @@ public class UserService {
 	private UserDetailResponseConMap updateUserExistsNewConMap(User user, RequestInfo requestInfo) {
 		System.out.println("Update RequestInfo : " + requestInfo.toString());
 		UserSearchRequest userSearchRequest = getBaseUserSearchRequest(requestInfo.getUserInfo().getTenantId(), requestInfo);
+		userSearchRequest.setUserName(user.getMobileNumber());
 		userSearchRequest.setMobileNumber(user.getMobileNumber());
 		// userSearchRequest.setUserType(connectionHolderInfo.getType());
 		userSearchRequest.setUserType("CITIZEN");
-		userSearchRequest.setName(user.getName());
+		//userSearchRequest.setName(user.getName());
 		StringBuilder uri = new StringBuilder(configuration.getUserHost())
 				.append(configuration.getUserSearchEndpoint());
 		return updateUserCallNewConMap(userSearchRequest, uri);
