@@ -709,7 +709,7 @@ public class UserService {
 		userSearchRequest.setUserName(mobileNumber);
 		//userSearchRequest.setUserType(ownerInfo.getType());
 		userSearchRequest.setUserType("CITIZEN");
-		userSearchRequest.setName(connectionOwnerName);
+		//userSearchRequest.setName(connectionOwnerName);
 		StringBuilder uri = new StringBuilder(configuration.getUserHost())
 				.append(configuration.getUserSearchEndpoint());
 		return userCallNewConMap(userSearchRequest, uri);
