@@ -275,6 +275,7 @@ public class UserService {
 			user.setId(userDetailResponse.getUser().get(0).getId());
 			user.setUuid(userDetailResponse.getUser().get(0).getUuid());
 			user.setMobileNumber(request.getRequestInfo().getUserInfo().getMobileNumber());
+			user.setName(userDetailResponse.getUser().get(0).getName());
 			System.out.println("update userDetailResponse : "+ userDetailResponse.toString());
 			System.out.println("Owner Info Mobile Number :" + user.toString());
 		
