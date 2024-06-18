@@ -463,13 +463,11 @@ public class WaterServiceImpl implements WaterService {
 		
 		//userService.createUserNewConnection(waterConnectionRequest);
 		userService.createUserConMap(waterConnectionRequest);
-		waterConnectionRequest.getWaterConnection()
-				.setUserName(waterConnectionRequest.getWaterConnection().getUserName());
+		waterConnectionRequest.getWaterConnection().setUserName(waterConnectionRequest.getWaterConnection().getUserName());
 
 		if (waterConnectionRequest.getWaterConnection().getSameuservalid().equals(true)) {
 			if (waterConnectionRequest.getWaterConnection().getMobileNumberOwner() != null) {
-				waterConnectionRequest.getWaterConnection()
-						.setMobileNumberOwner(waterConnectionRequest.getWaterConnection().getMobileNumberOwner());
+				waterConnectionRequest.getWaterConnection().setMobileNumberOwner(waterConnectionRequest.getWaterConnection().getMobileNumberOwner());
 				waterConnectionRequest.getWaterConnection().setConnectionOwnerName(waterConnectionRequest.getWaterConnection().getConnectionOwnerName());
 				UserDetailResponseConMap userCheckResponse = userService.userExistsNewConnectionMap(waterConnectionRequest.getRequestInfo(),waterConnectionRequest.getWaterConnection().getConnectionOwnerName(),waterConnectionRequest.getWaterConnection().getMobileNumberOwner());
 				
@@ -486,12 +484,9 @@ public class WaterServiceImpl implements WaterService {
 			}
 		} else {
 			if (waterConnectionRequest.getRequestInfo().getUserInfo().getMobileNumber() != null) {
-				waterConnectionRequest.getWaterConnection()
-						.setMobileNumberOwner(waterConnectionRequest.getRequestInfo().getUserInfo().getMobileNumber());
-				
+				waterConnectionRequest.getWaterConnection().setMobileNumberOwner(waterConnectionRequest.getRequestInfo().getUserInfo().getMobileNumber());				
 			} else {
-				waterConnectionRequest.getWaterConnection()
-						.setMobileNumberOwner(waterConnectionRequest.getWaterConnection().getUserName());
+				waterConnectionRequest.getWaterConnection().setMobileNumberOwner(waterConnectionRequest.getWaterConnection().getUserName());
 			}
 		}
 

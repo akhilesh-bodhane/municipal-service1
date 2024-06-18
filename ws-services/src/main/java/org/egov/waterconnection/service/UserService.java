@@ -706,6 +706,7 @@ public class UserService {
 			String connectionOwnerName, String mobileNumber) {
 		UserSearchRequest userSearchRequest = getBaseUserSearchRequest(requestInfo.getUserInfo().getTenantId(), requestInfo);
 		userSearchRequest.setMobileNumber(mobileNumber);
+		userSearchRequest.setUserName(mobileNumber);
 		//userSearchRequest.setUserType(ownerInfo.getType());
 		userSearchRequest.setUserType("CITIZEN");
 		userSearchRequest.setName(connectionOwnerName);
