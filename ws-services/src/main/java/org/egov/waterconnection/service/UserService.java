@@ -167,7 +167,7 @@ public class UserService {
 			String mobileNumber = request.getWaterConnection().getMobileNumberOwner();
 			System.out.println("Owner Mobile No. : " + mobileNumber);
 			addUserDefaultFieldsNewConMap(request.getWaterConnection().getTenantId(), role, user);
-			UserDetailResponseConMap userDetailResponse = userExistsNewConnectionMap(request.getRequestInfo(),
+			UserDetailResponseConMap userDetailResponse = userExistsNewConnectionMap1(request.getRequestInfo(),
 					request.getWaterConnection().getConnectionOwnerName(), mobileNumber);
 			System.out.println("UserdetailResponse : " + userDetailResponse.toString());
 			if (CollectionUtils.isEmpty(userDetailResponse.getUser())) {
@@ -711,6 +711,20 @@ public class UserService {
 		//userSearchRequest.setUserType(ownerInfo.getType());
 		userSearchRequest.setUserType("CITIZEN");
 		//userSearchRequest.setName(connectionOwnerName);
+		StringBuilder uri = new StringBuilder(configuration.getUserHost())
+				.append(configuration.getUserSearchEndpoint());
+		return userCallNewConMap(userSearchRequest, uri);
+	}
+	
+	
+	public UserDetailResponseConMap userExistsNewConnectionMap1(RequestInfo requestInfo,
+			String connectionOwnerName, String mobileNumber) {
+		UserSearchRequest userSearchRequest = getBaseUserSearchRequest(requestInfo.getUserInfo().getTenantId(), requestInfo);
+		userSearchRequest.setMobileNumber(mobileNumber);
+		//userSearchRequest.setUserName(mobileNumber);
+		//userSearchRequest.setUserType(ownerInfo.getType());
+		userSearchRequest.setUserType("CITIZEN");
+		userSearchRequest.setName(connectionOwnerName);
 		StringBuilder uri = new StringBuilder(configuration.getUserHost())
 				.append(configuration.getUserSearchEndpoint());
 		return userCallNewConMap(userSearchRequest, uri);
