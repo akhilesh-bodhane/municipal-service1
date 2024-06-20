@@ -238,6 +238,8 @@ public class WaterServiceImpl implements WaterService {
 	@Override
 	public List<WaterConnection> updateWaterConnection(WaterConnectionRequest waterConnectionRequest) {
 		log.info("Update WaterConnection: {}", waterConnectionRequest.getWaterConnection());
+		
+		System.out.println("Connectholder uuid water request : " + waterConnectionRequest.getWaterConnection().getConnectionHolders().get(0).getUuid());
 		waterConnectionValidator.validateWaterConnection(waterConnectionRequest, true);
 		mDMSValidator.validateMasterData(waterConnectionRequest);
 
@@ -380,7 +382,7 @@ public class WaterServiceImpl implements WaterService {
 		
 		System.out.println("ws_application_id : " + waterConnectionRequest.getWaterConnection().getConnectionHolders().get(0).getWs_application_id().toString());
 		System.out.println("WS application number : " + waterConnectionRequest.getWaterConnection().getApplicationNo());
-		System.out.println("Water Connection Request Before Update : " + waterConnectionRequest.toString());
+		System.out.println("Water Connection Request Before Update : " + waterConnectionRequest.getWaterConnection().getConnectionHolders().toString());
 		waterDao.updateWaterConnection(waterConnectionRequest, isStateUpdatable);
 
 		// enrichmentService.postForMeterReading(waterConnectionRequest);
