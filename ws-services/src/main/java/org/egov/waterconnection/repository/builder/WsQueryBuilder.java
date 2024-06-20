@@ -127,6 +127,8 @@ public class WsQueryBuilder {
 	//private static final String ORDER_BY_CLAUSE = " ORDER BY conn.id DESC";
 	
 	private static final String ORDER_BY_CLAUSE = " ORDER BY connectionholder.lastmodifiedtime DESC";
+	
+	private static final String ORDER_BY_CLAUSE_CITIZEN = " ORDER BY application.applicationno DESC";
 
 	public static final String GET_PIECHART_DATA = "SELECT id, cccode, divsdiv, consumercode, billcycle, billgroup, subgroup, \r\n"
 			+ "       billtype, name, address, cesscharge, netamount, grossamount, \r\n"
@@ -916,7 +918,7 @@ public class WsQueryBuilder {
 		 * query.append(" cm.user_id = ? ");
 		 * preparedStatement.add(criteria.getConnectionUserId()); }
 		 */
-		query.append(ORDER_BY_CLAUSE);
+		query.append(ORDER_BY_CLAUSE_CITIZEN);
 		return addPaginationWrapper(query.toString(), preparedStatement, criteria);
 	}
 
