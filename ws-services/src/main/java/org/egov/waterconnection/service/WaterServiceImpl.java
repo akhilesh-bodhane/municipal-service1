@@ -297,7 +297,9 @@ public class WaterServiceImpl implements WaterService {
 					.setSubmitByName(waterConnectionRequest.getRequestInfo().getUserInfo().getName());
 			waterConnectionRequest.getWaterConnection().getConnectionHolders().get(0)
 					.setUuid(waterConnectionRequest.getRequestInfo().getUserInfo().getUuid());
+			waterConnectionRequest.getWaterConnection().getConnectionHolders().get(0).setTenantId(waterConnectionRequest.getWaterConnection().getTenantId());
 			
+			System.out.println("Water Application Tenant Id : " + waterConnectionRequest.getWaterConnection().getTenantId());			
 			System.out.println("Connection Holder uuid : " + waterConnectionRequest.getWaterConnection().getConnectionHolders().get(0).getUuid());
 			waterConnectionRequest.getWaterConnection().setApplicationStatus(WCConstants.STATUS_INITIATED);
 		} else {
