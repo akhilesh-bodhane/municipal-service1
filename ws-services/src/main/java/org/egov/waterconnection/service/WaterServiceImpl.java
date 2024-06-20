@@ -377,6 +377,10 @@ public class WaterServiceImpl implements WaterService {
 		if (isTerminateState) {
 			waterConnectionRequest.getWaterConnection().setInWorkflow(false);
 		}
+		
+		System.out.println("ws_application_id : " + waterConnectionRequest.getWaterConnection().getConnectionHolders().get(0).getWs_application_id().toString());
+		System.out.println("WS application number : " + waterConnectionRequest.getWaterConnection().getApplicationNo());
+		System.out.println("Water Connection Request Before Update : " + waterConnectionRequest.toString());
 		waterDao.updateWaterConnection(waterConnectionRequest, isStateUpdatable);
 
 		// enrichmentService.postForMeterReading(waterConnectionRequest);
