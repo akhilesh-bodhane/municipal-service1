@@ -24,6 +24,7 @@ import org.egov.waterconnection.model.SMSRequest;
 import org.egov.waterconnection.model.SMSRequest.SMSRequestBuilder;
 import org.egov.waterconnection.model.SearchCriteria;
 import org.egov.waterconnection.model.SearchTotalCollectionCriteria;
+import org.egov.waterconnection.model.Status;
 import org.egov.waterconnection.model.WaterApplication;
 import org.egov.waterconnection.model.WaterConnection;
 import org.egov.waterconnection.model.WaterConnectionCount;
@@ -237,8 +238,7 @@ public class WaterServiceImpl implements WaterService {
 	@SuppressWarnings("unlikely-arg-type")
 	@Override
 	public List<WaterConnection> updateWaterConnection(WaterConnectionRequest waterConnectionRequest) {
-		log.info("Update WaterConnection: {}", waterConnectionRequest.getWaterConnection());
-		
+		log.info("Update WaterConnection: {}", waterConnectionRequest.getWaterConnection());		
 		System.out.println("Connectholder uuid water request : " + waterConnectionRequest.getWaterConnection().getConnectionHolders().get(0).getUuid());
 		waterConnectionValidator.validateWaterConnection(waterConnectionRequest, true);
 		mDMSValidator.validateMasterData(waterConnectionRequest);
@@ -295,13 +295,16 @@ public class WaterServiceImpl implements WaterService {
 					.setSubmitBy(waterConnectionRequest.getRequestInfo().getUserInfo().getUuid());
 			waterConnectionRequest.getWaterConnection()
 					.setSubmitByName(waterConnectionRequest.getRequestInfo().getUserInfo().getName());
-			waterConnectionRequest.getWaterConnection().getConnectionHolders().get(0)
-					.setUuid(waterConnectionRequest.getRequestInfo().getUserInfo().getUuid());
+			/*
+			 * waterConnectionRequest.getWaterConnection().getConnectionHolders().get(0)
+			 * .setUuid(waterConnectionRequest.getRequestInfo().getUserInfo().getUuid());
+			 */
 			waterConnectionRequest.getWaterConnection().getConnectionHolders().get(0).setTenantId(waterConnectionRequest.getWaterConnection().getTenantId());
 			
 			System.out.println("Water Application Tenant Id : " + waterConnectionRequest.getWaterConnection().getTenantId());			
 			System.out.println("Connection Holder uuid : " + waterConnectionRequest.getWaterConnection().getConnectionHolders().get(0).getUuid());
 			waterConnectionRequest.getWaterConnection().setApplicationStatus(WCConstants.STATUS_INITIATED);
+			waterConnectionRequest.getWaterConnection().getConnectionHolders().get(0).setStatus(Status.ACTIVE);
 		} else {
 			businessService = workflowService.getBusinessService(
 					waterConnectionRequest.getWaterConnection().getTenantId(), waterConnectionRequest.getRequestInfo(),
