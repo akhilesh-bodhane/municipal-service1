@@ -100,7 +100,7 @@ public class WaterConnectionValidator {
 		System.out.println("Current Action : " + request.getWaterConnection().getProcessInstance().getAction().toString());
 		System.out.println("Search Connection No : " + request.getWaterConnection().getConnectionNo().toString());
 		if (WCConstants.ACTIVATE_CONNECTION.equals(request.getWaterConnection().getProcessInstance().getAction())){
-			validateConnectioNo(request.getWaterConnection(), searchResult);
+			 validateConnectioNo(request.getWaterConnection(), searchResult);
 		}
 		
 
@@ -130,11 +130,11 @@ public class WaterConnectionValidator {
 		System.out.println("Search Application Status : " + searchResult.getApplicationStatus());
 		if (searchResult.getConnectionNo() != null && StatusEnum.ACTIVE.equals(searchResult.getStatus())) {			
 			if(!"CONNECTION_ACTIVATED".equals(searchResult.getApplicationStatus())){
-				if(!"REJECTED".equals(searchResult.getApplicationStatus())) {
-					if(!"CANCELLED".equals(searchResult.getApplicationStatus())) {
+				//if(!"REJECTED".equals(searchResult.getApplicationStatus())) {
+					//if(!"CANCELLED".equals(searchResult.getApplicationStatus())) {
 						errorMap.put("CONNECTION NO ALREADY EXISTS", "Water connection " + searchResult.getConnectionNo() + "  is already linked with another user account. Please close/permanently disconnect/ temporarily disconnect the existing water connection to proceed application " + searchResult.getApplicationNo() +" for a new water connection raised by new user.");
-					}
-				}
+					//}
+				//}
 			} 
 			
 		} 

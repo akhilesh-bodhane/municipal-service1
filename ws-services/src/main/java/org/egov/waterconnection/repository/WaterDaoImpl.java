@@ -127,6 +127,40 @@ public class WaterDaoImpl implements WaterDao {
 
 		return waterConnectionList;
 	}
+	
+	@Override
+	public List<WaterConnection> getWaterDuplicateConnectionList(SearchCriteria criteria, RequestInfo requestInfo) {
+		List<Object> preparedStatement = new ArrayList<>();
+		String query = wsQueryBuilder.getWaterConnectionSearchQueryString(criteria, preparedStatement, requestInfo);
+
+		// log.info("Query-->"+query);
+
+		StringBuilder str = new StringBuilder("Water query: ").append(query);
+		// log.info(str.toString());
+		if (query == null)
+			return Collections.emptyList();
+//		if (log.isDebugEnabled()) {
+		// StringBuilder str = new StringBuilder("Water query: ").append(query);
+//			log.info(str.toString());
+//		}
+
+		// log.info(jdbcTemplate.query(query,
+		// preparedStatement.toArray(),waterRowMapper).toString());
+
+		List<WaterConnection> waterConnectionList = jdbcTemplate.query(query, preparedStatement.toArray(),
+				waterRowMapper);
+
+		System.out.println(preparedStatement.toArray());
+		System.out.println(preparedStatement);
+		System.out.println(waterRowMapper.toString());
+		System.out.println("WaterConnectionList" + waterConnectionList.toString());
+
+		if (waterConnectionList == null) {
+			return Collections.emptyList();
+		}
+
+		return waterConnectionList;
+	}
 
 	@Override
 	public List<WaterConnection> getWaterConnectionListCitizen(SearchCriteria criteria, RequestInfo requestInfo) {

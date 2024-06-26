@@ -193,6 +193,13 @@ public class WaterServiceImpl implements WaterService {
 	public List<WaterConnection> getWaterConnectionsList(SearchCriteria criteria, RequestInfo requestInfo) {
 		return waterDao.getWaterConnectionList(criteria, requestInfo);
 	}
+	
+	
+	public List<WaterConnection> getWaterDuplicateConnectionList(SearchCriteria criteria, RequestInfo requestInfo) {
+		return waterDao.getWaterDuplicateConnectionList(criteria, requestInfo);
+	}
+	
+	
 
 	/**
 	 * 
@@ -337,21 +344,20 @@ public class WaterServiceImpl implements WaterService {
 							.equals(waterConnectionRequest.getWaterConnection().getActivityType())
 					&& WCConstants.ACTIVATE_CONNECTION
 							.equals(waterConnectionRequest.getWaterConnection().getProcessInstance().getAction())) {
-				WaterConnection searchResult2 = getConnectionNoExist(
+				List<WaterConnection> searchResult2 = getConnectionNoExist(
 						waterConnectionRequest.getWaterConnection().getConnectionNo(),
 						waterConnectionRequest.getRequestInfo());
 				System.out.println("Search Result 2 : " + searchResult2.toString());
-				waterConnectionValidator.validateConnectionNo(waterConnectionRequest, searchResult2);
-				// WaterConnection connExists =
-				// getConnectionNoExist(waterConnectionRequest.getWaterConnection().getConnectionNo(),
-				// waterConnectionRequest.getRequestInfo());
-				WaterConnectionRequest waterConnectionRequest2 = new WaterConnectionRequest();
-				waterConnectionRequest2.setRequestInfo(waterConnectionRequest.getRequestInfo());
-				waterConnectionRequest2.setWaterConnection(searchResult2);
-				waterConnectionRequest2.getWaterConnection().setStatus(StatusEnum.INACTIVE);
-				System.out.println("Water Connection Request 2 : " + waterConnectionRequest2.toString());
-				;
-				waterDao.updateWaterConnection(waterConnectionRequest2, isStateUpdatable);
+				
+				for(WaterConnection waterConn : searchResult2) {
+					waterConnectionValidator.validateConnectionNo(waterConnectionRequest, waterConn);
+					WaterConnectionRequest waterConnectionRequest2 = new WaterConnectionRequest();
+					waterConnectionRequest2.setRequestInfo(waterConnectionRequest.getRequestInfo());
+					waterConnectionRequest2.setWaterConnection(waterConn);
+					waterConnectionRequest2.getWaterConnection().setStatus(StatusEnum.INACTIVE);
+					System.out.println("Water Connection Request 2 : " + waterConnectionRequest2.toString());
+					waterDao.updateWaterConnection(waterConnectionRequest2, isStateUpdatable);
+				}				
 			}
 						
 			
@@ -437,13 +443,13 @@ public class WaterServiceImpl implements WaterService {
 		}		
 	}
 	
-	public WaterConnection getConnectionNoExist(String connectionNo, RequestInfo requestInfo) {
+	public List<WaterConnection> getConnectionNoExist(String connectionNo, RequestInfo requestInfo) {
 		//log.info("Water Application Id:{}", id);
 		//Set<String> ids = new HashSet<>(Arrays.asList(id));
 		SearchCriteria criteria = new SearchCriteria();
 		criteria.setConnectionNumber(connectionNo);
-		List<WaterConnection> connections = getWaterConnectionsList(criteria, requestInfo);
-		return connections.get(0);		
+		List<WaterConnection> connections = getWaterDuplicateConnectionList(criteria, requestInfo);
+		return connections;		
 	}
 
 	@Override

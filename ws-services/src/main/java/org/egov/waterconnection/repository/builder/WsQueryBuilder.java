@@ -57,6 +57,8 @@ public class WsQueryBuilder {
 
 	private static String holderSelectValues = "connectionholder.tenantid as holdertenantid, connectionholder.connectionid as holderapplicationId, userid, connectionholder.status as holderstatus, isprimaryholder, connectionholdertype,connectionholder.correspondance_address as holdercorrepondanceaddress, holdershippercentage, connectionholder.relationship as holderrelationship,connectionholder.name as holdername,connectionholder.proposed_mobile_no as proposedMobileNo ,connectionholder.proposed_name as  proposedName,connectionholder.proposed_gender as proposedGender ,connectionholder.proposed_guardian_name as proposedGuardianName ,connectionholder.proposed_correspondance_address as  proposedCorrespondanceAddress , connectionholder.createdby as holdercreatedby, connectionholder.createdtime as holdercreatedtime, connectionholder.lastmodifiedby as holderlastmodifiedby,"
 			+ " connectionholder.lastmodifiedtime as holderlastmodifiedtime, connectionholder.ws_application_id, connectionholder.sameuservalid, connectionholder.submitby, connectionholder.submitbyname,";
+	
+	private static final String WATER_CONNECTION_SEARCH_QUERY = "select " + holderSelectValues +" from eg_ws_connectionholder connectionholder ";
 
 	private static final String WATER_SEARCH_QUERY = "SELECT "
 			/* + " conn.*, wc.*, document.*, plumber.*, application.*, property.*, " */
@@ -588,6 +590,25 @@ public class WsQueryBuilder {
 			+ " from eg_ws_application ewa ";
 
 	public static final String MOBILE_NUMBER_EXCEPTION_CODE = "MOBILE NUMBER DOES NOT EXISTS";
+	
+	
+	public String getWaterConnectionSearchQueryString(SearchCriteria criteria, List<Object> preparedStatement,
+			RequestInfo requestInfo) {
+		if (criteria.isEmpty())
+			return null;
+		StringBuilder query = new StringBuilder();
+
+		query = new StringBuilder(WATER_CONNECTION_SEARCH_QUERY);
+		
+		if (!StringUtils.isEmpty(criteria.getConnectionNumber())) {
+			addClauseIfRequired(preparedStatement, query);
+			query.append(" conn.connectionno = ? ");
+			preparedStatement.add(criteria.getConnectionNumber());
+		}
+		
+		query.append(ORDER_BY_CLAUSE);
+		return addPaginationWrapper(query.toString(), preparedStatement, criteria);
+	}
 
 	/**
 	 * 
