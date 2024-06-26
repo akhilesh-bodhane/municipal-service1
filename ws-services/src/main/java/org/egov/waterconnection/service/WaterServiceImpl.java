@@ -382,6 +382,21 @@ public class WaterServiceImpl implements WaterService {
 				.setApplicationStatus(waterConnectionRequest.getWaterConnection().getApplicationStatus());
 		waterConnectionRequest.getWaterConnection().getWaterApplication()
 				.setAction(waterConnectionRequest.getWaterConnection().getProcessInstance().getAction());
+		
+		if(waterConnectionRequest.getWaterConnection().getConnectionHolders().get(0).getProposedName()!=null) {
+			waterConnectionRequest.getWaterConnection().setProposedName(
+					waterConnectionRequest.getWaterConnection().getConnectionHolders().get(0).getProposedName());
+		}
+		
+		if(waterConnectionRequest.getWaterConnection().getConnectionHolders().get(0).getProposedMobileNo() != null ) {
+			waterConnectionRequest.getWaterConnection().setProposedMobileNo(
+					waterConnectionRequest.getWaterConnection().getConnectionHolders().get(0).getProposedMobileNo());
+		}
+		
+		if(waterConnectionRequest.getWaterConnection().getConnectionHolders().get(0).getProposedCorrespondanceAddress() != null) {
+			waterConnectionRequest.getWaterConnection().setProposedCorrespondanceAddress(
+					waterConnectionRequest.getWaterConnection().getConnectionHolders().get(0).getProposedCorrespondanceAddress());
+		}
 
 		log.info("Next applicationStatus: {}", waterConnectionRequest.getWaterConnection().getApplicationStatus());
 

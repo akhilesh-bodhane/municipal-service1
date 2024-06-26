@@ -189,6 +189,9 @@ public class WaterConnection extends Connection {
 
 	@JsonProperty("proposedName")
 	private String proposedName = null;
+	
+	@JsonProperty("proposedCorrespondanceAddress")
+	private String proposedCorrespondanceAddress = null;
 
 	public String getContractValue() {
 		return contractValue;
