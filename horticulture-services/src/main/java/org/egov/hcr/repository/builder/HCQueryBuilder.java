@@ -93,14 +93,11 @@ public class HCQueryBuilder {
 			StringBuilder localityStr = new StringBuilder();
 			localityStr.append("(");
 			for(String local: localityArray) {
-				int strLength = localityArray.length;
+				int strLength = localityArray.length - 1;
 				System.out.println("Array value : " + local + " str length : " + strLength);
 				localityStr.append("'" + local.trim() + "'");
 				for(int i = 0 ; i < strLength ; i++) {
-					if(i < (strLength-1)) {
-						System.out.println("str length : " + strLength);
 						localityStr.append(",");
-					}
 				}
 			}
 			localityStr.append(")");
