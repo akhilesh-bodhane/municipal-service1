@@ -87,16 +87,17 @@ public class HCQueryBuilder {
 			String locality = criteria.getHouseNoAndStreetName();
 			String[] localityArray = locality.split(",");
 			//builder.append(" hc.locality ilike ? ");
-			builder.append(" hc.locality IN (?) ");
+			builder.append(" hc.locality IN ?");
 			
 			StringBuilder localityStr = new StringBuilder();
-
+			localityStr.append("(");
 			for(int i=0; i > localityArray.length; i++) {
 				localityStr.append("'" + localityArray[i].trim() + "'");	
 				if(i > localityArray.length || i == (localityArray.length - 1)) {
 					localityStr.append(",");
 				}
 			}
+			localityStr.append(")");
 			preparedStmtList.add(localityStr);
 		}
 
