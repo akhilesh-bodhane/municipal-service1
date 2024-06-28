@@ -84,9 +84,20 @@ public class HCQueryBuilder {
 		// locality
 		if (criteria.getHouseNoAndStreetName() != null) {
 			addClauseIfRequired(preparedStmtList, builder);
-			builder.append(" hc.locality ilike ? ");
+			String locality = criteria.getHouseNoAndStreetName();
+			String[] localityArray = locality.split(",");
+			//builder.append(" hc.locality ilike ? ");
+			builder.append(" hc.locality IN (?) ");
+			
+			StringBuilder localityStr = new StringBuilder();
 
-			preparedStmtList.add("%" + criteria.getHouseNoAndStreetName().trim() + "%");
+			for(int i=0; i > localityArray.length; i++) {
+				localityStr.append("'" + localityArray[i].trim() + "'");	
+				if(i > localityArray.length || i == (localityArray.length - 1)) {
+					localityStr.append(",");
+				}
+			}
+			preparedStmtList.add(localityStr);
 		}
 
 		// street name
