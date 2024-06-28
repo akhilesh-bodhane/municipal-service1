@@ -85,12 +85,12 @@ public class HCQueryBuilder {
 		if (criteria.getHouseNoAndStreetName() != null) {
 			addClauseIfRequired(preparedStmtList, builder);
 			String locality = criteria.getHouseNoAndStreetName();
+			StringBuilder localityStr = new StringBuilder();
 			System.out.println("Locality ");
 			String[] localityArray = locality.split(",");
 			//builder.append(" hc.locality ilike ? ");
-			builder.append(" hc.locality IN ?");
 			
-			StringBuilder localityStr = new StringBuilder();
+			
 			localityStr.append("(");
 			for(String local: localityArray) {				
 				System.out.println("Array value : " + local);
@@ -99,7 +99,8 @@ public class HCQueryBuilder {
 			}
 			localityStr.deleteCharAt(localityStr.length()-1);
 			localityStr.append(")");
-			preparedStmtList.add(localityStr);
+			builder.append(" hc.locality IN " + localityStr);
+			//preparedStmtList.add(localityStr);
 		}
 
 		// street name
