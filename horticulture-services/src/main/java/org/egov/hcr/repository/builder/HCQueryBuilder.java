@@ -97,12 +97,13 @@ public class HCQueryBuilder {
 			for(String local: localityArray) {				
 				System.out.println("Array value : " + local + " str length : " + strLength);
 				localityStr.append("'" + local.trim() + "'");
+				for(int i = 0 ; i < strLength; i++) {
+					System.out.println("for loop strlength : " + strLength);
+						localityStr.append(",");
+				}
 			}
 			
-			for(int i = 0 ; i < strLength; i++) {
-				System.out.println("for loop strlength : " + strLength);
-					localityStr.append(",");
-			}
+			
 			
 			localityStr.append(")");
 			preparedStmtList.add(localityStr);
