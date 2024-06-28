@@ -90,21 +90,14 @@ public class HCQueryBuilder {
 			//builder.append(" hc.locality ilike ? ");
 			builder.append(" hc.locality IN ?");
 			
-			int strLength = localityArray.length - 1;
-			
 			StringBuilder localityStr = new StringBuilder();
 			localityStr.append("(");
 			for(String local: localityArray) {				
 				System.out.println("Array value : " + local + " str length : " + strLength);
 				localityStr.append("'" + local.trim() + "'");
-				for(int i = 0 ; i < strLength; i++) {
-					System.out.println("for loop strlength : " + strLength);
-						localityStr.append(",");
-				}
+				localityStr.append(",");
 			}
-			
-			
-			
+			localityStr.deleteCharAt(localityStr.length()-1);
 			localityStr.append(")");
 			preparedStmtList.add(localityStr);
 		}
