@@ -96,7 +96,8 @@ public class HCQueryBuilder {
 				int strLength = localityArray.length - 1;
 				System.out.println("Array value : " + local + " str length : " + strLength);
 				localityStr.append("'" + local.trim() + "'");
-				for(int i = 0 ; i < strLength ; i++) {
+				for(int i = 0 ; i < strLength - 1 ; i++) {
+					System.out.println("for loop strlength : " + strLength);
 						localityStr.append(",");
 				}
 			}
