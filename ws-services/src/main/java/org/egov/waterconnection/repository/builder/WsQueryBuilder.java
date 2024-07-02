@@ -504,7 +504,7 @@ public class WsQueryBuilder {
 	private static final String WATER_GET_API = " select wc.connectionType,conn.tenantid,\r\n"
 			+ "wc.connection_id as connection_Id,application.applicationno as app_applicationno,"
 			/* + "conn.applicationStatus ," */
-			/* + "conn.status,\r\n" */
+			+ "conn.status,\r\n" 
 			+ "		conn.connectionNo,\r\n"
 			/* + "	wc.proposedPipeSize," */
 			/* + " wc.waterSource,\r\n" */
