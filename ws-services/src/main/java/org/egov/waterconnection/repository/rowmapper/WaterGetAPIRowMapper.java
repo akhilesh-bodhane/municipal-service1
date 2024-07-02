@@ -39,7 +39,7 @@ public class WaterGetAPIRowMapper implements ResultSetExtractor<List<WaterConnec
 				currentWaterConnection.setApplicationNo(rs.getString("app_applicationno"));
 				//currentWaterConnection.setApplicationStatus(rs.getString("applicationstatus"));
 				
-				//currentWaterConnection.setStatus(StatusEnum.fromValue(rs.getString("status")));
+				currentWaterConnection.setStatus(StatusEnum.fromValue(rs.getString("status")));
 				currentWaterConnection.setConnectionNo(rs.getString("connectionNo"));
 				//currentWaterConnection.setProposedPipeSize(rs.getString("proposedPipeSize"));
 				//currentWaterConnection.setWaterApplicationType(rs.getString("waterApplicationType"));
