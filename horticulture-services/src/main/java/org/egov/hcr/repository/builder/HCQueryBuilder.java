@@ -49,6 +49,27 @@ public class HCQueryBuilder {
 
 		StringBuilder builder = new StringBuilder(QUERY);
 
+		// locality
+		if (criteria.getHouseNoAndStreetName() != null) {
+			//addClauseIfRequired(preparedStmtList, builder);
+			String locality = criteria.getHouseNoAndStreetName();
+			StringBuilder localityStr = new StringBuilder();
+			System.out.println("Locality ");
+			String[] localityArray = locality.split(",");
+			builder.append(" WHERE ");
+
+			localityStr.append("(");
+			for (String local : localityArray) {
+				System.out.println("Array value : " + local);
+				localityStr.append("'" + local.trim() + "'");
+				localityStr.append(",");
+			}
+			localityStr.deleteCharAt(localityStr.length() - 1);
+			localityStr.append(")");
+			builder.append(" hc.locality IN " + localityStr);
+			preparedStmtList.add("");
+		}
+				
 		// owner name
 		if (criteria.getOwnerName() != null) {
 			addClauseIfRequired(preparedStmtList, builder);
@@ -79,28 +100,6 @@ public class HCQueryBuilder {
 			builder.append(" hc.longitude = ?  ");
 
 			preparedStmtList.add(criteria.getLongitude().trim());
-		}
-
-		// locality
-		if (criteria.getHouseNoAndStreetName() != null) {
-			addClauseIfRequired(preparedStmtList, builder);
-			String locality = criteria.getHouseNoAndStreetName();
-			StringBuilder localityStr = new StringBuilder();
-			System.out.println("Locality ");
-			String[] localityArray = locality.split(",");
-			builder.append(" ? ");
-			
-			
-			localityStr.append("(");
-			for(String local: localityArray) {				
-				System.out.println("Array value : " + local);
-				localityStr.append("'" + local.trim() + "'");
-				localityStr.append(",");
-			}
-			localityStr.deleteCharAt(localityStr.length()-1);
-			localityStr.append(")");
-			builder.append(" hc.locality IN " + localityStr);
-			preparedStmtList.add("");
 		}
 
 		// street name
