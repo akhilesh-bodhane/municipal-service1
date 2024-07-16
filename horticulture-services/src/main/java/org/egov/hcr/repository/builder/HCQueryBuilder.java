@@ -100,7 +100,7 @@ public class HCQueryBuilder {
 			localityStr.deleteCharAt(localityStr.length()-1);
 			localityStr.append(")");
 			builder.append(" hc.locality IN " + localityStr);
-			//preparedStmtList.add(localityStr);
+			preparedStmtList.add("");
 		}
 
 		// street name
