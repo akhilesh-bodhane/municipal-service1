@@ -54,9 +54,9 @@ public class HCQueryBuilder {
 			//addClauseIfRequired(preparedStmtList, builder);
 			String locality = criteria.getHouseNoAndStreetName();
 			StringBuilder localityStr = new StringBuilder();
-			System.out.println("Locality ");
+			System.out.println("WHERE Locality ");
 			String[] localityArray = locality.split(",");
-			builder.append(" WHERE ");
+			//builder.append(" ");
 
 			localityStr.append("(");
 			for (String local : localityArray) {
@@ -67,12 +67,12 @@ public class HCQueryBuilder {
 			localityStr.deleteCharAt(localityStr.length() - 1);
 			localityStr.append(")");
 			builder.append(" hc.locality IN " + localityStr);
-			preparedStmtList.add("");
+			//preparedStmtList.add("");
 		}
 				
 		// owner name
 		if (criteria.getOwnerName() != null) {
-			addClauseIfRequired(preparedStmtList, builder);
+			addClauseIfRequiredSearch(criteria, preparedStmtList, builder);
 			builder.append(" hc.owner_name like ? ");
 
 			preparedStmtList.add("%" + criteria.getOwnerName().trim() + "%");
@@ -80,7 +80,7 @@ public class HCQueryBuilder {
 
 		// address
 		if (criteria.getAddress() != null) {
-			addClauseIfRequired(preparedStmtList, builder);
+			addClauseIfRequiredSearch(criteria, preparedStmtList, builder);
 			builder.append(" hc.location like ? ");
 
 			preparedStmtList.add("%" + criteria.getAddress().trim() + "%");
@@ -88,7 +88,7 @@ public class HCQueryBuilder {
 
 		// latitude
 		if (criteria.getLatitude() != null) {
-			addClauseIfRequired(preparedStmtList, builder);
+			addClauseIfRequiredSearch(criteria, preparedStmtList, builder);
 			builder.append(" hc.latitude  =? ");
 
 			preparedStmtList.add(criteria.getLatitude().trim());
@@ -96,7 +96,7 @@ public class HCQueryBuilder {
 
 		// longitude
 		if (criteria.getLongitude() != null) {
-			addClauseIfRequired(preparedStmtList, builder);
+			addClauseIfRequiredSearch(criteria, preparedStmtList, builder);
 			builder.append(" hc.longitude = ?  ");
 
 			preparedStmtList.add(criteria.getLongitude().trim());
@@ -104,20 +104,20 @@ public class HCQueryBuilder {
 
 		// street name
 		if (criteria.getStreetName() != null) {
-			addClauseIfRequired(preparedStmtList, builder);
+			addClauseIfRequiredSearch(criteria, preparedStmtList, builder);
 			builder.append(" hc.street_name ilike ?");
 			preparedStmtList.add("%" + criteria.getStreetName().trim() + "%");
 		}
 
 		// landmark
 		if (criteria.getLandmark() != null) {
-			addClauseIfRequired(preparedStmtList, builder);
+			addClauseIfRequiredSearch(criteria, preparedStmtList, builder);
 			builder.append(" hc.landmark ilike ?");
 			preparedStmtList.add("%" + criteria.getLandmark().trim() + "%");
 		}
 		// contact_number
 		if (criteria.getOwnerContactNumber() != null) {
-			addClauseIfRequired(preparedStmtList, builder);
+			addClauseIfRequiredSearch(criteria, preparedStmtList, builder);
 			builder.append(" hc.contact_number ilike ?");
 			preparedStmtList.add("%" + criteria.getOwnerContactNumber().trim() + "%");
 		}
@@ -125,21 +125,21 @@ public class HCQueryBuilder {
 		// email_id
 		if (criteria.getEmail() != null) {
 
-			addClauseIfRequired(preparedStmtList, builder);
+			addClauseIfRequiredSearch(criteria, preparedStmtList, builder);
 			builder.append(" hc.email_id ilike ?");
 			preparedStmtList.add("%" + criteria.getEmail().trim() + "%");
 		}
 
 		// tree_count
 		if (criteria.getTreeCount() != null) {
-			addClauseIfRequired(preparedStmtList, builder);
+			addClauseIfRequiredSearch(criteria, preparedStmtList, builder);
 			builder.append(" hc.tree_count = ?");
 			preparedStmtList.add(criteria.getTreeCount());
 		}
 
 		// service type
 		if (criteria.getServiceType() != null) {
-			addClauseIfRequired(preparedStmtList, builder);
+			addClauseIfRequiredSearch(criteria, preparedStmtList, builder);
 			builder.append(" hc.service_type ilike ?");
 			preparedStmtList.add("%" + criteria.getServiceType().trim().toUpperCase() + "%");
 		}
@@ -147,7 +147,7 @@ public class HCQueryBuilder {
 		// service request id
 		if (criteria.getService_request_id() != null) {
 
-			addClauseIfRequired(preparedStmtList, builder);
+			addClauseIfRequiredSearch(criteria, preparedStmtList, builder);
 			builder.append(" hc.service_request_id ilike ?");
 			preparedStmtList.add("%" + criteria.getService_request_id().trim() + "%");
 		}
@@ -155,7 +155,7 @@ public class HCQueryBuilder {
 		// service request status
 		if (criteria.getServiceRequestStatus() != null) {
 
-			addClauseIfRequired(preparedStmtList, builder);
+			addClauseIfRequiredSearch(criteria, preparedStmtList, builder);
 			builder.append(" hc.service_request_status   = ?");
 			preparedStmtList.add(criteria.getServiceRequestStatus().trim().toUpperCase());
 		}
@@ -163,28 +163,28 @@ public class HCQueryBuilder {
 		// from date
 
 		if (criteria.getFromDate() != null) {
-			addClauseIfRequired(preparedStmtList, builder);
+			addClauseIfRequiredSearch(criteria, preparedStmtList, builder);
 			builder.append(" hc.createdtime >= ? ");
 			preparedStmtList.add(criteria.getFromDate());
 		}
 
 		// to date
 		if (criteria.getToDate() != null) {
-			addClauseIfRequired(preparedStmtList, builder);
+			addClauseIfRequiredSearch(criteria, preparedStmtList, builder);
 			builder.append(" hc.createdtime <= ? ");
 			preparedStmtList.add(criteria.getToDate());
 
 		}
 		// service request sub type
 		if (criteria.getServiceRequestSubtype() != null) {
-			addClauseIfRequired(preparedStmtList, builder);
+			addClauseIfRequiredSearch(criteria, preparedStmtList, builder);
 			builder.append(" hc.servicerequestsubtype->>'subservicetype' = ?");
 
 			preparedStmtList.add(criteria.getServiceRequestSubtype().trim());
 		}
 
 		if (criteria.getDataPayload() != null && criteria.getDataPayload().get("assignedTo") != null) {
-			addClauseIfRequired(preparedStmtList, builder);
+			addClauseIfRequiredSearch(criteria, preparedStmtList, builder);
 			builder.append(" hc.current_assignee= ?");
 
 			preparedStmtList.add(criteria.getDataPayload().get("assignedTo").toString().trim());
@@ -193,7 +193,7 @@ public class HCQueryBuilder {
 		// this is for citizen
 		if (criteria.getRequestInfo().getUserInfo().getType().equals("CITIZEN")) {
 
-			addClauseIfRequired(preparedStmtList, builder);
+			addClauseIfRequiredSearch(criteria, preparedStmtList, builder);
 			builder.append(" hc.createdby  = ? ");
 			preparedStmtList.add(criteria.getAuditDetails().getCreatedBy());
 
@@ -201,7 +201,7 @@ public class HCQueryBuilder {
 
 		// ServiceTypeName
 		if (!Strings.isNullOrEmpty(criteria.getServiceTypeName())) {
-			addClauseIfRequired(preparedStmtList, builder);
+			addClauseIfRequiredSearch(criteria, preparedStmtList, builder);
 			builder.append(" hc.service_type_name  = ? ");
 			preparedStmtList.add(criteria.getServiceTypeName());
 		}
@@ -387,6 +387,14 @@ public class HCQueryBuilder {
 
 	private static void addClauseIfRequired(List<Object> values, StringBuilder queryString) {
 		if (values.isEmpty())
+			queryString.append(" WHERE ");
+		else {
+			queryString.append(" AND");
+		}
+	}
+	
+	private static void addClauseIfRequiredSearch(RequestData criteria, List<Object> values, StringBuilder queryString) {
+		if (values.isEmpty() && criteria.getHouseNoAndStreetName() == null)
 			queryString.append(" WHERE ");
 		else {
 			queryString.append(" AND");
