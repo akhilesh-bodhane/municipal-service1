@@ -82,7 +82,26 @@ public class HCQueryBuilder {
 		}
 
 		// locality
-		
+		if (criteria.getHouseNoAndStreetName() != null) {
+			addClauseIfRequired(preparedStmtList, builder);
+			String locality = criteria.getHouseNoAndStreetName();
+			StringBuilder localityStr = new StringBuilder();
+			System.out.println("Locality ");
+			String[] localityArray = locality.split(",");
+			builder.append(" ? ");
+			
+			
+			localityStr.append("(");
+			for(String local: localityArray) {				
+				System.out.println("Array value : " + local);
+				localityStr.append("'" + local.trim() + "'");
+				localityStr.append(",");
+			}
+			localityStr.deleteCharAt(localityStr.length()-1);
+			localityStr.append(")");
+			builder.append(" hc.locality IN " + localityStr);
+			preparedStmtList.add("");
+		}
 
 		// street name
 		if (criteria.getStreetName() != null) {
@@ -339,27 +358,6 @@ public class HCQueryBuilder {
 			addClauseIfRequired(preparedStmtList, builder);
 			builder.append(" hc.service_type_name  = ? ");
 			preparedStmtList.add(criteria.getServiceTypeName());
-		}
-		
-		if (criteria.getHouseNoAndStreetName() != null) {
-			addClauseIfRequired(preparedStmtList, builder);
-			String locality = criteria.getHouseNoAndStreetName();
-			StringBuilder localityStr = new StringBuilder();
-			System.out.println("Locality ");
-			String[] localityArray = locality.split(",");
-			//builder.append(" hc.locality ilike ? ");
-			
-			
-			localityStr.append("(");
-			for(String local: localityArray) {				
-				System.out.println("Array value : " + local);
-				localityStr.append("'" + local.trim() + "'");
-				localityStr.append(",");
-			}
-			localityStr.deleteCharAt(localityStr.length()-1);
-			localityStr.append(")");
-			builder.append(" hc.locality IN " + localityStr);
-			//preparedStmtList.add("");
 		}
 
 		// builder.append(" ORDER BY service_request_id DESC");
