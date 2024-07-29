@@ -121,9 +121,10 @@ public class QueryBuilder {
 			+ "WHERE\r\n"
 			+ "    rank > 1 ";
 	
-	public static final String UPDATE_CITY ="update eg_user_address set city ='ch.chandigarh'\r\n"
-			+ " from eg_user where eg_user.id=eg_user_address.userid \r\n"
-			+ " and eg_user.\"type\" ='CITIZEN' and eg_user_address.city='ch'";
+	public static final String UPDATE_CITY ="update eg_user_address set ad.city ='ch.chandigarh'\r\n"
+			+ "			from eg_user u\r\n"
+			+ "         inner join eg_user_address ad on u.id=ad.userid \r\n"
+			+ "         where ad.\"type\" ='PERMANENT' and ad.city is null or ad.city ='ch'";
 	
 	public String getCoexistenceIdleConnectionKillCount(List<Object> preparedStatement) {
 		StringBuilder query;
