@@ -2,6 +2,7 @@ package org.egov.ec.service;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -119,6 +120,8 @@ public class DemandService {
 			String tenantId = calculation.getTenantId();
 			String consumerCode = calculation.getEcDetail().getChallanNumber();
 			String userUuid=calculation.getEcDetail().getUuid();
+			Long billExpiryTime = getExpiryDateForDemand();
+			
 			List<DemandDetail> demandDetails = new LinkedList<>();
 			calculation.getTaxHeadEstimates().forEach(taxHeadEstimate -> {
 				demandDetails.add(DemandDetail.builder().taxAmount(taxHeadEstimate.getEstimateAmount())
@@ -134,9 +137,19 @@ public class DemandService {
 					.taxPeriodTo(taxPeriods.get(ECConstants.MDMS_ENDDATE))
 					.consumerType(config.getBusinessService())
 					.businessService(config.getBusinessService())
+					.billExpiryTime(billExpiryTime)
 					.build());
 		}
 		return demandRepository.saveDemand(requestInfo, demands);
+	}
+	
+	private Long getExpiryDateForDemand() {
+
+		Calendar cal = Calendar.getInstance();	
+
+		cal.add(Calendar.DAY_OF_MONTH, 7); 
+		cal.set(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DATE), 23, 59, 59);
+		return cal.getTimeInMillis();
 	}
 
 	private List<Demand> updateDemand(RequestInfo requestInfo, List<Calculation> calculations) {
