@@ -266,7 +266,7 @@ public class WaterServicesUtil {
 	public String getShortnerURL(String actualURL) {
 		JSONObject obj = new JSONObject();
 		obj.put(URL, actualURL);
-		String url = config.getNotificationUrl() + config.getShortenerURL();
+		String url = config.getNotificationUrl() + "/" + config.getShortenerURL();
 		
 		Object response = serviceRequestRepository.getShortningURL(new StringBuilder(url), obj);
 		return response.toString();
