@@ -382,7 +382,7 @@ public class ViolationService {
 
 		} catch (Exception e) {
 			log.error("Violation Service - Get Violation Exception" + e.getMessage());
-			throw new CustomException("VIOLATION_GET_EXCEPTION", e.getMessage());
+			throw new CustomException("VIOLATION_GET_EXCEPTION", "No Voilation Found");
 		}
 	}
 
