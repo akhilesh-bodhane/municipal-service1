@@ -345,7 +345,11 @@ public class TLValidator {
         List<String> applicationDocIds = new LinkedList<>();
         if(!CollectionUtils.isEmpty(license.getTradeLicenseDetail().getApplicationDocuments())){
             license.getTradeLicenseDetail().getApplicationDocuments().forEach(document -> {
-                applicationDocIds.add(document.getId());
+            	if(license.getTradeLicenseDetail().getApplicationDocuments().get(0).getFileStoreId() != null){
+            		System.out.println("Adding document id");
+            		applicationDocIds.add(document.getId());
+            	}
+                
             });
         }
         return applicationDocIds;
