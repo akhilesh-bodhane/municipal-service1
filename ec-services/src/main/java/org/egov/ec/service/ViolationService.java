@@ -325,9 +325,11 @@ public class ViolationService {
 	public ResponseEntity<ResponseInfoWrapper> getChallan(RequestInfoWrapper requestInfoWrapper) {
 		log.info("Violation Service - Get Challan");
 		try {
-
+			System.out.println("Inside try condition get method");
 			EcSearchCriteria searchCriteria = objectMapper.convertValue(requestInfoWrapper.getRequestBody(),
 					EcSearchCriteria.class);
+			
+			System.out.println("searchCriteria " + searchCriteria.toString());
 
 			String responseValidate = "";
 
@@ -337,35 +339,42 @@ public class ViolationService {
 			responseValidate = wfIntegrator.validateJsonAddUpdateData(payloadData, EcConstants.CHALLANGET);
 
 			if (responseValidate.equals("")) {
+				System.out.println("Inside if condition to check null");
 
 				List<Violation> violationPage = null;
 
 				if (searchCriteria.getLimit() == null) {
+					System.out.println("Default limit");
 					searchCriteria.setLimit(DEFAULT_LIMIT);
 				}
 				if (searchCriteria.getLimit() == -1) {
+					System.out.println("limit set to 1000+");
 					searchCriteria.setLimit(1_000_000);
 				}
 				List<String> roleCodes = new LinkedList<>();
 				requestInfoWrapper.getRequestInfo().getUserInfo().getRoles().forEach(role -> {
 					roleCodes.add(role.getCode());
+					System.out.println("roleCodes");
 				});
 				if (roleCodes.contains("challanHOD") && !roleCodes.contains("challanSM")
 						&& !roleCodes.contains("challanSI")) {
 					if (!searchCriteria.getAction().equals("auctionChallan")
 							&& !searchCriteria.getAction().equals("challanSM")
 							&& searchCriteria.getSearchText().equals("")) {
+						System.out.println("if condition role code check");
 						violationPage = repository.getChallanForHOD(searchCriteria);
 
 					} else if (searchCriteria.getAction().equals("auctionChallan")
 							&& searchCriteria.getSearchText().equals("")) {
+						System.out.println("Else if condition auctionChallan role code check");
 						violationPage = repository.getChallanForAuctionHOD(searchCriteria);
 					} else {
+						System.out.println("Else condition get challan");
 						violationPage = repository.getChallan(searchCriteria);
 					}
 
 				} else {
-
+					System.out.println("Final else condition get challan");
 					violationPage = repository.getChallan(searchCriteria);
 				}
 				
