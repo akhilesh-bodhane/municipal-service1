@@ -126,9 +126,9 @@ public class WsQueryBuilder {
 			+ "(SELECT *, DENSE_RANK() OVER (ORDER BY conn_id desc) offset_ FROM " + "({})" + " result) result_offset "
 			+ "WHERE offset_ > ? AND offset_ <= ?";
 
-	//private static final String ORDER_BY_CLAUSE = " ORDER BY conn.id DESC";
+	private static final String ORDER_BY_CLAUSE = " ORDER BY conn.id DESC";
 	
-	private static final String ORDER_BY_CLAUSE = " ORDER BY connectionholder.lastmodifiedtime DESC";
+	//private static final String ORDER_BY_CLAUSE = " ORDER BY connectionholder.lastmodifiedtime DESC";
 	
 	private static final String ORDER_BY_CLAUSE_APPNO = " ORDER BY application.applicationno DESC";
 
