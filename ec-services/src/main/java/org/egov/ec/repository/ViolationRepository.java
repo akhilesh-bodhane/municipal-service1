@@ -207,7 +207,7 @@ public class ViolationRepository {
 		log.info("Violation Repository - getChallanForAuctionHOD Method");
 
 		List<Violation> violationDetailList = jdbcTemplate.query(EcQueryBuilder.GET_VIOLATION_MASTER_AUCTION_HOD,
-				new Object[] { searchCriteria.getTenantId() }, rowMapper);
+				new Object[] { searchCriteria.getTenantId(), searchCriteria.getFromDate(), searchCriteria.getToDate() }, rowMapper);
 		return violationDetailList;
 	}
 

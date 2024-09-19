@@ -133,7 +133,8 @@ public class EcQueryBuilder {
 			+ " JOIN egec_payment payment on violation.violation_uuid = payment.violation_uuid \n"
 			+ " JOIN egec_auction_master auction on violation.violation_uuid = auction.violation_uuid \n"
 			+ " LEFT JOIN egec_document doc on violation.violation_uuid = doc.violation_uuid \n"
-			+ " where auction.status='PENDING' and violation.tenant_id=? order by violation.last_modified_time desc	";
+			+ " where auction.status='PENDING' and violation.tenant_id=? and violation.created_time >=? \n"
+			+ "	and violation.created_time >=? order by violation.last_modified_time desc	";
 
 	public static final String GET_AUCTION_CHALLAN_MASTER = "\n"
 			+ "		select auction.*,violation.si_name,violation.violator_name,violation.encroachment_type,violation.sector,challan.challan_id,violation.violation_date,violation.contact_number from egec_auction_master auction \n"

@@ -329,7 +329,7 @@ public class ViolationService {
 			EcSearchCriteria searchCriteria = objectMapper.convertValue(requestInfoWrapper.getRequestBody(),
 					EcSearchCriteria.class);
 			
-			System.out.println("searchCriteria " + searchCriteria.toString());
+			System.out.println("searchCriteria " + searchCriteria.getAction() + " " + searchCriteria.getFromDate() + " " + searchCriteria.getToDate());
 
 			String responseValidate = "";
 
