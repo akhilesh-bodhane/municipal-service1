@@ -27,7 +27,8 @@ public class EcQueryBuilder {
 			+ " JOIN egec_payment payment on violation.violation_uuid = payment.violation_uuid \n"
 			+ " JOIN egec_store_item_register storeItem on violation.violation_uuid = storeItem.violation_uuid \n"
 			+ " LEFT JOIN egec_document doc on violation.violation_uuid = doc.violation_uuid \n"
-			+ " where violation.tenant_id=? and challan.challan_status='PENDING FOR AUCTION' order by violation.last_modified_time desc";
+			+ " where violation.tenant_id=? and challan.challan_status='PENDING FOR AUCTION' and violation.created_time >=? \n"
+			+ "	and violation.created_time <=? order by violation.last_modified_time desc";
 
 	public static final String GET_VIOLATION_MASTER_SM = "select (select case when ((select count(*) from egec_store_item_register store where store.violation_uuid=violation.violation_uuid) > 0) and  challan.challan_status='CLOSED' then 'RELEASED FROM STORE' when challan.challan_status='CLOSED' and ((select count(*) from egec_store_item_register store where store.violation_uuid=violation.violation_uuid) = 0) then 'RELEASED ON GROUND' else challan.challan_status end  )as challan_status,\n"
 			+ "	*,(select head_amount from egec_challan_detail ch where ch.budget_head ='FINE_AMOUNT' and ch.challan_uuid=challan.challan_uuid) as fineAmount,\n"
@@ -133,8 +134,8 @@ public class EcQueryBuilder {
 			+ " JOIN egec_payment payment on violation.violation_uuid = payment.violation_uuid \n"
 			+ " JOIN egec_auction_master auction on violation.violation_uuid = auction.violation_uuid \n"
 			+ " LEFT JOIN egec_document doc on violation.violation_uuid = doc.violation_uuid \n"
-			+ " where auction.status='PENDING' and violation.tenant_id=? and violation.created_time >=? \n"
-			+ "	and violation.created_time >=? order by violation.last_modified_time desc	";
+			+ " where auction.status='PENDING' and violation.tenant_id=? \n"
+			+ "	order by violation.last_modified_time desc	";
 
 	public static final String GET_AUCTION_CHALLAN_MASTER = "\n"
 			+ "		select auction.*,violation.si_name,violation.violator_name,violation.encroachment_type,violation.sector,challan.challan_id,violation.violation_date,violation.contact_number from egec_auction_master auction \n"

@@ -119,9 +119,9 @@ public class ViolationRepository {
 			}
 
 		} else if (searchCriteria.getAction().equalsIgnoreCase("auctionChallan")) {
-
+			System.out.println("Inside auctionChallan type action");
 			violationDetailList = jdbcTemplate.query(EcQueryBuilder.GET_VIOLATION_MASTER_AUTION,
-					new Object[] { searchCriteria.getTenantId() }, rowMapper);
+					new Object[] { searchCriteria.getTenantId(), searchCriteria.getFromDate(), searchCriteria.getToDate() }, rowMapper);
 			return violationDetailList;
 
 		} else if (searchCriteria.getAction().equalsIgnoreCase("ChallanSM")) {
@@ -207,7 +207,7 @@ public class ViolationRepository {
 		log.info("Violation Repository - getChallanForAuctionHOD Method");
 
 		List<Violation> violationDetailList = jdbcTemplate.query(EcQueryBuilder.GET_VIOLATION_MASTER_AUCTION_HOD,
-				new Object[] { searchCriteria.getTenantId(), searchCriteria.getFromDate(), searchCriteria.getToDate() }, rowMapper);
+				new Object[] { searchCriteria.getTenantId() }, rowMapper);
 		return violationDetailList;
 	}
 
