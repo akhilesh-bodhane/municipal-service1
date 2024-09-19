@@ -38,10 +38,10 @@ public class EcSearchCriteria {
 
 
     @JsonProperty("fromDate")
-    private Long fromDate = null;
+    private Long fromDate;
 
     @JsonProperty("toDate")
-    private Long toDate = null;
+    private Long toDate;
 
 
     @JsonProperty("offset")
