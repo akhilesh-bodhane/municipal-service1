@@ -780,7 +780,7 @@ if(Usage != null) {
                     
 					formFee = (criteria.getWaterConnection().getContractValue() == null || criteria.getWaterConnection().getContractValue() == "") 
 							? BigDecimal.ZERO : (new BigDecimal(criteria.getWaterConnection().getContractValue()))
-							.multiply((BigDecimal.valueOf(1.75)).divide(WSCalculationConstant.HUNDRED));
+							.multiply((BigDecimal.valueOf(1.5)).divide(WSCalculationConstant.HUNDRED));
 				} else {
 
 					formFee = new BigDecimal(multiplier * property.getSuperBuiltUpArea());
