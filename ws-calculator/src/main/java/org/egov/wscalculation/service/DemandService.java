@@ -106,7 +106,9 @@ public class DemandService {
 		Map<String, Object> financialYearMaster = (Map<String, Object>) masterMap
 				.get(WSCalculationConstant.BILLING_PERIOD);
 		Long fromDate = (Long) financialYearMaster.get(WSCalculationConstant.STARTING_DATE_APPLICABLES);
+		System.out.println("From Date : " + fromDate);
 		Long toDate = (Long) financialYearMaster.get(WSCalculationConstant.ENDING_DATE_APPLICABLES);
+		System.out.println("To Date : " + toDate);
 
 		// List that will contain Calculation for new demands
 		List<Calculation> createCalculations = new LinkedList<>();
