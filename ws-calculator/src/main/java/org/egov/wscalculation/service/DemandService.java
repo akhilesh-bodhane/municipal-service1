@@ -194,9 +194,9 @@ public class DemandService {
 			Map<String, Object> financialYearMaster = (Map<String, Object>) masterMap
 					.get(WSCalculationConstant.BILLING_PERIOD);
 
-			Long fromDate = (Long) financialYearMaster.get(WSCalculationConstant.STARTING_DATE_APPLICABLES);
-			Long toDate = (Long) financialYearMaster.get(WSCalculationConstant.ENDING_DATE_APPLICABLES);
-			Long expiryDate = (Long) financialYearMaster.get(WSCalculationConstant.Demand_Expiry_Date_String);
+			Long fromDate = Long.valueOf(financialYearMaster.get(WSCalculationConstant.STARTING_DATE_APPLICABLES).toString());
+			Long toDate = Long.valueOf(financialYearMaster.get(WSCalculationConstant.ENDING_DATE_APPLICABLES).toString());
+			Long expiryDate = Long.valueOf(financialYearMaster.get(WSCalculationConstant.Demand_Expiry_Date_String).toString());
 			BigDecimal minimumPaybleAmount = isForConnectionNO == true ? configs.getMinimumPayableAmount()
 					: calculation.getTotalAmount();
 			String businessService = isForConnectionNO == true ? configs.getBusinessService()
