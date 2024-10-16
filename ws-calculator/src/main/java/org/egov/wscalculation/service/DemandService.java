@@ -107,8 +107,8 @@ public class DemandService {
 				.get(WSCalculationConstant.BILLING_PERIOD);
 		System.out.println("From Date : " + financialYearMaster.get(WSCalculationConstant.STARTING_DATE_APPLICABLES));
 		System.out.println("To Date : " + financialYearMaster.get(WSCalculationConstant.ENDING_DATE_APPLICABLES));
-		Long fromDate = Long.valueOf((String) financialYearMaster.get(WSCalculationConstant.STARTING_DATE_APPLICABLES)) ;		
-		Long toDate = Long.valueOf((String) financialYearMaster.get(WSCalculationConstant.ENDING_DATE_APPLICABLES));
+		Long fromDate = (Long) financialYearMaster.get(WSCalculationConstant.STARTING_DATE_APPLICABLES);		
+		Long toDate = (Long) financialYearMaster.get(WSCalculationConstant.ENDING_DATE_APPLICABLES);
 		
 
 		// List that will contain Calculation for new demands
