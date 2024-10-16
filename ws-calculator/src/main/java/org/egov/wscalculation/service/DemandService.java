@@ -111,8 +111,8 @@ public class DemandService {
 		String fromDatestr = (String) financialYearMaster.get(WSCalculationConstant.STARTING_DATE_APPLICABLES);
 		String toDateStr = (String) financialYearMaster.get(WSCalculationConstant.ENDING_DATE_APPLICABLES);
 		
-		Long fromDate = Long.parseLong(fromDatestr);		
-		Long toDate = Long.parseLong(toDateStr);
+		Long fromDate = Long.valueOf(fromDatestr);		
+		Long toDate = Long.valueOf(toDateStr);
 		
 
 		// List that will contain Calculation for new demands
