@@ -621,18 +621,21 @@ public class ViolationService {
 			String requestHeader) {
 		log.info("Violation Service - Generate Challan");
 		Violation violationMaster = objectMapper.convertValue(requestInfoWrapper.getRequestBody(), Violation.class);
+		/*
+		 * String strOutput = violationMaster.getNotificationTemplate().getBody()
+		 * .replace("<violator>", violationMaster.getViolatorName())
+		 * .replace("<ChallanId>", violationMaster.getChallanId())
+		 * .replace("<EnchroachmentType>", violationMaster.getEncroachmentType())
+		 * .replace("<Date and Time>", violationMaster.getViolationDate() + " " +
+		 * violationMaster.getViolationTime()) .replace("<Link>", wfIntegrator
+		 * .getShortnedUrl( (config.getLoginUrl() + "?mobileno=" +
+		 * violationMaster.getContactNumber() + "&ecno=" +
+		 * violationMaster.getChallanId()), requestInfoWrapper.getRequestInfo()))
+		 * .replace("<br>", "\r\n");
+		 */
+		
 		String strOutput = violationMaster.getNotificationTemplate().getBody()
-				.replace("<violator>", violationMaster.getViolatorName())
 				.replace("<ChallanId>", violationMaster.getChallanId())
-				.replace("<EnchroachmentType>", violationMaster.getEncroachmentType())
-				.replace("<Date and Time>",
-						violationMaster.getViolationDate() + " " + violationMaster.getViolationTime())
-				.replace("<Link>",
-						wfIntegrator
-								.getShortnedUrl(
-										(config.getLoginUrl() + "?mobileno=" + violationMaster.getContactNumber()
-												+ "&ecno=" + violationMaster.getChallanId()),
-										requestInfoWrapper.getRequestInfo()))
 				.replace("<br>", "\r\n");
 		log.info("Message Ready To Send : {}", strOutput);
 		violationMaster.getNotificationTemplate().setBody(strOutput);
