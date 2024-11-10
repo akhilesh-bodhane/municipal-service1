@@ -255,14 +255,14 @@ public class ServiceRequestRepository {
 
 		whereStr.append(" order by createdtime desc LIMIT ");
 		if (serviceReqSearchCriteria.getNoOfRecords() != null && serviceReqSearchCriteria.getNoOfRecords() != 0) {
-			whereStr.append(" serviceReqSearchCriteria.getNoOfRecords() ");
+			whereStr.append(serviceReqSearchCriteria.getNoOfRecords());
 		} else {
 			whereStr.append(" 200 ");
 		}
 
 		whereStr.append(" OFFSET ");
 		if (serviceReqSearchCriteria.getOffset() != null && serviceReqSearchCriteria.getOffset() != 0) {
-			whereStr.append(" serviceReqSearchCriteria.getOffset() ");
+			whereStr.append(serviceReqSearchCriteria.getOffset());
 		} else {
 			whereStr.append(" 0 ");
 		}

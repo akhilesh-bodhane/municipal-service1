@@ -289,7 +289,7 @@ public class PGRUtils {
 				PGRConstants.SEARCHER_SRSEARCH_DEF_NAME);
 		uri.append(endPoint);
 		serviceReqSearchCriteria.setNoOfRecords(
-				null == serviceReqSearchCriteria.getNoOfRecords() ? 200L : serviceReqSearchCriteria.getNoOfRecords()); // be
+				null == serviceReqSearchCriteria.getNoOfRecords() ? 30L : serviceReqSearchCriteria.getNoOfRecords()); // be
 																														// default
 																														// we
 																														// retrieve
