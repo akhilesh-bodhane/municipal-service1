@@ -13,6 +13,7 @@ import org.egov.ec.repository.builder.EcQueryBuilder;
 import org.egov.ec.repository.rowmapper.ViolationDetailRowMapper;
 import org.egov.ec.web.models.EcSearchCriteria;
 import org.egov.ec.web.models.RequestInfoWrapper;
+import org.egov.ec.web.models.SMPKVendorDetail;
 import org.egov.ec.web.models.VendorRegistration;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -53,14 +54,19 @@ public class VendorRegistrationRepository {
 	public List<VendorRegistration> getVendor(EcSearchCriteria searchCriteria) {
 		log.info("VendorRegistration Repository - getVendor Method");
 		List<VendorRegistration> vendor;
+		List<SMPKVendorDetail> spicVendor;
 		Map<String, Object> paramValues = new HashMap<>();
 		String parameter = "" + searchCriteria.getSearchText() + "%";
 
 		if (null != searchCriteria.getSearchText() && !searchCriteria.getSearchText().isEmpty() ) {
-
+			System.out.println("Inside Vendor Search Method By Search Text");
 			vendor = jdbcTemplate.query(EcQueryBuilder.GET_VENDOR_DETAIL_SEARCH,
 					new Object[] { parameter, parameter, parameter },
 					new BeanPropertyRowMapper<VendorRegistration>(VendorRegistration.class));
+			spicVendor = jdbcTemplate.query(EcQueryBuilder.GET_SPIC_VENDOR_DETAIL_SEARCH,
+					new Object[] { parameter, parameter },
+					new BeanPropertyRowMapper<SMPKVendorDetail>(SMPKVendorDetail.class));
+			vendor.get(0).setSpicVendorDetail(spicVendor);
 			return vendor;
 		} else {
 			List<Object> covNo = new ArrayList<>();

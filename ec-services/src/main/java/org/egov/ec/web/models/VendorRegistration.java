@@ -97,5 +97,8 @@ public class VendorRegistration {
 	
 	@JsonProperty("numberOfViolation")
 	private String numberOfViolation;
+	
+	@JsonProperty("spicVendorDetail")
+	private List<SMPKVendorDetail> spicVendorDetail;
 }
 
