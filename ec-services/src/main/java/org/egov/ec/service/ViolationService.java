@@ -23,6 +23,7 @@ import org.egov.ec.web.models.EcSearchCriteria;
 import org.egov.ec.web.models.NotificationTemplate;
 import org.egov.ec.web.models.RequestInfoWrapper;
 import org.egov.ec.web.models.ResponseInfoWrapper;
+import org.egov.ec.web.models.SMPKVendorDetail;
 import org.egov.ec.web.models.Violation;
 import org.egov.ec.web.models.ViolationCount;
 import org.egov.ec.web.models.Idgen.IdGenerationResponse;
@@ -237,7 +238,7 @@ public class ViolationService {
 				String sourceUuid = deviceSource.saveDeviceDetails(requestHeader, "addViolationEvent",
 						violationMaster.getTenantId(), requestInfoWrapper.getAuditDetails());
 				violationMaster.setSourceUuid(sourceUuid);
-
+				System.out.println("No of Violation : " + violationMaster.getNumberOfViolation());
 				if (response != null && response.getStatus().equalsIgnoreCase(EcConstants.STATUS_SUCCESSFULL)
 						&& response1 != null
 						&& response1.getStatus().equalsIgnoreCase(EcConstants.STATUS_SUCCESSFULL)) {
@@ -249,10 +250,11 @@ public class ViolationService {
 					producer.push(config.getSmsNotificationTopic(), violationMaster.getNotificationTemplate());
 
 				}
-
+				
 				return new ResponseEntity<>(ResponseInfoWrapper.builder()
 						.responseInfo(ResponseInfo.builder().status(EcConstants.STATUS_SUCCESS).build())
 						.responseBody(violationMaster).build(), HttpStatus.OK);
+				
 			} else {
 				throw new CustomException("VIOLATION_GENERATE_CHALLAN_EXCEPTION", responseValidate);
 			}
