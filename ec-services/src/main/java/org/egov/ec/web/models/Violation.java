@@ -199,6 +199,7 @@ public class Violation {
 	@JsonProperty("receiptNo")
 	private String receiptNo;
 	
-	
+	@JsonProperty("violatorStatus")
+	private String violatorStatus;
 	
 }
