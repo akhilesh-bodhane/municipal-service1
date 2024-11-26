@@ -1,5 +1,7 @@
 package org.egov.ec.service;
 
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -234,6 +236,14 @@ public class ViolationService {
 				violationMaster.getNotificationTemplate().setMessage(strOutput);
 
 				validate.validateFields(violationMaster);
+				
+				Instant licenseCancelDate1 = Instant.now().plus(90, ChronoUnit.DAYS);
+				
+				String licenseCanceldDate = licenseCancelDate1.toString();
+				
+				System.out.println("licenseCanceldDate : " + licenseCanceldDate);
+				
+				violationMaster.setViolatorLicenseCancelDate(licenseCanceldDate);
 
 				String sourceUuid = deviceSource.saveDeviceDetails(requestHeader, "addViolationEvent",
 						violationMaster.getTenantId(), requestInfoWrapper.getAuditDetails());

@@ -202,4 +202,6 @@ public class Violation {
 	@JsonProperty("violatorStatus")
 	private String violatorStatus;
 	
+	@JsonProperty("violatorLicenseCancelDate")
+	private String violatorLicenseCancelDate;
 }
