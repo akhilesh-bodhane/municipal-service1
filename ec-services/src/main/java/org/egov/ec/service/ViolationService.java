@@ -237,13 +237,16 @@ public class ViolationService {
 
 				validate.validateFields(violationMaster);
 				
-				Instant licenseCancelDate1 = Instant.now().plus(90, ChronoUnit.DAYS);
+				System.out.println("Violator Status : " + violationMaster.getViolatorStatus());
 				
-				String licenseCanceldDate = licenseCancelDate1.toString();
+				if("Suspended".equalsIgnoreCase(violationMaster.getViolatorStatus())) {
+					Instant licenseCancelDate1 = Instant.now().plus(90, ChronoUnit.DAYS);					
+					String licenseCanceldDate = licenseCancelDate1.toString();					
+					System.out.println("licenseCanceldDate : " + licenseCanceldDate);					
+					violationMaster.setViolatorLicenseCancelDate(licenseCanceldDate);
+				}
 				
-				System.out.println("licenseCanceldDate : " + licenseCanceldDate);
 				
-				violationMaster.setViolatorLicenseCancelDate(licenseCanceldDate);
 
 				String sourceUuid = deviceSource.saveDeviceDetails(requestHeader, "addViolationEvent",
 						violationMaster.getTenantId(), requestInfoWrapper.getAuditDetails());
