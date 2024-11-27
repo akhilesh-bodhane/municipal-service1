@@ -49,8 +49,8 @@ public class SMPKVendorDetail {
 	@JsonProperty("status")
 	private String status;
 	
-	@JsonProperty("licenseCancelledTillDate")
-	private String licenseCancelledTillDate;
+	@JsonProperty("licenseCancelTillDate")
+	private String licenseCancelTillDate;
 	
 	@Size(max = 256)
 	@JsonProperty("createdBy")
