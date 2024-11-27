@@ -68,7 +68,9 @@ public class EcQueryBuilder {
 	
 	public static final String GET_VIOLATION_MASTER_SEARCH = "select (select case when ((select count(*) from egec_store_item_register store where store.violation_uuid=violation.violation_uuid) > 0) and  challan.challan_status='CLOSED' then 'RELEASED FROM STORE' when challan.challan_status='CLOSED' and ((select count(*) from egec_store_item_register store where store.violation_uuid=violation.violation_uuid) = 0) then 'RELEASED ON GROUND' else challan.challan_status end  )as challan_status,\n"
 			+ "			payment.last_modified_time as last_modified_time,*,fine.head_amount as fineAmount,\n"
-			+ "			pen.head_amount as penaltyAmount \n"
+			+ "			pen.head_amount as penaltyAmount, \n"
+			+ "			esvd.status as violator_status, \n"
+			+ "			esvd.licensecanceltilldate as violator_license_cancel_date \n"
 			+ "			from egec_violation_master violation \n"
 			+ "			join egec_challan_master challan on violation.violation_uuid=challan.violation_uuid \n"
 			+ "			join egec_payment payment on violation.violation_uuid = payment.violation_uuid \n"
@@ -76,6 +78,7 @@ public class EcQueryBuilder {
 			+ "    		left join egec_document doc on violation.violation_uuid = doc.violation_uuid \n"
 			+ "			left join egec_challan_detail fine on fine.challan_uuid = challan.challan_uuid and fine.budget_head = 'FINE_AMOUNT' \n"
 			+ " 		left join egec_challan_detail pen on pen.challan_uuid = challan.challan_uuid and pen.budget_head = 'PENALTY_AMOUNT' \n"
+			+ " 		left join egec_spic_vendor_details esvd on violation.license_no_cov = esvd.covno \n"
 			+ "    		where violation.contact_number ilike ? or challan.challan_id ilike ? or challan.challan_uuid ilike ? \n"
 			+ "    		or violation.violator_name ilike ? or violation.license_no_cov ilike ? or violation.si_name ilike ? \n"
 			+ "    		or violation.sector ilike ? or violation.encroachment_type ilike ? and violation.tenant_id=? order by violation.last_modified_time desc";
