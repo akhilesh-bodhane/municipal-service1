@@ -1,5 +1,6 @@
 package org.egov.ec.service;
 
+import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
@@ -240,8 +241,9 @@ public class ViolationService {
 				System.out.println("Violator Status : " + violationMaster.getViolatorStatus());
 				
 				if("Suspended".equalsIgnoreCase(violationMaster.getViolatorStatus())) {
+					SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy"); 
 					Instant licenseCancelDate1 = Instant.now().plus(90, ChronoUnit.DAYS);					
-					String licenseCanceldDate = licenseCancelDate1.toString();					
+					String licenseCanceldDate = formatter.format(licenseCancelDate1.toString());					
 					System.out.println("licenseCanceldDate : " + licenseCanceldDate);					
 					violationMaster.setViolatorLicenseCancelDate(licenseCanceldDate);
 				}
