@@ -241,9 +241,11 @@ public class ViolationService {
 				System.out.println("Violator Status : " + violationMaster.getViolatorStatus());
 				
 				if("Suspended".equalsIgnoreCase(violationMaster.getViolatorStatus())) {
+					
 					SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy"); 
-					Instant licenseCancelDate1 = Instant.now().plus(90, ChronoUnit.DAYS);					
-					String licenseCanceldDate = formatter.format(licenseCancelDate1);					
+					Instant licenseCancelDate1 = Instant.now().plus(90, ChronoUnit.DAYS);
+					Date dateConvert = Date.from(licenseCancelDate1);
+					String licenseCanceldDate = formatter.format(dateConvert);					
 					System.out.println("licenseCanceldDate : " + licenseCanceldDate);					
 					violationMaster.setViolatorLicenseCancelDate(licenseCanceldDate);
 				}
