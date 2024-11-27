@@ -178,6 +178,8 @@ public class ViolationDetailRowMapper implements ResultSetExtractor<List<Violati
 									(rs.getString("last_modified_by") == null ? "" : rs.getString("last_modified_by")))
 							.lastModifiedTime((rs.getLong("last_modified_time")))
 							.challanUuid(rs.getString("challan_uuid") == null ? "" : rs.getString("challan_uuid"))
+							.violatorStatus(rs.getString("violator_status") == null ? "" : rs.getString("violator_status"))
+							.violatorLicenseCancelDate(rs.getString("violator_license_cancel_date") == null ? "" : rs.getString("violator_license_cancel_date"))
 							.build();
 
 					// Document List
