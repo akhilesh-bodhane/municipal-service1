@@ -74,7 +74,7 @@ public class ViolationDetailRowMapper implements ResultSetExtractor<List<Violati
 							.violatorStatus(rs.getString("violator_status") == null ? "" : rs.getString("violator_status"))
 							.violatorLicenseCancelDate(rs.getString("violator_license_cancel_date") == null ? "" : rs.getString("violator_license_cancel_date"))
 							.tradeType(rs.getString("tradetype") == null ? "" : rs.getString("tradetype"))
-							.surveyedCovNo(rs.getString("sovno") == null ? "" : rs.getString("sovno"))
+							.surveyedCovNo(rs.getString("surveyed_cov_no") == null ? "" : rs.getString("surveyed_cov_no"))
 							.feeOutStanding(rs.getString("feesoutstanding") == null ? "" : rs.getString("feesoutstanding"))
 							.build();
 					
@@ -184,7 +184,7 @@ public class ViolationDetailRowMapper implements ResultSetExtractor<List<Violati
 							.violatorStatus(rs.getString("violator_status") == null ? "" : rs.getString("violator_status"))
 							.violatorLicenseCancelDate(rs.getString("violator_license_cancel_date") == null ? "" : rs.getString("violator_license_cancel_date"))
 							.tradeType(rs.getString("tradetype") == null ? "" : rs.getString("tradetype"))
-							.surveyedCovNo(rs.getString("sovno") == null ? "" : rs.getString("sovno"))
+							.surveyedCovNo(rs.getString("surveyed_cov_no") == null ? "" : rs.getString("surveyed_cov_no"))
 							.feeOutStanding(rs.getString("feesoutstanding") == null ? "" : rs.getString("feesoutstanding"))
 							.build();
 

@@ -195,7 +195,6 @@ public class Violation {
 	@JsonProperty("toDate")
 	private Date toDate;
 	
-	
 	@JsonProperty("receiptNo")
 	private String receiptNo;
 	
