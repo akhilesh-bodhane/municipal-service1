@@ -73,9 +73,9 @@ public class ViolationDetailRowMapper implements ResultSetExtractor<List<Violati
 							.challanUuid(rs.getString("challan_uuid") == null ? "" : rs.getString("challan_uuid"))
 							.violatorStatus(rs.getString("violator_status") == null ? "" : rs.getString("violator_status"))
 							.violatorLicenseCancelDate(rs.getString("violator_license_cancel_date") == null ? "" : rs.getString("violator_license_cancel_date"))
-							.feeOutStanding(rs.getString("fees_out_standing") == null ? "" : rs.getString("fees_out_standing"))
-							.tradeType(rs.getString("trade_type") == null ? "" : rs.getString("trade_type"))
-							.surveyedCovNo(rs.getString("sov_no") == null ? "" : rs.getString("sov_no"))
+							.tradeType(rs.getString("tradetype") == null ? "" : rs.getString("tradetype"))
+							.surveyedCovNo(rs.getString("sovno") == null ? "" : rs.getString("sovno"))
+							.feeOutStanding(rs.getString("feesoutstanding") == null ? "" : rs.getString("feesoutstanding"))
 							.build();
 					
 					ecPayment.setPaymentUuid(rs.getString("payment_uuid"));
@@ -183,9 +183,9 @@ public class ViolationDetailRowMapper implements ResultSetExtractor<List<Violati
 							.challanUuid(rs.getString("challan_uuid") == null ? "" : rs.getString("challan_uuid"))
 							.violatorStatus(rs.getString("violator_status") == null ? "" : rs.getString("violator_status"))
 							.violatorLicenseCancelDate(rs.getString("violator_license_cancel_date") == null ? "" : rs.getString("violator_license_cancel_date"))
-							.feeOutStanding(rs.getString("fees_out_standing") == null ? "" : rs.getString("fees_out_standing"))
-							.tradeType(rs.getString("trade_type") == null ? "" : rs.getString("trade_type"))
-							.surveyedCovNo(rs.getString("sov_no") == null ? "" : rs.getString("sov_no"))
+							.tradeType(rs.getString("tradetype") == null ? "" : rs.getString("tradetype"))
+							.surveyedCovNo(rs.getString("sovno") == null ? "" : rs.getString("sovno"))
+							.feeOutStanding(rs.getString("feesoutstanding") == null ? "" : rs.getString("feesoutstanding"))
 							.build();
 
 					// Document List
