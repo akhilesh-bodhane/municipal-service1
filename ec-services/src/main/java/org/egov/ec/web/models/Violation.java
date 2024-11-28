@@ -204,4 +204,13 @@ public class Violation {
 	
 	@JsonProperty("violatorLicenseCancelDate")
 	private String violatorLicenseCancelDate;
+	
+	@JsonProperty("surveyedCovNo")
+	private String surveyedCovNo;
+	
+	@JsonProperty("feeOutStanding")
+	private String feeOutStanding;
+	
+	@JsonProperty("tradeType")
+	private String tradeType;
 }

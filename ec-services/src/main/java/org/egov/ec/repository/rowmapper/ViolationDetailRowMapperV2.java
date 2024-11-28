@@ -58,6 +58,9 @@ public class ViolationDetailRowMapperV2 implements ResultSetExtractor<List<Viola
 									: (Long.parseLong(rs.getString("last_modified_time"))))
 							.violatorStatus(rs.getString("violator_status") == null ? "" : rs.getString("violator_status"))
 							.violatorLicenseCancelDate(rs.getString("licensecanceltilldate") == null ? "" : rs.getString("licensecanceltilldate"))
+							.feeOutStanding(rs.getString("feesoutstanding") == null ? "" : rs.getString("feesoutstanding"))
+							.tradeType(rs.getString("tradetype") == null ? "" : rs.getString("tradetype"))
+							.surveyedCovNo(rs.getString("sovno") == null ? "" : rs.getString("sovno"))
 							.build();
 
 					String violationItem = rs.getString("violation_item");

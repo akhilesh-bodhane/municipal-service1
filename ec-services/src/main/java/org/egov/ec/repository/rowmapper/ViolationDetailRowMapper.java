@@ -73,6 +73,9 @@ public class ViolationDetailRowMapper implements ResultSetExtractor<List<Violati
 							.challanUuid(rs.getString("challan_uuid") == null ? "" : rs.getString("challan_uuid"))
 							.violatorStatus(rs.getString("violator_status") == null ? "" : rs.getString("violator_status"))
 							.violatorLicenseCancelDate(rs.getString("violator_license_cancel_date") == null ? "" : rs.getString("violator_license_cancel_date"))
+							.feeOutStanding(rs.getString("feesoutstanding") == null ? "" : rs.getString("feesoutstanding"))
+							.tradeType(rs.getString("tradetype") == null ? "" : rs.getString("tradetype"))
+							.surveyedCovNo(rs.getString("sovno") == null ? "" : rs.getString("sovno"))
 							.build();
 					
 					ecPayment.setPaymentUuid(rs.getString("payment_uuid"));
@@ -180,6 +183,9 @@ public class ViolationDetailRowMapper implements ResultSetExtractor<List<Violati
 							.challanUuid(rs.getString("challan_uuid") == null ? "" : rs.getString("challan_uuid"))
 							.violatorStatus(rs.getString("violator_status") == null ? "" : rs.getString("violator_status"))
 							.violatorLicenseCancelDate(rs.getString("violator_license_cancel_date") == null ? "" : rs.getString("violator_license_cancel_date"))
+							.feeOutStanding(rs.getString("feesoutstanding") == null ? "" : rs.getString("feesoutstanding"))
+							.tradeType(rs.getString("tradetype") == null ? "" : rs.getString("tradetype"))
+							.surveyedCovNo(rs.getString("sovno") == null ? "" : rs.getString("sovno"))
 							.build();
 
 					// Document List
