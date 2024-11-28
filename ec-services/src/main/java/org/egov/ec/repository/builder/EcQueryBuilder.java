@@ -72,7 +72,7 @@ public class EcQueryBuilder {
 			+ "			esvd.status as violator_status, \n"
 			+ "			esvd.licensecanceltilldate as violator_license_cancel_date, \n"
 			+ "			esvd.tradetype as tradetype, \n"
-			+ "			esvd.sovno as sovno, \n"
+			+ "			esvd.sovno as surveyed_cov_no, \n"
 			+ "			esvd.feesoutstanding as feesoutstanding \n"
 			+ "			from egec_violation_master violation \n"
 			+ "			join egec_challan_master challan on violation.violation_uuid=challan.violation_uuid \n"
