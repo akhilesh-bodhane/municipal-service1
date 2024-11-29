@@ -439,38 +439,41 @@ System.out.println(urlResponse);
 			Auction auction = new Auction();
 			Violation violation = new  Violation();
 			requestInfoWrapper.setRequestBody(violation);
-				 //auctionList = auctionRepository.getPendingForAuctionChallans(ecSearchCriteria.getTenantId());
+				 auctionList = auctionRepository.getPendingForAuctionChallans(ecSearchCriteria.getTenantId());
 				 
 				 auctionList1 = auctionRepository.getPendingForAuctionChallanVoilation(ecSearchCriteria.getTenantId());
 				 
-					/*
-					 * if (!auctionList.isEmpty()) {
-					 * 
-					 * auctionList.stream().forEach((c) -> { ProcessInstance processInstance1 = new
-					 * ProcessInstance(); processInstance1.setBusinessId(c.getChallanId());
-					 * processInstance1.setTenantId(ecSearchCriteria.getTenantId());
-					 * processInstance1.setBusinessService(EcConstants.WORKFLOW_CHALLAN);
-					 * processInstance1.setAction(EcConstants.STATUS_AUCTION_PENDING);
-					 * processInstance1.setModuleName(EcConstants.WORKFLOW_MODULE);
-					 * List<ProcessInstance> processList1 = Arrays.asList(processInstance1);
-					 * 
-					 * ResponseInfo response1 = wfIntegrator
-					 * .callWorkFlow(ProcessInstanceRequest.builder().processInstances(processList1)
-					 * .requestInfo(requestInfoWrapper.getRequestInfo()).build());
-					 * 
-					 * if (response1 != null &&
-					 * response1.getStatus().equalsIgnoreCase(EcConstants.STATUS_SUCCESSFULL)) {
-					 * Violation violationMaster =
-					 * objectMapper.convertValue(requestInfoWrapper.getRequestBody(),
-					 * Violation.class);
-					 * 
-					 * violationMaster.setLastModifiedBy(requestInfoWrapper.getAuditDetails().
-					 * getLastModifiedBy()); violationMaster
-					 * .setLastModifiedTime(requestInfoWrapper.getAuditDetails().getLastModifiedTime
-					 * ()); violationMaster.setStatus(EcConstants.STATUS_AUCTION_PENDING);
-					 * violationMaster.setChallanUuid(c.getChallanUuid());
-					 * violationRepository.updateChallan(violationMaster); } }); }
-					 */
+					
+					  if (!auctionList.isEmpty()) {
+					  
+					  auctionList.stream().forEach((c) -> { 
+					  ProcessInstance processInstance1 = new ProcessInstance(); 
+					  processInstance1.setBusinessId(c.getChallanId());
+					  processInstance1.setTenantId(ecSearchCriteria.getTenantId());
+					  processInstance1.setBusinessService(EcConstants.WORKFLOW_CHALLAN);
+					  processInstance1.setAction(EcConstants.STATUS_AUCTION_PENDING);
+					  processInstance1.setModuleName(EcConstants.WORKFLOW_MODULE);
+					  List<ProcessInstance> processList1 = Arrays.asList(processInstance1);
+					  
+					  ResponseInfo response1 = wfIntegrator
+					  .callWorkFlow(ProcessInstanceRequest.builder().processInstances(processList1)
+					          .requestInfo(requestInfoWrapper.getRequestInfo()).build());
+					  
+					  if (response1 != null 
+							  && response1.getStatus().equalsIgnoreCase(EcConstants.STATUS_SUCCESSFULL)) {
+					  Violation violationMaster = objectMapper.convertValue(requestInfoWrapper.getRequestBody(),
+					          Violation.class);
+					  
+					  violationMaster.setLastModifiedBy(requestInfoWrapper.getAuditDetails().getLastModifiedBy()); 
+					  violationMaster
+					          .setLastModifiedTime(requestInfoWrapper.getAuditDetails().getLastModifiedTime()); 
+					  violationMaster.setStatus(EcConstants.STATUS_AUCTION_PENDING);
+					  violationMaster.setChallanUuid(c.getChallanUuid());
+					  violationRepository.updateChallan(violationMaster); 
+					  } 
+					  }); 
+				  }
+					 
 				
 				if (!auctionList1.isEmpty()) {
 
