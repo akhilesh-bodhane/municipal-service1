@@ -139,4 +139,19 @@ public class AuctionRepository {
 				new Object[] {tenantId},new BeanPropertyRowMapper<Auction> (Auction.class));
 		return auctionList;
 	}
+	
+	/**
+	 * fetches the count of remaining auctioned items against challan
+	 *
+	 * @param Auction Auction request for challanId
+	 * @return Returns the count of pending and remaining auctions
+	 */
+	public List<Auction> getPendingForAuctionChallanVoilation(String tenantId) {
+		log.info("Auction Repository - getPendingForAuctionChallans Method");
+		List<Auction> auctionList;
+		auctionList= jdbcTemplate.query(EcQueryBuilder.GET_CHALLAN_PENDING_AUCTION_VIOLATION,
+				new Object[] {},new BeanPropertyRowMapper<Auction> (Auction.class));
+		return auctionList;
+	}	
+	
 }
