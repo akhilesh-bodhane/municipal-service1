@@ -302,6 +302,14 @@ public class EcQueryBuilder {
 			+ "	(select store.challan_uuid from egec_store_item_register store where (select store.item_store_deposit_date from egec_store_item_register store where store.challan_uuid=challan.challan_uuid limit 1)\n"
 			+ "	< now()- interval '30 days' and challan.challan_status <> 'CLOSED' and violation.encroachment_type <> 'Seizure of Vehicles')\n"
 			+ "   and ((payment.payment_status = 'PENDING' and violation.encroachment_type <> 'Unauthorized/Unregistered Vendor') OR (violation.encroachment_type = 'Unauthorized/Unregistered Vendor')) and challan.challan_status <> 'CLOSED'";
+	
+	public static final String GET_CHALLAN_PENDING_AUCTION_VIOLATION = "select ecm.challan_uuid,\r\n"
+			+ "	ecm.challan_id from egec_challan_master ecm\r\n"
+			+ "	inner join egec_violation_master evd on evd.violation_uuid =ecm.violation_uuid \r\n"
+			+ "	where evd.encroachment_type ='Registered Street Vendors'\r\n"
+			+ "	and evd.number_of_violation in ('4','5')\r\n"
+			+ "	and ecm.challan_status ='ADDED TO STORE'\r\n"
+			+ "	and ecm.tenant_id = 'ch.chandigarh'";
 
 	public static final String SEARCH_PROCESS_INSTANCE = "select * from eg_wf_processinstance_v2 ewpv where businessid in (select challan_uuid from egec_challan_master ecm where challan_id in ( ?)\r\n"
 			+ "union select challan_id from egec_challan_master ecm where challan_id in (?))";
