@@ -246,7 +246,7 @@ public class ViolationRepository {
 						violation.getSiName(), violation.getSector(), violation.getSector(), violation.getChallanId(),
 						violation.getChallanId() },
 				violationDetailRowMapperV2);
-		System.out.println("Violation Detail List : " + violationDetailList.toArray());
+		System.out.println("Violation Detail List : " + violationDetailList.toString());
 
 		return violationDetailList;
 
