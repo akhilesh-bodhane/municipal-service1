@@ -177,5 +177,42 @@ public class VendorRegistrationService {
 			throw new CustomException("VENDORREGISTRATION_UPDATE_EXCEPTION", e.getMessage());
 		}
 	}
+	
+	
+	public ResponseEntity<ResponseInfoWrapper> updateVendorSPIC(RequestInfoWrapper requestInfoWrapper) {
+		log.info("Vendor Service - Update Vendor");
+		try {
+			VendorRegistration vendorRegistration = objectMapper.convertValue(requestInfoWrapper.getRequestBody(),
+					VendorRegistration.class);
+
+			String responseValidate = "";
+
+			Gson gson = new Gson();
+			String payloadData = gson.toJson(vendorRegistration, VendorRegistration.class);
+
+			responseValidate = wfIntegrator.validateJsonAddUpdateData(payloadData, EcConstants.VENDDORUPDATE);
+
+			if (responseValidate.equals("")) {
+
+				vendorRegistration.getVendorRegistrationList().stream().forEach((c) -> {
+					c.setCreatedBy(requestInfoWrapper.getAuditDetails().getCreatedBy());
+					c.setCreatedTime(requestInfoWrapper.getAuditDetails().getCreatedTime());
+					c.setLastModifiedBy(requestInfoWrapper.getAuditDetails().getLastModifiedBy());
+					c.setLastModifiedTime(requestInfoWrapper.getAuditDetails().getLastModifiedTime());
+				});
+
+				repository.updateVendorSPIC(vendorRegistration);
+
+				return new ResponseEntity<>(ResponseInfoWrapper.builder()
+						.responseInfo(ResponseInfo.builder().status(EcConstants.STATUS_SUCCESS).build())
+						.responseBody(vendorRegistration).build(), HttpStatus.OK);
+			} else {
+				throw new CustomException("VENDORREGISTRATION_UPDATE_EXCEPTION", responseValidate);
+			}
+		} catch (Exception e) {
+			log.error("Vendor Service - Update Vendor Exception" + e.getMessage());
+			throw new CustomException("VENDORREGISTRATION_UPDATE_EXCEPTION", e.getMessage());
+		}
+	}
 
 }

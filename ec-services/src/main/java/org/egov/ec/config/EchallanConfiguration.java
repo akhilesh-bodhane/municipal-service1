@@ -157,6 +157,9 @@ public class EchallanConfiguration {
 
 	@Value("${persister.update.vendor.topic}")
 	private String UpdateVendorTopic;
+	
+	@Value("${persister.update.vendor.spic.topic}")
+	private String UpdateVendorSpicTopic;
 
 	@Value("${persister.create.deviceSource.topic}")
 	public String RequestDeviceSource;

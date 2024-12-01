@@ -109,9 +109,17 @@ public class VendorRegistrationRepository {
     */
 	public void updateVendor(@Valid VendorRegistration vendorRegistration) {
 		log.info("VendorRegistration Repository - updateVendor Method");
-
+		
 		RequestInfoWrapper infoWrapper = RequestInfoWrapper.builder().requestBody(vendorRegistration).build();
 		producer.push(config.getUpdateVendorTopic(), infoWrapper);
+
+	}
+	
+	public void updateVendorSPIC(@Valid VendorRegistration vendorRegistration) {
+		log.info("VendorRegistration Repository - updateVendor Method");
+		
+		RequestInfoWrapper infoWrapper = RequestInfoWrapper.builder().requestBody(vendorRegistration).build();
+		producer.push(config.getUpdateVendorSpicTopic(), infoWrapper);
 
 	}
 

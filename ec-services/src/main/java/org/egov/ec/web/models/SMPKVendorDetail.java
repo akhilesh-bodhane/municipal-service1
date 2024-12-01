@@ -67,4 +67,14 @@ public class SMPKVendorDetail {
 	@JsonProperty("lastModifiedTime")
 	@NotNull(message = "lastModifiedTime should not be empty or null")
 	private Long lastModifiedTime;
+	
+	@JsonProperty("noOfViolation")
+	private String noOfViolation;
+	
+	@JsonProperty("totalTerminated")
+	private String totalTerminated;
+	
+	@JsonProperty("lastTerminatedOn")
+	@NotNull(message = "lastTerminatedOn should not be empty or null")
+	private Long lastTerminatedOn;
 }

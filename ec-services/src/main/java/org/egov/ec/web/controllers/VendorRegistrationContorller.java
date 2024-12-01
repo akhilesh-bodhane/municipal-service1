@@ -68,5 +68,13 @@ public class VendorRegistrationContorller {
 				+ "."+ Thread.currentThread().getStackTrace()[1].getMethodName());
 		return vendorService.updateVendor(requestInfoWrapper);
 	}
+	
+	@PostMapping(value = "/spicvendor/_update")
+	public ResponseEntity<ResponseInfoWrapper> updateChallanSpic(
+			@Valid @RequestBody RequestInfoWrapper requestInfoWrapper) {
+		log.info("Entering: " + Thread.currentThread().getStackTrace()[1].getClassName()
+				+ "."+ Thread.currentThread().getStackTrace()[1].getMethodName());
+		return vendorService.updateVendorSPIC(requestInfoWrapper);
+	}
 
 }
