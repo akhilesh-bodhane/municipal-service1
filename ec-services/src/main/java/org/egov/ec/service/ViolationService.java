@@ -240,14 +240,15 @@ public class ViolationService {
 				
 				System.out.println("Violator Status : " + violationMaster.getViolatorStatus());
 				
-				if("Suspended".equalsIgnoreCase(violationMaster.getViolatorStatus())) {
-					
+				if("Suspended".equalsIgnoreCase(violationMaster.getViolatorStatus())) {					
 					SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy"); 
 					Instant licenseCancelDate1 = Instant.now().plus(90, ChronoUnit.DAYS);
 					Date dateConvert = Date.from(licenseCancelDate1);
 					String licenseCanceldDate = formatter.format(dateConvert);					
 					System.out.println("licenseCanceldDate : " + licenseCanceldDate);					
 					violationMaster.setViolatorLicenseCancelDate(licenseCanceldDate);
+				} else if("Terminated".equalsIgnoreCase(violationMaster.getViolatorStatus())) {
+					violationMaster.setViolatorLicenseCancelDate(null);
 				}
 				
 				
@@ -255,9 +256,13 @@ public class ViolationService {
 				String sourceUuid = deviceSource.saveDeviceDetails(requestHeader, "addViolationEvent",
 						violationMaster.getTenantId(), requestInfoWrapper.getAuditDetails());
 				violationMaster.setSourceUuid(sourceUuid);
-				System.out.println("No of Violation : " + violationMaster.getNumberOfViolation());
+				System.out.println("No of Violation 1 : " + violationMaster.getNumberOfViolation());
 				System.out.println("covno : " + violationMaster.getLicenseNoCov());
 				System.out.println("Violator Status : " + violationMaster.getViolatorStatus());
+				
+				Integer violationCount = Integer.valueOf(violationMaster.getNumberOfViolation()) + 1;
+				violationMaster.setNumberOfViolation(violationCount.toString());
+				System.out.println("No of Violation 2 : " + violationMaster.getNumberOfViolation());
 				if (response != null && response.getStatus().equalsIgnoreCase(EcConstants.STATUS_SUCCESSFULL)
 						&& response1 != null
 						&& response1.getStatus().equalsIgnoreCase(EcConstants.STATUS_SUCCESSFULL)) {
