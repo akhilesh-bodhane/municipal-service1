@@ -260,9 +260,6 @@ public class ViolationService {
 				System.out.println("covno : " + violationMaster.getLicenseNoCov());
 				System.out.println("Violator Status : " + violationMaster.getViolatorStatus());
 				
-				Integer violationCount = Integer.valueOf(violationMaster.getNumberOfViolation()) + 1;
-				violationMaster.setNumberOfViolation(violationCount.toString());
-				System.out.println("No of Violation 2 : " + violationMaster.getNumberOfViolation());
 				if (response != null && response.getStatus().equalsIgnoreCase(EcConstants.STATUS_SUCCESSFULL)
 						&& response1 != null
 						&& response1.getStatus().equalsIgnoreCase(EcConstants.STATUS_SUCCESSFULL)) {
