@@ -64,7 +64,7 @@ public class VendorRegistrationRepository {
 					new Object[] { parameter, parameter, parameter },
 					new BeanPropertyRowMapper<VendorRegistration>(VendorRegistration.class));
 			spicVendor = jdbcTemplate.query(EcQueryBuilder.GET_SPIC_VENDOR_DETAIL_SEARCH,
-					new Object[] { parameter, parameter },
+					new Object[] { parameter, parameter, parameter },
 					new BeanPropertyRowMapper<SMPKVendorDetail>(SMPKVendorDetail.class));
 			vendor.get(0).setSpicVendorDetail(spicVendor);
 			return vendor;
