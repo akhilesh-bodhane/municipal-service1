@@ -60,12 +60,16 @@ public class VendorRegistrationRepository {
 
 		if (null != searchCriteria.getSearchText() && !searchCriteria.getSearchText().isEmpty() ) {
 			System.out.println("Inside Vendor Search Method By Search Text");
-			vendor = jdbcTemplate.query(EcQueryBuilder.GET_VENDOR_DETAIL_SEARCH,
-					new Object[] { parameter, parameter, parameter },
-					new BeanPropertyRowMapper<VendorRegistration>(VendorRegistration.class));
 			spicVendor = jdbcTemplate.query(EcQueryBuilder.GET_SPIC_VENDOR_DETAIL_SEARCH,
 					new Object[] { parameter, parameter, parameter },
 					new BeanPropertyRowMapper<SMPKVendorDetail>(SMPKVendorDetail.class));
+			
+			int covno = spicVendor.get(0).getCovNo();
+			System.out.println("Spic Cov No : " + covno);
+			
+			vendor = jdbcTemplate.query(EcQueryBuilder.GET_VENDOR_DETAIL_SEARCH,
+					new Object[] { covno, parameter, parameter },
+					new BeanPropertyRowMapper<VendorRegistration>(VendorRegistration.class));
 			vendor.get(0).setSpicVendorDetail(spicVendor);
 			return vendor;
 		} else {
