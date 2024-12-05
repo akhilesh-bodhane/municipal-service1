@@ -64,7 +64,7 @@ public class VendorRegistrationRepository {
 					new Object[] { parameter, parameter, parameter },
 					new BeanPropertyRowMapper<SMPKVendorDetail>(SMPKVendorDetail.class));
 			
-			int covno = spicVendor.get(0).getCovNo();
+			String covno = String.valueOf(spicVendor.get(0).getCovNo());
 			System.out.println("Spic Cov No : " + covno);
 			
 			vendor = jdbcTemplate.query(EcQueryBuilder.GET_VENDOR_DETAIL_SEARCH,
