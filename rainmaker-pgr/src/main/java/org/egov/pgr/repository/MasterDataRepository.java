@@ -60,10 +60,11 @@ public class MasterDataRepository {
     
     public AutoroutingMap getAutoRoutingDataByType(String tenantId, String type) {
 
-    	String query = "SELECT id, tenantid, autorouting, createdby, createdtime, lastmodifiedby, lastmodifiedtime, active, type FROM eg_pgr_autorouting_data WHERE tenantid=:tenantid type=:type";
+    	String query = "SELECT id, tenantid, autorouting, createdby, createdtime, lastmodifiedby, lastmodifiedtime, active, type FROM eg_pgr_autorouting_data WHERE tenantid=:tenantid and type=:type";
 
         final Map<String, Object> parametersMap = new HashMap<String, Object>();
         parametersMap.put("tenantid", tenantId);
+        parametersMap.put("type", type);
 
         List<AutoroutingMap> autoroutingMapList = namedParameterJdbcTemplate.query(query, parametersMap, new AutoRoutingMapRowmapper());
         if(!CollectionUtils.isEmpty(autoroutingMapList)) {
