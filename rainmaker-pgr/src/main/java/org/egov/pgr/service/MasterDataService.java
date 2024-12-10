@@ -176,8 +176,15 @@ public class MasterDataService {
 		Map<String, String> errorMap = new HashMap<>();
 		RequestInfo requestInfo = autoroutingMapRequest.getRequestInfo();
 		AutoroutingMap autoroutingMap =autoroutingMapRequest.getAutoroutingMap();
+		AutoroutingMap mapDataFromDB = null;
 		
-		AutoroutingMap mapDataFromDB = masterDataRepository.getAutoRoutingData(autoroutingMap.getTenantId());
+		System.out.println("Auto routing update type : " + autoroutingMap.getType());
+		if(null != autoroutingMap.getType()) {
+			mapDataFromDB = masterDataRepository.getAutoRoutingDataByType(autoroutingMap.getTenantId(), autoroutingMap.getType());
+		} else {
+			mapDataFromDB = masterDataRepository.getAutoRoutingData(autoroutingMap.getTenantId());
+		}
+		
 		if(null == mapDataFromDB || null == mapDataFromDB.getAutorouting() ) {
 			errorMap.put(ErrorConstants.NO_DATA_FOUND_CODE, ErrorConstants.NO_DATA_FOUND_MSG);
 		}else {
@@ -186,6 +193,9 @@ public class MasterDataService {
 						updateAutoroutingData(mapDataFromDB.getAutorouting(), autoroutingMap.getAutorouting(),
 								autoroutingMapRequest.getRequestInfo(), autoroutingMapRequest.getAutoroutingMap().getTenantId()));
 				mapDataFromDB.setActive(true);
+				mapDataFromDB.setType(autoroutingMapRequest.getAutoroutingMap().getType());
+				
+				System.out.println("mapDataFromDB type : " + mapDataFromDB.getType());
 				AuditDetails auditDetails = pGRUtils.getAuditDetails(String.valueOf(requestInfo.getUserInfo().getId()), false);
 				mapDataFromDB.setAuditDetails(auditDetails);
 				autoroutingMapRequest.setAutoroutingMap(mapDataFromDB);
