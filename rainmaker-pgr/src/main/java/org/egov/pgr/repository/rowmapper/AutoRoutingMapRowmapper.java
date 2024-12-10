@@ -16,7 +16,7 @@ public class AutoRoutingMapRowmapper implements RowMapper<AutoroutingMap> {
     public AutoroutingMap mapRow(final ResultSet rs, final int rowNum) throws SQLException {
     	AuditDetails auditDetails = populateAddress(rs);
         return AutoroutingMap.builder().id(rs.getString("id")).tenantId(rs.getString("tenantid"))
-        		.autorouting(rs.getObject("autorouting")).active(rs.getBoolean("active"))
+        		.autorouting(rs.getObject("autorouting")).active(rs.getBoolean("active")).type(rs.getString("type"))
         		.auditDetails(auditDetails).build();
     }
     
