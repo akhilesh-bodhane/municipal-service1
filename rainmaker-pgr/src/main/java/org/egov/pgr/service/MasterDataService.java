@@ -119,7 +119,16 @@ public class MasterDataService {
 	public AutoroutingMapResponse getAutoroutingData(RequestInfo requestInfo, AutoroutingMapReqSearchCriteria criteria) {
 		log.info("Get Autorouting data from database");
 		Map<String, String> errorMap = new HashMap<>();
-		AutoroutingMap autoroutingMap = masterDataRepository.getAutoRoutingData(criteria.getTenantId());
+		AutoroutingMap autoroutingMap = null;
+		System.out.println("type : " + criteria.getType());
+		if(null != criteria.getType()) {
+			System.out.println("Inside if condition of type");
+			 autoroutingMap = masterDataRepository.getAutoRoutingDataByType(criteria.getTenantId(), criteria.getType());
+		} else {
+			System.out.println("Inside else condition of type");
+			 autoroutingMap = masterDataRepository.getAutoRoutingData(criteria.getTenantId());
+		}
+		
 		if(null == autoroutingMap) {
 			errorMap.put(ErrorConstants.NO_DATA_FOUND_CODE, ErrorConstants.NO_DATA_FOUND_MSG);
 		}else {	

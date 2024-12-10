@@ -35,4 +35,7 @@ public class AutoroutingMapReqSearchCriteria {
 	@JsonProperty("sector")
 	private String sector;
 	
+	@JsonProperty("type")
+	private String type;
+	
 }

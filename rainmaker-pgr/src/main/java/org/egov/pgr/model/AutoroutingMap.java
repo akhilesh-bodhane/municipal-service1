@@ -33,5 +33,8 @@ public class AutoroutingMap   {
   
   @JsonProperty("active")
   private Boolean active;
+  
+  @JsonProperty("type")
+  private String type;
 }
 

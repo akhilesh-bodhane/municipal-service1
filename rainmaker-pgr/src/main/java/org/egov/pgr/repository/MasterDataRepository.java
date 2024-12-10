@@ -27,7 +27,7 @@ public class MasterDataRepository {
      */
     public AutoroutingMap getAutoRoutingData(String id, String tenantId) {
 
-        String query = "SELECT id, tenantid, autorouting, createdby, createdtime, lastmodifiedby, lastmodifiedtime, active FROM eg_pgr_autorouting_data WHERE id=:id AND tenantid=:tenantid";
+        String query = "SELECT id, tenantid, autorouting, createdby, createdtime, lastmodifiedby, lastmodifiedtime, active, type FROM eg_pgr_autorouting_data WHERE id=:id AND tenantid=:tenantid";
 
         final Map<String, Object> parametersMap = new HashMap<String, Object>();
         parametersMap.put("id", id);
@@ -46,7 +46,21 @@ public class MasterDataRepository {
      */
     public AutoroutingMap getAutoRoutingData(String tenantId) {
 
-    	String query = "SELECT id, tenantid, autorouting, createdby, createdtime, lastmodifiedby, lastmodifiedtime, active FROM eg_pgr_autorouting_data WHERE tenantid=:tenantid";
+    	String query = "SELECT id, tenantid, autorouting, createdby, createdtime, lastmodifiedby, lastmodifiedtime, active, type FROM eg_pgr_autorouting_data WHERE tenantid=:tenantid";
+
+        final Map<String, Object> parametersMap = new HashMap<String, Object>();
+        parametersMap.put("tenantid", tenantId);
+
+        List<AutoroutingMap> autoroutingMapList = namedParameterJdbcTemplate.query(query, parametersMap, new AutoRoutingMapRowmapper());
+        if(!CollectionUtils.isEmpty(autoroutingMapList)) {
+        	return autoroutingMapList.get(0);
+        }
+        return null;
+    }
+    
+    public AutoroutingMap getAutoRoutingDataByType(String tenantId, String type) {
+
+    	String query = "SELECT id, tenantid, autorouting, createdby, createdtime, lastmodifiedby, lastmodifiedtime, active, type FROM eg_pgr_autorouting_data WHERE tenantid=:tenantid type=:type";
 
         final Map<String, Object> parametersMap = new HashMap<String, Object>();
         parametersMap.put("tenantid", tenantId);
