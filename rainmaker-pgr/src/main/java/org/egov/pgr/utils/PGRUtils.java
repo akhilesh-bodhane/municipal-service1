@@ -762,7 +762,6 @@ public class PGRUtils {
 
 		List<String> status = history.getActions().stream().map(ActionInfo::getStatus).collect(Collectors.toList());
 
-		System.out.println("status : " + status.toString());
 		if (status.contains(WorkFlowConfigs.STATUS_ESCALATED_LEVEL1_PENDING)
 				&& !status.contains(WorkFlowConfigs.STATUS_RESOLVED)) {
 			return true;
