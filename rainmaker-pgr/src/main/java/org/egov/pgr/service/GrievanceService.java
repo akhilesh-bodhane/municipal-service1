@@ -1716,7 +1716,7 @@ public class GrievanceService {
 					ActionHistory actionHistory = serviceResponse.getActionHistory().get(i);
 
 					if (pGRUtils.checkAutoEscalatedWithoutResolved(actionHistory)) {
-						log.info("complaint {} is already auto escalated.", service.getServiceRequestId());
+						log.info("complaint {} is already auto escalated. status {} ", service.getServiceRequestId(), service.getStatus());
 						continue;
 					}
 
