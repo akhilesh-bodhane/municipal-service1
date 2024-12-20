@@ -31,6 +31,7 @@ import org.egov.pgr.model.AverageSolutionTime;
 import org.egov.pgr.model.Bucket;
 import org.egov.pgr.model.CompletionRate;
 import org.egov.pgr.model.Department;
+import org.egov.pgr.model.DescriptionReportLog;
 import org.egov.pgr.model.DiscriptionReport;
 import org.egov.pgr.model.Grievance;
 import org.egov.pgr.model.GrievanceReport;
@@ -444,6 +445,9 @@ public class ReportService {
 						mapOfSectors.get(data.getLocality()) != null ? mapOfSectors.get(data.getLocality()).getName()
 								: "");
 				repository.saveData(request, data);
+				Long dt = System.currentTimeMillis();
+				DescriptionReportLog descriptionLog = new DescriptionReportLog(String.valueOf(dt),"SUCCESS", "Scheduler run successfully");
+				repository.saveLogData(request, descriptionLog);
 			}
 		}
 

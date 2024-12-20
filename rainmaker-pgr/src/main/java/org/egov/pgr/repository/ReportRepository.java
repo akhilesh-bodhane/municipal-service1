@@ -8,6 +8,8 @@ import java.util.Map;
 import org.egov.pgr.contract.IUDXData;
 import org.egov.pgr.contract.IUDXDataRequest;
 import org.egov.pgr.contract.ReportRequest;
+import org.egov.pgr.model.DescriptionReportLog;
+import org.egov.pgr.model.DiscriptionLogRequestInfoWrapper;
 import org.egov.pgr.model.DiscriptionReport;
 import org.egov.pgr.model.DiscriptionRequestInfoWrapper;
 import org.egov.pgr.model.RequestInfoWrapper;
@@ -33,6 +35,9 @@ public class ReportRepository {
 
 	@Value("${kafka.topics.save.discription}")
 	private String saveDiscriptionTopic;
+	
+	@Value("${kafka.topics.save.discription.log}")
+	private String saveDiscriptionTopicLog;
 
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
@@ -90,6 +95,14 @@ public class ReportRepository {
 		DiscriptionRequestInfoWrapper infoWrapper = DiscriptionRequestInfoWrapper.builder().discriptionReport(data)
 				.build();
 		pGRProducer.push(saveDiscriptionTopic, infoWrapper);
+
+	}
+	
+	public void saveLogData(RequestInfoWrapper request, DescriptionReportLog data) {
+
+		DiscriptionLogRequestInfoWrapper infoWrapper = DiscriptionLogRequestInfoWrapper.builder().descriptionReportLog(data)
+				.build();
+		pGRProducer.push(saveDiscriptionTopicLog, infoWrapper);
 
 	}
 
