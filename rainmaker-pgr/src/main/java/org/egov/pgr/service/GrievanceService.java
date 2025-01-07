@@ -1784,6 +1784,8 @@ public class GrievanceService {
 					Service service = serviceResponse.getServices().get(i);
 					ActionHistory actionHistory = serviceResponse.getActionHistory().get(i);
 					
+					String tenantId = service.getTenantId();
+					
 					log.info("initial status for scheduler : {}  " , service.getStatus());
 
 					if (pGRUtils.checkAutoEscalatedWithoutResolved(actionHistory)) {
@@ -1794,7 +1796,19 @@ public class GrievanceService {
 					log.info("Escalation started for complaint " + service.getServiceRequestId());
 
 					List<ActionInfo> actionInfo = new ArrayList<ActionInfo>();
+					//ActionInfo actionInfos = actionInfo.get(i);
 					actionInfo.add(ActionInfo.builder().action(WorkFlowConfigs.ACTION_REOPEN).build());
+										
+					for (ActionInfo actionInfos : actionInfo) {
+						System.out.println("action***********"+actionInfos.getAction());
+					    if ("reopen".equals(actionInfos.getAction())) {
+					        String employeeEscalationOfficerOne = fetchAutoroutingEmployeeEscalationOfficerone(requestInfo, tenantId, service);
+					        System.out.println("employeeEscalationOfficerOne***********"+employeeEscalationOfficerOne);
+					        actionInfos.setAssignee(employeeEscalationOfficerOne);
+					        actionInfo.add(actionInfos);
+					    }
+					}
+					
 					List<Service> services = new ArrayList<Service>();
 					services.add(service);
 					ServiceRequest request = ServiceRequest.builder().requestInfo(requestInfo).actionInfo(actionInfo)
