@@ -1340,18 +1340,20 @@ public class GrievanceService {
 				List sectorArr = (List) objList.get(0);
 				for (int i = 0; i < sectorArr.size(); i++) {
 					List<String> sectors = JsonPath.read(sectorArr.get(i), PGRConstants.AUTOROUTING_SECTOR_JSONPATH);
-					if (!CollectionUtils.isEmpty(sectors)) {
-						if (sectors.contains(sector)) {
-							if(JsonPath.read(sectorArr.get(i), PGRConstants.AUTOROUTING_ESCALATING_OFFICER1_JSONPATH) !=null) {
-								System.out.println("AUTOROUTING_ESCALATING_OFFICER1_JSONPATH NOT NULL***********");
-							employeeEscalationOfficerone = JsonPath.read(sectorArr.get(i), PGRConstants.AUTOROUTING_ESCALATING_OFFICER1_JSONPATH);
-							System.out.println("employeeEscalationOfficerone from json path***********"+employeeEscalationOfficerone);
-							}
+					if (!CollectionUtils.isEmpty(sectors) && sectors.contains(sector)) {
+							Object currentElement = sectorArr.get(i);								
+						    String escalationOfficer = JsonPath.read(currentElement, PGRConstants.AUTOROUTING_ESCALATING_OFFICER1_JSONPATH);
+						    System.out.println("escalationOfficer######***********"+escalationOfficer);
+								// If the escalation officer path is not null, assign it and log
+					                if (escalationOfficer != null && !escalationOfficer.isEmpty()) {
+					                	System.out.println("AUTOROUTING_ESCALATING_OFFICER1_JSONPATH NOT NULL***********");
+					                    employeeEscalationOfficerone = escalationOfficer;
+					                    System.out.println("employeeEscalationOfficerone from json path***********" + employeeEscalationOfficerone);
+					                }						
 							break;
-						}
 					}
 				}
-			}
+			}			
 		} catch (Exception e) {
 			log.error("Exception while fetching fetchAutoroutingEmployee: " + e);
 		}
