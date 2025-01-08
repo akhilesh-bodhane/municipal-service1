@@ -1322,6 +1322,8 @@ public class GrievanceService {
 			List<Object> serivceDefs = getServiceType(servReq, requestInfo);
 			if (!CollectionUtils.isEmpty(serivceDefs))
 				category = String.valueOf(serivceDefs.get(0));
+			
+			 System.out.println("category######***********"+category);
 
 			Address address = servReq.getAddressDetail();
 			if (null != address) {
@@ -1340,8 +1342,10 @@ public class GrievanceService {
 				List sectorArr = (List) objList.get(0);
 				for (int i = 0; i < sectorArr.size(); i++) {
 					List<String> sectors = JsonPath.read(sectorArr.get(i), PGRConstants.AUTOROUTING_SECTOR_JSONPATH);
+					 System.out.println("sectors######***********"+sectors);
 					if (!CollectionUtils.isEmpty(sectors) && sectors.contains(sector)) {
-							Object currentElement = sectorArr.get(i);								
+							Object currentElement = sectorArr.get(i);	
+							 System.out.println("currentElement######***********"+currentElement);
 						    String escalationOfficer = JsonPath.read(currentElement, PGRConstants.AUTOROUTING_ESCALATING_OFFICER1_JSONPATH);
 						    System.out.println("escalationOfficer######***********"+escalationOfficer);
 								// If the escalation officer path is not null, assign it and log
