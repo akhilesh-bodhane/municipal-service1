@@ -1805,16 +1805,25 @@ public class GrievanceService {
 										
 					for (ActionInfo actionInfos : actionInfo) {
 						System.out.println("action***********"+actionInfos.getAction());
-					    if ("reopen".equals(actionInfos.getAction())) {
-					        String employeeEscalationOfficerOne = fetchAutoroutingEmployeeEscalationOfficerone(requestInfo, tenantId, service);
-					        System.out.println("employeeEscalationOfficerOne***********"+employeeEscalationOfficerOne);
-					        actionInfos.setAssignee(employeeEscalationOfficerOne);
-					        actionInfo.add(actionInfos);
-					    }
+						try {
+							 if ("reopen".equals(actionInfos.getAction())) {
+							        String employeeEscalationOfficerOne = fetchAutoroutingEmployeeEscalationOfficerone(requestInfo, tenantId, service);
+							        System.out.println("employeeEscalationOfficerOne***********"+employeeEscalationOfficerOne);
+							        actionInfos.setAssignee(employeeEscalationOfficerOne);
+							        System.out.println("actionInfos***********"+actionInfos);
+							        actionInfo.add(actionInfos);
+							        System.out.println("actionInfo***********"+actionInfo);
+							    }	
+						} catch (Exception e) {
+							e.printStackTrace();
+							System.out.println("exception***********"+e);
+						}
+					   
 					}
 					
 					List<Service> services = new ArrayList<Service>();
 					services.add(service);
+					System.out.println("services***********"+services);
 					ServiceRequest request = ServiceRequest.builder().requestInfo(requestInfo).actionInfo(actionInfo)
 							.services(services).build();
 
