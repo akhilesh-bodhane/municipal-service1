@@ -1802,24 +1802,35 @@ public class GrievanceService {
 					List<ActionInfo> actionInfo = new ArrayList<ActionInfo>();
 					//ActionInfo actionInfos = actionInfo.get(i);
 					actionInfo.add(ActionInfo.builder().action(WorkFlowConfigs.ACTION_REOPEN).build());
+					
+					 String employeeEscalationOfficerOne = fetchAutoroutingEmployeeEscalationOfficerone(requestInfo, tenantId, service);
+				        System.out.println("employeeEscalationOfficerOne***********"+employeeEscalationOfficerOne);
+				        //actionInfo.get(0).setAssignee(employeeEscalationOfficerOne);
+				        actionInfo.add(ActionInfo.builder().assignee(employeeEscalationOfficerOne).build());
+				        
+				        //actionInfos.setAssignee(employeeEscalationOfficerOne);
+				        System.out.println("actionInfos***********"+actionInfo);
+				       // actionInfo.add(actionInfos);
+				        //System.out.println("actionInfo***********"+actionInfo);
+					
+					
 										
-					for (ActionInfo actionInfos : actionInfo) {
-						System.out.println("action***********"+actionInfos.getAction());
-						try {
-							 if ("reopen".equals(actionInfos.getAction())) {
-							        String employeeEscalationOfficerOne = fetchAutoroutingEmployeeEscalationOfficerone(requestInfo, tenantId, service);
-							        System.out.println("employeeEscalationOfficerOne***********"+employeeEscalationOfficerOne);
-							        actionInfos.setAssignee(employeeEscalationOfficerOne);
-							        System.out.println("actionInfos***********"+actionInfos);
-							        actionInfo.add(actionInfos);
-							        System.out.println("actionInfo***********"+actionInfo);
-							    }	
-						} catch (Exception e) {
-							e.printStackTrace();
-							System.out.println("exception***********"+e);
-						}
-					   
-					}
+					/*
+					 * for (ActionInfo actionInfos : actionInfo) {
+					 * System.out.println("action***********"+actionInfos.getAction()); try { if
+					 * ("reopen".equals(actionInfos.getAction())) { String
+					 * employeeEscalationOfficerOne =
+					 * fetchAutoroutingEmployeeEscalationOfficerone(requestInfo, tenantId, service);
+					 * System.out.println("employeeEscalationOfficerOne***********"+
+					 * employeeEscalationOfficerOne);
+					 * actionInfos.setAssignee(employeeEscalationOfficerOne);
+					 * System.out.println("actionInfos***********"+actionInfos);
+					 * actionInfo.add(actionInfos);
+					 * System.out.println("actionInfo***********"+actionInfo); } } catch (Exception
+					 * e) { e.printStackTrace(); System.out.println("exception***********"+e); }
+					 * 
+					 * }
+					 */
 					
 					List<Service> services = new ArrayList<Service>();
 					services.add(service);
