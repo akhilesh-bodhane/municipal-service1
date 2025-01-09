@@ -500,7 +500,12 @@ public class GrievanceService {
 					System.out.println("reopen*********** iff");
 					employeeEscalationOfficerOne = fetchAutoroutingEmployeeEscalationOfficerone(requestInfo, tenantId, service);
 					System.out.println("employeeEscalationOfficerOne***********"+employeeEscalationOfficerOne);
-					actionInfo.setAssignee(employeeEscalationOfficerOne);
+					String assigneeId="";
+					if(employeeEscalationOfficerOne !=null && !employeeEscalationOfficerOne.isEmpty()) { 
+					assigneeId = masterDataService.getAssigneeId(employeeEscalationOfficerOne);
+					System.out.println("assigneeId***********"+assigneeId); 
+					 }
+					actionInfo.setAssignee(assigneeId);
 					}
 					service.setStatus(StatusEnum.fromValue(actionStatusMap.get(actionInfo.getAction())));
 				}
@@ -1332,7 +1337,7 @@ public class GrievanceService {
 
 			// Object result = fetchAutoroutingEscalationMap(requestInfo, tenantId,
 			// category, sector);
-			Object result = masterDataService.fetchAutoroutingEscalationMap(tenantId, category, null);
+			Object result = masterDataService.fetchAutoroutingEscalationMapNew(tenantId, category, null);
 			if (null != result) {
 				List objList = JsonPath.read(result, PGRConstants.JSONPATH_AUTOROUTING_CODES_DB);
 				if (CollectionUtils.isEmpty(objList)) {
@@ -1800,38 +1805,23 @@ public class GrievanceService {
 					log.info("Escalation started for complaint " + service.getServiceRequestId());
 
 					List<ActionInfo> actionInfo = new ArrayList<ActionInfo>();
-					//ActionInfo actionInfos = actionInfo.get(i);
+
 					actionInfo.add(ActionInfo.builder().action(WorkFlowConfigs.ACTION_REOPEN).build());
 					
-					 String employeeEscalationOfficerOne = fetchAutoroutingEmployeeEscalationOfficerone(requestInfo, tenantId, service);
-				        System.out.println("employeeEscalationOfficerOne***********"+employeeEscalationOfficerOne);
-				        //actionInfo.get(0).setAssignee(employeeEscalationOfficerOne);
-				        actionInfo.add(ActionInfo.builder().assignee(employeeEscalationOfficerOne).build());
-				        
-				        //actionInfos.setAssignee(employeeEscalationOfficerOne);
-				        System.out.println("actionInfos***********"+actionInfo);
-				       // actionInfo.add(actionInfos);
-				        //System.out.println("actionInfo***********"+actionInfo);
-					
-					
-										
 					/*
-					 * for (ActionInfo actionInfos : actionInfo) {
-					 * System.out.println("action***********"+actionInfos.getAction()); try { if
-					 * ("reopen".equals(actionInfos.getAction())) { String
-					 * employeeEscalationOfficerOne =
+					 * String employeeEscalationOfficerOne =
 					 * fetchAutoroutingEmployeeEscalationOfficerone(requestInfo, tenantId, service);
 					 * System.out.println("employeeEscalationOfficerOne***********"+
-					 * employeeEscalationOfficerOne);
-					 * actionInfos.setAssignee(employeeEscalationOfficerOne);
-					 * System.out.println("actionInfos***********"+actionInfos);
-					 * actionInfo.add(actionInfos);
-					 * System.out.println("actionInfo***********"+actionInfo); } } catch (Exception
-					 * e) { e.printStackTrace(); System.out.println("exception***********"+e); }
-					 * 
-					 * }
+					 * employeeEscalationOfficerOne); String assigneeId="";
+					 * if(employeeEscalationOfficerOne !=null &&
+					 * !employeeEscalationOfficerOne.isEmpty()) { assigneeId =
+					 * masterDataService.getAssigneeId(employeeEscalationOfficerOne);
+					 * System.out.println("assigneeId***********"+assigneeId); }
+					 * actionInfo.add(ActionInfo.builder().assignee(assigneeId).build());
+					 * System.out.println("actionInfos***********"+actionInfo);
 					 */
-					
+
+																					
 					List<Service> services = new ArrayList<Service>();
 					services.add(service);
 					System.out.println("services***********"+services);
