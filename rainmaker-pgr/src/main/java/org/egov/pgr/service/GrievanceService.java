@@ -500,7 +500,12 @@ public class GrievanceService {
 					System.out.println("reopen*********** iff");
 					employeeEscalationOfficerOne = fetchAutoroutingEmployeeEscalationOfficerone(requestInfo, tenantId, service);
 					System.out.println("employeeEscalationOfficerOne***********"+employeeEscalationOfficerOne);
-					actionInfo.setAssignee(employeeEscalationOfficerOne);
+					String assigneeId="";
+					if(employeeEscalationOfficerOne !=null && !employeeEscalationOfficerOne.isEmpty()) { 
+					assigneeId = masterDataService.getAssigneeId(employeeEscalationOfficerOne);
+					System.out.println("assigneeId***********"+assigneeId); 
+					 }
+					actionInfo.setAssignee(assigneeId);
 					}
 					service.setStatus(StatusEnum.fromValue(actionStatusMap.get(actionInfo.getAction())));
 				}
@@ -1322,6 +1327,8 @@ public class GrievanceService {
 			List<Object> serivceDefs = getServiceType(servReq, requestInfo);
 			if (!CollectionUtils.isEmpty(serivceDefs))
 				category = String.valueOf(serivceDefs.get(0));
+			
+			 System.out.println("category######***********"+category);
 
 			Address address = servReq.getAddressDetail();
 			if (null != address) {
@@ -1330,7 +1337,7 @@ public class GrievanceService {
 
 			// Object result = fetchAutoroutingEscalationMap(requestInfo, tenantId,
 			// category, sector);
-			Object result = masterDataService.fetchAutoroutingEscalationMap(tenantId, category, null);
+			Object result = masterDataService.fetchAutoroutingEscalationMapNew(tenantId, category, null);
 			if (null != result) {
 				List objList = JsonPath.read(result, PGRConstants.JSONPATH_AUTOROUTING_CODES_DB);
 				if (CollectionUtils.isEmpty(objList)) {
@@ -1340,8 +1347,10 @@ public class GrievanceService {
 				List sectorArr = (List) objList.get(0);
 				for (int i = 0; i < sectorArr.size(); i++) {
 					List<String> sectors = JsonPath.read(sectorArr.get(i), PGRConstants.AUTOROUTING_SECTOR_JSONPATH);
+					 System.out.println("sectors######***********"+sectors);
 					if (!CollectionUtils.isEmpty(sectors) && sectors.contains(sector)) {
-							Object currentElement = sectorArr.get(i);								
+							Object currentElement = sectorArr.get(i);	
+							 System.out.println("currentElement######***********"+currentElement);
 						    String escalationOfficer = JsonPath.read(currentElement, PGRConstants.AUTOROUTING_ESCALATING_OFFICER1_JSONPATH);
 						    System.out.println("escalationOfficer######***********"+escalationOfficer);
 								// If the escalation officer path is not null, assign it and log
@@ -1796,21 +1805,26 @@ public class GrievanceService {
 					log.info("Escalation started for complaint " + service.getServiceRequestId());
 
 					List<ActionInfo> actionInfo = new ArrayList<ActionInfo>();
-					//ActionInfo actionInfos = actionInfo.get(i);
+
 					actionInfo.add(ActionInfo.builder().action(WorkFlowConfigs.ACTION_REOPEN).build());
-										
-					for (ActionInfo actionInfos : actionInfo) {
-						System.out.println("action***********"+actionInfos.getAction());
-					    if ("reopen".equals(actionInfos.getAction())) {
-					        String employeeEscalationOfficerOne = fetchAutoroutingEmployeeEscalationOfficerone(requestInfo, tenantId, service);
-					        System.out.println("employeeEscalationOfficerOne***********"+employeeEscalationOfficerOne);
-					        actionInfos.setAssignee(employeeEscalationOfficerOne);
-					        actionInfo.add(actionInfos);
-					    }
-					}
 					
+					/*
+					 * String employeeEscalationOfficerOne =
+					 * fetchAutoroutingEmployeeEscalationOfficerone(requestInfo, tenantId, service);
+					 * System.out.println("employeeEscalationOfficerOne***********"+
+					 * employeeEscalationOfficerOne); String assigneeId="";
+					 * if(employeeEscalationOfficerOne !=null &&
+					 * !employeeEscalationOfficerOne.isEmpty()) { assigneeId =
+					 * masterDataService.getAssigneeId(employeeEscalationOfficerOne);
+					 * System.out.println("assigneeId***********"+assigneeId); }
+					 * actionInfo.add(ActionInfo.builder().assignee(assigneeId).build());
+					 * System.out.println("actionInfos***********"+actionInfo);
+					 */
+
+																					
 					List<Service> services = new ArrayList<Service>();
 					services.add(service);
+					System.out.println("services***********"+services);
 					ServiceRequest request = ServiceRequest.builder().requestInfo(requestInfo).actionInfo(actionInfo)
 							.services(services).build();
 
