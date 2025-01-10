@@ -462,7 +462,6 @@ public class GrievanceService {
 		Map<String, List<String>> errorMap = new HashMap<>();
 		RequestInfo requestInfo = request.getRequestInfo();
 		List<Service> serviceReqs = request.getServices();
-		String tenantId = serviceReqs.get(0).getTenantId();
 		List<ActionInfo> actionInfos = request.getActionInfo();
 		final AuditDetails auditDetails = pGRUtils.getAuditDetails(String.valueOf(requestInfo.getUserInfo().getId()),
 				false);
@@ -493,20 +492,6 @@ public class GrievanceService {
 					service.setStatus(StatusEnum.fromValue(WorkFlowConfigs.STATUS_ESCALATED_LEVEL2_PENDING));
 					actionInfo.setStatus(WorkFlowConfigs.STATUS_ESCALATED_LEVEL2_PENDING);
 				} else {
-					// Find autorouting employee for new complaint
-					String employeeEscalationOfficerOne = "";
-					System.out.println("action***********"+actionInfo.getAction());
-					if("reopen".equals(actionInfo.getAction())) {
-					System.out.println("reopen*********** iff");
-					employeeEscalationOfficerOne = fetchAutoroutingEmployeeEscalationOfficerone(requestInfo, tenantId, service);
-					System.out.println("employeeEscalationOfficerOne***********"+employeeEscalationOfficerOne);
-					String assigneeId="";
-					if(employeeEscalationOfficerOne !=null && !employeeEscalationOfficerOne.isEmpty()) { 
-					assigneeId = masterDataService.getAssigneeId(employeeEscalationOfficerOne);
-					System.out.println("assigneeId***********"+assigneeId); 
-					 }
-					actionInfo.setAssignee(assigneeId);
-					}
 					service.setStatus(StatusEnum.fromValue(actionStatusMap.get(actionInfo.getAction())));
 				}
 			}
@@ -1307,69 +1292,6 @@ public class GrievanceService {
 		return employeeCode;
 
 	}
-	
-	/**
-	 * method to fetch AutoRoutingEmployee from mdms based on category,sector
-	 * 
-	 * @param requestInfo
-	 * @param tenantId
-	 * @param category
-	 * @param sector
-	 * @return String
-	 * @author Tonmoy
-	 */
-	public String fetchAutoroutingEmployeeEscalationOfficerone(RequestInfo requestInfo, String tenantId, Service servReq) {
-		System.out.println("fetchAutoroutingEmployeeEscalationOfficerone method************");
-		String employeeEscalationOfficerone = null;
-		try {
-			String category = null;
-			String sector = null;
-			List<Object> serivceDefs = getServiceType(servReq, requestInfo);
-			if (!CollectionUtils.isEmpty(serivceDefs))
-				category = String.valueOf(serivceDefs.get(0));
-			
-			 System.out.println("category######***********"+category);
-
-			Address address = servReq.getAddressDetail();
-			if (null != address) {
-				sector = address.getMohalla();
-			}
-
-			// Object result = fetchAutoroutingEscalationMap(requestInfo, tenantId,
-			// category, sector);
-			Object result = masterDataService.fetchAutoroutingEscalationMapNew(tenantId, category, null);
-			if (null != result) {
-				List objList = JsonPath.read(result, PGRConstants.JSONPATH_AUTOROUTING_CODES_DB);
-				if (CollectionUtils.isEmpty(objList)) {
-					return null;
-				}
-
-				List sectorArr = (List) objList.get(0);
-				for (int i = 0; i < sectorArr.size(); i++) {
-					List<String> sectors = JsonPath.read(sectorArr.get(i), PGRConstants.AUTOROUTING_SECTOR_JSONPATH);
-					 System.out.println("sectors######***********"+sectors);
-					if (!CollectionUtils.isEmpty(sectors) && sectors.contains(sector)) {
-							Object currentElement = sectorArr.get(i);	
-							 System.out.println("currentElement######***********"+currentElement);
-						    String escalationOfficer = JsonPath.read(currentElement, PGRConstants.AUTOROUTING_ESCALATING_OFFICER1_JSONPATH);
-						    System.out.println("escalationOfficer######***********"+escalationOfficer);
-								// If the escalation officer path is not null, assign it and log
-					                if (escalationOfficer != null && !escalationOfficer.isEmpty()) {
-					                	System.out.println("AUTOROUTING_ESCALATING_OFFICER1_JSONPATH NOT NULL***********");
-					                    employeeEscalationOfficerone = escalationOfficer;
-					                    System.out.println("employeeEscalationOfficerone from json path***********" + employeeEscalationOfficerone);
-					                }						
-							break;
-					}
-				}
-			}			
-		} catch (Exception e) {
-			log.error("Exception while fetching fetchAutoroutingEmployee: " + e);
-		}
-
-		return employeeEscalationOfficerone;
-
-	}
 
 	/**
 	 * method to fetch Escalating officers(1st level & 2nd level) from mdms based on
@@ -1793,8 +1715,6 @@ public class GrievanceService {
 					Service service = serviceResponse.getServices().get(i);
 					ActionHistory actionHistory = serviceResponse.getActionHistory().get(i);
 					
-					String tenantId = service.getTenantId();
-					
 					log.info("initial status for scheduler : {}  " , service.getStatus());
 
 					if (pGRUtils.checkAutoEscalatedWithoutResolved(actionHistory)) {
@@ -1805,26 +1725,9 @@ public class GrievanceService {
 					log.info("Escalation started for complaint " + service.getServiceRequestId());
 
 					List<ActionInfo> actionInfo = new ArrayList<ActionInfo>();
-
 					actionInfo.add(ActionInfo.builder().action(WorkFlowConfigs.ACTION_REOPEN).build());
-					
-					/*
-					 * String employeeEscalationOfficerOne =
-					 * fetchAutoroutingEmployeeEscalationOfficerone(requestInfo, tenantId, service);
-					 * System.out.println("employeeEscalationOfficerOne***********"+
-					 * employeeEscalationOfficerOne); String assigneeId="";
-					 * if(employeeEscalationOfficerOne !=null &&
-					 * !employeeEscalationOfficerOne.isEmpty()) { assigneeId =
-					 * masterDataService.getAssigneeId(employeeEscalationOfficerOne);
-					 * System.out.println("assigneeId***********"+assigneeId); }
-					 * actionInfo.add(ActionInfo.builder().assignee(assigneeId).build());
-					 * System.out.println("actionInfos***********"+actionInfo);
-					 */
-
-																					
 					List<Service> services = new ArrayList<Service>();
 					services.add(service);
-					System.out.println("services***********"+services);
 					ServiceRequest request = ServiceRequest.builder().requestInfo(requestInfo).actionInfo(actionInfo)
 							.services(services).build();
 

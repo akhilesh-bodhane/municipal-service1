@@ -58,20 +58,6 @@ public class MasterDataRepository {
         return null;
     }
     
-    public AutoroutingMap getAutoRoutingDataNew(String tenantId) {
-
-    	String query = "SELECT id, tenantid, autorouting, createdby, createdtime, lastmodifiedby, lastmodifiedtime, active, type FROM eg_pgr_autorouting_data WHERE tenantid=:tenantid and type='autorouting'";
-
-        final Map<String, Object> parametersMap = new HashMap<String, Object>();
-        parametersMap.put("tenantid", tenantId);
-
-        List<AutoroutingMap> autoroutingMapList = namedParameterJdbcTemplate.query(query, parametersMap, new AutoRoutingMapRowmapper());
-        if(!CollectionUtils.isEmpty(autoroutingMapList)) {
-        	return autoroutingMapList.get(0);
-        }
-        return null;
-    }
-    
     public AutoroutingMap getAutoRoutingDataByType(String tenantId, String type) {
 
     	String query = "SELECT id, tenantid, autorouting, createdby, createdtime, lastmodifiedby, lastmodifiedtime, active, type FROM eg_pgr_autorouting_data WHERE tenantid=:tenantid and type=:type";
@@ -85,18 +71,6 @@ public class MasterDataRepository {
         	return autoroutingMapList.get(0);
         }
         return null;
-    }
-    
-    public String getAssigneeId(String assignee) {
-
-    	String query = "select id from eg_user eu where username =:assignee";
-
-        final Map<String, Object> parametersMap = new HashMap<String, Object>();
-        parametersMap.put("assignee", assignee);
-
-        String assigneeId = namedParameterJdbcTemplate.queryForObject(query,parametersMap, String.class);
-       
-        return assigneeId;
     }
 
 }
