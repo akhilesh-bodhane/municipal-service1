@@ -337,17 +337,20 @@ public class WaterServiceImpl implements WaterService {
 			
 			boolean isConnectionPresent = getConnectionNo(waterConnectionRequest.getWaterConnection().getConnectionNo(), waterConnectionRequest.getRequestInfo());
 			
-			System.out.println("isConnectionPresent : " + isConnectionPresent + "Activity Type : " + waterConnectionRequest.getWaterConnection().getActivityType() + "Action : " + waterConnectionRequest.getWaterConnection().getProcessInstance().getAction());
+			System.out.println("isConnectionPresent : " + isConnectionPresent);
+			System.out.println("Activity Type : " + waterConnectionRequest.getWaterConnection().getActivityType());
+			System.out.println("Action : " + waterConnectionRequest.getWaterConnection().getProcessInstance().getAction());
 			
 			if (isConnectionPresent
 					&& WCConstants.ACTIVITY_TYPE_NEW_CONN
 							.equals(waterConnectionRequest.getWaterConnection().getActivityType())
 					&& WCConstants.ACTIVATE_CONNECTION
 							.equals(waterConnectionRequest.getWaterConnection().getProcessInstance().getAction())) {
+				System.out.println("Inside connection status update inactive logic");
 				List<WaterConnection> searchResult2 = getConnectionNoExist(
 						waterConnectionRequest.getWaterConnection().getConnectionNo(),
 						waterConnectionRequest.getRequestInfo());
-				System.out.println("Search Result 2 : " + searchResult2.toString());
+				System.out.println("SearchResult2 : " + searchResult2.toString());
 				
 				for(WaterConnection waterConn : searchResult2) {
 					waterConnectionValidator.validateConnectionNo(waterConnectionRequest, waterConn);
