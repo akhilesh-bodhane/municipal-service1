@@ -598,7 +598,7 @@ public class WsQueryBuilder {
 			return null;
 		StringBuilder query = new StringBuilder();
 
-		query = new StringBuilder(WATER_CONNECTION_SEARCH_QUERY);
+		query = new StringBuilder(WATER_SEARCH_QUERY);
 		
 		if (!StringUtils.isEmpty(criteria.getConnectionNumber())) {
 			addClauseIfRequired(preparedStatement, query);
