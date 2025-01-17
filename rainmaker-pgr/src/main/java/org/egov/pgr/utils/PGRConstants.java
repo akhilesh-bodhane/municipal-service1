@@ -95,6 +95,8 @@ public class PGRConstants {
 	public static final String EMPLOYEE_BASE_JSONPATH = "$.Employees";
 	public static final String DEPARTMENTNAME_EMPLOYEE_JSONPATH = "$.Department[0].name";
 	public static final String AUTOROUTING_SECTOR_JSONPATH = "$.Sector";
+	public static final String AUTOROUTING_SECTOR_JSONPATH_SMALL = "$.sector";
+	
 	public static final String AUTOROUTING_EMPLOYEE_JSONPATH = "$.Employee";
 	public static final String AUTOROUTING_CATEGORY_JSONPATH = "$.category";
 	public static final String AUTOROUTING_ESCALATING_OFFICER1_JSONPATH = "$.escalationOfficer1";

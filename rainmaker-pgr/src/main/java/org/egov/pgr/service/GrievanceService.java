@@ -1346,23 +1346,53 @@ public class GrievanceService {
 
 				List sectorArr = (List) objList.get(0);
 				for (int i = 0; i < sectorArr.size(); i++) {
-					List<String> sectors = JsonPath.read(sectorArr.get(i), PGRConstants.AUTOROUTING_SECTOR_JSONPATH);
+					System.out.println("sectorArr.get(i):::"+sectorArr.get(i));
+					
+					// Try fetching 'sector' first (camel case) then fallback to 'Sector' (lowercase)
+					List<Map<String, String>> sectors = null;
+					
+					//List<String> sectors = JsonPath.read(sectorArr.get(i), PGRConstants.AUTOROUTING_SECTOR_JSONPATH);
+					
+					try {
+						// If camel case 'sector' is not found, try lowercase 'Sector'
+						sectors = JsonPath.read(sectorArr.get(i), PGRConstants.AUTOROUTING_SECTOR_JSONPATH); // Define fallback JSONPath for lowercase 'Sector'  
+			        } catch (Exception e) {		            
+			        	sectors = JsonPath.read(sectorArr.get(i), PGRConstants.AUTOROUTING_SECTOR_JSONPATH_SMALL);
+			            
+			        }
+					
 					 System.out.println("sectors######***********"+sectors);
-					if (!CollectionUtils.isEmpty(sectors) && sectors.contains(sector)) {
-							Object currentElement = sectorArr.get(i);	
+					 if (!CollectionUtils.isEmpty(sectors)) {
+						 for (Map<String, String> sectorMap : sectors) {
+							 String sectorValue = sectorMap.get("value");
+							 if (sectorValue != null && sectorValue.equals(sector)) {
+							 Object currentElement = sectorArr.get(i);	
 							 System.out.println("currentElement######***********"+currentElement);
-						    String escalationOfficer = JsonPath.read(currentElement, PGRConstants.AUTOROUTING_ESCALATING_OFFICER1_JSONPATH);
-						    System.out.println("escalationOfficer######***********"+escalationOfficer);
-								// If the escalation officer path is not null, assign it and log
-					                if (escalationOfficer != null && !escalationOfficer.isEmpty()) {
-					                	System.out.println("AUTOROUTING_ESCALATING_OFFICER1_JSONPATH NOT NULL***********");
-					                    employeeEscalationOfficerone = escalationOfficer;
+															 
+							// Retrieve escalationOfficer1 list
+					            List<Map<String, String>> escalationOfficerList = JsonPath.read(currentElement, PGRConstants.AUTOROUTING_ESCALATING_OFFICER1_JSONPATH);
+
+					            if (!CollectionUtils.isEmpty(escalationOfficerList)) {
+					                // Get the first index value from the escalationOfficer1 list
+					                Map<String, String> firstEscalationOfficer = escalationOfficerList.get(0);
+					                String escalationOfficerValue = firstEscalationOfficer.get("value");
+
+					                System.out.println("escalationOfficerValue######***********" + escalationOfficerValue);
+
+					                if (escalationOfficerValue != null && !escalationOfficerValue.isEmpty()) {
+					                    System.out.println("AUTOROUTING_ESCALATING_OFFICER1_JSONPATH NOT NULL***********");
+					                    employeeEscalationOfficerone = escalationOfficerValue;
 					                    System.out.println("employeeEscalationOfficerone from json path***********" + employeeEscalationOfficerone);
-					                }						
-							break;
-					}
+					                }
+					               
+					            }
+					            break;
+							 }     
+					    }
+					 }
 				}
-			}			
+			}
+			
 		} catch (Exception e) {
 			log.error("Exception while fetching fetchAutoroutingEmployee: " + e);
 		}
