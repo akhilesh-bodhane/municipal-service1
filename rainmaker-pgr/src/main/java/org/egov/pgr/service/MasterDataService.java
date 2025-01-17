@@ -270,6 +270,11 @@ public class MasterDataService {
 		return getFilterAutoroutingData(autoroutingMap.getAutorouting(), tenantId, category, sector);
 	}
 	
+	public Object fetchAutoroutingEscalationMapNew(String tenantId, String category, String sector) {
+		AutoroutingMap autoroutingMap = masterDataRepository.getAutoRoutingDataNew(tenantId);
+		return getFilterAutoroutingData(autoroutingMap.getAutorouting(), tenantId, category, sector);
+	}
+	
 	private void updateEOUserRole(List<String> selectedEO1List, List<String> selectedEO2List,
 			Map<String, String> dbEO1Map, Map<String, String> dbEO2Map, List<String> replacedEO1List,
 			List<String> replacedEO2List, LinkedHashMap<String, Object> finalObject, RequestInfo requestInfo, String tenantId) {
@@ -508,4 +513,12 @@ public class MasterDataService {
 					.responseInfo(factory.createResponseInfoFromRequestInfo(autoroutingMapRequest.getRequestInfo(), true))
 					.autoroutingMap(autoroutingMapRequest.getAutoroutingMap()).build();
 	}
+	
+	
+	public String getAssigneeId(String assignee) {
+		String assigneeId = masterDataRepository.getAssigneeId(assignee);
+		System.out.println("Inside getAssigneeId method:::"+assigneeId);
+		return assigneeId;
+	}
+	
 }
