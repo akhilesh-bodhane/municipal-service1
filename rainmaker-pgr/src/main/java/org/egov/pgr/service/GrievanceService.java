@@ -628,7 +628,9 @@ public class GrievanceService {
 			// if any complaint is assigned to an escalated officer via autorouting then
 			// fetch that complaints also.
 			try {
-				List<String> status = new ArrayList<String>();
+				// Adding status as Assigned & ReassignedRequested with the status getting from payload request.
+				//List<String> status = new ArrayList<String>();
+				List<String> status = serviceReqSearchCriteria.getStatus();
 				status.add(WorkFlowConfigs.STATUS_ASSIGNED);
 				status.add(WorkFlowConfigs.STATUS_REASSIGN_REQUESTED);
 				serviceReqSearchCriteria.setStatus(status);
