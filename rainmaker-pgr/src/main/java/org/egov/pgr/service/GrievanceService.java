@@ -1298,7 +1298,7 @@ public class GrievanceService {
 					try {
 						sectors = JsonPath.read(sectorArr.get(i), PGRConstants.AUTOROUTING_SECTOR_JSONPATH);
 					} catch (Exception e) {
-						log.error("Exception while fetching fetchAutoroutingEmployee: " + e);
+						log.error("Exception while fetching Sector: " + e);
 					}
 
 					try {
@@ -1310,21 +1310,33 @@ public class GrievanceService {
 							System.out.println("sectors : " + sectors.toString());
 						}
 					} catch (Exception e) {
-						log.error("Exception while fetching fetchAutoroutingEmployee: " + e);
+						log.error("Exception while fetching sector: " + e);
 					}
 						
 					
 					if (!CollectionUtils.isEmpty(sectors)) {
 						if (sectors.contains(sector)) {
-							employeeCode = JsonPath.read(sectorArr.get(i), PGRConstants.AUTOROUTING_EMPLOYEE_JSONPATH_CAP);
-							if(employeeCode==null) {
-								employeeCode = JsonPath.read(sectorArr.get(i), PGRConstants.AUTOROUTING_EMPLOYEE_JSONPATH_SMALL);
+							
+							try {
+								employeeCode = JsonPath.read(sectorArr.get(i), PGRConstants.AUTOROUTING_EMPLOYEE_JSONPATH_CAP);
+							} catch (Exception e) {
+								log.error("Exception while fetching Employee: " + e);
+							}
+							
+							
+							try {
+								employeeCode = JsonPath.read(sectorArr.get(i),
+										PGRConstants.AUTOROUTING_EMPLOYEE_JSONPATH_SMALL);
 								System.out.println("Employee Code : " + employeeCode.toString());
-								if(employeeCode!=null) {
-									employeeCode = JsonPath.read(sectorArr.get(i), PGRConstants.AUTOROUTING_EMPLOYEE_JSONPATH_VALUE);
+								if (employeeCode != null) {
+									employeeCode = JsonPath.read(sectorArr.get(i),
+											PGRConstants.AUTOROUTING_EMPLOYEE_JSONPATH_VALUE);
 									System.out.println("Employee Value : " + employeeCode.toString());
 								}
+							} catch (Exception e) {
+								log.error("Exception while fetching employee: " + e);
 							}
+							
 							break;
 						}
 					}
