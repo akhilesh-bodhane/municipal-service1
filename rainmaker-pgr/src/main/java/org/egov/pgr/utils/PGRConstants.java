@@ -100,7 +100,7 @@ public class PGRConstants {
 	
 	public static final String AUTOROUTING_EMPLOYEE_JSONPATH_CAP = "$.Employee";
 	public static final String AUTOROUTING_EMPLOYEE_JSONPATH_SMALL = "$.employee";
-	public static final String AUTOROUTING_EMPLOYEE_JSONPATH_VALUE = "$.employee.value";
+	public static final String AUTOROUTING_EMPLOYEE_JSONPATH_VALUE = "$.employee.*.value";
 	public static final String AUTOROUTING_CATEGORY_JSONPATH = "$.category";
 	public static final String AUTOROUTING_ESCALATING_OFFICER1_JSONPATH = "$.escalationOfficer1";
 	public static final String AUTOROUTING_ESCALATING_OFFICER2_JSONPATH = "$.escalationOfficer2";
