@@ -1291,18 +1291,29 @@ public class GrievanceService {
 					return null;
 				}
 
-				List sectorArr = (List) objList.get(0);
+				List sectorArr = (List) objList.get(0);				
 				for (int i = 0; i < sectorArr.size(); i++) {
+					List<String> sectors = null;
 					System.out.println("Inside Autorouting Map Sector check loop create method");
-					List<String> sectors = JsonPath.read(sectorArr.get(i), PGRConstants.AUTOROUTING_SECTOR_JSONPATH);
-					if(CollectionUtils.isEmpty(sectors)) {
+					try {
+						sectors = JsonPath.read(sectorArr.get(i), PGRConstants.AUTOROUTING_SECTOR_JSONPATH);
+					} catch (Exception e) {
+						log.error("Exception while fetching fetchAutoroutingEmployee: " + e);
+					}
+
+					try {
 						sectors = JsonPath.read(sectorArr.get(i), PGRConstants.AUTOROUTING_SECTOR_JSONPATH_SMALL);
 						System.out.println("sectors : " + sectors.toString());
-						if(!CollectionUtils.isEmpty(sectors)) {
-							sectors = JsonPath.read(sectorArr.get(i), PGRConstants.AUTOROUTING_SECTOR_JSONPATH_SMALL_VALUE);
+						if (sectors != null) {
+							sectors = JsonPath.read(sectorArr.get(i),
+									PGRConstants.AUTOROUTING_SECTOR_JSONPATH_SMALL_VALUE);
 							System.out.println("sectors : " + sectors.toString());
 						}
+					} catch (Exception e) {
+						log.error("Exception while fetching fetchAutoroutingEmployee: " + e);
 					}
+						
+					
 					if (!CollectionUtils.isEmpty(sectors)) {
 						if (sectors.contains(sector)) {
 							employeeCode = JsonPath.read(sectorArr.get(i), PGRConstants.AUTOROUTING_EMPLOYEE_JSONPATH_CAP);
