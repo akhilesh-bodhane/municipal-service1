@@ -1293,12 +1293,14 @@ public class GrievanceService {
 
 				List sectorArr = (List) objList.get(0);
 				for (int i = 0; i < sectorArr.size(); i++) {
+					System.out.println("Inside Autorouting Map Sector check loop create method");
 					List<String> sectors = JsonPath.read(sectorArr.get(i), PGRConstants.AUTOROUTING_SECTOR_JSONPATH);
-					if(sectors == null) {
+					if(CollectionUtils.isEmpty(sectors)) {
 						sectors = JsonPath.read(sectorArr.get(i), PGRConstants.AUTOROUTING_SECTOR_JSONPATH_SMALL);
 						System.out.println("sectors : " + sectors.toString());
-						if(sectors != null) {
+						if(!CollectionUtils.isEmpty(sectors)) {
 							sectors = JsonPath.read(sectorArr.get(i), PGRConstants.AUTOROUTING_SECTOR_JSONPATH_SMALL_VALUE);
+							System.out.println("sectors : " + sectors.toString());
 						}
 					}
 					if (!CollectionUtils.isEmpty(sectors)) {
