@@ -1296,7 +1296,15 @@ public class GrievanceService {
 					List<String> sectors = JsonPath.read(sectorArr.get(i), PGRConstants.AUTOROUTING_SECTOR_JSONPATH);
 					if (!CollectionUtils.isEmpty(sectors)) {
 						if (sectors.contains(sector)) {
-							employeeCode = JsonPath.read(sectorArr.get(i), PGRConstants.AUTOROUTING_EMPLOYEE_JSONPATH);
+							employeeCode = JsonPath.read(sectorArr.get(i), PGRConstants.AUTOROUTING_EMPLOYEE_JSONPATH_CAP);
+							if(employeeCode==null) {
+								employeeCode = JsonPath.read(sectorArr.get(i), PGRConstants.AUTOROUTING_EMPLOYEE_JSONPATH_SMALL);
+								System.out.println("Employee Code : " + employeeCode.toString());
+								if(employeeCode!=null) {
+									employeeCode = JsonPath.read(sectorArr.get(i), PGRConstants.AUTOROUTING_EMPLOYEE_JSONPATH_VALUE);
+									System.out.println("Employee Value : " + employeeCode.toString());
+								}
+							}
 							break;
 						}
 					}
