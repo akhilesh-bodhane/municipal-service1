@@ -96,6 +96,7 @@ public class PGRConstants {
 	public static final String DEPARTMENTNAME_EMPLOYEE_JSONPATH = "$.Department[0].name";
 	public static final String AUTOROUTING_SECTOR_JSONPATH = "$.Sector";
 	public static final String AUTOROUTING_SECTOR_JSONPATH_SMALL = "$.sector";
+	public static final String AUTOROUTING_SECTOR_JSONPATH_SMALL_VALUE = "$.sector.*.value";
 	
 	public static final String AUTOROUTING_EMPLOYEE_JSONPATH_CAP = "$.Employee";
 	public static final String AUTOROUTING_EMPLOYEE_JSONPATH_SMALL = "$.employee";

@@ -1294,6 +1294,13 @@ public class GrievanceService {
 				List sectorArr = (List) objList.get(0);
 				for (int i = 0; i < sectorArr.size(); i++) {
 					List<String> sectors = JsonPath.read(sectorArr.get(i), PGRConstants.AUTOROUTING_SECTOR_JSONPATH);
+					if(sectors == null) {
+						sectors = JsonPath.read(sectorArr.get(i), PGRConstants.AUTOROUTING_SECTOR_JSONPATH_SMALL);
+						System.out.println("sectors : " + sectors.toString());
+						if(sectors != null) {
+							sectors = JsonPath.read(sectorArr.get(i), PGRConstants.AUTOROUTING_SECTOR_JSONPATH_SMALL_VALUE);
+						}
+					}
 					if (!CollectionUtils.isEmpty(sectors)) {
 						if (sectors.contains(sector)) {
 							employeeCode = JsonPath.read(sectorArr.get(i), PGRConstants.AUTOROUTING_EMPLOYEE_JSONPATH_CAP);
