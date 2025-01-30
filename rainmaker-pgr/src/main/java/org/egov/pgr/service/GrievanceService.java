@@ -1329,9 +1329,11 @@ public class GrievanceService {
 										PGRConstants.AUTOROUTING_EMPLOYEE_JSONPATH_SMALL);
 								System.out.println("Employee Code : " + employeeCode.toString());
 								if (employeeCode != null) {
-									employeeCode = JsonPath.read(sectorArr.get(i),
+									Map<String, String> employeeCodeMap = JsonPath.read(sectorArr.get(i),
 											PGRConstants.AUTOROUTING_EMPLOYEE_JSONPATH_VALUE);
-									System.out.println("Employee Value : " + employeeCode.toString());
+									System.out.println("Employee Value : " + employeeCodeMap.toString());
+					                employeeCode = employeeCodeMap.get("value");
+					                System.out.println("Employee code : " + employeeCode.toString());					                
 								}
 							} catch (Exception e) {
 								log.error("Exception while fetching employee: " + e);
