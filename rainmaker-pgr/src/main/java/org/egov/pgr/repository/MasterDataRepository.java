@@ -46,7 +46,7 @@ public class MasterDataRepository {
      */
     public AutoroutingMap getAutoRoutingData(String tenantId) {
 
-    	String query = "SELECT id, tenantid, autorouting, createdby, createdtime, lastmodifiedby, lastmodifiedtime, active, type FROM eg_pgr_autorouting_data WHERE tenantid=:tenantid and type='autorouting'";
+    	String query = "SELECT id, tenantid, autorouting, createdby, createdtime, lastmodifiedby, lastmodifiedtime, active, type FROM eg_pgr_autorouting_data WHERE tenantid=:tenantid and type='sms'";
 
         final Map<String, Object> parametersMap = new HashMap<String, Object>();
         parametersMap.put("tenantid", tenantId);
