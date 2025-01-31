@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.egov.pgr.contract.ServiceReqSearchCriteria;
 import org.egov.pgr.contract.ServiceRequest;
@@ -571,6 +572,472 @@ public class ServiceRequestRepository {
 		}
 		query = query + whereStr.toString();
 		log.info("Description Report query: " + query);
+		return query;
+	}
+	
+	public int getUnresolvedSLACount(String key,List<String> value) {
+		Map<String, Object> preparedStatementValues = new HashMap<>();
+		String query = getServiceRequestCount(key,value);
+		int count = 0;
+		try {
+			count = namedParameterJdbcTemplate.queryForObject(query, preparedStatementValues, Integer.class);
+		} catch (DataAccessResourceFailureException ex) {
+			log.info("Query Execution Failed Due To Timeout: ", ex);
+			PSQLException cause = (PSQLException) ex.getCause();
+			if (cause != null && cause.getSQLState().equals("57014")) {
+				throw new CustomException("QUERY_EXECUTION_TIMEOUT", "Query failed, as it took more than expected");
+			} else {
+				throw ex;
+			}
+		} catch (Exception e) {
+			log.info("Query Execution Failed: ", e);
+			throw e;
+		}
+		return count;
+
+	}
+	
+	
+	public String getServiceRequestCount(String key,List<String> value) {
+		String query = ReportQueryBuilder.GET_PGR_UNRESOLVED_SLA_COUNT;
+		StringBuilder whereStr = new StringBuilder();
+		
+		String formattedValues = value.stream()
+                .map(v -> "'" + v + "'") // Properly format each value as a SQL string
+                .collect(Collectors.joining(", "));
+
+		if ("Division1".equals(key)) {
+			 whereStr.append(" AND eps.servicecode IN (").append(formattedValues).append(")");
+		}
+		if ("Division2".equals(key)) {
+			 whereStr.append(" AND eps.servicecode IN (").append(formattedValues).append(")");
+		}
+		if ("Division3".equals(key)) {
+			 whereStr.append(" AND eps.servicecode IN (").append(formattedValues).append(")");
+		}
+		if ("Division4".equals(key)) {
+			 whereStr.append(" AND eps.servicecode IN (").append(formattedValues).append(")");
+		}
+		
+		query = query + whereStr.toString();
+		log.info("getServiceRequestCount query: " + query);
+		return query;
+	}
+	
+	public int getUnresolvedSLACount1(String key,List<String> value) {
+		Map<String, Object> preparedStatementValues = new HashMap<>();
+		String query = getServiceRequestCount1(key,value);
+		int count = 0;
+		try {
+			count = namedParameterJdbcTemplate.queryForObject(query, preparedStatementValues, Integer.class);
+		} catch (DataAccessResourceFailureException ex) {
+			log.info("Query Execution Failed Due To Timeout: ", ex);
+			PSQLException cause = (PSQLException) ex.getCause();
+			if (cause != null && cause.getSQLState().equals("57014")) {
+				throw new CustomException("QUERY_EXECUTION_TIMEOUT", "Query failed, as it took more than expected");
+			} else {
+				throw ex;
+			}
+		} catch (Exception e) {
+			log.info("Query Execution Failed: ", e);
+			throw e;
+		}
+		return count;
+
+	}
+	
+	
+	public String getServiceRequestCount1(String key,List<String> value) {
+		String query = ReportQueryBuilder.GET_PGR_UNRESOLVED_SLA_COUNT;
+		StringBuilder whereStr = new StringBuilder();
+		
+		String formattedValues = value.stream()
+                .map(v -> "'" + v + "'") // Properly format each value as a SQL string
+                .collect(Collectors.joining(", "));
+
+		if ("Division1".equals(key)) {
+			 whereStr.append(" AND epad.mohalla IN (").append(formattedValues).append(")");
+		}
+		if ("Division2".equals(key)) {
+			 whereStr.append(" AND epad.mohalla IN (").append(formattedValues).append(")");
+		}
+		if ("Division3".equals(key)) {
+			 whereStr.append(" AND epad.mohalla IN (").append(formattedValues).append(")");
+		}
+		
+		query = query + whereStr.toString();
+		log.info("getServiceRequestCount query: " + query);
+		return query;
+	}
+	
+	public int getUnresolvedSLACount2(String key,List<String> value) {
+		Map<String, Object> preparedStatementValues = new HashMap<>();
+		String query = getServiceRequestCount2(key,value);
+		int count = 0;
+		try {
+			count = namedParameterJdbcTemplate.queryForObject(query, preparedStatementValues, Integer.class);
+		} catch (DataAccessResourceFailureException ex) {
+			log.info("Query Execution Failed Due To Timeout: ", ex);
+			PSQLException cause = (PSQLException) ex.getCause();
+			if (cause != null && cause.getSQLState().equals("57014")) {
+				throw new CustomException("QUERY_EXECUTION_TIMEOUT", "Query failed, as it took more than expected");
+			} else {
+				throw ex;
+			}
+		} catch (Exception e) {
+			log.info("Query Execution Failed: ", e);
+			throw e;
+		}
+		return count;
+
+	}
+	
+	
+	public String getServiceRequestCount2(String key,List<String> value) {
+		String query = ReportQueryBuilder.GET_PGR_UNRESOLVED_SLA_COUNT;
+		StringBuilder whereStr = new StringBuilder();
+		
+		String formattedValues = value.stream()
+                .map(v -> "'" + v + "'") // Properly format each value as a SQL string
+                .collect(Collectors.joining(", "));
+
+		if ("Horticulture 1".equals(key)) {
+			 whereStr.append(" AND epad.mohalla IN (").append(formattedValues).append(")");
+		}
+		if ("Horticulture 2".equals(key)) {
+			 whereStr.append(" AND epad.mohalla IN (").append(formattedValues).append(")");
+		}
+		if ("Electrical".equals(key)) {
+			 whereStr.append(" AND epad.mohalla IN (").append(formattedValues).append(")");
+		}
+		
+		query = query + whereStr.toString();
+		log.info("getServiceRequestCount query: " + query);
+		return query;
+	}
+	
+	public int getUnresolvedSLACount3(String key,List<String> value) {
+		Map<String, Object> preparedStatementValues = new HashMap<>();
+		String query = getServiceRequestCount3(key,value);
+		int count = 0;
+		try {
+			count = namedParameterJdbcTemplate.queryForObject(query, preparedStatementValues, Integer.class);
+		} catch (DataAccessResourceFailureException ex) {
+			log.info("Query Execution Failed Due To Timeout: ", ex);
+			PSQLException cause = (PSQLException) ex.getCause();
+			if (cause != null && cause.getSQLState().equals("57014")) {
+				throw new CustomException("QUERY_EXECUTION_TIMEOUT", "Query failed, as it took more than expected");
+			} else {
+				throw ex;
+			}
+		} catch (Exception e) {
+			log.info("Query Execution Failed: ", e);
+			throw e;
+		}
+		return count;
+
+	}
+	
+	
+	public String getServiceRequestCount3(String key,List<String> value) {
+		String query = ReportQueryBuilder.GET_PGR_UNRESOLVED_SLA_COUNT;
+		StringBuilder whereStr = new StringBuilder();
+		
+		String formattedValues = value.stream()
+                .map(v -> "'" + v + "'") // Properly format each value as a SQL string
+                .collect(Collectors.joining(", "));
+
+		if ("Health and sanitation".equals(key)) {
+			 whereStr.append(" AND eps.servicecode IN (").append(formattedValues).append(")");
+		}
+		
+		query = query + whereStr.toString();
+		log.info("getServiceRequestCount query: " + query);
+		return query;
+	}
+	
+	
+	public List<Map<String, Object>> getUsermobileno(String value) {
+		Map<String, Object> preparedStatementValues = new HashMap<>();
+		String query = getusermobNoQuery(value);
+		List<Map<String, Object>> userData = new ArrayList<>();
+		try {
+			userData = namedParameterJdbcTemplate.queryForList(query, preparedStatementValues);
+		} catch (DataAccessResourceFailureException ex) {
+			log.info("Query Execution Failed Due To Timeout: ", ex);
+			PSQLException cause = (PSQLException) ex.getCause();
+			if (cause != null && cause.getSQLState().equals("57014")) {
+				throw new CustomException("QUERY_EXECUTION_TIMEOUT", "Query failed, as it took more than expected");
+			} else {
+				throw ex;
+			}
+		} catch (Exception e) {
+			log.info("Query Execution Failed: ", e);
+			throw e;
+		}
+		return userData;
+
+	}
+		
+	public String getusermobNoQuery(String value) {
+		String query = ReportQueryBuilder.GET_EMPLOYEE_MOBILE_NO;
+		StringBuilder whereStr = new StringBuilder();		
+		whereStr.append(" euv.role_code = '" + value + "'");		
+		query = query + whereStr.toString();
+		log.info("getServiceRequestCount query: " + query);
+		return query;
+	}
+	
+	public int getCEUnresolvedSLACount(String key,List<String> value) {
+		Map<String, Object> preparedStatementValues = new HashMap<>();
+		String query = getCEServiceRequestCount(key,value);
+		int count = 0;
+		try {
+			count = namedParameterJdbcTemplate.queryForObject(query, preparedStatementValues, Integer.class);
+		} catch (DataAccessResourceFailureException ex) {
+			log.info("Query Execution Failed Due To Timeout: ", ex);
+			PSQLException cause = (PSQLException) ex.getCause();
+			if (cause != null && cause.getSQLState().equals("57014")) {
+				throw new CustomException("QUERY_EXECUTION_TIMEOUT", "Query failed, as it took more than expected");
+			} else {
+				throw ex;
+			}
+		} catch (Exception e) {
+			log.info("Query Execution Failed: ", e);
+			throw e;
+		}
+		return count;
+
+	}
+		
+	public String getCEServiceRequestCount(String key,List<String> value) {
+		String query = ReportQueryBuilder.GET_PGR_UNRESOLVED_SLA_COUNT;
+		StringBuilder whereStr = new StringBuilder();
+		
+		String formattedValues = value.stream()
+                .map(v -> "'" + v + "'") // Properly format each value as a SQL string
+                .collect(Collectors.joining(", "));
+
+		if ("SE Office B&R".equals(key)) {
+			 whereStr.append(" AND eps.servicecode IN (").append(formattedValues).append(")");
+		}
+		if ("SE Office PH".equals(key)) {
+			 whereStr.append(" AND eps.servicecode IN (").append(formattedValues).append(")");
+		}
+		if ("SE Office H&E".equals(key)) {
+			 whereStr.append(" AND eps.servicecode IN (").append(formattedValues).append(")");
+		}		
+		query = query + whereStr.toString();
+		log.info("getCEServiceRequestCount query: " + query);
+		return query;
+	}
+	
+	public int getJCMC1UnresolvedSLACount(String key,List<String> value) {
+		Map<String, Object> preparedStatementValues = new HashMap<>();
+		String query = getJCMC1ServiceRequestCount(key,value);
+		int count = 0;
+		try {
+			count = namedParameterJdbcTemplate.queryForObject(query, preparedStatementValues, Integer.class);
+		} catch (DataAccessResourceFailureException ex) {
+			log.info("Query Execution Failed Due To Timeout: ", ex);
+			PSQLException cause = (PSQLException) ex.getCause();
+			if (cause != null && cause.getSQLState().equals("57014")) {
+				throw new CustomException("QUERY_EXECUTION_TIMEOUT", "Query failed, as it took more than expected");
+			} else {
+				throw ex;
+			}
+		} catch (Exception e) {
+			log.info("Query Execution Failed: ", e);
+			throw e;
+		}
+		return count;
+
+	}
+		
+	public String getJCMC1ServiceRequestCount(String key,List<String> value) {
+		String query = ReportQueryBuilder.GET_PGR_UNRESOLVED_SLA_COUNT;
+		StringBuilder whereStr = new StringBuilder();
+		
+		String formattedValues = value.stream()
+                .map(v -> "'" + v + "'") // Properly format each value as a SQL string
+                .collect(Collectors.joining(", "));
+
+		if ("Health and Sanitation".equals(key)) {
+			 whereStr.append(" AND eps.servicecode IN (").append(formattedValues).append(")");
+		}
+		if ("Birth And Death".equals(key)) {
+			 whereStr.append(" AND eps.servicecode IN (").append(formattedValues).append(")");
+		}
+		if ("Accounts Branch".equals(key)) {
+			 whereStr.append(" AND eps.servicecode IN (").append(formattedValues).append(")");
+		}
+		if ("House allotment committee".equals(key)) {
+			 whereStr.append(" AND eps.servicecode IN (").append(formattedValues).append(")");
+		}
+		if ("Parking Branch".equals(key)) {
+			 whereStr.append(" AND eps.servicecode IN (").append(formattedValues).append(")");
+		}
+		if ("Colony Branch".equals(key)) {
+			 whereStr.append(" AND eps.servicecode IN (").append(formattedValues).append(")");
+		}
+		if ("Mechanical Wing".equals(key)) {
+			 whereStr.append(" AND eps.servicecode IN (").append(formattedValues).append(")");
+		}
+		if ("Pension Branch".equals(key)) {
+			 whereStr.append(" AND eps.servicecode IN (").append(formattedValues).append(")");
+		}
+		query = query + whereStr.toString();
+		log.info("getJCMC1ServiceRequestCount query: " + query);
+		return query;
+	}
+	
+	public int getJCMC2UnresolvedSLACount(String key,List<String> value) {
+		Map<String, Object> preparedStatementValues = new HashMap<>();
+		String query = getJCMC2ServiceRequestCount(key,value);
+		int count = 0;
+		try {
+			count = namedParameterJdbcTemplate.queryForObject(query, preparedStatementValues, Integer.class);
+		} catch (DataAccessResourceFailureException ex) {
+			log.info("Query Execution Failed Due To Timeout: ", ex);
+			PSQLException cause = (PSQLException) ex.getCause();
+			if (cause != null && cause.getSQLState().equals("57014")) {
+				throw new CustomException("QUERY_EXECUTION_TIMEOUT", "Query failed, as it took more than expected");
+			} else {
+				throw ex;
+			}
+		} catch (Exception e) {
+			log.info("Query Execution Failed: ", e);
+			throw e;
+		}
+		return count;
+
+	}
+		
+	public String getJCMC2ServiceRequestCount(String key,List<String> value) {
+		String query = ReportQueryBuilder.GET_PGR_UNRESOLVED_SLA_COUNT;
+		StringBuilder whereStr = new StringBuilder();
+		
+		String formattedValues = value.stream()
+                .map(v -> "'" + v + "'") // Properly format each value as a SQL string
+                .collect(Collectors.joining(", "));
+
+		if ("Fire Wing".equals(key)) {
+			 whereStr.append(" AND eps.servicecode IN (").append(formattedValues).append(")");
+		}
+		if ("Enforcement Branch".equals(key)) {
+			 whereStr.append(" AND eps.servicecode IN (").append(formattedValues).append(")");
+		}
+		if ("NULM".equals(key)) {
+			 whereStr.append(" AND eps.servicecode IN (").append(formattedValues).append(")");
+		}
+		if ("Public relation Wing".equals(key)) {
+			 whereStr.append(" AND eps.servicecode IN (").append(formattedValues).append(")");
+		}
+		query = query + whereStr.toString();
+		log.info("getJCMC2ServiceRequestCount query: " + query);
+		return query;
+	}
+	
+	public int getJCMC3UnresolvedSLACount(String key,List<String> value) {
+		Map<String, Object> preparedStatementValues = new HashMap<>();
+		String query = getJCMC3ServiceRequestCount(key,value);
+		int count = 0;
+		try {
+			count = namedParameterJdbcTemplate.queryForObject(query, preparedStatementValues, Integer.class);
+		} catch (DataAccessResourceFailureException ex) {
+			log.info("Query Execution Failed Due To Timeout: ", ex);
+			PSQLException cause = (PSQLException) ex.getCause();
+			if (cause != null && cause.getSQLState().equals("57014")) {
+				throw new CustomException("QUERY_EXECUTION_TIMEOUT", "Query failed, as it took more than expected");
+			} else {
+				throw ex;
+			}
+		} catch (Exception e) {
+			log.info("Query Execution Failed: ", e);
+			throw e;
+		}
+		return count;
+
+	}
+		
+	public String getJCMC3ServiceRequestCount(String key,List<String> value) {
+		String query = ReportQueryBuilder.GET_PGR_UNRESOLVED_SLA_COUNT;
+		StringBuilder whereStr = new StringBuilder();
+		
+		String formattedValues = value.stream()
+                .map(v -> "'" + v + "'") // Properly format each value as a SQL string
+                .collect(Collectors.joining(", "));
+
+		if ("Sub-Office Manimajra".equals(key)) {
+			 whereStr.append(" AND eps.servicecode IN (").append(formattedValues).append(")");
+		}
+		if ("Tax Branch".equals(key)) {
+			 whereStr.append(" AND eps.servicecode IN (").append(formattedValues).append(")");
+		}
+		if ("Apni &Day Mandi".equals(key)) {
+			 whereStr.append(" AND eps.servicecode IN (").append(formattedValues).append(")");
+		}
+		if ("Booking Branch/Advertisement".equals(key)) {
+			 whereStr.append(" AND eps.servicecode IN (").append(formattedValues).append(")");
+		}
+		if ("Estate Branch".equals(key)) {
+			 whereStr.append(" AND eps.servicecode IN (").append(formattedValues).append(")");
+		}
+		if ("Computer cell".equals(key)) {
+			 whereStr.append(" AND eps.servicecode IN (").append(formattedValues).append(")");
+		}
+		if ("Building Branch".equals(key)) {
+			 whereStr.append(" AND eps.servicecode IN (").append(formattedValues).append(")");
+		}
+		query = query + whereStr.toString();
+		log.info("getJCMC3ServiceRequestCount query: " + query);
+		return query;
+	}
+	
+	public int getCommisionerUnresolvedSLACount(String key,List<String> value) {
+		Map<String, Object> preparedStatementValues = new HashMap<>();
+		String query = getCommissionerServiceRequestCount(key,value);
+		int count = 0;
+		try {
+			count = namedParameterJdbcTemplate.queryForObject(query, preparedStatementValues, Integer.class);
+		} catch (DataAccessResourceFailureException ex) {
+			log.info("Query Execution Failed Due To Timeout: ", ex);
+			PSQLException cause = (PSQLException) ex.getCause();
+			if (cause != null && cause.getSQLState().equals("57014")) {
+				throw new CustomException("QUERY_EXECUTION_TIMEOUT", "Query failed, as it took more than expected");
+			} else {
+				throw ex;
+			}
+		} catch (Exception e) {
+			log.info("Query Execution Failed: ", e);
+			throw e;
+		}
+		return count;
+
+	}
+		
+	public String getCommissionerServiceRequestCount(String key,List<String> value) {
+		String query = ReportQueryBuilder.GET_PGR_UNRESOLVED_SLA_COUNT;
+		StringBuilder whereStr = new StringBuilder();
+		
+		String formattedValues = value.stream()
+                .map(v -> "'" + v + "'") // Properly format each value as a SQL string
+                .collect(Collectors.joining(", "));
+
+		if ("CE office".equals(key)) {
+			 whereStr.append(" AND eps.servicecode IN (").append(formattedValues).append(")");
+		}
+		if ("JCMCC 1".equals(key)) {
+			 whereStr.append(" AND eps.servicecode IN (").append(formattedValues).append(")");
+		}
+		if ("JCMCC 2".equals(key)) {
+			 whereStr.append(" AND eps.servicecode IN (").append(formattedValues).append(")");
+		}
+		if ("JCMCC 3".equals(key)) {
+			 whereStr.append(" AND eps.servicecode IN (").append(formattedValues).append(")");
+		}	
+		query = query + whereStr.toString();
+		log.info("getCommissionerServiceRequestCount query: " + query);
 		return query;
 	}
 }

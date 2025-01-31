@@ -202,5 +202,20 @@ public class ReportQueryBuilder {
 	public String getIUDXQuery() {
 		return SELECT_IUDX_DATA_QUERY;
 	}
+	
+	public static final String GET_PGR_UNRESOLVED_SLA_COUNT = "select\r\n"
+			+ "	count(*)\r\n"
+			+ "from\r\n"
+			+ "	eg_pgr_service eps \r\n"
+			+ "left outer join  eg_pgr_action epa \r\n"
+			+ "	on eps.servicerequestid = epa.businesskey \r\n"
+			+ "left outer join eg_pgr_address epad on eps.addressid =epad.\"uuid\" \r\n"
+			+ "where\r\n"
+			+ "epa.status in ('escalatedlevel1pending', 'escalatedlevel2pending')\r\n"
+			+ "and (eps.slaendtime < epa.\"when\")";
+	
+	public static final String GET_EMPLOYEE_MOBILE_NO = "select mobilenumber,name  from eg_user eu \r\n"
+			+ "INNER join eg_userrole_v1 euv on euv.user_id =eu.id\r\n"
+			+ "where";
 
 }

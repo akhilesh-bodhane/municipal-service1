@@ -37,6 +37,42 @@ public class PGRConstants {
 	public static final String MDMS_AUTOROUTING_ESCALATION_MAP_MASTER_NAME = "AutoroutingEscalationMap";
 	public static final String MDMS_AUTOROUTING_ESCALATION_OFFICER1_NAME = "escalationOfficer1";
 	public static final String MDMS_AUTOROUTING_ESCALATION_OFFICER2_NAME = "escalationOfficer2";
+	public static final String NOTIFICATION_LOCALE = "en_IN";
+	
+	public static final String MDMS_LEVEL_THREE_SMS_ROUTING_MASTER_NAME = "levelthreesmsrouting";
+	public static final String MDMS_LEVEL_FOUR_SMS_ROUTING_MASTER_NAME = "levelfoursmsrouting";
+	public static final String MDMS_LEVEL_FIVE_SMS_ROUTING_MASTER_NAME = "levelfivesmsrouting";
+	
+	// L3 Role Codes
+	public static final String ROLE_PH = "SE_PUBLIC_HEALTH";
+	public static final String ROLE_BR = "SE_B_R";
+	public static final String ROLE_HE = "SE_H_E";
+	public static final String ROLE_MOH = "MOH";
+	
+	// L4 Role Codes
+	public static final String ROLE_CE = "CE";
+	public static final String ROLE_JCMC1 = "JCMC1";
+	public static final String ROLE_JCMC2 = "JCMC2";
+	public static final String ROLE_JCMC3 = "JCMC3";
+	
+	// L5 Role Code
+	public static final String ROLE_COMMISSIONER = "COMMISSIONER";
+	
+	//PGR unresolved SLA Notifications Template codes	
+	// L3
+	public static final String LOCALIZATION_CODE_PH = "pgr.sms.notification.se.ph";
+	public static final String LOCALIZATION_CODE_BR = "pgr.sms.notification.se.br";
+	public static final String LOCALIZATION_CODE_HE = "pgr.sms.notification.se.he";
+	public static final String LOCALIZATION_CODE_MOH = "pgr.sms.notification.se.moh";
+	
+	// L4
+	public static final String LOCALIZATION_CODE_CE = "pgr.sms.notification.ce";
+	public static final String LOCALIZATION_CODE_JCMC1 = "pgr.sms.notification.jcmc1";
+	public static final String LOCALIZATION_CODE_JCMC2 = "pgr.sms.notification.jcmc2";
+	public static final String LOCALIZATION_CODE_JCMC3 = "pgr.sms.notification.jcmc3";
+	
+	// L5
+	public static final String LOCALIZATION_CODE_COMMISSIONER = "pgr.sms.notification.commissioner";
 	
 
 	public static final String LOCALIZATION_CODE_SUBMIT_CITIZEN = "pgr.sms.notification.submit.citizen";

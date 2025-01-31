@@ -5,6 +5,7 @@ import java.util.*;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.WordUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.mdms.model.MasterDetail;
 import org.egov.mdms.model.MdmsCriteria;
@@ -20,11 +21,13 @@ import org.egov.pgr.repository.ServiceRequestRepository;
 import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
 
 import com.jayway.jsonpath.JsonPath;
 
 import lombok.extern.slf4j.Slf4j;
+import net.minidev.json.JSONObject;
 
 @Component
 @Slf4j
@@ -262,4 +265,70 @@ public class ReportUtils {
 		
 		return value;
 	}
+	
+	/*
+	 * public MdmsCriteriaReq getRequestForLevelThreeRoutingSearch(StringBuilder
+	 * uri, String tenantId, RequestInfo requestInfo) {
+	 * uri.append(mdmsHost).append(mdmsEndpoint); MasterDetail masterDetail =
+	 * org.egov.mdms.model.MasterDetail.builder()
+	 * .name(PGRConstants.MDMS_SERVICETYPE_MASTER_NAME).build(); List<MasterDetail>
+	 * masterDetails = new ArrayList<>(); masterDetails.add(masterDetail);
+	 * ModuleDetail moduleDetail =
+	 * ModuleDetail.builder().moduleName(PGRConstants.MDMS_PGR_MOD_NAME)
+	 * .masterDetails(masterDetails).build(); List<ModuleDetail> moduleDetails = new
+	 * ArrayList<>(); moduleDetails.add(moduleDetail); MdmsCriteria mdmsCriteria =
+	 * MdmsCriteria.builder().tenantId(tenantId).moduleDetails(moduleDetails).build(
+	 * ); return
+	 * MdmsCriteriaReq.builder().requestInfo(requestInfo).mdmsCriteria(mdmsCriteria)
+	 * .build(); }
+	 */
+	
+	public MdmsCriteriaReq getRequestForLevelThreeRoutingSearch(StringBuilder uri, String tenantId,
+			RequestInfo requestInfo) {
+		uri.append(mdmsHost).append(mdmsEndpoint);
+		MasterDetail masterDetail = org.egov.mdms.model.MasterDetail.builder()
+				.name(PGRConstants.MDMS_LEVEL_THREE_SMS_ROUTING_MASTER_NAME).build();
+		List<MasterDetail> masterDetails = new ArrayList<>();
+		masterDetails.add(masterDetail);
+		ModuleDetail moduleDetail = ModuleDetail.builder().moduleName(PGRConstants.MDMS_COMMON_MASTERS_MODULE_NAME)
+				.masterDetails(masterDetails).build();
+		List<ModuleDetail> moduleDetails = new ArrayList<>();
+		moduleDetails.add(moduleDetail);
+		MdmsCriteria mdmsCriteria = MdmsCriteria.builder().tenantId(tenantId).moduleDetails(moduleDetails).build();
+		return MdmsCriteriaReq.builder().requestInfo(requestInfo).mdmsCriteria(mdmsCriteria).build();
+	}
+	
+	public MdmsCriteriaReq getRequestForLevelfourRoutingSearch(StringBuilder uri, String tenantId,
+			RequestInfo requestInfo) {
+		uri.append(mdmsHost).append(mdmsEndpoint);
+		MasterDetail masterDetail = org.egov.mdms.model.MasterDetail.builder()
+				.name(PGRConstants.MDMS_LEVEL_FOUR_SMS_ROUTING_MASTER_NAME).build();
+		List<MasterDetail> masterDetails = new ArrayList<>();
+		masterDetails.add(masterDetail);
+		ModuleDetail moduleDetail = ModuleDetail.builder().moduleName(PGRConstants.MDMS_COMMON_MASTERS_MODULE_NAME)
+				.masterDetails(masterDetails).build();
+		List<ModuleDetail> moduleDetails = new ArrayList<>();
+		moduleDetails.add(moduleDetail);
+		MdmsCriteria mdmsCriteria = MdmsCriteria.builder().tenantId(tenantId).moduleDetails(moduleDetails).build();
+		return MdmsCriteriaReq.builder().requestInfo(requestInfo).mdmsCriteria(mdmsCriteria).build();
+	}
+	
+	public MdmsCriteriaReq getRequestForLevelfiveRoutingSearch(StringBuilder uri, String tenantId,
+			RequestInfo requestInfo) {
+		uri.append(mdmsHost).append(mdmsEndpoint);
+		MasterDetail masterDetail = org.egov.mdms.model.MasterDetail.builder()
+				.name(PGRConstants.MDMS_LEVEL_FIVE_SMS_ROUTING_MASTER_NAME).build();
+		List<MasterDetail> masterDetails = new ArrayList<>();
+		masterDetails.add(masterDetail);
+		ModuleDetail moduleDetail = ModuleDetail.builder().moduleName(PGRConstants.MDMS_COMMON_MASTERS_MODULE_NAME)
+				.masterDetails(masterDetails).build();
+		List<ModuleDetail> moduleDetails = new ArrayList<>();
+		moduleDetails.add(moduleDetail);
+		MdmsCriteria mdmsCriteria = MdmsCriteria.builder().tenantId(tenantId).moduleDetails(moduleDetails).build();
+		return MdmsCriteriaReq.builder().requestInfo(requestInfo).mdmsCriteria(mdmsCriteria).build();
+	}
+	
+	
+	
+	
 }
