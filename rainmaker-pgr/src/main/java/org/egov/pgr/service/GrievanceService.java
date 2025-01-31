@@ -49,6 +49,7 @@ import org.egov.pgr.utils.ResponseInfoFactory;
 import org.egov.pgr.utils.WorkFlowConfigs;
 import org.egov.pgr.validator.PGRRequestValidator;
 import org.egov.tracer.model.CustomException;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.util.CollectionUtils;
@@ -1325,15 +1326,18 @@ public class GrievanceService {
 							
 							
 							try {
-								employeeCode = JsonPath.read(sectorArr.get(i),
+								Map<String, String> employeeCodeMap = JsonPath.read(sectorArr.get(i),
 										PGRConstants.AUTOROUTING_EMPLOYEE_JSONPATH_SMALL);
-								System.out.println("Employee Code : " + employeeCode.toString());
-								if (employeeCode != null) {
-									Map<String, String> employeeCodeMap = JsonPath.read(sectorArr.get(i),
-											PGRConstants.AUTOROUTING_EMPLOYEE_JSONPATH_VALUE);
-									System.out.println("Employee Value : " + employeeCodeMap.toString());
-					                employeeCode = employeeCodeMap.get("value");
-					                System.out.println("Employee code : " + employeeCode.toString());					                
+								System.out.println("Employee Code : " + employeeCodeMap.toString());
+								if (employeeCodeMap != null) {
+									/*
+									 * Map<String, String> employeeCodeMap = JsonPath.read(sectorArr.get(i),
+									 * PGRConstants.AUTOROUTING_EMPLOYEE_JSONPATH_VALUE);
+									 */
+									System.out.println("Employee Value : " + employeeCodeMap.toString());	
+					                JSONObject employeeValue = new JSONObject(employeeCodeMap);
+					                employeeCode = employeeValue.getString("value");
+					                System.out.println("Employee Code Value : " + employeeCode);
 								}
 							} catch (Exception e) {
 								log.error("Exception while fetching employee: " + e);
