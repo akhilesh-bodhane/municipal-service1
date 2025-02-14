@@ -1017,7 +1017,7 @@ public class PGRUtils {
 			}
 			for (SMSRequest smsRequest : smsRequestsList) {
 				System.out.println("smsRequest ::"+smsRequest.getMobileNumber());
-				///pGRProducer.push(smsNotifTopic, smsRequest);
+				pGRProducer.push(smsNotifTopic, smsRequest);
 				// log.info("MobileNumber: " + smsRequest.getMobileNumber() + " Messages: " +
 				// smsRequest.getMessage());
 			}
