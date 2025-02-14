@@ -1040,4 +1040,129 @@ public class ServiceRequestRepository {
 		log.info("getCommissionerServiceRequestCount query: " + query);
 		return query;
 	}
+	
+	
+	
+	public List<Map<String, Object>> getescalteOfficeroneUnresolvedData() {
+		Map<String, Object> preparedStatementValues = new HashMap<>();
+		String query = getescalteOfficerOneServiceRequest();
+		 List<Map<String, Object>> data;
+		try {
+			data = namedParameterJdbcTemplate.queryForList(query, preparedStatementValues);
+		} catch (DataAccessResourceFailureException ex) {
+			log.info("Query Execution Failed Due To Timeout: ", ex);
+			PSQLException cause = (PSQLException) ex.getCause();
+			if (cause != null && cause.getSQLState().equals("57014")) {
+				throw new CustomException("QUERY_EXECUTION_TIMEOUT", "Query failed, as it took more than expected");
+			} else {
+				throw ex;
+			}
+		} catch (Exception e) {
+			log.info("Query Execution Failed: ", e);
+			throw e;
+		}
+		return data;
+
+	}
+		
+	public String getescalteOfficerOneServiceRequest() {
+		String query = ReportQueryBuilder.GET_PGR_ESCALATE_OFFICER_ONE_UNRESOLVED_SLA;
+		StringBuilder whereStr = new StringBuilder();	
+		query = query + whereStr.toString();
+		log.info("getCommissionerServiceRequestCount query: " + query);
+		return query;
+	}
+	
+	public List<Map<String, Object>> getUsermobilenoByUserId(String value) {
+		Map<String, Object> preparedStatementValues = new HashMap<>();
+		String query = getusermobNoByUseridQuery(value);
+		List<Map<String, Object>> userData = new ArrayList<>();
+		try {
+			userData = namedParameterJdbcTemplate.queryForList(query, preparedStatementValues);
+		} catch (DataAccessResourceFailureException ex) {
+			log.info("Query Execution Failed Due To Timeout: ", ex);
+			PSQLException cause = (PSQLException) ex.getCause();
+			if (cause != null && cause.getSQLState().equals("57014")) {
+				throw new CustomException("QUERY_EXECUTION_TIMEOUT", "Query failed, as it took more than expected");
+			} else {
+				throw ex;
+			}
+		} catch (Exception e) {
+			log.info("Query Execution Failed: ", e);
+			throw e;
+		}
+		return userData;
+
+	}
+		
+	public String getusermobNoByUseridQuery(String value) {
+		String query = ReportQueryBuilder.GET_EMPLOYEE_MOBILE_NO_BY_USERID;
+		StringBuilder whereStr = new StringBuilder();		
+		whereStr.append(" username = '" + value + "'");		
+		query = query + whereStr.toString();
+		log.info("getusermobNoByUseridQuery query: " + query);
+		return query;
+	}
+	
+	public List<Map<String, Object>> getescalteOfficertwoUnresolvedData() {
+		Map<String, Object> preparedStatementValues = new HashMap<>();
+		String query = getescalteOfficertwoServiceRequest();
+		 List<Map<String, Object>> data;
+		try {
+			data = namedParameterJdbcTemplate.queryForList(query, preparedStatementValues);
+		} catch (DataAccessResourceFailureException ex) {
+			log.info("Query Execution Failed Due To Timeout: ", ex);
+			PSQLException cause = (PSQLException) ex.getCause();
+			if (cause != null && cause.getSQLState().equals("57014")) {
+				throw new CustomException("QUERY_EXECUTION_TIMEOUT", "Query failed, as it took more than expected");
+			} else {
+				throw ex;
+			}
+		} catch (Exception e) {
+			log.info("Query Execution Failed: ", e);
+			throw e;
+		}
+		return data;
+
+	}
+		
+	public String getescalteOfficertwoServiceRequest() {
+		String query = ReportQueryBuilder.GET_PGR_ESCALATE_OFFICER_TWO_UNRESOLVED_SLA;
+		StringBuilder whereStr = new StringBuilder();	
+		query = query + whereStr.toString();
+		log.info("getCommissionerServiceRequestCount query: " + query);
+		return query;
+	}
+	
+	
+	public String getUserNameBymobileNo(String mobileno) {
+		Map<String, Object> preparedStatementValues = new HashMap<>();
+		String query = getuserNameByMobileno(mobileno);
+		String username = "";
+		try {
+			username = namedParameterJdbcTemplate.queryForObject(query, preparedStatementValues,String.class);
+		} catch (DataAccessResourceFailureException ex) {
+			log.info("Query Execution Failed Due To Timeout: ", ex);
+			PSQLException cause = (PSQLException) ex.getCause();
+			if (cause != null && cause.getSQLState().equals("57014")) {
+				throw new CustomException("QUERY_EXECUTION_TIMEOUT", "Query failed, as it took more than expected");
+			} else {
+				throw ex;
+			}
+		} catch (Exception e) {
+			log.info("Query Execution Failed: ", e);
+			throw e;
+		}
+		return username;
+
+	}
+		
+	public String getuserNameByMobileno(String mobileno) {
+		String query = ReportQueryBuilder.GET_EMPLOYEE_USERNAME_BY_MOBILENO;
+		StringBuilder whereStr = new StringBuilder();		
+		whereStr.append(" mobilenumber = '" + mobileno + "'");		
+		query = query + whereStr.toString();
+		log.info("getuserNameByMobileno query: " + query);
+		return query;
+	}
 }

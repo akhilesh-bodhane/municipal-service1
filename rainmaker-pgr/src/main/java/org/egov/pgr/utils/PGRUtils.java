@@ -939,7 +939,7 @@ public class PGRUtils {
 	    return messageTemplate;
 	}
 	
-	// L4 SMS Template
+	// L5 SMS Template
 		public String getCommissionerTemplate(Map<String,Integer> CommissionerCounts, String localizationMessages) {
 			String messageTemplate = getMessageTemplate(PGRConstants.LOCALIZATION_CODE_COMMISSIONER, localizationMessages);
 		    messageTemplate = messageTemplate.replace("<count1>", String.valueOf(CommissionerCounts.getOrDefault("CE office", 0))+ "\n");
@@ -949,6 +949,34 @@ public class PGRUtils {
 
 		    return messageTemplate;
 		}
+		
+		// escalationofficerone SMS Template
+		public String getEscalationofficerOneTemplate(String extractedCategory,String servicerequestid,String complaintname,
+						String contact,String sector, String localizationMessages) {
+					String messageTemplate = getMessageTemplate(PGRConstants.LOCALIZATION_CODE_ESCALATION_OFFICER_ONE, localizationMessages);
+				    
+				    messageTemplate = messageTemplate.replace("<count1>", extractedCategory != null ? extractedCategory : "N/A");
+				    messageTemplate = messageTemplate.replace("<count2>", servicerequestid != null ? servicerequestid : "N/A");
+				    messageTemplate = messageTemplate.replace("<count3>", complaintname != null ? complaintname : "N/A");
+				    messageTemplate = messageTemplate.replace("<count4>", contact != null ? contact : "N/A");
+				    messageTemplate = messageTemplate.replace("<count5>", sector != null ? sector : "N/A");
+
+				    return messageTemplate;
+				}
+		
+		// escalationofficertwo SMS Template
+				public String getEscalationofficerTwoTemplate(String extractedCategory,String servicerequestid,String complaintname,
+								String contact,String sector, String localizationMessages) {
+							String messageTemplate = getMessageTemplate(PGRConstants.LOCALIZATION_CODE_ESCALATION_OFFICER_TWO, localizationMessages);
+						    
+						    messageTemplate = messageTemplate.replace("<count1>", extractedCategory != null ? extractedCategory : "N/A");
+						    messageTemplate = messageTemplate.replace("<count2>", servicerequestid != null ? servicerequestid : "N/A");
+						    messageTemplate = messageTemplate.replace("<count3>", complaintname != null ? complaintname : "N/A");
+						    messageTemplate = messageTemplate.replace("<count4>", contact != null ? contact : "N/A");
+						    messageTemplate = messageTemplate.replace("<count5>", sector != null ? sector : "N/A");
+
+						    return messageTemplate;
+						}
 	
 	@SuppressWarnings("unchecked")
 	public String getMessageTemplate(String notificationCode, String localizationMessage) {
@@ -976,7 +1004,8 @@ public class PGRUtils {
 		List<SMSRequest> smsRequest = new LinkedList<>();
 		for (Map.Entry<String, String> entryset : mobileNumberToOwner.entrySet()) {
 			String customizedMsg = message.replace("<1>", entryset.getValue());
-			smsRequest.add(new SMSRequest(entryset.getKey(), customizedMsg));
+			smsRequest.add(new SMSRequest(entryset.getKey(), customizedMsg,entryset.getValue()));
+			//smsRequest.add(new SMSRequest(entryset.getValue(), customizedMsg));
 		}
 		return smsRequest;
 	}
@@ -988,7 +1017,7 @@ public class PGRUtils {
 			}
 			for (SMSRequest smsRequest : smsRequestsList) {
 				System.out.println("smsRequest ::"+smsRequest.getMobileNumber());
-				pGRProducer.push(smsNotifTopic, smsRequest);
+				///pGRProducer.push(smsNotifTopic, smsRequest);
 				// log.info("MobileNumber: " + smsRequest.getMobileNumber() + " Messages: " +
 				// smsRequest.getMessage());
 			}

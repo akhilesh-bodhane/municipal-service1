@@ -74,6 +74,11 @@ public class PGRConstants {
 	// L5
 	public static final String LOCALIZATION_CODE_COMMISSIONER = "pgr.sms.notification.commissioner";
 	
+	// L1
+	public static final String LOCALIZATION_CODE_ESCALATION_OFFICER_ONE = "pgr.sms.notification.escalationofficerone";
+	
+	// L2
+	public static final String LOCALIZATION_CODE_ESCALATION_OFFICER_TWO = "pgr.sms.notification.escalationofficertwo";
 
 	public static final String LOCALIZATION_CODE_SUBMIT_CITIZEN = "pgr.sms.notification.submit.citizen";
 	
