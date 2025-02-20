@@ -1658,17 +1658,18 @@ public class GrievanceService {
 				
 				List eoArr = (List) objList2.get(0);
 				for (int i = 0; i < eoArr.size(); i++) {
-					List<String> escalationOfficer1List = null;
+					System.out.println("Inside Loop For EO1 List");
+					String escalationOfficer1List = null;
 					try {
 						escalationOfficer1List = JsonPath.read(eoArr.get(i), PGRConstants.AUTOROUTING_ESCALATING_OFFICER1_JSONPATH);
-						System.out.println("sectors : " + escalationOfficer1List.toString());
+						System.out.println("escalationOfficer1List : " + escalationOfficer1List.toString());
 						if (escalationOfficer1List != null) {
 							escalationOfficer1List = JsonPath.read(eoArr.get(i),
-									PGRConstants.AUTOROUTING_ESCALATING_OFFICER1_JSONPATH);
-							System.out.println("sectors : " + escalationOfficer1List.toString());
+									PGRConstants.AUTOROUTING_ESCALATING_OFFICER1_JSONPATH_VALUE);
+							System.out.println("escalationOfficer1List : " + escalationOfficer1List.toString());
 						}
 					} catch (Exception e) {
-						log.error("Exception while fetching sector: " + e);
+						log.error("Exception while fetching escalationOfficer1List: " + e);
 					}
 					System.out.println("escalationOfficer1List : " + escalationOfficer1List.toString());					
 					/*
