@@ -1656,14 +1656,15 @@ public class GrievanceService {
 					return null;
 				}
 				
-				for (int i = 0; i < objList2.size(); i++) {
+				List eoArr = (List) objList2.get(0);
+				for (int i = 0; i < eoArr.size(); i++) {
 					System.out.println("Inside Loop For EO1 List");
 					List<String> escalationOfficer1List = null;
 					try {
-						escalationOfficer1List = JsonPath.read(objList2.get(i), PGRConstants.AUTOROUTING_ESCALATING_OFFICER1_JSONPATH);
+						escalationOfficer1List = JsonPath.read(eoArr.get(i), PGRConstants.AUTOROUTING_ESCALATING_OFFICER1_JSONPATH_SMS);
 						System.out.println("escalationOfficer1List : " + escalationOfficer1List.toString());
 						if (escalationOfficer1List != null) {
-							escalationOfficer1List = JsonPath.read(objList2.get(i),
+							escalationOfficer1List = JsonPath.read(eoArr.get(i),
 									PGRConstants.AUTOROUTING_ESCALATING_OFFICER1_JSONPATH_VALUE);
 							System.out.println("escalationOfficer1List : " + escalationOfficer1List.toString());
 						}
