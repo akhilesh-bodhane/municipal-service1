@@ -1652,8 +1652,24 @@ public class GrievanceService {
 					return null;
 				}
 				
-				for (int i = 0; i < objList2.size(); i++) {
-					List<String> escalationOfficer1List = JsonPath.read(objList2.get(i), PGRConstants.AUTOROUTING_ESCALATING_OFFICER1_JSONPATH);
+				if (CollectionUtils.isEmpty(objList2)) {
+					return null;
+				}
+				
+				List eoArr = (List) objList2.get(0);
+				for (int i = 0; i < eoArr.size(); i++) {
+					List<String> escalationOfficer1List = null;
+					try {
+						escalationOfficer1List = JsonPath.read(eoArr.get(i), PGRConstants.AUTOROUTING_ESCALATING_OFFICER1_JSONPATH);
+						System.out.println("sectors : " + escalationOfficer1List.toString());
+						if (escalationOfficer1List != null) {
+							escalationOfficer1List = JsonPath.read(eoArr.get(i),
+									PGRConstants.AUTOROUTING_ESCALATING_OFFICER1_JSONPATH);
+							System.out.println("sectors : " + escalationOfficer1List.toString());
+						}
+					} catch (Exception e) {
+						log.error("Exception while fetching sector: " + e);
+					}
 					System.out.println("escalationOfficer1List : " + escalationOfficer1List.toString());					
 					/*
 					 * if (escalationOfficer1List != null) { JSONObject employeeValue = new
@@ -1666,7 +1682,7 @@ public class GrievanceService {
 						if (escalationOfficer1List.contains(requestInfo.getUserInfo().getUserName())) {
 							if (CollectionUtils.isEmpty(categoryList1))
 								categoryList1 = new ArrayList<String>();
-							categoryList1.add(JsonPath.read(objList.get(i), PGRConstants.AUTOROUTING_CATEGORY_JSONPATH));
+							categoryList1.add(JsonPath.read(objList2.get(i), PGRConstants.AUTOROUTING_CATEGORY_JSONPATH));
 						}
 					}
 				}
