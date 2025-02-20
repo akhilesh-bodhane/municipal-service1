@@ -10,6 +10,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -29,6 +31,7 @@ import org.egov.pgr.contract.CountResponse;
 import org.egov.pgr.contract.ParamValue;
 import org.egov.pgr.contract.ReportRequest;
 import org.egov.pgr.contract.RequestInfoWrapper;
+import org.egov.pgr.contract.SMSRequest;
 import org.egov.pgr.contract.SearcherRequest;
 import org.egov.pgr.contract.ServiceReqSearchCriteria;
 import org.egov.pgr.contract.ServiceRequestComplaints;
@@ -38,10 +41,12 @@ import org.egov.pgr.model.ActionInfo;
 import org.egov.pgr.model.AuditDetails;
 import org.egov.pgr.model.SearchParam;
 import org.egov.pgr.model.Service;
+import org.egov.pgr.producer.PGRProducer;
 import org.egov.pgr.repository.ServiceRequestRepository;
 import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
@@ -53,6 +58,7 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.jayway.jsonpath.JsonPath;
 
 import lombok.extern.slf4j.Slf4j;
+import net.minidev.json.JSONObject;
 
 @Component
 @Slf4j
@@ -95,7 +101,7 @@ public class PGRUtils {
 
 	@Value("${egov.localization.search.endpoint}")
 	private String localizationSearchEndpoint;
-
+	
 	@Value("${egov.user.host}")
 	private String egovUserHost;
 
@@ -116,6 +122,9 @@ public class PGRUtils {
 
 	@Value("${are.inactive.complaintcategories.enabled}")
 	private Boolean areInactiveComplaintCategoriesEnabled;
+	
+	 @Value("${kafka.topics.notification.sms}")
+	 private String smsNotifTopic;
 
 	@Autowired
 	private ResponseInfoFactory factory;
@@ -126,6 +135,9 @@ public class PGRUtils {
 	private static final String MODULE_NAME = "{moduleName}";
 
 	private static final String SEARCH_NAME = "{searchName}";
+	
+	@Autowired
+    private PGRProducer pGRProducer;
 
 	/**
 	 * Prepares request and uri for service code search from MDMS
@@ -816,4 +828,202 @@ public class PGRUtils {
 		return ReportRequest.builder().tenantId(tenantId).reportName("SLAAchievementDepartmentWise")
 				.requestInfo(requestInfo).searchParams(searchParams).build();
 	}
+	
+	
+	@SuppressWarnings("unchecked")
+	@Cacheable(value = "messages", key = "#tenantId")
+	public String getLocalizationMessages(String tenantId, RequestInfo requestInfo) {
+		log.info("Fetching localization messages for {}", tenantId);
+		LinkedHashMap<String, Object> responseMap = (LinkedHashMap<String, Object>) serviceRequestRepository
+				.fetchResult(getUri(tenantId, requestInfo), requestInfo);
+		String jsonString = new JSONObject(responseMap).toString();
+		return jsonString;
+	}
+	
+	private StringBuilder getUri(String tenantId, RequestInfo requestInfo) {
+
+		tenantId = tenantId.split("\\.")[0];
+
+		String locale = PGRConstants.NOTIFICATION_LOCALE;
+		if (!StringUtils.isEmpty(requestInfo.getMsgId()) && requestInfo.getMsgId().split("|").length >= 2) {
+			locale = requestInfo.getMsgId().split("\\|")[1];
+		}
+
+		StringBuilder uri = new StringBuilder();
+		uri.append(localizationHost).append(localizationSearchEndpoint).append("?").append("locale=").append(locale)
+				.append("&tenantId=").append(tenantId).append("&module=").append(PGRConstants.LOCALIZATION_MODULE_NAME);
+
+		return uri;
+	}
+	
+	// L3 SMS Template
+	public String getPublicHealthTemplate(Map<String,Integer> sePublicHealthCounts, String localizationMessages) {
+		String messageTemplate = getMessageTemplate(PGRConstants.LOCALIZATION_CODE_PH, localizationMessages);
+	    messageTemplate = messageTemplate.replace("<count1>", String.valueOf(sePublicHealthCounts.getOrDefault("Division1", 0))+ "\n");
+	    messageTemplate = messageTemplate.replace("<count2>", String.valueOf(sePublicHealthCounts.getOrDefault("Division2", 0))+ "\n");
+	    messageTemplate = messageTemplate.replace("<count3>", String.valueOf(sePublicHealthCounts.getOrDefault("Division3", 0))+ "\n");
+	    messageTemplate = messageTemplate.replace("<count4>", String.valueOf(sePublicHealthCounts.getOrDefault("Division4", 0))+ "\n");
+
+	    return messageTemplate;
+	}
+	
+	public String getBRTemplate(Map<String,Integer> seBRCounts, String localizationMessages) {
+		String messageTemplate = getMessageTemplate(PGRConstants.LOCALIZATION_CODE_BR, localizationMessages);
+	    messageTemplate = messageTemplate.replace("<count1>", String.valueOf(seBRCounts.getOrDefault("Division1", 0))+ "\n");
+	    messageTemplate = messageTemplate.replace("<count2>", String.valueOf(seBRCounts.getOrDefault("Division2", 0))+ "\n");
+	    messageTemplate = messageTemplate.replace("<count3>", String.valueOf(seBRCounts.getOrDefault("Division3", 0))+ "\n");
+
+	    return messageTemplate;
+	}
+	
+	public String getHETemplate(Map<String,Integer> seHECounts, String localizationMessages) {
+		String messageTemplate = getMessageTemplate(PGRConstants.LOCALIZATION_CODE_HE, localizationMessages);
+	    messageTemplate = messageTemplate.replace("<count1>", String.valueOf(seHECounts.getOrDefault("Horticulture 1", 0))+ "\n");
+	    messageTemplate = messageTemplate.replace("<count2>", String.valueOf(seHECounts.getOrDefault("Horticulture 2", 0))+ "\n");
+	    messageTemplate = messageTemplate.replace("<count3>", String.valueOf(seHECounts.getOrDefault("Electrical", 0))+ "\n");
+
+	    return messageTemplate;
+	}
+	
+	public String getMOHTemplate(Map<String,Integer> mohCounts, String localizationMessages) {
+		String messageTemplate = getMessageTemplate(PGRConstants.LOCALIZATION_CODE_MOH, localizationMessages);
+	    messageTemplate = messageTemplate.replace("<count1>", String.valueOf(mohCounts.getOrDefault("Health and sanitation", 0))+ "\n");
+
+	    return messageTemplate;
+	}
+	
+	// L4 SMS Template
+	public String getCETemplate(Map<String,Integer> CECounts, String localizationMessages) {
+		String messageTemplate = getMessageTemplate(PGRConstants.LOCALIZATION_CODE_CE, localizationMessages);
+	    messageTemplate = messageTemplate.replace("<count1>", String.valueOf(CECounts.getOrDefault("SE Office B&R", 0))+ "\n");
+	    messageTemplate = messageTemplate.replace("<count2>", String.valueOf(CECounts.getOrDefault("SE Office PH", 0))+ "\n");
+	    messageTemplate = messageTemplate.replace("<count3>", String.valueOf(CECounts.getOrDefault("SE Office H&E", 0))+ "\n");
+
+	    return messageTemplate;
+	}
+	
+	public String getJCMC1Template(Map<String,Integer> JCMC1Counts, String localizationMessages) {
+		String messageTemplate = getMessageTemplate(PGRConstants.LOCALIZATION_CODE_JCMC1, localizationMessages);
+	    messageTemplate = messageTemplate.replace("<count1>", String.valueOf(JCMC1Counts.getOrDefault("Health and Sanitation", 0))+ "\n");
+	    messageTemplate = messageTemplate.replace("<count2>", String.valueOf(JCMC1Counts.getOrDefault("Birth And Death", 0))+ "\n");
+	    messageTemplate = messageTemplate.replace("<count3>", String.valueOf(JCMC1Counts.getOrDefault("Accounts Branch", 0))+ "\n");
+	    messageTemplate = messageTemplate.replace("<count4>", String.valueOf(JCMC1Counts.getOrDefault("House allotment committee", 0))+ "\n");
+	    messageTemplate = messageTemplate.replace("<count5>", String.valueOf(JCMC1Counts.getOrDefault("Parking Branch", 0))+ "\n");
+	    messageTemplate = messageTemplate.replace("<count6>", String.valueOf(JCMC1Counts.getOrDefault("Colony Branch", 0))+ "\n");
+	    messageTemplate = messageTemplate.replace("<count7>", String.valueOf(JCMC1Counts.getOrDefault("Mechanical Wing", 0))+ "\n");
+	    messageTemplate = messageTemplate.replace("<count8>", String.valueOf(JCMC1Counts.getOrDefault("Pension Branch", 0))+ "\n");
+
+	    return messageTemplate;
+	}
+	
+	public String getJCMC2Template(Map<String,Integer> JCMC2Counts, String localizationMessages) {
+		String messageTemplate = getMessageTemplate(PGRConstants.LOCALIZATION_CODE_JCMC2, localizationMessages);
+	    messageTemplate = messageTemplate.replace("<count1>", String.valueOf(JCMC2Counts.getOrDefault("Fire Wing", 0))+ "\n");
+	    messageTemplate = messageTemplate.replace("<count2>", String.valueOf(JCMC2Counts.getOrDefault("Enforcement Branch", 0))+ "\n");
+	    messageTemplate = messageTemplate.replace("<count3>", String.valueOf(JCMC2Counts.getOrDefault("NULM", 0))+ "\n");
+	    messageTemplate = messageTemplate.replace("<count4>", String.valueOf(JCMC2Counts.getOrDefault("Public relation Wing", 0))+ "\n");
+
+	    return messageTemplate;
+	}
+	
+	public String getJCMC3Template(Map<String,Integer> JCMC3Counts, String localizationMessages) {
+		String messageTemplate = getMessageTemplate(PGRConstants.LOCALIZATION_CODE_JCMC3, localizationMessages);
+	    messageTemplate = messageTemplate.replace("<count1>", String.valueOf(JCMC3Counts.getOrDefault("Sub-Office Manimajra", 0))+ "\n");
+	    messageTemplate = messageTemplate.replace("<count2>", String.valueOf(JCMC3Counts.getOrDefault("Tax Branch", 0))+ "\n");
+	    messageTemplate = messageTemplate.replace("<count3>", String.valueOf(JCMC3Counts.getOrDefault("Apni &Day Mandi", 0))+ "\n");
+	    messageTemplate = messageTemplate.replace("<count4>", String.valueOf(JCMC3Counts.getOrDefault("Booking Branch/Advertisement", 0))+ "\n");
+	    messageTemplate = messageTemplate.replace("<count5>", String.valueOf(JCMC3Counts.getOrDefault("Estate Branch", 0))+ "\n");
+	    messageTemplate = messageTemplate.replace("<count6>", String.valueOf(JCMC3Counts.getOrDefault("Computer cell", 0))+ "\n");
+	    messageTemplate = messageTemplate.replace("<count7>", String.valueOf(JCMC3Counts.getOrDefault("Building Branch", 0))+ "\n");
+
+	    return messageTemplate;
+	}
+	
+	// L5 SMS Template
+		public String getCommissionerTemplate(Map<String,Integer> CommissionerCounts, String localizationMessages) {
+			String messageTemplate = getMessageTemplate(PGRConstants.LOCALIZATION_CODE_COMMISSIONER, localizationMessages);
+		    messageTemplate = messageTemplate.replace("<count1>", String.valueOf(CommissionerCounts.getOrDefault("CE office", 0))+ "\n");
+		    messageTemplate = messageTemplate.replace("<count2>", String.valueOf(CommissionerCounts.getOrDefault("JCMCC 1", 0))+ "\n");
+		    messageTemplate = messageTemplate.replace("<count3>", String.valueOf(CommissionerCounts.getOrDefault("JCMCC 2", 0))+ "\n");
+		    messageTemplate = messageTemplate.replace("<count4>", String.valueOf(CommissionerCounts.getOrDefault("JCMCC 3", 0))+ "\n");
+
+		    return messageTemplate;
+		}
+		
+		// escalationofficerone SMS Template
+		public String getEscalationofficerOneTemplate(String extractedCategory,String servicerequestid,String complaintname,
+						String contact,String sector, String localizationMessages) {
+					String messageTemplate = getMessageTemplate(PGRConstants.LOCALIZATION_CODE_ESCALATION_OFFICER_ONE, localizationMessages);
+				    
+				    messageTemplate = messageTemplate.replace("<count1>", extractedCategory != null ? extractedCategory : "N/A");
+				    messageTemplate = messageTemplate.replace("<count2>", servicerequestid != null ? servicerequestid : "N/A");
+				    messageTemplate = messageTemplate.replace("<count3>", complaintname != null ? complaintname : "N/A");
+				    messageTemplate = messageTemplate.replace("<count4>", contact != null ? contact : "N/A");
+				    messageTemplate = messageTemplate.replace("<count5>", sector != null ? sector : "N/A");
+
+				    return messageTemplate;
+				}
+		
+		// escalationofficertwo SMS Template
+				public String getEscalationofficerTwoTemplate(String extractedCategory,String servicerequestid,String complaintname,
+								String contact,String sector, String localizationMessages) {
+							String messageTemplate = getMessageTemplate(PGRConstants.LOCALIZATION_CODE_ESCALATION_OFFICER_TWO, localizationMessages);
+						    
+						    messageTemplate = messageTemplate.replace("<count1>", extractedCategory != null ? extractedCategory : "N/A");
+						    messageTemplate = messageTemplate.replace("<count2>", servicerequestid != null ? servicerequestid : "N/A");
+						    messageTemplate = messageTemplate.replace("<count3>", complaintname != null ? complaintname : "N/A");
+						    messageTemplate = messageTemplate.replace("<count4>", contact != null ? contact : "N/A");
+						    messageTemplate = messageTemplate.replace("<count5>", sector != null ? sector : "N/A");
+
+						    return messageTemplate;
+						}
+	
+	@SuppressWarnings("unchecked")
+	public String getMessageTemplate(String notificationCode, String localizationMessage) {
+		String path = "$..messages[?(@.code==\"{}\")].message";
+		path = path.replace("{}", notificationCode);
+		String message = null;
+		try {
+			Object messageObj = JsonPath.parse(localizationMessage).read(path);
+			message = ((ArrayList<String>) messageObj).get(0);
+		} catch (Exception e) {
+			// log.warn("Fetching from localization failed", e);
+			return "" + e;
+		}
+		return message;
+	}
+	
+	/**
+	 * Creates sms request for the each owners
+	 * 
+	 * @param message                 The message for the specific ownershipTransfer
+	 * @param mobileNumberToOwnerName Map of mobileNumber to OwnerName
+	 * @return List of SMSRequest
+	 */
+	public List<SMSRequest> createSMSRequest(String message, Map<String, String> mobileNumberToOwner) {
+		List<SMSRequest> smsRequest = new LinkedList<>();
+		for (Map.Entry<String, String> entryset : mobileNumberToOwner.entrySet()) {
+			String customizedMsg = message.replace("<1>", entryset.getValue());
+			smsRequest.add(new SMSRequest(entryset.getKey(), customizedMsg,entryset.getValue()));
+			//smsRequest.add(new SMSRequest(entryset.getValue(), customizedMsg));
+		}
+		return smsRequest;
+	}
+	
+	public void sendSMS(List<SMSRequest> smsRequestsList, boolean isSMSEnabled) {
+		if (isSMSEnabled) {
+			if (CollectionUtils.isEmpty(smsRequestsList)) {
+				// log.info("Messages from localization couldn't be fetched!");
+			}
+			for (SMSRequest smsRequest : smsRequestsList) {
+				System.out.println("smsRequest ::"+smsRequest.getMobileNumber());
+				pGRProducer.push(smsNotifTopic, smsRequest);
+				// log.info("MobileNumber: " + smsRequest.getMobileNumber() + " Messages: " +
+				// smsRequest.getMessage());
+			}
+		}
+
+	}
+	
+	
 }

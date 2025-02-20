@@ -202,5 +202,52 @@ public class ReportQueryBuilder {
 	public String getIUDXQuery() {
 		return SELECT_IUDX_DATA_QUERY;
 	}
+	
+	public static final String GET_PGR_UNRESOLVED_SLA_COUNT = "select\r\n"
+			+ "	count(*)\r\n"
+			+ "from\r\n"
+			+ "	eg_pgr_service eps \r\n"
+			+ "left outer join  eg_pgr_action epa \r\n"
+			+ "	on eps.servicerequestid = epa.businesskey \r\n"
+			+ "left outer join eg_pgr_address epad on eps.addressid =epad.\"uuid\" \r\n"
+			+ "where\r\n"
+			+ "epa.status in ('escalatedlevel1pending', 'escalatedlevel2pending') and eps.status in ('escalatedlevel1pending', 'escalatedlevel2pending') \r\n"
+			+ "and (eps.slaendtime < epa.\"when\") and  eps.slaendtime is not null and eps.category is not null";
+	
+	public static final String GET_EMPLOYEE_MOBILE_NO = "select mobilenumber,name  from eg_user eu \r\n"
+			+ "INNER join eg_userrole_v1 euv on euv.user_id =eu.id\r\n"
+			+ "where";
+	
+	public static final String GET_PGR_ESCALATE_OFFICER_ONE_UNRESOLVED_SLA = "select eps.servicecode,eps.servicerequestid,eu.\"name\",eps.phone,epad.mohalla  \r\n"
+			+ "			from\r\n"
+			+ "			eg_pgr_service eps \r\n"
+			+ "			left outer join  eg_pgr_action epa\r\n"
+			+ "			on eps.servicerequestid = epa.businesskey \r\n"
+			+ "			left outer join eg_pgr_address epad on eps.addressid =epad.uuid\r\n"
+			+ "			left outer join eg_user eu on eu.id=eps.accountid ::bigint\r\n"
+			+ "			where\r\n"
+			+ "			epa.status in ('escalatedlevel1pending') and eps.status in ('escalatedlevel1pending')				\r\n"
+			+ "			and (eps.slaendtime < epa.\"when\")\r\n"
+			+ "			and  eps.slaendtime is not null and eps.category is not null";
+	        //+ "			and  eps.slaendtime is not null and eps.category is not null and eps.servicerequestid='10/06/2020/011321'";
+	
+	
+	public static final String GET_PGR_ESCALATE_OFFICER_TWO_UNRESOLVED_SLA = "select eps.servicecode,eps.servicerequestid,eu.\"name\",eps.phone,epad.mohalla  \r\n"
+			+ "			from\r\n"
+			+ "			eg_pgr_service eps \r\n"
+			+ "			left outer join  eg_pgr_action epa\r\n"
+			+ "			on eps.servicerequestid = epa.businesskey \r\n"
+			+ "			left outer join eg_pgr_address epad on eps.addressid =epad.uuid\r\n"
+			+ "			left outer join eg_user eu on eu.id=eps.accountid ::bigint\r\n"
+			+ "			where\r\n"
+			+ "			epa.status in ('escalatedlevel2pending') and eps.status in ('escalatedlevel2pending')				\r\n"
+			+ "			and (eps.slaendtime < epa.\"when\")\r\n"
+			+ "			and  eps.slaendtime is not null and eps.category is not null";
+	
+	public static final String GET_PGR_UNRESOLVED_SLA_OFFICER_COUNT = "";
+	
+	public static final String GET_EMPLOYEE_MOBILE_NO_BY_USERID = "select mobilenumber,name from eg_user eu where";
+	
+	public static final String GET_EMPLOYEE_USERNAME_BY_MOBILENO = "select username from eg_user eu where";
 
 }

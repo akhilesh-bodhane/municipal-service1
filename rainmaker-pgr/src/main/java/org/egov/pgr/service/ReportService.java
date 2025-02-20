@@ -5,10 +5,14 @@ import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.apache.commons.collections.CollectionUtils;
@@ -21,11 +25,13 @@ import org.egov.mdms.model.MdmsCriteria;
 import org.egov.mdms.model.MdmsCriteriaReq;
 import org.egov.mdms.model.MdmsResponse;
 import org.egov.mdms.model.ModuleDetail;
+import org.egov.pgr.contract.Address;
 import org.egov.pgr.contract.IUDXData;
 import org.egov.pgr.contract.IUDXDataRequest;
 import org.egov.pgr.contract.IUDXDataResponse;
 import org.egov.pgr.contract.ReportRequest;
 import org.egov.pgr.contract.ReportResponse;
+import org.egov.pgr.contract.SMSRequest;
 import org.egov.pgr.contract.ServiceReqSearchCriteria;
 import org.egov.pgr.model.AverageSolutionTime;
 import org.egov.pgr.model.Bucket;
@@ -42,6 +48,9 @@ import org.egov.pgr.model.ResponseInfoWrapper;
 import org.egov.pgr.model.Sector;
 import org.egov.pgr.model.ServiceDefMdms;
 import org.egov.pgr.model.SlaAchievement;
+import org.egov.pgr.model.LevelThreeSlaCountsResponse;
+import org.egov.pgr.model.LevelfiveSlaCountsResponse;
+import org.egov.pgr.model.LevelfourSlaCountsResponse;
 import org.egov.pgr.model.TodaysAssignedComplaint;
 import org.egov.pgr.model.TodaysClosedComplaints;
 import org.egov.pgr.model.TodaysComplaint;
@@ -70,6 +79,7 @@ import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.jsonpath.JsonPath;
+import com.jayway.jsonpath.PathNotFoundException;
 
 import lombok.extern.slf4j.Slf4j;
 import net.minidev.json.JSONArray;
@@ -100,6 +110,12 @@ public class ReportService {
 
 	@Autowired
 	private PGRUtils pGRUtils;
+	
+	 @Value("${notification.sms.enabled}")
+	 private Boolean isSMSNotificationEnabled;
+	 
+	 @Autowired
+	 private MasterDataService masterDataService;
 
 	@Autowired
 	public ReportService(@Value("${egov.mdms.host}") final String mdmsServiceHostname,
@@ -109,6 +125,8 @@ public class ReportService {
 
 	@Autowired
 	private PGRUtils pgrUtils;
+	
+	
 
 	public ReportResponse getReports(ReportRequest reportRequest) {
 		reportUtils.validateReportRequest(reportRequest);
@@ -747,4 +765,1720 @@ public class ReportService {
 					.iudxData(null).build(), HttpStatus.OK);
 		}
 	}
+	
+	public ResponseEntity<ResponseInfoWrapper> LevelThreeprocess(RequestInfoWrapper request) {
+		
+	LevelThreeSlaCountsResponse slaCountsResponse=null;
+	try {			
+	Map<String, Map<String, List<String>>> getlevelthreesmsRoutingData = getlevelthreesmsRoutingData(request);
+	
+	// Store SLA counts for each category
+    Map<String,Integer> sePublicHealthCounts = new HashMap<>();
+    Map<String, Integer> seBRCounts = new HashMap<>();
+    Map<String, Integer> seHECounts = new HashMap<>();
+    Map<String, Integer> mohCounts = new HashMap<>();
+	
+	
+	Map<String, List<String>> sepublichealth = getlevelthreesmsRoutingData.get(PGRConstants.ROLE_PH);	
+	
+	for (Map.Entry<String, List<String>> entry : sepublichealth.entrySet()) {
+
+	    String key = entry.getKey();
+	    
+	    List<String> value = entry.getValue();
+	    
+	    System.out.println("Key: " + key);
+	    System.out.println("Value: " + value);
+	   	       
+	    int unresolvedSLACount = serviceRequestRepository.getUnresolvedSLACount(key,value);	    	    
+	    sePublicHealthCounts.put(entry.getKey(), unresolvedSLACount);
+	}	
+	Map<String, List<String>> seBRData = getlevelthreesmsRoutingData.get(PGRConstants.ROLE_BR);
+	for (Map.Entry<String, List<String>> entry : seBRData.entrySet()) {
+
+	    String key = entry.getKey();
+	    
+	    List<String> value = entry.getValue();
+	    
+	    System.out.println("Key: " + key);
+	    System.out.println("Value: " + value);
+	    	    
+	    int unresolvedSLACount1 = serviceRequestRepository.getUnresolvedSLACount1(key,value);
+	    	    
+	    seBRCounts.put(entry.getKey(), unresolvedSLACount1);  
+	}	
+	Map<String, List<String>> seHR = getlevelthreesmsRoutingData.get(PGRConstants.ROLE_HE);
+	for (Map.Entry<String, List<String>> entry : seHR.entrySet()) {
+
+	    String key = entry.getKey();
+
+	    List<String> value = entry.getValue();
+	    
+	    System.out.println("Key: " + key);
+	    System.out.println("Value: " + value);
+	    	    
+	    int unresolvedSLACount2 = serviceRequestRepository.getUnresolvedSLACount2(key,value);
+	        
+	    seHECounts.put(entry.getKey(), unresolvedSLACount2);
+	}
+	
+	Map<String, List<String>> MOH = getlevelthreesmsRoutingData.get(PGRConstants.ROLE_MOH);
+	for (Map.Entry<String, List<String>> entry : MOH.entrySet()) {
+		
+	    String key = entry.getKey();
+	    
+	    List<String> value = entry.getValue();
+	    
+	    System.out.println("Key: " + key);
+	    System.out.println("Value: " + value);
+	    	    
+	    int unresolvedSLACount2 = serviceRequestRepository.getUnresolvedSLACount3(key,value);
+	    	    
+	    mohCounts.put(entry.getKey(), unresolvedSLACount2);
+	}
+	
+	  publicHealthprocess(sePublicHealthCounts);
+	  BRprocess(seBRCounts);
+	  HEprocess(seHECounts);
+	  MOHprocess(mohCounts);
+	  
+	  slaCountsResponse = new LevelThreeSlaCountsResponse(sePublicHealthCounts, seBRCounts, seHECounts, mohCounts);
+				
+	}catch (Exception e) {
+		 log.error("Exception in LevelThreeprocess method!"+e.getLocalizedMessage());		
+	}
+	return new ResponseEntity<>(ResponseInfoWrapper.builder()
+			.responseInfo(ResponseInfo.builder().status("SUCCESS").build()).responseBody(slaCountsResponse).build(),
+			HttpStatus.OK);
+	}
+	
+	public void publicHealthprocess(Map<String,Integer> sePublicHealthCounts) {
+		RequestInfo requestInfo = new RequestInfo();
+		requestInfo.setMsgId("1007212671881518955|en_IN");
+		String tenantId="ch.chandigarh";
+		List<SMSRequest> smsRequestsProperty = new LinkedList<>();
+        try {        
+    		if (isSMSNotificationEnabled != null) {
+    			if (isSMSNotificationEnabled) {
+    				enrichPublicHealthSMSRequest(sePublicHealthCounts, smsRequestsProperty, requestInfo);
+    				if (!CollectionUtils.isEmpty(smsRequestsProperty)) {
+    					pGRUtils.sendSMS(smsRequestsProperty, true);
+    					for (SMSRequest smsRequest : smsRequestsProperty) {
+    						System.out.println("smsRequest ::"+smsRequest.getMobileNumber());
+    						 String description="SMS sent succesfully Escalation officer 3 mobile no -('"+smsRequest.getMobileNumber()+"')";
+    						 String description1 = "'" + description + "'::+'" + smsRequest.getMessage() + "'";
+    						 String type="EscalationOfficer3";
+    						 String officerrole=PGRConstants.ROLE_PH;
+    						 insertIntol3l4l5SmsLog(description1, "SENT", tenantId,smsRequest.getMobileNumber(),smsRequest.getName(),type,officerrole);
+    					}
+    				}
+    			}
+    		}			
+		} catch (Exception e) {
+			log.error("Exception in publicHealthprocess method!"+e.getLocalizedMessage());
+			for (SMSRequest smsRequest : smsRequestsProperty) {
+				System.out.println("smsRequest ::"+smsRequest.getMobileNumber());
+				 String description="SMS Failed due to '"+e.getLocalizedMessage()+"' to Escalation officer 1 mobile no -('"+smsRequest.getMobileNumber()+"')";
+				 String type="EscalationOfficer3";
+				 String officerrole=PGRConstants.ROLE_PH;
+				 insertIntol3l4l5SmsLog(description, "NOT SENT", tenantId,smsRequest.getMobileNumber(),smsRequest.getName(),type,officerrole);
+			}
+		}
+		
+	}
+	
+	private void enrichPublicHealthSMSRequest(Map<String,Integer> sePublicHealthCounts, List<SMSRequest> smsRequests, RequestInfo requestInfo) {
+		
+		   try {			   
+			   String message = null;
+				String localizationMessages;
+	            String tenantId="ch.chandigarh";
+				localizationMessages = pGRUtils.getLocalizationMessages(tenantId, requestInfo);
+				message = pGRUtils.getPublicHealthTemplate(sePublicHealthCounts, localizationMessages);
+						  
+				  Map<String, String> mobileNumberToOwner = new HashMap<>();
+				  
+				  String officerrole=PGRConstants.ROLE_PH;
+				  
+				  List<Map<String, Object>> userData = serviceRequestRepository.getUsermobileno(officerrole);
+				  
+				  System.out.println(userData);
+				  String processedMessage="";
+				  for (Map<String, Object> row : userData) {
+				      String mobileNumber = (String) row.get("mobilenumber");
+				      String name = (String) row.get("name");
+				      System.out.println("Mobile: " + mobileNumber + ", Name: " + name);
+				      				      
+				      if (mobileNumber != null && !"".equals(mobileNumber.trim())) {
+					      // Check if the mobile number is already processed
+					    if (!mobileNumberToOwner.containsKey(mobileNumber)) {		          
+					         mobileNumberToOwner.put(mobileNumber, name);				          				         				          						         
+					      }else {
+			                    // If the mobile number is already in the map, concatenate names to preserve information
+			                 mobileNumberToOwner.put(mobileNumber, mobileNumberToOwner.get(mobileNumber) + ", " + name);
+			             }							         
+					     }else {
+					    	 String description = "For Officer: ('" + name + "') mobile no: ('"
+										+ mobileNumber + "'), doesn't exists in the system.";
+					    	 String type="EscalationOfficer3";	
+					    	 insertIntol3l4l5SmsLog(description, "NOT SENT", tenantId,mobileNumber,name,type,officerrole);
+					     }				      
+				  }
+				  processedMessage   = message.replaceAll("<br/>", "");	
+				  smsRequests.addAll(pGRUtils.createSMSRequest(processedMessage, mobileNumberToOwner));	
+			
+		} catch (Exception e) {
+			log.error("Exception in enrichPublicHealthSMSRequest method!"+e.getLocalizedMessage());
+		}
+					 
+	}
+	
+	
+	public void BRprocess(Map<String,Integer> seBRCounts) {
+		RequestInfo requestInfo = new RequestInfo();
+		requestInfo.setMsgId("1007666966271199412|en_IN");
+		String tenantId="ch.chandigarh";
+		List<SMSRequest> smsRequestsProperty = new LinkedList<>();
+		try {			
+			if (isSMSNotificationEnabled != null) {
+				if (isSMSNotificationEnabled) {
+					enrichBRSMSRequest(seBRCounts, smsRequestsProperty, requestInfo);
+					if (!CollectionUtils.isEmpty(smsRequestsProperty)) {
+						pGRUtils.sendSMS(smsRequestsProperty, true);	
+						for (SMSRequest smsRequest : smsRequestsProperty) {
+    						System.out.println("smsRequest ::"+smsRequest.getMobileNumber());
+    						 String description="SMS sent succesfully Escalation officer 3 mobile no -('"+smsRequest.getMobileNumber()+"')";
+    						 String description1 = "'" + description + "'::+'" + smsRequest.getMessage() + "'";
+    						 String type="EscalationOfficer3";
+    						 String officerrole=PGRConstants.ROLE_BR;
+    						 insertIntol3l4l5SmsLog(description1, "SENT", tenantId,smsRequest.getMobileNumber(),smsRequest.getName(),type,officerrole);
+    					}
+					}
+				}
+			}
+			
+		} catch (Exception e) {
+			log.error("Exception in BRprocess method!"+e.getLocalizedMessage());
+			for (SMSRequest smsRequest : smsRequestsProperty) {
+				System.out.println("smsRequest ::"+smsRequest.getMobileNumber());
+				 String description="SMS Failed due to '"+e.getLocalizedMessage()+"' to Escalation officer 1 mobile no -('"+smsRequest.getMobileNumber()+"')";
+				 String type="EscalationOfficer3";
+				 String officerrole=PGRConstants.ROLE_BR;
+				 insertIntol3l4l5SmsLog(description, "NOT SENT", tenantId,smsRequest.getMobileNumber(),smsRequest.getName(),type,officerrole);
+			}
+		}		
+	}
+	
+	private void enrichBRSMSRequest(Map<String,Integer> seBRCounts, List<SMSRequest> smsRequests, RequestInfo requestInfo) {
+		
+		try {			
+			String message = null;
+			String localizationMessages;
+	        String tenantId="ch.chandigarh";
+			localizationMessages = pGRUtils.getLocalizationMessages(tenantId, requestInfo);
+			message = pGRUtils.getBRTemplate(seBRCounts, localizationMessages);
+					  
+			  Map<String, String> mobileNumberToOwner = new HashMap<>();
+			  
+			  String officerrole=PGRConstants.ROLE_BR;
+			  
+			  List<Map<String, Object>> userData = serviceRequestRepository.getUsermobileno(officerrole);
+			  
+			  System.out.println(userData);
+			  String processedMessage="";
+			  for (Map<String, Object> row : userData) {
+			      String mobileNumber = (String) row.get("mobilenumber");
+			      String name = (String) row.get("name");
+			      System.out.println("Mobile: " + mobileNumber + ", Name: " + name);
+			      		      
+			      if (mobileNumber != null && !"".equals(mobileNumber.trim())) {
+				    if (!mobileNumberToOwner.containsKey(mobileNumber)) {		          
+				         mobileNumberToOwner.put(mobileNumber, name);				          				         				          						         
+				      }else {
+		                    // If the mobile number is already in the map, concatenate names to preserve information
+		                 mobileNumberToOwner.put(mobileNumber, mobileNumberToOwner.get(mobileNumber) + ", " + name);
+		             }							         
+				     }else {
+				    	 String description = "For Officer: ('" + name + "') mobile no: ('"
+									+ mobileNumber + "'), doesn't exists in the system.";
+				    	 String type="EscalationOfficer3";	
+				    	 insertIntol3l4l5SmsLog(description, "NOT SENT", tenantId,mobileNumber,name,type,officerrole);
+				     }				      
+			  }
+			  processedMessage   = message.replaceAll("<br/>", "");
+			  smsRequests.addAll(pGRUtils.createSMSRequest(processedMessage, mobileNumberToOwner));		
+			
+		} catch (Exception e) {
+			log.error("Exception in enrichBRSMSRequest method!"+e.getLocalizedMessage());
+		}
+			 
+}
+	
+	public void HEprocess(Map<String,Integer> seHECounts) {
+		RequestInfo requestInfo = new RequestInfo();
+		requestInfo.setMsgId("1007903896804833422|en_IN");
+		String tenantId="ch.chandigarh";
+		List<SMSRequest> smsRequestsProperty = new LinkedList<>();
+		try {
+			if (isSMSNotificationEnabled != null) {
+				if (isSMSNotificationEnabled) {
+					enrichHESMSRequest(seHECounts, smsRequestsProperty, requestInfo);
+					if (!CollectionUtils.isEmpty(smsRequestsProperty)) {
+						pGRUtils.sendSMS(smsRequestsProperty, true);	
+						for (SMSRequest smsRequest : smsRequestsProperty) {
+    						System.out.println("smsRequest ::"+smsRequest.getMobileNumber());
+    						 String description="SMS sent succesfully Escalation officer 3 mobile no -('"+smsRequest.getMobileNumber()+"')";
+    						 String description1 = "'" + description + "'::+'" + smsRequest.getMessage() + "'";
+    						 String type="EscalationOfficer3";
+    						 String officerrole=PGRConstants.ROLE_HE;
+    						 insertIntol3l4l5SmsLog(description1, "SENT", tenantId,smsRequest.getMobileNumber(),smsRequest.getName(),type,officerrole);
+    					}
+					}
+				}
+			}			
+		} catch (Exception e) {
+			log.error("Exception in HEprocess method!"+e.getLocalizedMessage());
+			for (SMSRequest smsRequest : smsRequestsProperty) {
+				System.out.println("smsRequest ::"+smsRequest.getMobileNumber());
+				 String description="SMS Failed due to '"+e.getLocalizedMessage()+"' to Escalation officer 1 mobile no -('"+smsRequest.getMobileNumber()+"')";
+				 String type="EscalationOfficer3";
+				 String officerrole=PGRConstants.ROLE_HE;
+				 insertIntol3l4l5SmsLog(description, "NOT SENT", tenantId,smsRequest.getMobileNumber(),smsRequest.getName(),type,officerrole);
+			}
+		}		
+	}
+	
+	private void enrichHESMSRequest(Map<String,Integer> seHECounts, List<SMSRequest> smsRequests, RequestInfo requestInfo) {	
+		
+		try {			
+			String message = null;
+			String localizationMessages;
+	        String tenantId="ch.chandigarh";
+			localizationMessages = pGRUtils.getLocalizationMessages(tenantId, requestInfo);
+			message = pGRUtils.getHETemplate(seHECounts, localizationMessages);
+					  
+			  Map<String, String> mobileNumberToOwner = new HashMap<>();
+			  
+			  String officerrole=PGRConstants.ROLE_HE;
+			  
+			  List<Map<String, Object>> userData = serviceRequestRepository.getUsermobileno(officerrole);
+			  
+			  System.out.println(userData);
+			  String processedMessage="";
+			  for (Map<String, Object> row : userData) {
+			      String mobileNumber = (String) row.get("mobilenumber");
+			      String name = (String) row.get("name");
+			      System.out.println("Mobile: " + mobileNumber + ", Name: " + name);
+			      			      
+			      if (mobileNumber != null && !"".equals(mobileNumber.trim())) {
+					    if (!mobileNumberToOwner.containsKey(mobileNumber)) {		          
+					         mobileNumberToOwner.put(mobileNumber, name);				          				         				          						         
+					      }else {
+			                    // If the mobile number is already in the map, concatenate names to preserve information
+			                 mobileNumberToOwner.put(mobileNumber, mobileNumberToOwner.get(mobileNumber) + ", " + name);
+			             }							         
+					     }else {
+					    	 String description = "For Officer: ('" + name + "') mobile no: ('"
+										+ mobileNumber + "'), doesn't exists in the system.";
+					    	 String type="EscalationOfficer3";	
+					    	 insertIntol3l4l5SmsLog(description, "NOT SENT", tenantId,mobileNumber,name,type,officerrole);
+					     }			     
+			  }
+			  processedMessage   = message.replaceAll("<br/>", "");
+			  smsRequests.addAll(pGRUtils.createSMSRequest(processedMessage, mobileNumberToOwner));	
+			
+		} catch (Exception e) {
+			log.error("Exception in enrichHESMSRequest method!"+e.getLocalizedMessage());
+		}				 
+}
+	
+	public void MOHprocess(Map<String,Integer> mohCounts) {
+		RequestInfo requestInfo = new RequestInfo();
+		requestInfo.setMsgId("1007568025969717533|en_IN");
+		String tenantId="ch.chandigarh";
+		List<SMSRequest> smsRequestsProperty = new LinkedList<>();
+		try {
+			if (isSMSNotificationEnabled != null) {
+				if (isSMSNotificationEnabled) {
+					enrichMOHSMSRequest(mohCounts, smsRequestsProperty, requestInfo);
+					if (!CollectionUtils.isEmpty(smsRequestsProperty)) {
+						pGRUtils.sendSMS(smsRequestsProperty, true);		
+						for (SMSRequest smsRequest : smsRequestsProperty) {
+    						System.out.println("smsRequest ::"+smsRequest.getMobileNumber());
+    						 String description="SMS sent succesfully Escalation officer 3 mobile no -('"+smsRequest.getMobileNumber()+"')";
+    						 String description1 = "'" + description + "'::+'" + smsRequest.getMessage() + "'";
+    						 String type="EscalationOfficer3";
+    						 String officerrole=PGRConstants.ROLE_MOH;
+    						 insertIntol3l4l5SmsLog(description1, "SENT", tenantId,smsRequest.getMobileNumber(),smsRequest.getName(),type,officerrole);
+    					}
+					}
+				}
+			}
+			
+		} catch (Exception e) {
+			log.error("Exception in MOHprocess method!"+e.getLocalizedMessage());
+			for (SMSRequest smsRequest : smsRequestsProperty) {
+				System.out.println("smsRequest ::"+smsRequest.getMobileNumber());
+				 String description="SMS Failed due to '"+e.getLocalizedMessage()+"' to Escalation officer 1 mobile no -('"+smsRequest.getMobileNumber()+"')";
+				 String type="EscalationOfficer3";
+				 String officerrole=PGRConstants.ROLE_MOH;
+				 insertIntol3l4l5SmsLog(description, "NOT SENT", tenantId,smsRequest.getMobileNumber(),smsRequest.getName(),type,officerrole);
+			}
+		}		
+	}
+	
+	private void enrichMOHSMSRequest(Map<String,Integer> mohCounts, List<SMSRequest> smsRequests, RequestInfo requestInfo) {
+		
+		try {
+			String message = null;
+			String localizationMessages;
+	        String tenantId="ch.chandigarh";
+			localizationMessages = pGRUtils.getLocalizationMessages(tenantId, requestInfo);
+			message = pGRUtils.getMOHTemplate(mohCounts, localizationMessages);
+					  
+			  Map<String, String> mobileNumberToOwner = new HashMap<>();
+			  
+			  String officerrole=PGRConstants.ROLE_MOH;
+			  
+			  List<Map<String, Object>> userData = serviceRequestRepository.getUsermobileno(officerrole);
+			  
+			  System.out.println(userData);
+			  String processedMessage="";
+			  for (Map<String, Object> row : userData) {
+			      String mobileNumber = (String) row.get("mobilenumber");
+			      String name = (String) row.get("name");
+			      System.out.println("Mobile: " + mobileNumber + ", Name: " + name);
+			      
+			      if (mobileNumber != null && !"".equals(mobileNumber.trim())) {
+					    if (!mobileNumberToOwner.containsKey(mobileNumber)) {		          
+					         mobileNumberToOwner.put(mobileNumber, name);				          				         				          						         
+					      }else {
+			                    // If the mobile number is already in the map, concatenate names to preserve information
+			                 mobileNumberToOwner.put(mobileNumber, mobileNumberToOwner.get(mobileNumber) + ", " + name);
+			             }							         
+					     }else {
+					    	 String description = "For Officer: ('" + name + "') mobile no: ('"
+										+ mobileNumber + "'), doesn't exists in the system.";
+					    	 String type="EscalationOfficer3";	
+					    	 insertIntol3l4l5SmsLog(description, "NOT SENT", tenantId,mobileNumber,name,type,officerrole);
+					     }
+			  }
+			  processedMessage = message.replaceAll("<br/>", "");
+			  smsRequests.addAll(pGRUtils.createSMSRequest(processedMessage, mobileNumberToOwner));				
+		} catch (Exception e) {
+			log.error("Exception in enrichMOHSMSRequest method!"+e.getLocalizedMessage());
+		}
+				 
+}
+	
+	
+	public Map<String, Map<String, List<String>>> getlevelthreesmsRoutingData(RequestInfoWrapper requestinfoWrapper) {
+		// Map to store categories division-wise
+		Map<String, Map<String, List<String>>> rolesDataMap = new HashMap<>();
+		try {						
+			ObjectMapper mapper = pgrUtils.getObjectMapper();
+			StringBuilder uri = new StringBuilder();
+			String tenantId="ch.chandigarh";
+			Object request = reportUtils.getRequestForLevelThreeRoutingSearch(uri, tenantId,
+					requestinfoWrapper.getRequestInfo());
+			Object response = serviceRequestRepository.fetchResult(uri, request);
+			if (null != response) {
+				List<Map<String, Object>> resultCast = mapper
+						.convertValue(JsonPath.read(response, "$.MdmsRes.common-masters.levelthreesmsrouting"), List.class);
+				
+				 // Iterating through the routing data
+		        for (Map<String, Object> routingData : resultCast) {
+		        	String roleName = (String) routingData.get("RoleName");
+
+		            // Initialize a map for the current role's divisions
+		            Map<String, List<String>> divisionDataMap = new HashMap<>();
+		            
+		            // Process divisions if they exist
+		            List<Map<String, Object>> divisions = (List<Map<String, Object>>) routingData.get("Divisions");
+		            
+		            if (divisions != null) {
+		                // Iterate through the divisions and fetch categories or sectors
+		                for (Map<String, Object> division : divisions) {
+		                    String divisionName = (String) division.get("Division");
+		                    List<String> categories = (List<String>) division.get("category");
+		                    List<String> sectors = (List<String>) division.get("Sectors");
+
+		                    // Check if the category list contains "All Category", fetch sectors if true
+		                    if (categories != null && categories.contains("All Category") && sectors != null) {
+		                        divisionDataMap.put(divisionName, sectors); // Store sectors
+		                    } else if (categories != null) {
+		                        divisionDataMap.put(divisionName, categories); // Store categories
+		                    }
+		                }
+		            }
+		            
+		            // Add the division data for the current role to the roles data map
+		            rolesDataMap.put(roleName, divisionDataMap);
+		        }
+
+			}						
+		} catch (Exception e) {
+			log.error("Exception in getlevelthreesmsRoutingData method!"+e.getLocalizedMessage());
+		}
+		return rolesDataMap;
+	}
+	
+	
+	public ResponseEntity<ResponseInfoWrapper> Levelfourprocess(RequestInfoWrapper request) {
+		
+		LevelfourSlaCountsResponse slaCountsResponse=null;
+		try {			
+		Map<String, Map<String, List<String>>> getlevelfoursmsRoutingData = getlevelfoursmsRoutingData(request);
+		
+		// Store SLA counts for each category
+	    Map<String,Integer> CECounts = new HashMap<>();
+	    Map<String, Integer> JCMC1Counts = new HashMap<>();
+	    Map<String, Integer> JCMC2Counts = new HashMap<>();
+	    Map<String, Integer> JCMC3Counts = new HashMap<>();
+		
+		
+		Map<String, List<String>> CE = getlevelfoursmsRoutingData.get(PGRConstants.ROLE_CE);	
+		
+		for (Map.Entry<String, List<String>> entry : CE.entrySet()) {
+
+		    String key = entry.getKey();
+		    
+		    List<String> value = entry.getValue();
+		    
+		    System.out.println("Key: " + key);
+		    System.out.println("Value: " + value);
+		   	       
+		    int unresolvedSLACount = serviceRequestRepository.getCEUnresolvedSLACount(key,value);	    	    
+		    CECounts.put(entry.getKey(), unresolvedSLACount);
+		}	
+		Map<String, List<String>> JCMC1Data = getlevelfoursmsRoutingData.get(PGRConstants.ROLE_JCMC1);
+		for (Map.Entry<String, List<String>> entry : JCMC1Data.entrySet()) {
+
+		    String key = entry.getKey();
+		    
+		    List<String> value = entry.getValue();
+		    
+		    System.out.println("Key: " + key);
+		    System.out.println("Value: " + value);
+		    	    
+		    int unresolvedSLACount1 = serviceRequestRepository.getJCMC1UnresolvedSLACount(key,value);
+		    	    
+		    JCMC1Counts.put(entry.getKey(), unresolvedSLACount1);  
+		}	
+		Map<String, List<String>> JCMC2Data = getlevelfoursmsRoutingData.get(PGRConstants.ROLE_JCMC2);
+		for (Map.Entry<String, List<String>> entry : JCMC2Data.entrySet()) {
+
+		    String key = entry.getKey();
+
+		    List<String> value = entry.getValue();
+		    
+		    System.out.println("Key: " + key);
+		    System.out.println("Value: " + value);
+		    	    
+		    int unresolvedSLACount2 = serviceRequestRepository.getJCMC2UnresolvedSLACount(key,value);
+		        
+		    JCMC2Counts.put(entry.getKey(), unresolvedSLACount2);
+		}
+		
+		Map<String, List<String>> JCMC3Data = getlevelfoursmsRoutingData.get(PGRConstants.ROLE_JCMC3);
+		for (Map.Entry<String, List<String>> entry : JCMC3Data.entrySet()) {
+			
+		    String key = entry.getKey();
+		    
+		    List<String> value = entry.getValue();
+		    
+		    System.out.println("Key: " + key);
+		    System.out.println("Value: " + value);
+		    	    
+		    int unresolvedSLACount2 = serviceRequestRepository.getJCMC3UnresolvedSLACount(key,value);
+		    	    
+		    JCMC3Counts.put(entry.getKey(), unresolvedSLACount2);
+		}
+		
+		  CEprocess(CECounts);
+		  JCMC1process(JCMC1Counts);
+		  JCMC2process(JCMC2Counts);
+		  JCMC3process(JCMC3Counts);
+		  
+		  slaCountsResponse = new LevelfourSlaCountsResponse(CECounts, JCMC1Counts, JCMC2Counts, JCMC3Counts);
+					
+		}catch (Exception e) {
+			 log.error("Exception in Levelfourprocess method!"+e.getLocalizedMessage());		
+		}
+		return new ResponseEntity<>(ResponseInfoWrapper.builder()
+				.responseInfo(ResponseInfo.builder().status("SUCCESS").build()).responseBody(slaCountsResponse).build(),
+				HttpStatus.OK);
+		}
+	
+	public void CEprocess(Map<String,Integer> CECounts) {
+		RequestInfo requestInfo = new RequestInfo();
+		requestInfo.setMsgId("1007816608884562188|en_IN");
+		String tenantId="ch.chandigarh";
+		List<SMSRequest> smsRequestsProperty = new LinkedList<>();
+        try {
+    		if (isSMSNotificationEnabled != null) {
+    			if (isSMSNotificationEnabled) {
+    				enrichCESMSRequest(CECounts, smsRequestsProperty, requestInfo);
+    				if (!CollectionUtils.isEmpty(smsRequestsProperty)) {
+    					pGRUtils.sendSMS(smsRequestsProperty, true);	
+    					for (SMSRequest smsRequest : smsRequestsProperty) {
+    						System.out.println("smsRequest ::"+smsRequest.getMobileNumber());
+    						 String description="SMS sent succesfully Escalation officer 4 mobile no -('"+smsRequest.getMobileNumber()+"')";
+    						 String description1 = "'" + description + "'::+'" + smsRequest.getMessage() + "'";
+    						 String type="EscalationOfficer4";
+    						 String officerrole=PGRConstants.ROLE_CE;
+    						 insertIntol3l4l5SmsLog(description1, "SENT", tenantId,smsRequest.getMobileNumber(),smsRequest.getName(),type,officerrole);
+    					}
+    				}
+    			}
+    		}			
+		} catch (Exception e) {
+			log.error("Exception in CEprocess method!"+e.getLocalizedMessage());
+			for (SMSRequest smsRequest : smsRequestsProperty) {
+				System.out.println("smsRequest ::"+smsRequest.getMobileNumber());
+				 String description="SMS Failed due to '"+e.getLocalizedMessage()+"' to Escalation officer 4 mobile no -('"+smsRequest.getMobileNumber()+"')";
+				 String type="EscalationOfficer4";
+				 String officerrole=PGRConstants.ROLE_CE;
+				 insertIntol3l4l5SmsLog(description, "NOT SENT", tenantId,smsRequest.getMobileNumber(),smsRequest.getName(),type,officerrole);
+			}
+		}
+		
+	}
+	
+	private void enrichCESMSRequest(Map<String,Integer> CECounts, List<SMSRequest> smsRequests, RequestInfo requestInfo) {
+		
+		   try {			   
+			   String message = null;
+				String localizationMessages;
+	            String tenantId="ch.chandigarh";
+				localizationMessages = pGRUtils.getLocalizationMessages(tenantId, requestInfo);
+				message = pGRUtils.getCETemplate(CECounts, localizationMessages);
+						  
+				  Map<String, String> mobileNumberToOwner = new HashMap<>();
+				  
+				  String officerrole=PGRConstants.ROLE_CE;
+				  
+				  List<Map<String, Object>> userData = serviceRequestRepository.getUsermobileno(officerrole);
+				  
+				  System.out.println(userData);
+				  String processedMessage="";
+				  for (Map<String, Object> row : userData) {
+				      String mobileNumber = (String) row.get("mobilenumber");
+				      String name = (String) row.get("name");
+				      System.out.println("Mobile: " + mobileNumber + ", Name: " + name);
+				      				      
+				      if (mobileNumber != null && !"".equals(mobileNumber.trim())) {
+						    if (!mobileNumberToOwner.containsKey(mobileNumber)) {		          
+						         mobileNumberToOwner.put(mobileNumber, name);				          				         				          						         
+						      }else {
+				                    // If the mobile number is already in the map, concatenate names to preserve information
+				                 mobileNumberToOwner.put(mobileNumber, mobileNumberToOwner.get(mobileNumber) + ", " + name);
+				             }							         
+						     }else {
+						    	 String description = "For Officer: ('" + name + "') mobile no: ('"
+											+ mobileNumber + "'), doesn't exists in the system.";
+						    	 String type="EscalationOfficer4";				    	 
+						    	 insertIntol3l4l5SmsLog(description, "NOT SENT", tenantId,mobileNumber,name,type,officerrole);
+						     }				     
+				  }
+				  processedMessage = message.replaceAll("<br/>", "");
+				  smsRequests.addAll(pGRUtils.createSMSRequest(processedMessage, mobileNumberToOwner));	
+			
+		} catch (Exception e) {
+			log.error("Exception in enrichCESMSRequest method!"+e.getLocalizedMessage());
+		}
+					 
+	}
+	
+	public void JCMC1process(Map<String,Integer> JCMC1Counts) {
+		RequestInfo requestInfo = new RequestInfo();
+		requestInfo.setMsgId("1007226799854888750|en_IN");
+		List<SMSRequest> smsRequestsProperty = new LinkedList<>();
+		String tenantId="ch.chandigarh";
+        try {
+    		if (isSMSNotificationEnabled != null) {
+    			if (isSMSNotificationEnabled) {
+    				enrichJCMC1SMSRequest(JCMC1Counts, smsRequestsProperty, requestInfo);
+    				if (!CollectionUtils.isEmpty(smsRequestsProperty)) {
+    					pGRUtils.sendSMS(smsRequestsProperty, true);
+    					for (SMSRequest smsRequest : smsRequestsProperty) {
+    						System.out.println("smsRequest ::"+smsRequest.getMobileNumber());
+    						 String description="SMS sent succesfully Escalation officer 4 mobile no -('"+smsRequest.getMobileNumber()+"')";
+    						 String description1 = "'" + description + "'::+'" + smsRequest.getMessage() + "'";
+    						 String type="EscalationOfficer4";
+    						 String officerrole=PGRConstants.ROLE_JCMC1;
+    						 insertIntol3l4l5SmsLog(description1, "SENT", tenantId,smsRequest.getMobileNumber(),smsRequest.getName(),type,officerrole);
+    					}
+    				}
+    			}
+    		}			
+		} catch (Exception e) {
+			log.error("Exception in JCMC1process method!"+e.getLocalizedMessage());
+			for (SMSRequest smsRequest : smsRequestsProperty) {
+				System.out.println("smsRequest ::"+smsRequest.getMobileNumber());
+				 String description="SMS Failed due to '"+e.getLocalizedMessage()+"' to Escalation officer 4 mobile no -('"+smsRequest.getMobileNumber()+"')";
+				 String type="EscalationOfficer4";
+				 String officerrole=PGRConstants.ROLE_JCMC1;
+				 insertIntol3l4l5SmsLog(description, "NOT SENT", tenantId,smsRequest.getMobileNumber(),smsRequest.getName(),type,officerrole);
+			}
+		}
+		
+	}
+	
+	private void enrichJCMC1SMSRequest(Map<String,Integer> JCMC1Counts, List<SMSRequest> smsRequests, RequestInfo requestInfo) {
+		
+		   try {			   
+			   String message = null;
+				String localizationMessages;
+	            String tenantId="ch.chandigarh";
+				localizationMessages = pGRUtils.getLocalizationMessages(tenantId, requestInfo);
+				message = pGRUtils.getJCMC1Template(JCMC1Counts, localizationMessages);
+						  
+				  Map<String, String> mobileNumberToOwner = new HashMap<>();
+				  
+				  String officerrole=PGRConstants.ROLE_JCMC1;
+				  
+				  List<Map<String, Object>> userData = serviceRequestRepository.getUsermobileno(officerrole);
+				  
+				  System.out.println(userData);
+				  String processedMessage="";
+				  for (Map<String, Object> row : userData) {
+				      String mobileNumber = (String) row.get("mobilenumber");
+				      String name = (String) row.get("name");
+				      System.out.println("Mobile: " + mobileNumber + ", Name: " + name);
+				     			      
+				      if (mobileNumber != null && !"".equals(mobileNumber.trim())) {
+						    if (!mobileNumberToOwner.containsKey(mobileNumber)) {		          
+						         mobileNumberToOwner.put(mobileNumber, name);				          				         				          						         
+						      }else {
+				                    // If the mobile number is already in the map, concatenate names to preserve information
+				                 mobileNumberToOwner.put(mobileNumber, mobileNumberToOwner.get(mobileNumber) + ", " + name);
+				             }							         
+						     }else {
+						    	 String description = "For Officer: ('" + name + "') mobile no: ('"
+											+ mobileNumber + "'), doesn't exists in the system.";
+						    	 String type="EscalationOfficer4";				    	 
+						    	 insertIntol3l4l5SmsLog(description, "NOT SENT", tenantId,mobileNumber,name,type,officerrole);
+						     }
+				     
+				  }
+				  processedMessage = message.replaceAll("<br/>", "");
+				  smsRequests.addAll(pGRUtils.createSMSRequest(processedMessage, mobileNumberToOwner));	
+			
+		} catch (Exception e) {
+			log.error("Exception in enrichJCMC1SMSRequest method!"+e.getLocalizedMessage());
+		}
+					 
+	}
+	
+	public void JCMC2process(Map<String,Integer> JCMC2Counts) {
+		RequestInfo requestInfo = new RequestInfo();
+		requestInfo.setMsgId("1007917932334871167|en_IN");
+		String tenantId="ch.chandigarh";
+		List<SMSRequest> smsRequestsProperty = new LinkedList<>();
+        try {
+    		if (isSMSNotificationEnabled != null) {
+    			if (isSMSNotificationEnabled) {
+    				enrichJCMC2SMSRequest(JCMC2Counts, smsRequestsProperty, requestInfo);
+    				if (!CollectionUtils.isEmpty(smsRequestsProperty)) {
+    					pGRUtils.sendSMS(smsRequestsProperty, true);	
+    					for (SMSRequest smsRequest : smsRequestsProperty) {
+    						System.out.println("smsRequest ::"+smsRequest.getMobileNumber());
+    						 String description="SMS sent succesfully Escalation officer 4 mobile no -('"+smsRequest.getMobileNumber()+"')";
+    						 String description1 = "'" + description + "'::+'" + smsRequest.getMessage() + "'";
+    						 String type="EscalationOfficer4";
+    						 String officerrole=PGRConstants.ROLE_JCMC2;
+    						 insertIntol3l4l5SmsLog(description1, "SENT", tenantId,smsRequest.getMobileNumber(),smsRequest.getName(),type,officerrole);
+    					}
+    				}
+    			}
+    		}			
+		} catch (Exception e) {
+			log.error("Exception in JCMC2process method!"+e.getLocalizedMessage());
+			for (SMSRequest smsRequest : smsRequestsProperty) {
+				System.out.println("smsRequest ::"+smsRequest.getMobileNumber());
+				 String description="SMS Failed due to '"+e.getLocalizedMessage()+"' to Escalation officer 4 mobile no -('"+smsRequest.getMobileNumber()+"')";
+				 String type="EscalationOfficer4";
+				 String officerrole=PGRConstants.ROLE_JCMC2;
+				 insertIntol3l4l5SmsLog(description, "NOT SENT", tenantId,smsRequest.getMobileNumber(),smsRequest.getName(),type,officerrole);
+			}
+		}
+		
+	}
+	
+	private void enrichJCMC2SMSRequest(Map<String,Integer> JCMC2Counts, List<SMSRequest> smsRequests, RequestInfo requestInfo) {
+		
+		   try {			   
+			   String message = null;
+				String localizationMessages;
+	            String tenantId="ch.chandigarh";
+				localizationMessages = pGRUtils.getLocalizationMessages(tenantId, requestInfo);
+				message = pGRUtils.getJCMC2Template(JCMC2Counts, localizationMessages);
+						  
+				  Map<String, String> mobileNumberToOwner = new HashMap<>();
+				  
+				  String officerrole=PGRConstants.ROLE_JCMC2;
+				  
+				  List<Map<String, Object>> userData = serviceRequestRepository.getUsermobileno(officerrole);
+				  
+				  System.out.println(userData);
+				  String processedMessage="";
+				  for (Map<String, Object> row : userData) {
+				      String mobileNumber = (String) row.get("mobilenumber");
+				      String name = (String) row.get("name");
+				      System.out.println("Mobile: " + mobileNumber + ", Name: " + name);
+				      
+				      if (mobileNumber != null && !"".equals(mobileNumber.trim())) {
+						    if (!mobileNumberToOwner.containsKey(mobileNumber)) {		          
+						         mobileNumberToOwner.put(mobileNumber, name);				          				         				          						         
+						      }else {
+				                    // If the mobile number is already in the map, concatenate names to preserve information
+				                 mobileNumberToOwner.put(mobileNumber, mobileNumberToOwner.get(mobileNumber) + ", " + name);
+				             }							         
+						     }else {
+						    	 String description = "For Officer: ('" + name + "') mobile no: ('"
+											+ mobileNumber + "'), doesn't exists in the system.";
+						    	 String type="EscalationOfficer4";				    	 
+						    	 insertIntol3l4l5SmsLog(description, "NOT SENT", tenantId,mobileNumber,name,type,officerrole);
+						     }
+				  }
+				  processedMessage = message.replaceAll("<br/>", "");
+				  smsRequests.addAll(pGRUtils.createSMSRequest(processedMessage, mobileNumberToOwner));	
+			
+		} catch (Exception e) {
+			log.error("Exception in enrichJCMC2SMSRequest method!"+e.getLocalizedMessage());
+		}
+					 
+	}
+	
+	public void JCMC3process(Map<String,Integer> JCMC3Counts) {
+		RequestInfo requestInfo = new RequestInfo();
+		requestInfo.setMsgId("1007357629795231352|en_IN");
+		String tenantId="ch.chandigarh";
+		List<SMSRequest> smsRequestsProperty = new LinkedList<>();
+        try {
+    		if (isSMSNotificationEnabled != null) {
+    			if (isSMSNotificationEnabled) {
+    				enrichJCMC3SMSRequest(JCMC3Counts, smsRequestsProperty, requestInfo);
+    				if (!CollectionUtils.isEmpty(smsRequestsProperty)) {
+    					pGRUtils.sendSMS(smsRequestsProperty, true);
+    					for (SMSRequest smsRequest : smsRequestsProperty) {
+    						System.out.println("smsRequest ::"+smsRequest.getMobileNumber());
+    						 String description="SMS sent succesfully Escalation officer 4 mobile no -('"+smsRequest.getMobileNumber()+"')";
+    						 String description1 = "'" + description + "'::+'" + smsRequest.getMessage() + "'";
+    						 String type="EscalationOfficer4";
+    						 String officerrole=PGRConstants.ROLE_JCMC3;
+    						 insertIntol3l4l5SmsLog(description1, "SENT", tenantId,smsRequest.getMobileNumber(),smsRequest.getName(),type,officerrole);
+    					}
+    				}
+    			}
+    		}			
+		} catch (Exception e) {
+			log.error("Exception in JCMC3process method!"+e.getLocalizedMessage());
+			for (SMSRequest smsRequest : smsRequestsProperty) {
+				System.out.println("smsRequest ::"+smsRequest.getMobileNumber());
+				 String description="SMS Failed due to '"+e.getLocalizedMessage()+"' to Escalation officer 4 mobile no -('"+smsRequest.getMobileNumber()+"')";
+				 String type="EscalationOfficer4";
+				 String officerrole=PGRConstants.ROLE_JCMC3;
+				 insertIntol3l4l5SmsLog(description, "NOT SENT", tenantId,smsRequest.getMobileNumber(),smsRequest.getName(),type,officerrole);
+			}
+		}
+		
+	}
+	
+	private void enrichJCMC3SMSRequest(Map<String,Integer> JCMC3Counts, List<SMSRequest> smsRequests, RequestInfo requestInfo) {
+		
+		   try {			   
+			   String message = null;
+				String localizationMessages;
+	            String tenantId="ch.chandigarh";
+				localizationMessages = pGRUtils.getLocalizationMessages(tenantId, requestInfo);
+				message = pGRUtils.getJCMC3Template(JCMC3Counts, localizationMessages);
+						  
+				  Map<String, String> mobileNumberToOwner = new HashMap<>();
+				  
+				  String officerrole=PGRConstants.ROLE_JCMC3;
+				  
+				  List<Map<String, Object>> userData = serviceRequestRepository.getUsermobileno(officerrole);
+				  
+				  System.out.println(userData);
+				  String processedMessage="";
+				  for (Map<String, Object> row : userData) {
+				      String mobileNumber = (String) row.get("mobilenumber");
+				      String name = (String) row.get("name");
+				      System.out.println("Mobile: " + mobileNumber + ", Name: " + name);
+				      
+				      if (mobileNumber != null && !"".equals(mobileNumber.trim())) {
+						    if (!mobileNumberToOwner.containsKey(mobileNumber)) {		          
+						         mobileNumberToOwner.put(mobileNumber, name);				          				         				          						         
+						      }else {
+				                    // If the mobile number is already in the map, concatenate names to preserve information
+				                 mobileNumberToOwner.put(mobileNumber, mobileNumberToOwner.get(mobileNumber) + ", " + name);
+				             }							         
+						     }else {
+						    	 String description = "For Officer: ('" + name + "') mobile no: ('"
+											+ mobileNumber + "'), doesn't exists in the system.";
+						    	 String type="EscalationOfficer4";				    	 
+						    	 insertIntol3l4l5SmsLog(description, "NOT SENT", tenantId,mobileNumber,name,type,officerrole);
+						     }		     			      
+				  }
+				  processedMessage = message.replaceAll("<br/>", "");
+				  smsRequests.addAll(pGRUtils.createSMSRequest(processedMessage, mobileNumberToOwner));	
+			
+		} catch (Exception e) {
+			log.error("Exception in enrichJCMC3SMSRequest method!"+e.getLocalizedMessage());
+		}
+					 
+	}
+	
+	
+	public Map<String, Map<String, List<String>>> getlevelfoursmsRoutingData(RequestInfoWrapper requestinfoWrapper) {
+		// Map to store categories division-wise
+		Map<String, Map<String, List<String>>> rolesDataMap = new HashMap<>();
+		try {						
+			ObjectMapper mapper = pgrUtils.getObjectMapper();
+			StringBuilder uri = new StringBuilder();
+			String tenantId="ch.chandigarh";
+			Object request = reportUtils.getRequestForLevelfourRoutingSearch(uri, tenantId,
+					requestinfoWrapper.getRequestInfo());
+			Object response = serviceRequestRepository.fetchResult(uri, request);
+			if (null != response) {
+				List<Map<String, Object>> resultCast = mapper
+						.convertValue(JsonPath.read(response, "$.MdmsRes.common-masters.levelfoursmsrouting"), List.class);
+				
+				 // Iterating through the routing data
+		        for (Map<String, Object> routingData : resultCast) {
+		        	String roleName = (String) routingData.get("RoleName");
+
+		            // Initialize a map for the current role's divisions
+		            Map<String, List<String>> divisionDataMap = new HashMap<>();
+		            
+		            // Process divisions if they exist
+		            List<Map<String, Object>> divisions = (List<Map<String, Object>>) routingData.get("Divisions");
+		            
+		            if (divisions != null) {
+		                // Iterate through the divisions and fetch categories or sectors
+		                for (Map<String, Object> division : divisions) {
+		                    String divisionName = (String) division.get("Division");
+		                    List<String> categories = (List<String>) division.get("category");
+		                    List<String> sectors = (List<String>) division.get("Sectors");
+
+		                    // Check if the category list contains "All Category", fetch sectors if true
+		                    if (categories != null && categories.contains("All Category") && sectors != null) {
+		                        divisionDataMap.put(divisionName, sectors); // Store sectors
+		                    } else if (categories != null) {
+		                        divisionDataMap.put(divisionName, categories); // Store categories
+		                    }
+		                }
+		            }
+		            
+		            // Add the division data for the current role to the roles data map
+		            rolesDataMap.put(roleName, divisionDataMap);
+		        }
+
+			}						
+		} catch (Exception e) {
+			log.error("Exception in getlevelfoursmsRoutingData method!"+e.getLocalizedMessage());
+		}
+		return rolesDataMap;
+	}
+	
+	public ResponseEntity<ResponseInfoWrapper> Levelfiveprocess(RequestInfoWrapper request) {
+		
+		LevelfiveSlaCountsResponse slaCountsResponse=null;
+		try {			
+		Map<String, Map<String, List<String>>> getlevelfivesmsRoutingData = getlevelfivesmsRoutingData(request);
+		
+		// Store SLA counts for each category
+	    Map<String,Integer> CommissionerCounts = new HashMap<>();
+				
+		Map<String, List<String>> COMMISSIONER = getlevelfivesmsRoutingData.get(PGRConstants.ROLE_COMMISSIONER);	
+		
+		for (Map.Entry<String, List<String>> entry : COMMISSIONER.entrySet()) {
+
+		    String key = entry.getKey();
+		    
+		    List<String> value = entry.getValue();
+		    
+		    System.out.println("Key: " + key);
+		    System.out.println("Value: " + value);
+		   	       
+		    int unresolvedSLACount = serviceRequestRepository.getCommisionerUnresolvedSLACount(key,value);	    	    
+		    CommissionerCounts.put(entry.getKey(), unresolvedSLACount);
+		}	
+
+		  Commissionerprocess(CommissionerCounts);
+
+		  
+		  slaCountsResponse = new LevelfiveSlaCountsResponse(CommissionerCounts);
+					
+		}catch (Exception e) {
+			 log.error("Exception in Levelfiveprocess method!"+e.getLocalizedMessage());		
+		}
+		return new ResponseEntity<>(ResponseInfoWrapper.builder()
+				.responseInfo(ResponseInfo.builder().status("SUCCESS").build()).responseBody(slaCountsResponse).build(),
+				HttpStatus.OK);
+		}
+	
+	public void Commissionerprocess(Map<String,Integer> CommissionerCounts) {
+		RequestInfo requestInfo = new RequestInfo();
+		requestInfo.setMsgId("1007615217573497663|en_IN");
+		String tenantId="ch.chandigarh";
+		List<SMSRequest> smsRequestsProperty = new LinkedList<>();
+        try {
+    		if (isSMSNotificationEnabled != null) {
+    			if (isSMSNotificationEnabled) {
+    				enrichCommissionerSMSRequest(CommissionerCounts, smsRequestsProperty, requestInfo);
+    				if (!CollectionUtils.isEmpty(smsRequestsProperty)) {
+    					pGRUtils.sendSMS(smsRequestsProperty, true);		
+    					for (SMSRequest smsRequest : smsRequestsProperty) {
+    						System.out.println("smsRequest ::"+smsRequest.getMobileNumber());
+    						 String description="SMS sent succesfully Escalation officer 5 mobile no -('"+smsRequest.getMobileNumber()+"')";
+    						 String description1 = "'" + description + "'::+'" + smsRequest.getMessage() + "'";
+    						 String type="EscalationOfficer5";
+    						 String officerrole=PGRConstants.ROLE_COMMISSIONER;
+    						 insertIntol3l4l5SmsLog(description1, "SENT", tenantId,smsRequest.getMobileNumber(),smsRequest.getName(),type,officerrole);
+    					}
+    				}
+    			}
+    		}			
+		} catch (Exception e) {
+			log.error("Exception in Commissionerprocess method!"+e.getLocalizedMessage());
+			for (SMSRequest smsRequest : smsRequestsProperty) {
+				System.out.println("smsRequest ::"+smsRequest.getMobileNumber());
+				 String description="SMS Failed due to '"+e.getLocalizedMessage()+"' to Escalation officer 4 mobile no -('"+smsRequest.getMobileNumber()+"')";
+				 String type="EscalationOfficer5";
+				 String officerrole=PGRConstants.ROLE_COMMISSIONER;
+				 insertIntol3l4l5SmsLog(description, "NOT SENT", tenantId,smsRequest.getMobileNumber(),smsRequest.getName(),type,officerrole);
+			}
+		}
+		
+	}
+	
+	private void enrichCommissionerSMSRequest(Map<String,Integer> CommissionerCounts, List<SMSRequest> smsRequests, RequestInfo requestInfo) {
+		
+		   try {			   
+			   String message = null;
+				String localizationMessages;
+	            String tenantId="ch.chandigarh";
+				localizationMessages = pGRUtils.getLocalizationMessages(tenantId, requestInfo);
+				message = pGRUtils.getCommissionerTemplate(CommissionerCounts, localizationMessages);
+						  
+				  Map<String, String> mobileNumberToOwner = new HashMap<>();
+				  
+				  String officerrole=PGRConstants.ROLE_COMMISSIONER;
+				  
+				  List<Map<String, Object>> userData = serviceRequestRepository.getUsermobileno(officerrole);
+				  
+				  System.out.println(userData);
+				  String processedMessage="";
+				  for (Map<String, Object> row : userData) {
+				      String mobileNumber = (String) row.get("mobilenumber");
+				      String name = (String) row.get("name");
+				      System.out.println("Mobile: " + mobileNumber + ", Name: " + name);
+				      				  				      
+				      if (mobileNumber != null && !"".equals(mobileNumber.trim())) {
+						    if (!mobileNumberToOwner.containsKey(mobileNumber)) {		          
+						         mobileNumberToOwner.put(mobileNumber, name);				          				         				          						         
+						      }else {
+				                    // If the mobile number is already in the map, concatenate names to preserve information
+				                 mobileNumberToOwner.put(mobileNumber, mobileNumberToOwner.get(mobileNumber) + ", " + name);
+				             }							         
+						     }else {
+						    	 String description = "For Officer: ('" + name + "') mobile no: ('"
+											+ mobileNumber + "'), doesn't exists in the system.";
+						    	 String type="EscalationOfficer5";				    	 
+						    	 insertIntol3l4l5SmsLog(description, "NOT SENT", tenantId,mobileNumber,name,type,officerrole);
+						     }				      
+				  }
+				  processedMessage = message.replaceAll("<br/>", "");
+				  smsRequests.addAll(pGRUtils.createSMSRequest(processedMessage, mobileNumberToOwner));	
+			
+		} catch (Exception e) {
+			log.error("Exception in enrichCommissionerSMSRequest method!"+e.getLocalizedMessage());
+		}
+					 
+	}
+	
+	public Map<String, Map<String, List<String>>> getlevelfivesmsRoutingData(RequestInfoWrapper requestinfoWrapper) {
+		// Map to store categories division-wise
+		Map<String, Map<String, List<String>>> rolesDataMap = new HashMap<>();
+		try {						
+			ObjectMapper mapper = pgrUtils.getObjectMapper();
+			StringBuilder uri = new StringBuilder();
+			String tenantId="ch.chandigarh";
+			Object request = reportUtils.getRequestForLevelfiveRoutingSearch(uri, tenantId,
+					requestinfoWrapper.getRequestInfo());
+			Object response = serviceRequestRepository.fetchResult(uri, request);
+			if (null != response) {
+				List<Map<String, Object>> resultCast = mapper
+						.convertValue(JsonPath.read(response, "$.MdmsRes.common-masters.levelfivesmsrouting"), List.class);
+				
+				 // Iterating through the routing data
+		        for (Map<String, Object> routingData : resultCast) {
+		        	String roleName = (String) routingData.get("RoleName");
+
+		            // Initialize a map for the current role's divisions
+		            Map<String, List<String>> divisionDataMap = new HashMap<>();
+		            
+		            // Process divisions if they exist
+		            List<Map<String, Object>> divisions = (List<Map<String, Object>>) routingData.get("Divisions");
+		            
+		            if (divisions != null) {
+		                // Iterate through the divisions and fetch categories or sectors
+		                for (Map<String, Object> division : divisions) {
+		                    String divisionName = (String) division.get("Division");
+		                    List<String> categories = (List<String>) division.get("category");
+		                    List<String> sectors = (List<String>) division.get("Sectors");
+
+		                    // Check if the category list contains "All Category", fetch sectors if true
+		                    if (categories != null && categories.contains("All Category") && sectors != null) {
+		                        divisionDataMap.put(divisionName, sectors); // Store sectors
+		                    } else if (categories != null) {
+		                        divisionDataMap.put(divisionName, categories); // Store categories
+		                    }
+		                }
+		            }
+		            
+		            // Add the division data for the current role to the roles data map
+		            rolesDataMap.put(roleName, divisionDataMap);
+		        }
+
+			}						
+		} catch (Exception e) {
+			log.error("Exception in getlevelfivesmsRoutingData method!"+e.getLocalizedMessage());
+		}
+		return rolesDataMap;
+	}
+	
+	
+public ResponseEntity<ResponseInfoWrapper> smsescalateofficeroneprocess(RequestInfoWrapper request) {
+	
+	
+	    List<Map<String, Object>> fetchAutoroutingEmployeeEscalationOfficeroneProcess=null;
+		try {	
+			
+			fetchAutoroutingEmployeeEscalationOfficeroneProcess = fetchAutoroutingEmployeeEscalationOfficeroneProcess(request);
+
+		}catch (Exception e) {
+			 log.error("Exception in smsescalateofficeroneprocess method!"+e.getLocalizedMessage());		
+		}
+		return new ResponseEntity<>(ResponseInfoWrapper.builder()
+				.responseInfo(ResponseInfo.builder().status("SUCCESS").build()).responseBody(fetchAutoroutingEmployeeEscalationOfficeroneProcess).build(),
+				HttpStatus.OK);
+		}
+
+
+/**
+ * method to fetch AutoRoutingEmployee from mdms based on category,sector
+ * 
+ * @param requestInfo
+ * @param tenantId
+ * @param category
+ * @param sector
+ * @return String
+ * @author Tonmoy
+ */
+public List<Map<String, Object>> fetchAutoroutingEmployeeEscalationOfficeroneProcess(
+		RequestInfoWrapper requestinfoWrapper) {
+	System.out.println("fetchAutoroutingEmployeeEscalationOfficeroneProcess method************");
+
+	List<Map<String, String>> escalationOfficerList = null;
+	List<Map<String, Object>> getescalteOfficeroneUnresolvedData = null;
+	try {
+
+		String tenantId = "ch.chandigarh";
+
+		getescalteOfficeroneUnresolvedData = serviceRequestRepository.getescalteOfficeroneUnresolvedData();
+
+		for (Map<String, Object> record : getescalteOfficeroneUnresolvedData) {
+			String servicecode = (String) record.get("servicecode");
+			String servicerequestid = (String) record.get("servicerequestid");
+			String name = (String) record.get("name");
+			String contact = (String) record.get("phone");
+			String sector = (String) record.get("mohalla");
+			String extractedCategory = "";
+			if (servicecode != null) {
+				String[] parts = servicecode.split("_");
+				
+				//System.out.println("parts************"+parts);
+				
+				//System.out.println("parts length************"+parts.length);
+				
+                   if (parts.length >3) {
+					extractedCategory = parts[2];  // third part of servicecode						
+			    }
+                 else if (parts.length >2) {
+					extractedCategory = parts[1]; // Second part of servicecode	
+			    }
+
+				    Object result = masterDataService.fetchAutoroutingEscalationMapNew(tenantId, extractedCategory,
+							null);
+
+					System.out.println("Service Code: " + servicecode + ", Extracted Category: " + extractedCategory
+							+ ", Result: " + result);
+
+					if (null != result) {
+						List objList = JsonPath.read(result, PGRConstants.JSONPATH_AUTOROUTING_CODES_DB);
+						if (CollectionUtils.isEmpty(objList)) {
+							System.out.println("Category not defined: " + extractedCategory);
+							String description = "Category ('" + extractedCategory
+									+ "') is not defined in autorouting JSON. " + "For Complaint No ('"
+									+ servicerequestid + "')";
+							String type = "EscalationOfficer1";
+							String officermobile = "";
+							String officername = "";
+							insertIntoSmsLog(extractedCategory, sector, description, "NOT SENT", tenantId,
+									officermobile, officername, type);
+							continue;
+						}
+						boolean sectorFound = false;
+						List sectorArr = (List) objList.get(0);
+						for (int i = 0; i < sectorArr.size(); i++) {
+							System.out.println("sectorArr.get(i):::" + sectorArr.get(i));
+
+							List<String> sectors = null;
+							System.out.println("Inside Autorouting Map Sector check loop create method");
+
+							try {
+								sectors = JsonPath.read(sectorArr.get(i), PGRConstants.AUTOROUTING_SECTOR_JSONPATH);
+							} catch (Exception e) {
+								log.error("Exception while fetching Sector: " + e);
+							}
+							try {
+								sectors = JsonPath.read(sectorArr.get(i),
+										PGRConstants.AUTOROUTING_SECTOR_JSONPATH_SMALL);
+								System.out.println("sectors : " + sectors.toString());
+								if (sectors != null) {
+									sectors = JsonPath.read(sectorArr.get(i),
+											PGRConstants.AUTOROUTING_SECTOR_JSONPATH_SMALL_VALUE);
+									System.out.println("sectors : " + sectors.toString());
+								}
+							} catch (Exception e) {
+								log.error("Exception while fetching sector: " + e);
+							}
+							System.out.println("sectors######***********" + sectors);
+							if (!CollectionUtils.isEmpty(sectors)) {
+								if (sectors.contains(sector)) {
+									sectorFound = true;
+									Object currentElement = sectorArr.get(i);
+									System.out.println("currentElement######***********" + currentElement);
+									
+									String type = "EscalationOfficer1";
+									String officermobile = "";
+									String officername = "";
+									try {
+										// Retrieve escalationOfficer1 list
+										Object escalationOfficerData = JsonPath.read(currentElement,
+												PGRConstants.AUTOROUTING_ESCALATING_OFFICER1_JSONPATH);
+										
+										if (escalationOfficerData instanceof List) {
+									        // Handle the case where escalationOfficer1 is an array
+									        escalationOfficerList = (List<Map<String, String>>) escalationOfficerData;
+									    } else if (escalationOfficerData instanceof String) {
+									        // Handle the case where escalationOfficer1 is a string
+									        escalationOfficerList = new ArrayList<>();
+									        Map<String, String> officerMap = new HashMap<>();
+									        officerMap.put("value", escalationOfficerData.toString());
+									        escalationOfficerList.add(officerMap);
+									    }
+
+										escalationOfficerOneprocess(escalationOfficerList, extractedCategory,
+												servicerequestid, name, contact, sector);
+
+									} catch (PathNotFoundException e) {
+										// Handle exception if 'escalationOfficer1' path is not found
+										System.out.println(
+												"escalationOfficer1 path not found, continuing with next iteration.");
+										String description = "For category ('" + extractedCategory + "') and sector ('"
+												+ sector
+												+ "') Escalation officer 1 is not defined in autorouting JSON. "
+												+ "For Complaint No ('" + servicerequestid + "')";
+										
+										insertIntoSmsLog(extractedCategory, sector, description, "NOT SENT", tenantId,
+												officermobile, officername, type);
+										// continue; // Skip this iteration and move to the next one
+									} catch (Exception e) {
+										// Log error and insert into SMS log
+										String description = "Error processing escalationOfficer1 for category ('"
+												+ extractedCategory + "') and sector ('" + sector
+												+ "'). Error: " + e.getMessage() + ". For Complaint No ('"
+												+ servicerequestid + "')";
+										log.error(description);
+										insertIntoSmsLog(extractedCategory, sector, description, "NOT SENT", tenantId,
+												officermobile, officername, type);
+										break; // Move to the next iteration
+									}
+									break;
+								}
+							}
+						}
+
+						// If the sector was not found in any of the sector arrays, insert an SMS log
+						if (!sectorFound) {
+							String description = "For the given category ('" + extractedCategory + "'), the sector ('"
+									+ sector + "') is not defined in the autorouting JSON. " + "For Complaint No ('"
+									+ servicerequestid + "')";
+							String type = "EscalationOfficer1";
+							String officermobile = "";
+							String officername = "";
+							insertIntoSmsLog(extractedCategory, sector, description, "NOT SENT", tenantId,
+									officermobile, officername, type);
+						}
+
+					}
+				
+			}
+		}
+
+	} catch (Exception e) {
+		log.error("Exception while fetching fetchAutoroutingEmployeeEscalationOfficeroneProcess: " + e);
+	}
+
+	return getescalteOfficeroneUnresolvedData;
+}
+
+private void insertIntoSmsLog(String category, String sector, String description, String status, String tenantId,String officermonileno,String officername,String type) {
+    String sql = "INSERT INTO eg_pgr__l1_l2_sms_log (id, category, sector, description, status, tenantid,officermonileno,officername,type) " +
+                 "VALUES (:id, :category, :sector, :description, :status, :tenantid, :officermonileno, :officername, :type)";
+    String uniqueId = java.util.UUID.randomUUID().toString(); // Generate unique ID
+    //Timestamp currentTimestamp = new Timestamp(System.currentTimeMillis());
+    
+ // Create parameters map
+    Map<String, Object> params = new HashMap<>();
+    params.put("id", uniqueId);
+    params.put("category", category);
+    params.put("sector", sector);
+    params.put("description", description);
+    params.put("status", status);
+    params.put("tenantid", tenantId);
+    params.put("officermonileno", officermonileno);
+    params.put("officername", officername);
+    params.put("type", type);
+   // params.put("createddate", currentTimestamp);
+
+    try {
+    	namedParameterJdbcTemplate.update(sql,params);
+        System.out.println("Record inserted successfully into eg_pgr__l1_l2_sms_log");
+    } catch (Exception e) {
+        System.err.println("Error inserting record into eg_pgr__l1_l2_sms_log: " + e.getMessage());
+    }
+}
+
+
+public void escalationOfficerOneprocess(List<Map<String, String>> escalationOfficerList,String extractedCategory,String servicerequestid,String name,
+		String contact,String sector) {
+	RequestInfo requestInfo = new RequestInfo();
+	requestInfo.setMsgId("1007615217573497663|en_IN");
+	List<SMSRequest> smsRequestsProperty = new LinkedList<>();
+	String tenantId="ch.chandigarh";
+    try {    	
+		if (isSMSNotificationEnabled != null) {
+			if (isSMSNotificationEnabled) {
+				escalationOfficerOneSMSRequest(escalationOfficerList,extractedCategory,servicerequestid,name,contact,sector,smsRequestsProperty, requestInfo);
+				if (!CollectionUtils.isEmpty(smsRequestsProperty)) {
+					pGRUtils.sendSMS(smsRequestsProperty, true);
+					for (SMSRequest smsRequest : smsRequestsProperty) {
+						System.out.println("smsRequest ::"+smsRequest.getMobileNumber());
+						 String description="SMS sent succesfully Escalation officer 1 mobile no -('"+smsRequest.getMobileNumber()+"') For category-('"+extractedCategory+"') and sector-('"+sector+"')";
+						 String description1 = "'" + description + "'::+'" + smsRequest.getMessage() + "'";
+						 String type="EscalationOfficer1";
+						 insertIntoSmsLog(extractedCategory, sector, description1,"SENT",tenantId,smsRequest.getMobileNumber(),smsRequest.getName(),type);
+					}
+				 
+				}
+			}
+		}			
+	} catch (Exception e) {
+		log.error("Exception in escalationOfficerOneprocess method!"+e.getLocalizedMessage());
+		
+		for (SMSRequest smsRequest : smsRequestsProperty) {
+			System.out.println("smsRequest ::"+smsRequest.getMobileNumber());
+			 String description="SMS Failed due to '"+e.getLocalizedMessage()+"' to Escalation officer 1 mobile no -('"+smsRequest.getMobileNumber()+"') For category-('"+extractedCategory+"') and sector-('"+sector+"')";
+			 String type="EscalationOfficer1";
+			 insertIntoSmsLog(extractedCategory, sector, description,"NOT SENT",tenantId,smsRequest.getMobileNumber(),smsRequest.getName(),type);
+		}
+	}
+	
+}
+
+private void escalationOfficerOneSMSRequest(List<Map<String, String>> escalationOfficerList,String extractedCategory,
+		String servicerequestid,String complaintname,String contact,String sector, List<SMSRequest> smsRequests, RequestInfo requestInfo) {
+	
+	   try {			   
+		   String message = null;
+		   String localizationMessages;
+           String tenantId="ch.chandigarh";
+			localizationMessages = pGRUtils.getLocalizationMessages(tenantId, requestInfo);
+			
+			message = pGRUtils.getEscalationofficerOneTemplate(extractedCategory,servicerequestid,complaintname,contact,sector, localizationMessages);
+			
+			Map<String, String> mobileNumberToOwner = new HashMap<>();
+			 String processedMessage="";
+			 if (!CollectionUtils.isEmpty(escalationOfficerList)) {
+	                // Get the first index value from the escalationOfficer1 list
+				 Map<String, String> firstEscalationOfficer = escalationOfficerList.get(0);
+	             String escalationOfficerValue = firstEscalationOfficer.get("value");
+	             
+	             List<Map<String, Object>> userData = serviceRequestRepository.getUsermobilenoByUserId(escalationOfficerValue);
+				  
+				  System.out.println(userData);
+					 
+				  for (Map<String, Object> row : userData) {
+				      String mobileNumber = (String) row.get("mobilenumber");
+				      String name = (String) row.get("name");
+				      System.out.println("Mobile: " + mobileNumber + ", Name: " + name);
+
+				      if (mobileNumber != null && !"".equals(mobileNumber.trim())) {
+					      // Check if the mobile number is already processed
+					    if (!mobileNumberToOwner.containsKey(mobileNumber)) {		          
+					         mobileNumberToOwner.put(mobileNumber, name);				          				         				          						         
+					      }else {
+			                    // If the mobile number is already in the map, concatenate names to preserve information
+			                 mobileNumberToOwner.put(mobileNumber, mobileNumberToOwner.get(mobileNumber) + ", " + name);
+			             }							         
+					     }else {
+					    	 String description = "For Officer: ('" + escalationOfficerValue + "') mobile no: ('"
+										+ mobileNumber + "'), doesn't exists in the system.";
+					    	 String type="EscalationOfficer1";
+							 insertIntoSmsLog(extractedCategory, sector, description, "NOT SENT", tenantId,mobileNumber,name,type);
+					     }
+				  }	
+				  
+				    processedMessage   = message.replaceAll("<br/>", "");	
+	            	smsRequests.addAll(pGRUtils.createSMSRequest(processedMessage, mobileNumberToOwner));	  				               
+	            }				
+	} catch (Exception e) {
+		log.error("Exception in escalationOfficerOneSMSRequest method!"+e.getLocalizedMessage());
+	}
+				 
+}
+
+
+public ResponseEntity<ResponseInfoWrapper> smsescalateofficertwoprocess(RequestInfoWrapper request) {
+	
+	
+	List<Map<String, Object>> fetchAutoroutingEmployeeEscalationOfficertwoProcess=null;
+	try {	
+		
+		fetchAutoroutingEmployeeEscalationOfficertwoProcess = fetchAutoroutingEmployeeEscalationOfficertwoProcess(request);
+
+	}catch (Exception e) {
+		 log.error("Exception in smsescalateofficertwoprocess method!"+e.getLocalizedMessage());		
+	}
+	return new ResponseEntity<>(ResponseInfoWrapper.builder()
+			.responseInfo(ResponseInfo.builder().status("SUCCESS").build()).responseBody(fetchAutoroutingEmployeeEscalationOfficertwoProcess).build(),
+			HttpStatus.OK);
+	}
+
+
+/**
+* method to fetch AutoRoutingEmployee from mdms based on category,sector
+* 
+* @param requestInfo
+* @param tenantId
+* @param category
+* @param sector
+* @return String
+* @author Tonmoy
+*/
+public List<Map<String, Object>> fetchAutoroutingEmployeeEscalationOfficertwoProcess(
+		RequestInfoWrapper requestinfoWrapper) {
+	System.out.println("fetchAutoroutingEmployeeEscalationOfficertwoProcess method************");
+
+	List<String> escalationOfficer2List = new ArrayList<>();
+
+	List<Map<String, Object>> getescalteOfficertwoUnresolvedData = null;
+	try {
+
+		String tenantId = "ch.chandigarh";
+
+		getescalteOfficertwoUnresolvedData = serviceRequestRepository.getescalteOfficertwoUnresolvedData();
+
+		for (Map<String, Object> record : getescalteOfficertwoUnresolvedData) {
+			String servicecode = (String) record.get("servicecode");
+			String servicerequestid = (String) record.get("servicerequestid");
+			String name = (String) record.get("name");
+			String contact = (String) record.get("phone");
+			String sector = (String) record.get("mohalla");
+			String extractedCategory = "";
+			if (servicecode != null) {
+				String[] parts = servicecode.split("_");
+				
+				 if (parts.length >3) {
+						extractedCategory = parts[2];  // third part of servicecode						
+				    }
+	                 else if (parts.length >2) {
+						extractedCategory = parts[1]; // Second part of servicecode	
+				    }
+
+					Object result = masterDataService.fetchAutoroutingEscalationMapNew(tenantId, extractedCategory,
+							null);
+
+					System.out.println("Service Code: " + servicecode + ", Extracted Category: " + extractedCategory
+							+ ", Result: " + result);
+
+					if (null != result) {
+						List<Map<String, Object>> categoryList = JsonPath.read(result, "$");
+						if (CollectionUtils.isEmpty(categoryList)) {
+							System.out.println("Category not defined: " + extractedCategory);
+							String description = "Category ('" + extractedCategory
+									+ "') is not defined in autorouting JSON. " + "For Complaint No ('"
+									+ servicerequestid + "')";
+							String type = "EscalationOfficer2";
+							String officermobile = "";
+							String officername = "";
+							insertIntoSmsLog(extractedCategory, sector, description, "NOT SENT", tenantId,
+									officermobile, officername, type);
+							continue;
+						}
+						boolean isMohallaPresent = false;
+
+						if (CollectionUtils.isNotEmpty(categoryList)) {
+							for (Map<String, Object> categoryData : categoryList) {
+								String category = (String) categoryData.get("category");
+								if (category != null && category.equalsIgnoreCase(extractedCategory)) {
+									List<Map<String, Object>> autoRoutingList = (List<Map<String, Object>>) categoryData
+											.get("autoRouting");
+
+									if (CollectionUtils.isNotEmpty(autoRoutingList)) {
+										for (Map<String, Object> autoRouting : autoRoutingList) {
+
+											List<Map<String, Object>> sectorMapList = null;
+											List<String> sectorStringList = null;
+
+											// Try fetching the sector as List<Map<String, Object>>
+											try {
+												sectorMapList = (List<Map<String, Object>>) autoRouting.get("sector");
+											} catch (Exception e) {
+												log.error("Exception while fetching sector as list of maps: " + e);
+											}
+
+											// Try fetching the Sector as List<String>
+											try {
+												sectorStringList = (List<String>) autoRouting.get("Sector");
+											} catch (Exception e) {
+
+												log.error("Exception while fetching Sector as list of strings: " + e);
+											}
+
+											// Check if the mohalla exists in either format
+
+											// Case 1: List<Map<String, Object>> format
+											if (CollectionUtils.isNotEmpty(sectorMapList)) {
+												isMohallaPresent = sectorMapList.stream().filter(Objects::nonNull)
+														.anyMatch(sectorObj -> sector != null && sector.equals(sectorObj.get("value")));
+											}
+
+											// Case 2: List<String> format
+											if (!isMohallaPresent && CollectionUtils.isNotEmpty(sectorStringList)) {
+												isMohallaPresent = sectorStringList.contains(sector);
+											}
+
+											if (isMohallaPresent) {
+												try {
+													// Object escalationOfficer2Obj = JsonPath.read(result,
+													// "$.escalationOfficer2");
+
+													// Extracting escalationOfficer2 from the root level
+													Object escalationOfficer2Obj = categoryData
+															.get("escalationOfficer2");
+
+													if (escalationOfficer2Obj instanceof List) {
+														escalationOfficer2List = (List<String>) escalationOfficer2Obj;
+													} else {
+														escalationOfficer2List = new ArrayList<>();
+													}
+
+													// escalationOfficer2List = JsonPath.read(result,
+													// "$.escalationOfficer2");
+
+													// escalationOfficer2List = JsonPath.read(result,
+													// PGRConstants.AUTOROUTING_ESCALATING_OFFICER2_JSONPATH);
+
+													if (!CollectionUtils.isEmpty(escalationOfficer2List)) {
+														escalationOfficerTwoprocess(escalationOfficer2List,
+																extractedCategory, servicerequestid, name, contact,
+																sector);
+														System.out.println(
+																"Escalation Officer 2 processed for sector: " + sector);
+													} else {
+														System.out.println(
+																"Escalation Officer 2 not found for sector: " + sector);
+
+														String description = "For category ('" + extractedCategory
+																+ "') and sector ('" + sector
+																+ "') Escalation officer 2 is not defined in autorouting JSON. "
+																+ "For Complaint No ('" + servicerequestid + "')";
+														String type = "EscalationOfficer2";
+														String officermobile = "";
+														String officername = "";
+
+														insertIntoSmsLog(extractedCategory, sector, description,
+																"NOT SENT", tenantId, officermobile, officername, type);
+													}
+												} catch (PathNotFoundException e) {
+													System.out.println(
+															"EscalationOfficer2 path not found, continuing with next iteration.");
+													String description = "For category ('" + extractedCategory
+															+ "') and sector ('" + sector
+															+ "') Escalation officer 2 path not found in autorouting JSON. "
+															+ "For Complaint No ('" + servicerequestid + "')";
+													String type = "EscalationOfficer2";
+													String officermobile = "";
+													String officername = "";
+													insertIntoSmsLog(extractedCategory, sector, description, "NOT SENT",
+															tenantId, officermobile, officername, type);
+												}
+												break; // Stop searching if a match is found
+											}
+										}
+									}
+								}
+							}
+							// If sector was never found in any iteration, call insertIntoSmsLog
+
+							if (!isMohallaPresent) {
+								String description = "For category ('" + extractedCategory + "'), sector ('" + sector
+										+ "') is not defined in autorouting JSON. " + "For Complaint No ('"
+										+ servicerequestid + "')";
+								String type = "EscalationOfficer2";
+								String officermobile = "";
+								String officername = "";
+								insertIntoSmsLog(extractedCategory, sector, description, "NOT SENT", tenantId,
+										officermobile, officername, type);
+							}
+
+						}
+
+					}
+				
+			}
+		}
+
+	} catch (Exception e) {
+		log.error("Exception while fetching fetchAutoroutingEmployeeEscalationOfficertwoProcess: " + e);
+	}
+
+	return getescalteOfficertwoUnresolvedData;
+}
+
+public void escalationOfficerTwoprocess(List<String> escalationOfficerList,String extractedCategory,String servicerequestid,String name,
+		String contact,String sector) {
+	RequestInfo requestInfo = new RequestInfo();
+	requestInfo.setMsgId("1007615217573497663|en_IN");
+	List<SMSRequest> smsRequestsProperty = new LinkedList<>();
+	String tenantId="ch.chandigarh";
+    try {    	
+		if (isSMSNotificationEnabled != null) {
+			if (isSMSNotificationEnabled) {
+				escalationOfficerTwoSMSRequest(escalationOfficerList,extractedCategory,servicerequestid,name,contact,sector,smsRequestsProperty, requestInfo);
+				if (!CollectionUtils.isEmpty(smsRequestsProperty)) {
+					pGRUtils.sendSMS(smsRequestsProperty, true);
+					for (SMSRequest smsRequest : smsRequestsProperty) {
+						System.out.println("smsRequest ::"+smsRequest.getMobileNumber());
+						 String description="SMS sent succesfully Escalation officer 2 mobile no -('"+smsRequest.getMobileNumber()+"') For category-('"+extractedCategory+"') and sector-('"+sector+"')";
+						 String description1 = "'" + description + "'::+'" + smsRequest.getMessage() + "'";
+						 String type="EscalationOfficer2";
+						 insertIntoSmsLog(extractedCategory, sector, description1,"SENT",tenantId,smsRequest.getMobileNumber(),smsRequest.getName(),type);
+					}
+				 
+				}
+			}
+		}			
+	} catch (Exception e) {
+		log.error("Exception in escalationOfficerTwoprocess method!"+e.getLocalizedMessage());
+		
+		for (SMSRequest smsRequest : smsRequestsProperty) {
+			System.out.println("smsRequest ::"+smsRequest.getMobileNumber());
+			 String description="SMS Failed due to '"+e.getLocalizedMessage()+"' to Escalation officer 2 mobile no -('"+smsRequest.getMobileNumber()+"') For category-('"+extractedCategory+"') and sector-('"+sector+"')";
+			 String type="EscalationOfficer2";
+			 insertIntoSmsLog(extractedCategory, sector, description,"NOT SENT",tenantId,smsRequest.getMobileNumber(),smsRequest.getName(),type);
+		}
+	}
+	
+}
+
+private void escalationOfficerTwoSMSRequest(List<String> escalationOfficerList,String extractedCategory,
+		String servicerequestid,String complaintname,String contact,String sector, List<SMSRequest> smsRequests, RequestInfo requestInfo) {
+	
+	   try {			   
+		   String message = null;
+		   String localizationMessages;
+           String tenantId="ch.chandigarh";
+			localizationMessages = pGRUtils.getLocalizationMessages(tenantId, requestInfo);
+			
+			message = pGRUtils.getEscalationofficerTwoTemplate(extractedCategory,servicerequestid,complaintname,contact,sector, localizationMessages);
+			
+			Map<String, String> mobileNumberToOwner = new HashMap<>();
+			 String processedMessage="";
+			 if (!CollectionUtils.isEmpty(escalationOfficerList)) {
+	                // Get the first index value from the escalationOfficer1 list
+				 for (String  officer : escalationOfficerList) {
+
+	             String officerid = officer;	             
+	             List<Map<String, Object>> userData = serviceRequestRepository.getUsermobilenoByUserId(officerid);
+				  
+				  System.out.println(userData);
+				  
+				  for (Map<String, Object> row : userData) {
+				      String mobileNumber = (String) row.get("mobilenumber");
+				      String name = (String) row.get("name");
+				      
+				      System.out.println("Mobile: " + mobileNumber + ", Name: " + name);
+				      
+				      if (mobileNumber != null && !"".equals(mobileNumber.trim())) {
+				      // Check if the mobile number is already processed
+				    if (!mobileNumberToOwner.containsKey(mobileNumber)) {		          
+				         mobileNumberToOwner.put(mobileNumber, name);				          				         				          						         
+				      }else {
+		                    // If the mobile number is already in the map, concatenate names to preserve information
+		                 mobileNumberToOwner.put(mobileNumber, mobileNumberToOwner.get(mobileNumber) + ", " + name);
+		             }		
+				         
+				     }else {
+				    	 String description = "For Officer: ('" + officerid + "') mobile no: ('"
+									+ mobileNumber + "'), doesn't exists in the system.";
+				    	 String type="EscalationOfficer2";				    	 
+						 insertIntoSmsLog(extractedCategory, sector, description, "NOT SENT", tenantId,mobileNumber,name,type);
+				     }
+				  }					  
+				 }
+				 processedMessage   = message.replaceAll("<br/>", "");	
+				 smsRequests.addAll(pGRUtils.createSMSRequest(processedMessage, mobileNumberToOwner));
+	            		  				               
+	            }				
+	} catch (Exception e) {
+		log.error("Exception in escalationOfficerTwoSMSRequest method!"+e.getLocalizedMessage());
+	}
+				 
+}
+
+private void insertIntol3l4l5SmsLog(String description, String status, String tenantId,String officermonileno,String officername,String type,String officerrole) {
+    String sql = "INSERT INTO eg_pgr__l3_l4_l5_sms_log (id,description, status, tenantid,officermonileno,officername,type,officerrole) " +
+                 "VALUES (:id, :description, :status, :tenantid, :officermonileno, :officername, :type, :officerrole)";
+    String uniqueId = java.util.UUID.randomUUID().toString(); // Generate unique ID
+    //Timestamp currentTimestamp = new Timestamp(System.currentTimeMillis());
+    
+ // Create parameters map
+    Map<String, Object> params = new HashMap<>();
+    params.put("id", uniqueId);
+    params.put("description", description);
+    params.put("status", status);
+    params.put("tenantid", tenantId);
+    params.put("officermonileno", officermonileno);
+    params.put("officername", officername);
+    params.put("type", type);
+    params.put("officerrole", officerrole);
+   // params.put("createddate", currentTimestamp);
+
+    try {
+    	namedParameterJdbcTemplate.update(sql,params);
+        System.out.println("Record inserted successfully into eg_pgr__l3_l4_l5_sms_log");
+    } catch (Exception e) {
+        System.err.println("Error inserting record into eg_pgr__l3_l4_l5_sms_log: " + e.getMessage());
+    }
+}
+	
+		
 }

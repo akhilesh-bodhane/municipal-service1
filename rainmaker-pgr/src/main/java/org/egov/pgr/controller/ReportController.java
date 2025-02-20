@@ -60,5 +60,30 @@ public class ReportController {
 	public ResponseEntity<?> getIUDXDataReports(@RequestBody @Valid IUDXDataRequest iudxDataRequest) {
 		return service.getIUDXDataReports(iudxDataRequest);
 	}
+	
+	@PostMapping(value = "/_smsLevelThreejobscheduler")
+	public ResponseEntity<ResponseInfoWrapper> smsLevelThreeprocess(@Valid @RequestBody RequestInfoWrapper request) throws JSONException {
+		return service.LevelThreeprocess(request);
+	}
+	
+	@PostMapping(value = "/_smsLevelfourjobscheduler")
+	public ResponseEntity<ResponseInfoWrapper> smsLevelfourprocess(@Valid @RequestBody RequestInfoWrapper request) throws JSONException {
+		return service.Levelfourprocess(request);
+	}
+	
+	@PostMapping(value = "/_smsLevelfivejobscheduler")
+	public ResponseEntity<ResponseInfoWrapper> smsLevelfiveprocess(@Valid @RequestBody RequestInfoWrapper request) throws JSONException {
+		return service.Levelfiveprocess(request);
+	}
+	
+	@PostMapping(value = "/_smsescalateofficeronejobscheduler")
+	public ResponseEntity<ResponseInfoWrapper> smsescalateofficeroneprocess(@Valid @RequestBody RequestInfoWrapper request) throws JSONException {
+		return service.smsescalateofficeroneprocess(request);
+	}
+	
+	@PostMapping(value = "/_smsescalateofficertwojobscheduler")
+	public ResponseEntity<ResponseInfoWrapper> smsescalateofficertwoprocess(@Valid @RequestBody RequestInfoWrapper request) throws JSONException {
+		return service.smsescalateofficertwoprocess(request);
+	}
 
 }

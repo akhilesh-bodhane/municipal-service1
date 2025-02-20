@@ -151,4 +151,22 @@ public class ApiConfiguration {
 	@Value("${fire.service.service.location.id}")
 	private String fireLocationId;	
 	
+	@Value("${integration.service.host}")
+	private String integrationHost;
+
+	@Value("${NIUASearch.service.data.get}")
+	private String NIUASearchServiceDataPath;
+	
+	@Value("${upyog.niua.service.host}")
+	private String upyogniuaHost;
+
+	@Value("${upyog.niua.ingest.path}")
+	private String upyogniuaingestPath;
+	
+	@Value("${integration.service.obps.host}")
+	private String obpsHost;
+
+	@Value("${NIUASearch.service.obps.data.get}")
+	private String NIUASearchOBPSDataPath;
+	
 }
