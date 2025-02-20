@@ -1679,7 +1679,7 @@ public class GrievanceService {
 					 * + employeeCode); }
 					 */
 		
-					if (!CollectionUtils.isEmpty(escalationOfficer1List)) {
+					if (escalationOfficer1List != null) {
 						if (escalationOfficer1List.contains(requestInfo.getUserInfo().getUserName())) {
 							if (CollectionUtils.isEmpty(categoryList1))
 								categoryList1 = new ArrayList<String>();
