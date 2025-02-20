@@ -1659,7 +1659,7 @@ public class GrievanceService {
 				List eoArr = (List) objList2.get(0);
 				for (int i = 0; i < eoArr.size(); i++) {
 					System.out.println("Inside Loop For EO1 List");
-					String escalationOfficer1List = null;
+					List<String> escalationOfficer1List = null;
 					try {
 						escalationOfficer1List = JsonPath.read(eoArr.get(i), PGRConstants.AUTOROUTING_ESCALATING_OFFICER1_JSONPATH);
 						System.out.println("escalationOfficer1List : " + escalationOfficer1List.toString());
@@ -1679,7 +1679,7 @@ public class GrievanceService {
 					 * + employeeCode); }
 					 */
 		
-					if (escalationOfficer1List != null) {
+					if (!CollectionUtils.isEmpty(escalationOfficer1List)) {
 						if (escalationOfficer1List.contains(requestInfo.getUserInfo().getUserName())) {
 							if (CollectionUtils.isEmpty(categoryList1))
 								categoryList1 = new ArrayList<String>();
