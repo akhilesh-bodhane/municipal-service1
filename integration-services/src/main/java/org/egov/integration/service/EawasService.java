@@ -1,12 +1,21 @@
 package org.egov.integration.service;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ResponseInfo;
 import org.egov.integration.common.CommonConstants;
+import org.egov.integration.config.ApiConfiguration;
 import org.egov.integration.config.EawasConfiguration;
 import org.egov.integration.model.Bucket;
 import org.egov.integration.model.EawasRequestInfoWrapper;
@@ -14,6 +23,7 @@ import org.egov.integration.model.EawasRequestInfoWrapper;
 //import org.egov.tl.web.models.TradeLicenseSearchCriteria;
 import org.egov.integration.model.Metrics;
 import org.egov.integration.model.RequestData;
+import org.egov.integration.model.RequestInfoWrapper;
 import org.egov.integration.model.ResponseInfoWrapper;
 import org.egov.integration.model.TLBucket;
 import org.egov.integration.model.TLDashboardRequestInfoWrapper;
@@ -30,14 +40,17 @@ import org.json.XML;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestTemplate;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 
 import lombok.extern.slf4j.Slf4j;
@@ -54,6 +67,9 @@ public class EawasService {
 
 	@Autowired
 	private EawasConfiguration config;
+	
+	@Autowired
+	private ApiConfiguration apiConfiguration;
 
 	public ResponseEntity<ResponseInfoWrapper> get(EawasRequestInfoWrapper request) throws JSONException {
 		RestTemplate restTemplate = requestFactory.getRestTemplate();
@@ -224,5 +240,196 @@ public class EawasService {
 					.responseInfo(ResponseInfo.builder().status("Failed").msgId(e.getMessage()).build()).build();
 		}
 	}
+	
+	public  Map<String, Object> searchNIUAScheduler(RequestInfoWrapper request) {
+		 Map<String, Object> licensesForNIUA = getTLNIUAData(request);
+		return licensesForNIUA;
+	}
+	
+	
+	public  Map<String, Object> getTLNIUAData(RequestInfoWrapper request) {
+
+	    LocalDate today = LocalDate.now();
+	    ZonedDateTime fromDateTime = today.atStartOfDay(ZoneId.of("Asia/Kolkata"));
+	    ZonedDateTime toDateTime = today.plusDays(1).atStartOfDay(ZoneId.of("Asia/Kolkata"));
+
+	    long fromDateMillis = fromDateTime.toInstant().toEpochMilli();
+	    long toDateMillis = toDateTime.toInstant().toEpochMilli();
+	    
+	    StringBuilder uri = new StringBuilder(apiConfiguration.getIntegrationHost());
+		uri.append(apiConfiguration.getNIUASearchServiceDataPath());
+		
+		String queryParams = String.format("?tenantId=ch.chandigarh&fromDate=%d&toDate=%d", fromDateMillis, toDateMillis);
+		uri.append(queryParams);
+		String url = uri.toString();
+	    
+	    RestTemplate restTemplate = requestFactory.getRestTemplate();
+	    //Object response;
+	    try {	    	
+	    	 ObjectMapper mapper = new ObjectMapper();
+	       //response =  restTemplate.postForObject(url, request, Object.class);
+	       Map<String, Object> responseMap = restTemplate.postForObject(url, request, Map.class);
+	      
+	        
+	       if (responseMap != null && !responseMap.isEmpty()) {
+	        	
+	        	 // Convert response to Map
+	           
+	           // Map<String, Object> responseMap = mapper.convertValue(response, Map.class);
+	            Map<String, Object> metrics = (Map<String, Object>) responseMap.get("metrics");
+
+	            // Extract "todaysApplications" value
+	            if (metrics != null) {
+	            	int todaysApplications = (int) metrics.getOrDefault("todaysApplications", 0);
+	                System.out.println("Today's Applications: " + todaysApplications);
+	                postToNIUADashboard(request,responseMap,todaysApplications);		                
+	            }else {
+	            System.out.println("Metrics not found in the response.");
+	            }
+	            return responseMap;
+	        } else {
+	            System.out.println("Response is null or empty.");
+	            return new HashMap<>();
+	        }
+	        
+	    } catch (HttpStatusCodeException e) {
+	        System.out.println("HTTP Status Code: " + e.getStatusCode());
+	        System.out.println("Response Body: " + e.getResponseBodyAsString());
+	        e.printStackTrace();
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    } 
+	    return new HashMap<>();
+	}
+	
+	public void postToNIUADashboard(RequestInfoWrapper request, Map<String, Object> responseData, int todaysApplications) {
+
+	    Map<String, Object> requestBody = new LinkedHashMap<>(); 
+
+	    Map<String, Object> requestInfo = new LinkedHashMap<>();
+	    requestInfo.put("apiId", "asset-services");
+	    requestInfo.put("msgId", "search with from and to values");
+	    requestInfo.put("authToken", "655bf367-e365-49d8-a54a-60f7aac5ca24");
+
+	    Map<String, Object> userInfo = new LinkedHashMap<>();
+	    userInfo.put("id", 10229);
+	    userInfo.put("uuid", "c499b45b-7d65-418f-b003-5ce5db2220d2");
+	    userInfo.put("userName", "679087|sSTvGEwvzXtWV07onOvUHilYqNe01RSLLQ==");
+	    userInfo.put("name", "CHD NDA USER");
+	    userInfo.put("mobileNumber", "9999999943");
+	    userInfo.put("type", "SYSTEM");
+	    userInfo.put("tenantId", "chd.municipalcorporationchandigarh");
+	    userInfo.put("permanentCity", null);
+
+	    Map<String, Object> role = new LinkedHashMap<>();
+	    role.put("name", "National Dashboard Systeme user");
+	    role.put("code", "NDA_SYSTEM");
+	    role.put("tenantId", "chd.municipalcorporationchandigarh");
+
+	    userInfo.put("roles", Collections.singletonList(role));
+	    userInfo.put("active", true);
+
+	    requestInfo.put("userInfo", userInfo);
+	    requestBody.put("RequestInfo", requestInfo); // Ensure RequestInfo is first in the body
+
+	    Map<String, Object> dataEntry = new LinkedHashMap<>();
+
+	    String todayDate = LocalDate.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+	    dataEntry.put("date", todayDate);
+	    dataEntry.put("module", "TL");
+	    dataEntry.put("ward", "Chandigarh");
+	    dataEntry.put("ulb", "chd.municipalcorporationchandigarh");
+	    dataEntry.put("region", "Chandigarh");
+	    dataEntry.put("state", "Chandigarh");
+
+	    if (responseData != null && responseData.containsKey("metrics")) {
+	        dataEntry.put("metrics", responseData.get("metrics"));
+	    } else {
+	        dataEntry.put("metrics", responseData); 
+	    }
+
+	    requestBody.put("Data", Collections.singletonList(dataEntry)); // Add Data after RequestInfo
+	    
+	    StringBuilder uri = new StringBuilder(apiConfiguration.getUpyogniuaHost());
+		uri.append(apiConfiguration.getUpyogniuaingestPath());
+		String url = uri.toString();
+
+	    // Use RestTemplate to make the POST request
+	    RestTemplate restTemplate = requestFactory.getRestTemplate();
+	    try {
+	        if (todaysApplications > 0) {
+	        	ResponseEntity<Map> response = restTemplate.postForEntity(url, requestBody, Map.class);
+	            System.out.println("upyog response:::"+response.getBody());
+	            if (response.getStatusCode().is2xxSuccessful()) {
+	                System.out.println("Successfully posted data to NIUA Dashboard");
+	            } else {
+	                System.out.println("Failed to post data. Status: " + response.getStatusCode());
+	            }
+	        } else {
+	        	System.out.println("No applications today. Skipping data post.");
+	        }
+	    } catch (HttpStatusCodeException e) {
+	        System.out.println("HTTP Status Code: " + e.getStatusCode());
+	        System.out.println("Response Body: " + e.getResponseBodyAsString());
+	        e.printStackTrace();
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
+	}
+	
+	
+	public  Map<String, Object> searchOBPSNIUAScheduler(RequestInfoWrapper request) {
+		 Map<String, Object> OBPSForNIUA = getOBPSNIUAData(request);
+		return OBPSForNIUA;
+	}
+	
+	
+	public  Map<String, Object> getOBPSNIUAData(RequestInfoWrapper request) {
+	    
+	    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+	    
+	 // Get current date as fromDate
+        String fromDate = LocalDate.now().format(formatter);
+        System.out.println("From Date: " + fromDate);
+        
+     // Get the next date as toDate
+        String toDate = LocalDate.now().plusDays(1).format(formatter);
+        System.out.println("To Date: " + toDate);
+	    	    
+	    StringBuilder uri = new StringBuilder(apiConfiguration.getObpsHost());
+		uri.append(apiConfiguration.getNIUASearchOBPSDataPath());
+		
+		String queryParams = String.format("?tenantId=ch.chandigarh&fromDate=%d&toDate=%d", fromDate, toDate);
+		uri.append(queryParams);
+		String url = uri.toString();
+	    
+	    RestTemplate restTemplate = requestFactory.getRestTemplate();
+	    //Object response;
+	    try {	    	
+	    	 ObjectMapper mapper = new ObjectMapper();
+	       //response =  restTemplate.postForObject(url, request, Object.class);
+	       Map<String, Object> responseMap = restTemplate.postForObject(url, request, Map.class);
+	      
+	        
+	       if (responseMap != null && !responseMap.isEmpty()) {
+	        	
+	            return responseMap;
+	            
+	        } else {
+	            System.out.println("Response is null or empty.");
+	            return new HashMap<>();
+	        }
+	        
+	    } catch (HttpStatusCodeException e) {
+	        System.out.println("HTTP Status Code: " + e.getStatusCode());
+	        System.out.println("Response Body: " + e.getResponseBodyAsString());
+	        e.printStackTrace();
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    } 
+	    return new HashMap<>();
+	}
+	
+	
 
 }
