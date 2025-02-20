@@ -1653,17 +1653,15 @@ public class GrievanceService {
 				}
 				
 				for (int i = 0; i < objList2.size(); i++) {
-					Map<String, String> eoCodeMap = JsonPath.read(objList2.get(i), PGRConstants.AUTOROUTING_ESCALATING_OFFICER1_JSONPATH);
-					System.out.println("EO Employee Code : " + eoCodeMap.toString());					
-					if (eoCodeMap != null) {	
-		                JSONObject employeeValue = new JSONObject(eoCodeMap);
-		                employeeCode = employeeValue.getString("value");
-		                System.out.println("Employee Code Value : " + employeeCode);
-					}
-					
-					List<String> escalationOfficer1List = null;
-					escalationOfficer1List.add(employeeCode);
-					System.out.println("escalationOfficer1List : " + escalationOfficer1List.toString());
+					List<String> escalationOfficer1List = JsonPath.read(objList2.get(i), PGRConstants.AUTOROUTING_ESCALATING_OFFICER1_JSONPATH);
+					System.out.println("escalationOfficer1List : " + escalationOfficer1List.toString());					
+					/*
+					 * if (escalationOfficer1List != null) { JSONObject employeeValue = new
+					 * JSONObject(escalationOfficer1List); employeeCode =
+					 * employeeValue.getString("value"); System.out.println("Employee Code Value : "
+					 * + employeeCode); }
+					 */
+		
 					if (!CollectionUtils.isEmpty(escalationOfficer1List)) {
 						if (escalationOfficer1List.contains(requestInfo.getUserInfo().getUserName())) {
 							if (CollectionUtils.isEmpty(categoryList1))
