@@ -660,6 +660,7 @@ public class GrievanceService {
 
 				if (null != assignedResponse) {
 					List assignedServiceList = JsonPath.read(assignedResponse, PGRConstants.COMPLAINT_JSONPATH);
+					System.out.println("Inside assigned response condition");
 					if (!CollectionUtils.isEmpty(assignedServiceList)) {
 						LinkedHashMap<String, Object> map = (LinkedHashMap<String, Object>) assignedResponse;
 						List obj = (List) map.get("services");
@@ -684,6 +685,7 @@ public class GrievanceService {
 							requestInfo.getUserInfo().getUserName());
 			}
 		} else {
+			System.out.println("Inside else condition of search");
 			searcherRequest = pGRUtils.prepareSearchRequestWithDetails(uri, serviceReqSearchCriteria, requestInfo);
 			response = serviceRequestRepository.fetchResult(uri, searcherRequest);
 			log.debug(PGRConstants.SEARCHER_RESPONSE_TEXT + response);
@@ -692,10 +694,14 @@ public class GrievanceService {
 		if (null == response)
 			return pGRUtils.getDefaultServiceResponse(requestInfo);
 		ServiceResponse serviceResponse = prepareResult(response, requestInfo);
-		if (CollectionUtils.isEmpty(serviceResponse.getServices()))
+		if (CollectionUtils.isEmpty(serviceResponse.getServices())) {
+			System.out.println("Inside response if condition");
 			return serviceResponse;
-		else
+		} else {
+			System.out.println("Inside response else condition");
 			return enrichResult(requestInfo, serviceResponse);
+		}
+			
 	}
 
 	/**
