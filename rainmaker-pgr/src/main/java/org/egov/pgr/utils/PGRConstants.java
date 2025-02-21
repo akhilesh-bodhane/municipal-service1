@@ -145,7 +145,7 @@ public class PGRConstants {
 	public static final String AUTOROUTING_CATEGORY_JSONPATH = "$.category";
 	public static final String AUTOROUTING_ESCALATING_OFFICER1_JSONPATH = "$.escalationOfficer1";
 	public static final String AUTOROUTING_ESCALATING_OFFICER1_JSONPATH_SMS = "$.autoRouting.*.escalationOfficer1";
-	public static final String AUTOROUTING_ESCALATING_OFFICER1_JSONPATH_VALUE = "$.autoRouting.escalationOfficer1.*.value";
+	public static final String AUTOROUTING_ESCALATING_OFFICER1_JSONPATH_VALUE = "$.autoRouting.*.escalationOfficer1.*.value";
 	public static final String AUTOROUTING_ESCALATING_OFFICER2_JSONPATH = "$.escalationOfficer2";
 	public static final String COMPLAINT_JSONPATH = "$.services.*.services";
 	public static final String COMPLAINT_ACTION_HISTORY_JSONPATH = "$.services.*.actionhistory";
