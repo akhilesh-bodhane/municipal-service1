@@ -632,13 +632,11 @@ public class GrievanceService {
 				// Adding status as Assigned & ReassignedRequested with the status getting from payload request.
 				//List<String> status = new ArrayList<String>();
 				List<String> status = serviceReqSearchCriteria.getStatus();
-				if(codes.contains(PGRConstants.ROLE_ESCALATION_OFFICER1) && 
-						serviceReqSearchCriteria.getStatus().contains(WorkFlowConfigs.STATUS_ESCALATED_LEVEL1_PENDING)){
+				if(codes.contains(PGRConstants.ROLE_ESCALATION_OFFICER1)){
 					status.add(WorkFlowConfigs.STATUS_ESCALATED_LEVEL1_PENDING);
 					status.remove(1);
 					System.out.println("Status of EO1 : " + status.toString());
-				} else if(codes.contains(PGRConstants.ROLE_ESCALATION_OFFICER2) &&
-						serviceReqSearchCriteria.getStatus().contains(WorkFlowConfigs.STATUS_ESCALATED_LEVEL2_PENDING)) {
+				} else if(codes.contains(PGRConstants.ROLE_ESCALATION_OFFICER2)) {
 					status.add(WorkFlowConfigs.STATUS_ESCALATED_LEVEL2_PENDING);
 					status.remove(0);
 					System.out.println("Status of EO2 : " + status.toString());
