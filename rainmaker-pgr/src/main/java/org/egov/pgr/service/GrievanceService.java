@@ -632,6 +632,17 @@ public class GrievanceService {
 				// Adding status as Assigned & ReassignedRequested with the status getting from payload request.
 				//List<String> status = new ArrayList<String>();
 				List<String> status = serviceReqSearchCriteria.getStatus();
+				if(codes.contains(PGRConstants.ROLE_ESCALATION_OFFICER1) && 
+						serviceReqSearchCriteria.getStatus().contains(WorkFlowConfigs.STATUS_ESCALATED_LEVEL1_PENDING)){
+					status.add(WorkFlowConfigs.STATUS_ESCALATED_LEVEL1_PENDING);
+					status.remove(1);
+					System.out.println("Status of EO1 : " + status.toString());
+				} else if(codes.contains(PGRConstants.ROLE_ESCALATION_OFFICER2) &&
+						serviceReqSearchCriteria.getStatus().contains(WorkFlowConfigs.STATUS_ESCALATED_LEVEL2_PENDING)) {
+					status.add(WorkFlowConfigs.STATUS_ESCALATED_LEVEL2_PENDING);
+					status.remove(0);
+					System.out.println("Status of EO2 : " + status.toString());
+				} 
 				//status.add(WorkFlowConfigs.STATUS_ASSIGNED);
 				status.add(WorkFlowConfigs.STATUS_REASSIGN_REQUESTED);
 				serviceReqSearchCriteria.setStatus(status);
@@ -640,6 +651,7 @@ public class GrievanceService {
 				enrichRequest(requestInfo, serviceReqSearchCriteria);
 				searcherRequest = pGRUtils.prepareSearchRequestWithDetails(uri, serviceReqSearchCriteria, requestInfo);
 				Object assignedResponse = serviceRequestRepository.fetchResult(uri, searcherRequest);
+				System.out.println("Final Status : " + status.toString());
 
 				if (null != assignedResponse) {
 					List assignedServiceList = JsonPath.read(assignedResponse, PGRConstants.COMPLAINT_JSONPATH);
@@ -1650,27 +1662,18 @@ public class GrievanceService {
 					return null;
 				}				
 				
+				//loop added to get escalation officer list from autorouting
 				for (int i = 0; i < objList.size(); i++) {
-					System.out.println("Inside Loop For EO1 List");
 					List<String> escalationOfficer1List = null;
 					try {
 						escalationOfficer1List = JsonPath.read(objList.get(i), PGRConstants.AUTOROUTING_ESCALATING_OFFICER1_JSONPATH_SMS);
-						System.out.println("escalationOfficer1List : " + escalationOfficer1List.toString());
 						if (escalationOfficer1List != null) {
 							escalationOfficer1List = JsonPath.read(objList.get(i),
 									PGRConstants.AUTOROUTING_ESCALATING_OFFICER1_JSONPATH_VALUE);
-							System.out.println("escalationOfficer1List : " + escalationOfficer1List.toString());
 						}
 					} catch (Exception e) {
 						log.error("Exception while fetching escalationOfficer1List: " + e);
-					}
-					System.out.println("escalationOfficer1List : " + escalationOfficer1List.toString());					
-					/*
-					 * if (escalationOfficer1List != null) { JSONObject employeeValue = new
-					 * JSONObject(escalationOfficer1List); employeeCode =
-					 * employeeValue.getString("value"); System.out.println("Employee Code Value : "
-					 * + employeeCode); }
-					 */
+					}					
 		
 					if (!CollectionUtils.isEmpty(escalationOfficer1List)) {
 						if (escalationOfficer1List.contains(requestInfo.getUserInfo().getUserName())) {
