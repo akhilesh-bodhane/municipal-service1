@@ -1644,28 +1644,20 @@ public class GrievanceService {
 			// Object result = fetchCategoriesFromAutoroutingEscalationMap(requestInfo,
 			// tenantId);
 			Object result = masterDataService.fetchAutoroutingEscalationMap(tenantId, null, null);
-			if (null != result) {
-				List objList2 = JsonPath.read(result, PGRConstants.JSONPATH_AUTOROUTING_CODES_DB);
-				
+			if (null != result) {				
 				List objList = (List) result;
 				if (CollectionUtils.isEmpty(objList)) {
 					return null;
-				}
+				}				
 				
-				if (CollectionUtils.isEmpty(objList2)) {
-					return null;
-				}
-				
-				
-				for (int i = 0; i < objList2.size(); i++) {
+				for (int i = 0; i < objList.size(); i++) {
 					System.out.println("Inside Loop For EO1 List");
 					List<String> escalationOfficer1List = null;
-					List eoArr = (List) objList2.get(2);
 					try {
-						escalationOfficer1List = JsonPath.read(eoArr.get(i), PGRConstants.AUTOROUTING_ESCALATING_OFFICER1_JSONPATH_SMS);
+						escalationOfficer1List = JsonPath.read(objList.get(i), PGRConstants.AUTOROUTING_ESCALATING_OFFICER1_JSONPATH_SMS);
 						System.out.println("escalationOfficer1List : " + escalationOfficer1List.toString());
 						if (escalationOfficer1List != null) {
-							escalationOfficer1List = JsonPath.read(eoArr.get(i),
+							escalationOfficer1List = JsonPath.read(objList.get(i),
 									PGRConstants.AUTOROUTING_ESCALATING_OFFICER1_JSONPATH_VALUE);
 							System.out.println("escalationOfficer1List : " + escalationOfficer1List.toString());
 						}
@@ -1684,7 +1676,7 @@ public class GrievanceService {
 						if (escalationOfficer1List.contains(requestInfo.getUserInfo().getUserName())) {
 							if (CollectionUtils.isEmpty(categoryList1))
 								categoryList1 = new ArrayList<String>();
-							categoryList1.add(JsonPath.read(objList2.get(i), PGRConstants.AUTOROUTING_CATEGORY_JSONPATH));
+							categoryList1.add(JsonPath.read(objList.get(i), PGRConstants.AUTOROUTING_CATEGORY_JSONPATH));
 						}
 					}
 				}
