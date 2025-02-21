@@ -633,7 +633,12 @@ public class GrievanceService {
 				//List<String> status = new ArrayList<String>();
 				List<String> status = serviceReqSearchCriteria.getStatus();
 				
-				if(codes.contains(PGRConstants.ROLE_ESCALATION_OFFICER1)){
+				if(codes.contains(PGRConstants.ROLE_ESCALATION_OFFICER1) && codes.contains(PGRConstants.ROLE_ESCALATION_OFFICER2)) {
+					status.remove(WorkFlowConfigs.STATUS_ESCALATED_LEVEL1_PENDING);
+					status.remove(WorkFlowConfigs.STATUS_ESCALATED_LEVEL2_PENDING);
+					status.add(WorkFlowConfigs.STATUS_ESCALATED_LEVEL1_PENDING);
+					status.add(WorkFlowConfigs.STATUS_ESCALATED_LEVEL2_PENDING);
+				} else if(codes.contains(PGRConstants.ROLE_ESCALATION_OFFICER1)){
 					status.add(WorkFlowConfigs.STATUS_ESCALATED_LEVEL1_PENDING);
 					status.remove(WorkFlowConfigs.STATUS_ESCALATED_LEVEL2_PENDING);
 					System.out.println("Status of EO1 : " + status.toString());
@@ -641,7 +646,7 @@ public class GrievanceService {
 					status.add(WorkFlowConfigs.STATUS_ESCALATED_LEVEL2_PENDING);
 					status.remove(WorkFlowConfigs.STATUS_ESCALATED_LEVEL1_PENDING);
 					System.out.println("Status of EO2 : " + status.toString());
-				} 
+				}
 				//status.add(WorkFlowConfigs.STATUS_ASSIGNED);
 				status.add(WorkFlowConfigs.STATUS_REASSIGN_REQUESTED);
 				serviceReqSearchCriteria.setStatus(status);
