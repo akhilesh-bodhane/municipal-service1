@@ -33,6 +33,7 @@ public class PGRConstants {
 	public static final String MDMS_DESIGNATION_MASTERS_MASTER_NAME = "Designation";
 	public static final String LOCALIZATION_MODULE_NAME = "rainmaker-pgr";
 	public static final String MDMS_SECTOR_MASTER_NAME = "Sector";
+	public static final String MDMS_SECTOR_MASTER_NAME_SMALL = "sector";
 	public static final String MDMS_PGR_DEPARTMENT_MASTER_NAME = "PgrDepartment";
 	public static final String MDMS_AUTOROUTING_ESCALATION_MAP_MASTER_NAME = "AutoroutingEscalationMap";
 	public static final String MDMS_AUTOROUTING_ESCALATION_OFFICER1_NAME = "escalationOfficer1";
@@ -138,6 +139,8 @@ public class PGRConstants {
 	public static final String AUTOROUTING_SECTOR_JSONPATH = "$.Sector";
 	public static final String AUTOROUTING_SECTOR_JSONPATH_SMALL = "$.sector";
 	public static final String AUTOROUTING_SECTOR_JSONPATH_SMALL_VALUE = "$.sector.*.value";
+	public static final String AUTOROUTING_SECTOR_JSONPATH_SEARCH = "$.autoRouting.*.sector";
+	public static final String AUTOROUTING_SECTOR_JSONPATH_SEARCH_VALUE = "$.autoRouting.*.sector.*.value";
 	
 	public static final String AUTOROUTING_EMPLOYEE_JSONPATH_CAP = "$.Employee";
 	public static final String AUTOROUTING_EMPLOYEE_JSONPATH_SMALL = "$.employee";
