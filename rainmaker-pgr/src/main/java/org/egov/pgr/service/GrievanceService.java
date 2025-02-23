@@ -656,7 +656,7 @@ public class GrievanceService {
 				searcherRequest = pGRUtils.prepareSearchRequestWithDetails(uri, serviceReqSearchCriteria, requestInfo);
 				Object assignedResponse = serviceRequestRepository.fetchResult(uri, searcherRequest);
 				System.out.println("Final Status : " + status.toString());
-				System.out.println("assignedResponse : " + assignedResponse.toString());
+				//System.out.println("assignedResponse : " + assignedResponse.toString());
 
 				if (null != assignedResponse) {
 					List assignedServiceList = JsonPath.read(assignedResponse, PGRConstants.COMPLAINT_JSONPATH);
