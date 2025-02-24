@@ -643,7 +643,7 @@ public class GrievanceService {
 					status.remove(WorkFlowConfigs.STATUS_ESCALATED_LEVEL1_PENDING);
 					System.out.println("Status of EO2 : " + status.toString());
 				}
-				//status.add(WorkFlowConfigs.STATUS_ASSIGNED);
+				status.add(WorkFlowConfigs.STATUS_ASSIGNED);
 				status.add(WorkFlowConfigs.STATUS_REASSIGN_REQUESTED);
 				serviceReqSearchCriteria.setStatus(status);
 				serviceReqSearchCriteria.setCategory(null);
