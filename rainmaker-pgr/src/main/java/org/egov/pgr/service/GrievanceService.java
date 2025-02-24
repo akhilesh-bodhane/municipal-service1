@@ -671,6 +671,7 @@ public class GrievanceService {
 							finalObj.addAll(obj1);
 							map1.put("services", finalObj);
 						} else {
+							System.out.println("Inside assigned response condition");
 							response = assignedResponse;
 						}
 					}
@@ -782,23 +783,19 @@ public class GrievanceService {
 							.collect(Collectors.toList());
 					
 					//commented on 24/02/2025 to get escalation officer 1 complaints with assigned id
-					/*
-					 * if ((codes.contains(PGRConstants.ROLE_ESCALATION_OFFICER1) ||
-					 * codes.contains(PGRConstants.ROLE_ESCALATION_OFFICER2)) &&
-					 * (!CollectionUtils.isEmpty(serviceReqSearchCriteria.getStatus()) &&
-					 * (serviceReqSearchCriteria.getStatus()
-					 * .contains(WorkFlowConfigs.STATUS_ESCALATED_LEVEL1_PENDING) ||
-					 * serviceReqSearchCriteria.getStatus()
-					 * .contains(WorkFlowConfigs.STATUS_ESCALATED_LEVEL2_PENDING)))) { // Do not
-					 * need to set assign anyone for escalation flow if the status is pending }
-					 */
 					
-					if (codes.contains(PGRConstants.ROLE_ESCALATION_OFFICER2)
+					if ((codes.contains(PGRConstants.ROLE_ESCALATION_OFFICER1)
+							|| codes.contains(PGRConstants.ROLE_ESCALATION_OFFICER2))
 							&& (!CollectionUtils.isEmpty(serviceReqSearchCriteria.getStatus())
 									&& (serviceReqSearchCriteria.getStatus()
+											.contains(WorkFlowConfigs.STATUS_ESCALATED_LEVEL1_PENDING)
+											|| serviceReqSearchCriteria.getStatus()
 													.contains(WorkFlowConfigs.STATUS_ESCALATED_LEVEL2_PENDING)))) {
 						// Do not need to set assign anyone for escalation flow if the status is pending
 					}
+					 
+					
+		
 					/**
 					 * if(!CollectionUtils.isEmpty(serviceReqSearchCriteria.getStatus()) &&
 					 * (serviceReqSearchCriteria.getStatus().contains(WorkFlowConfigs.STATUS_ESCALATED_LEVEL1_PENDING)
@@ -1913,7 +1910,8 @@ public class GrievanceService {
 			List secondLevelServiceList = null;
 			List secondLevelActionHistoryList = null;
 
-			Map<String, List<String>> categoryList = fetchCategoriesForEscalationOfficer(requestInfo,	serviceReqSearchCriteria.getTenantId());
+			Map<String, List<String>> categoryList = 
+					fetchCategoriesForEscalationOfficer(requestInfo, serviceReqSearchCriteria.getTenantId());
 			
 			List<String> categoryListForEscalatingOfficer1 = categoryList
 					.get(PGRConstants.MDMS_AUTOROUTING_ESCALATION_OFFICER1_NAME);
