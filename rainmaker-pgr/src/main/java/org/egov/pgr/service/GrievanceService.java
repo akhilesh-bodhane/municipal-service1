@@ -1664,6 +1664,7 @@ public class GrievanceService {
 		List<String> categoryList1 = null;
 		List<String> categoryList2 = null;
 		List<String> sectorList = null;
+		List<String> sectorList2 = new ArrayList<>();
 		String employeeCode = null;
 		try {
 			// Get category list for escalationOfficer1
@@ -1699,9 +1700,10 @@ public class GrievanceService {
 								sectorList = JsonPath.read(objList.get(i), PGRConstants.AUTOROUTING_SECTOR_JSONPATH_SEARCH);
 								System.out.println("sectorList : " + sectorList.toString());
 								if (sectorList != null) {
-									sectorList.add(JsonPath.read(objList.get(i),
-											PGRConstants.AUTOROUTING_SECTOR_JSONPATH_SEARCH_VALUE));
+									sectorList = JsonPath.read(objList.get(i),
+											PGRConstants.AUTOROUTING_SECTOR_JSONPATH_SEARCH_VALUE);
 									System.out.println("sectorList : " + sectorList.toString());
+									sectorList2.addAll(sectorList);
 								}
 							} catch (Exception e) {
 								log.error("Exception while fetching sectorList : " + e);
@@ -1742,7 +1744,7 @@ public class GrievanceService {
 		}
 
 		categoryMap.put(PGRConstants.MDMS_AUTOROUTING_ESCALATION_OFFICER1_NAME, categoryList1);
-		categoryMap.put(PGRConstants.MDMS_SECTOR_MASTER_NAME_SMALL, sectorList);
+		categoryMap.put(PGRConstants.MDMS_SECTOR_MASTER_NAME_SMALL, sectorList2);
 		categoryMap.put(PGRConstants.MDMS_AUTOROUTING_ESCALATION_OFFICER2_NAME, categoryList2);
 
 		return categoryMap;
@@ -1911,21 +1913,21 @@ public class GrievanceService {
 			List secondLevelActionHistoryList = null;
 
 			Map<String, List<String>> categoryList = 
-					fetchCategoriesForEscalationOfficer(requestInfo, serviceReqSearchCriteria.getTenantId());
-			
+					fetchCategoriesForEscalationOfficer(requestInfo, serviceReqSearchCriteria.getTenantId());			
 			List<String> categoryListForEscalatingOfficer1 = categoryList
 					.get(PGRConstants.MDMS_AUTOROUTING_ESCALATION_OFFICER1_NAME);
+			List<String> sectorListForEscalatingOfficer1 = categoryList
+					.get(PGRConstants.MDMS_SECTOR_MASTER_NAME_SMALL);
 			List<String> categoryListForEscalatingOfficer2 = categoryList
 					.get(PGRConstants.MDMS_AUTOROUTING_ESCALATION_OFFICER2_NAME);
 
 			
 			if (!CollectionUtils.isEmpty(categoryListForEscalatingOfficer1)) {
 				serviceReqSearchCriteria.setCategory(categoryListForEscalatingOfficer1);
+				serviceReqSearchCriteria.setMohalla(sectorListForEscalatingOfficer1);
 				List<String> status = new ArrayList<String>();
 				status.add(WorkFlowConfigs.STATUS_ESCALATED_LEVEL1_PENDING);
 				serviceReqSearchCriteria.setStatus(status);
-				//serviceReqSearchCriteria.setAssignedTo(requestInfo.getUserInfo().getId().toString());
-				//System.out.println("EO1 Assigned To id : " + serviceReqSearchCriteria.getAssignedTo());
 				searcherRequest = pGRUtils.prepareSearchRequestWithDetails(uri, serviceReqSearchCriteria, requestInfo);
 				firstLevelResponse = serviceRequestRepository.fetchResult(uri, searcherRequest);
 				log.debug(PGRConstants.SEARCHER_RESPONSE_TEXT + firstLevelResponse);
