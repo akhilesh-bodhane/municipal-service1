@@ -1954,8 +1954,8 @@ public class GrievanceService {
 									sectorList = JsonPath.read(objList.get(i), PGRConstants.AUTOROUTING_SECTOR_JSONPATH_SEARCH);
 									System.out.println("sectorList : " + sectorList.toString());
 									if (sectorList != null) {
-										sectorList.add(JsonPath.read(objList.get(i),
-												PGRConstants.AUTOROUTING_SECTOR_JSONPATH_SEARCH_VALUE));
+										sectorList = JsonPath.read(objList.get(i),
+												PGRConstants.AUTOROUTING_SECTOR_JSONPATH_SEARCH_VALUE);
 										System.out.println("sectorList : " + sectorList.toString());
 										
 										if (!CollectionUtils.isEmpty(categoryList1)) {
