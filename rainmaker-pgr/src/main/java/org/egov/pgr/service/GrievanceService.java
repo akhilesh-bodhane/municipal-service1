@@ -1955,7 +1955,7 @@ public class GrievanceService {
 									System.out.println("sectorList : " + sectorList.toString());
 									if (sectorList != null) {
 										sectorList.add(JsonPath.read(objList.get(i),
-												PGRConstants.AUTOROUTING_SECTOR_JSONPATH_SEARCH_VALUE);
+												PGRConstants.AUTOROUTING_SECTOR_JSONPATH_SEARCH_VALUE));
 										System.out.println("sectorList : " + sectorList.toString());
 									}
 								} catch (Exception e) {
