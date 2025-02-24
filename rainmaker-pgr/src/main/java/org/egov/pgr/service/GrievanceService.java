@@ -614,7 +614,8 @@ public class GrievanceService {
 		List<String> codes = requestInfo.getUserInfo().getRoles().stream().map(Role::getCode)
 				.collect(Collectors.toList());
 
-		if ((codes.contains(PGRConstants.ROLE_ESCALATION_OFFICER2))
+		if ((codes.contains(PGRConstants.ROLE_ESCALATION_OFFICER1))
+				|| (codes.contains(PGRConstants.ROLE_ESCALATION_OFFICER2))
 				&& CollectionUtils.isEmpty(serviceReqSearchCriteria.getServiceRequestId())) {
 			/*
 			 * if(!CollectionUtils.isEmpty(serviceReqSearchCriteria.getStatus()) &&
@@ -679,18 +680,6 @@ public class GrievanceService {
 					log.debug("No complaint is assigned to this escalated officer {}",
 							requestInfo.getUserInfo().getUserName());
 			}
-		} else if (codes.contains(PGRConstants.ROLE_ESCALATION_OFFICER1) 
-				&& CollectionUtils.isEmpty(serviceReqSearchCriteria.getServiceRequestId())) {
-			System.out.println("Inside else if condition of search for EO1");
-			List<String> status = serviceReqSearchCriteria.getStatus();
-			if(codes.contains(PGRConstants.ROLE_ESCALATION_OFFICER1)){
-				status.add(WorkFlowConfigs.STATUS_ESCALATED_LEVEL1_PENDING);
-				status.remove(WorkFlowConfigs.STATUS_ESCALATED_LEVEL2_PENDING);
-				System.out.println("Status of EO1 : " + status.toString());
-			} 			
-			searcherRequest = pGRUtils.prepareSearchRequestWithDetails(uri, serviceReqSearchCriteria, requestInfo);
-			response = serviceRequestRepository.fetchResult(uri, searcherRequest);
-			log.debug(PGRConstants.SEARCHER_RESPONSE_TEXT + response);
 		} else {
 			System.out.println("Inside else condition of search");
 			searcherRequest = pGRUtils.prepareSearchRequestWithDetails(uri, serviceReqSearchCriteria, requestInfo);
@@ -1922,20 +1911,24 @@ public class GrievanceService {
 			List<String> categoryListForEscalatingOfficer2 = categoryList
 					.get(PGRConstants.MDMS_AUTOROUTING_ESCALATION_OFFICER2_NAME);
 
-			/*
-			 * if (!CollectionUtils.isEmpty(categoryListForEscalatingOfficer1)) {
-			 * serviceReqSearchCriteria.setCategory(categoryListForEscalatingOfficer1);
-			 * List<String> status = new ArrayList<String>();
-			 * status.add(WorkFlowConfigs.STATUS_ESCALATED_LEVEL1_PENDING);
-			 * serviceReqSearchCriteria.setStatus(status); searcherRequest =
-			 * pGRUtils.prepareSearchRequestWithDetails(uri, serviceReqSearchCriteria,
-			 * requestInfo); firstLevelResponse = serviceRequestRepository.fetchResult(uri,
-			 * searcherRequest); log.debug(PGRConstants.SEARCHER_RESPONSE_TEXT +
-			 * firstLevelResponse); if (null != firstLevelResponse) { firstLevelServiceList
-			 * = JsonPath.read(firstLevelResponse, PGRConstants.COMPLAINT_JSONPATH);
-			 * firstLevelActionHistoryList = JsonPath.read(firstLevelResponse,
-			 * PGRConstants.COMPLAINT_ACTION_HISTORY_JSONPATH); } }
-			 */
+			
+			if (!CollectionUtils.isEmpty(categoryListForEscalatingOfficer1)) {
+				serviceReqSearchCriteria.setCategory(categoryListForEscalatingOfficer1);
+				List<String> status = new ArrayList<String>();
+				status.add(WorkFlowConfigs.STATUS_ESCALATED_LEVEL1_PENDING);
+				serviceReqSearchCriteria.setStatus(status);
+				serviceReqSearchCriteria.setAssignedTo(requestInfo.getUserInfo().getId().toString());
+				System.out.println("EO1 Assigned To id : " + serviceReqSearchCriteria.getAssignedTo());
+				searcherRequest = pGRUtils.prepareSearchRequestWithDetails(uri, serviceReqSearchCriteria, requestInfo);
+				firstLevelResponse = serviceRequestRepository.fetchResult(uri, searcherRequest);
+				log.debug(PGRConstants.SEARCHER_RESPONSE_TEXT + firstLevelResponse);
+				if (null != firstLevelResponse) {
+					firstLevelServiceList = JsonPath.read(firstLevelResponse, PGRConstants.COMPLAINT_JSONPATH);
+					firstLevelActionHistoryList = JsonPath.read(firstLevelResponse,
+							PGRConstants.COMPLAINT_ACTION_HISTORY_JSONPATH);
+				}
+			}
+			 
 			
 			if (!CollectionUtils.isEmpty(categoryListForEscalatingOfficer2)) {
 				serviceReqSearchCriteria.setCategory(categoryListForEscalatingOfficer2);
