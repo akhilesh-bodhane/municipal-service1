@@ -1752,7 +1752,6 @@ public class GrievanceService {
 		Map<String, List<String>> categoryMap = new HashMap<String, List<String>>();
 		List<String> categoryList1 = null;
 		List<String> sectorList = null;
-		List<String> sectorListFinal = null;
 		String employeeCode = null;
 		try {
 			// Get category list for escalationOfficer1
@@ -1786,9 +1785,9 @@ public class GrievanceService {
 							System.out.println("categoryList1 : " + categoryList1.toString());
 							try {
 								sectorList = JsonPath.read(objList.get(i), PGRConstants.AUTOROUTING_SECTOR_JSONPATH_SEARCH);
-								System.out.println("sectorList : " + sectorList.toString());
+								System.out.println("sectorList1 : " + sectorList.toString());
 								if (sectorList != null) {
-									sectorListFinal.add(JsonPath.read(objList.get(i),
+									sectorList.add(JsonPath.read(objList.get(i),
 											PGRConstants.AUTOROUTING_SECTOR_JSONPATH_SEARCH_VALUE));
 									System.out.println("sectorList : " + sectorList.toString());
 								}
