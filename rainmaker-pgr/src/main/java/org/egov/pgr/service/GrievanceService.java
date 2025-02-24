@@ -1697,8 +1697,8 @@ public class GrievanceService {
 								sectorList = JsonPath.read(objList.get(i), PGRConstants.AUTOROUTING_SECTOR_JSONPATH_SEARCH);
 								System.out.println("sectorList : " + sectorList.toString());
 								if (sectorList != null) {
-									sectorList = JsonPath.read(objList.get(i),
-											PGRConstants.AUTOROUTING_SECTOR_JSONPATH_SEARCH_VALUE);
+									sectorList.add(JsonPath.read(objList.get(i),
+											PGRConstants.AUTOROUTING_SECTOR_JSONPATH_SEARCH_VALUE));
 									System.out.println("sectorList : " + sectorList.toString());
 								}
 							} catch (Exception e) {
@@ -1829,6 +1829,7 @@ public class GrievanceService {
 			}
 			if (!CollectionUtils.isEmpty(categoryListForEscalatingOfficer2)) {
 				serviceReqSearchCriteria.setCategory(categoryListForEscalatingOfficer2);
+				serviceReqSearchCriteria.setMohalla(null);
 				List<String> status = new ArrayList<String>();
 				status.add(WorkFlowConfigs.STATUS_ESCALATED_LEVEL2_PENDING);
 				serviceReqSearchCriteria.setStatus(status);
