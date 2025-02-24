@@ -1750,6 +1750,7 @@ public class GrievanceService {
 	
 	public Map<String, List<String>> fetchCategoriesForEscalationOfficer1(RequestInfo requestInfo, String tenantId) {
 		Map<String, List<String>> categoryMap = new HashMap<String, List<String>>();
+		Map<String, List<String>> categorySectorMap = new HashMap<String, List<String>>();
 		List<String> categoryList1 = null;
 		List<String> sectorList = null;
 		String employeeCode = null;
@@ -1778,7 +1779,7 @@ public class GrievanceService {
 					}					
 		
 					if (!CollectionUtils.isEmpty(escalationOfficer1List)) {
-						if (escalationOfficer1List.contains(requestInfo.getUserInfo().getUserName())) {
+						if (escalationOfficer1List.contains(requestInfo.getUserInfo().getUserName())) {							
 							if (CollectionUtils.isEmpty(categoryList1))
 								categoryList1 = new ArrayList<String>();
 							categoryList1.add(JsonPath.read(objList.get(i), PGRConstants.AUTOROUTING_CATEGORY_JSONPATH));
@@ -1787,8 +1788,8 @@ public class GrievanceService {
 								sectorList = JsonPath.read(objList.get(i), PGRConstants.AUTOROUTING_SECTOR_JSONPATH_SEARCH);
 								System.out.println("sectorList1 : " + sectorList.toString());
 								if (sectorList != null) {
-									sectorList.add(JsonPath.read(objList.get(i),
-											PGRConstants.AUTOROUTING_SECTOR_JSONPATH_SEARCH_VALUE));
+									sectorList = JsonPath.read(objList.get(i),
+											PGRConstants.AUTOROUTING_SECTOR_JSONPATH_SEARCH_VALUE);
 									System.out.println("sectorList : " + sectorList.toString());
 								}
 							} catch (Exception e) {
