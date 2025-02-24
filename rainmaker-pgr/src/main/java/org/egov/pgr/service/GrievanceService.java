@@ -1957,30 +1957,30 @@ public class GrievanceService {
 										sectorList = JsonPath.read(objList.get(i),
 												PGRConstants.AUTOROUTING_SECTOR_JSONPATH_SEARCH_VALUE);
 										System.out.println("sectorList : " + sectorList.toString());
-										
-										if (!CollectionUtils.isEmpty(categoryList1)) {
-											serviceReqSearchCriteria.setCategory(categoryList1);
-											serviceReqSearchCriteria.setMohalla(sectorList);
-											
-											System.out.println("categoryListForEscalatingOfficer1 : " + categoryList1.toString());
-											System.out.println("sectorListForEscalatingOfficer1 : " + sectorList.toString());
-											
-											List<String> status = new ArrayList<String>();
-											status.add(WorkFlowConfigs.STATUS_ESCALATED_LEVEL1_PENDING);
-											serviceReqSearchCriteria.setStatus(status);
-											searcherRequest = pGRUtils.prepareSearchRequestWithDetails(uri, serviceReqSearchCriteria, requestInfo);
-											firstLevelResponse = serviceRequestRepository.fetchResult(uri, searcherRequest);
-											log.debug(PGRConstants.SEARCHER_RESPONSE_TEXT + firstLevelResponse);
-											if (null != firstLevelResponse) {
-												firstLevelServiceList = JsonPath.read(firstLevelResponse, PGRConstants.COMPLAINT_JSONPATH);
-												firstLevelActionHistoryList = JsonPath.read(firstLevelResponse,
-														PGRConstants.COMPLAINT_ACTION_HISTORY_JSONPATH);
-											}
-										}
 									}
 								} catch (Exception e) {
 									log.error("Exception while fetching sectorList : " + e);
 								}
+							}
+						}
+						
+						if (!CollectionUtils.isEmpty(categoryList1)) {
+							serviceReqSearchCriteria.setCategory(categoryList1);
+							serviceReqSearchCriteria.setMohalla(sectorList);
+							
+							System.out.println("categoryListForEscalatingOfficer1 : " + categoryList1.toString());
+							System.out.println("sectorListForEscalatingOfficer1 : " + sectorList.toString());
+							
+							List<String> status = new ArrayList<String>();
+							status.add(WorkFlowConfigs.STATUS_ESCALATED_LEVEL1_PENDING);
+							serviceReqSearchCriteria.setStatus(status);
+							searcherRequest = pGRUtils.prepareSearchRequestWithDetails(uri, serviceReqSearchCriteria, requestInfo);
+							firstLevelResponse = serviceRequestRepository.fetchResult(uri, searcherRequest);
+							log.debug(PGRConstants.SEARCHER_RESPONSE_TEXT + firstLevelResponse);
+							if (null != firstLevelResponse) {
+								firstLevelServiceList = JsonPath.read(firstLevelResponse, PGRConstants.COMPLAINT_JSONPATH);
+								firstLevelActionHistoryList = JsonPath.read(firstLevelResponse,
+										PGRConstants.COMPLAINT_ACTION_HISTORY_JSONPATH);
 							}
 						}
 					}
