@@ -1103,7 +1103,6 @@ public class GrievanceService {
 	public ServiceResponse enrichResult(RequestInfo requestInfo, ServiceResponse response) {
 		List<Long> userIds = response.getServices().stream().map(a -> {
 			try {
-				System.out.println("------ Inside try condition enrich search result ------");
 				return Long.parseLong(a.getAccountId());
 			} catch (Exception e) {
 				return null;
@@ -1112,7 +1111,6 @@ public class GrievanceService {
 		List<Address> addresses = new ArrayList<>();
 		response.getServices().forEach(service -> {
 			if (null != service) {
-				System.out.println("------ Inside not null check condition enrich search result ------");
 				if (null != service.getAddressDetail()) {
 					addresses.add(service.getAddressDetail());
 				}
@@ -1813,6 +1811,10 @@ public class GrievanceService {
 			if (!CollectionUtils.isEmpty(categoryListForEscalatingOfficer1)) {
 				serviceReqSearchCriteria.setCategory(categoryListForEscalatingOfficer1);
 				serviceReqSearchCriteria.setMohalla(sectorListForEscalatingOfficer1);
+				
+				System.out.println("categoryListForEscalatingOfficer1 : " + categoryListForEscalatingOfficer1.toString());
+				System.out.println("sectorListForEscalatingOfficer1 : " + sectorListForEscalatingOfficer1.toString());
+				
 				List<String> status = new ArrayList<String>();
 				status.add(WorkFlowConfigs.STATUS_ESCALATED_LEVEL1_PENDING);
 				serviceReqSearchCriteria.setStatus(status);
