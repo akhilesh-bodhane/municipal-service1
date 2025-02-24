@@ -1963,26 +1963,6 @@ public class GrievanceService {
 								}
 							}
 						}
-						
-						if (!CollectionUtils.isEmpty(categoryList1)) {
-							serviceReqSearchCriteria.setCategory(categoryList1);
-							serviceReqSearchCriteria.setMohalla(sectorList);
-							
-							System.out.println("categoryListForEscalatingOfficer1 : " + categoryList1.toString());
-							System.out.println("sectorListForEscalatingOfficer1 : " + sectorList.toString());
-							
-							List<String> status = new ArrayList<String>();
-							status.add(WorkFlowConfigs.STATUS_ESCALATED_LEVEL1_PENDING);
-							serviceReqSearchCriteria.setStatus(status);
-							searcherRequest = pGRUtils.prepareSearchRequestWithDetails(uri, serviceReqSearchCriteria, requestInfo);
-							firstLevelResponse = serviceRequestRepository.fetchResult(uri, searcherRequest);
-							log.debug(PGRConstants.SEARCHER_RESPONSE_TEXT + firstLevelResponse);
-							if (null != firstLevelResponse) {
-								firstLevelServiceList = JsonPath.read(firstLevelResponse, PGRConstants.COMPLAINT_JSONPATH);
-								firstLevelActionHistoryList = JsonPath.read(firstLevelResponse,
-										PGRConstants.COMPLAINT_ACTION_HISTORY_JSONPATH);
-							}
-						}
 					}
 				}
 
@@ -1991,27 +1971,27 @@ public class GrievanceService {
 			}
 			
 			
-			/*
-			 * if (!CollectionUtils.isEmpty(categoryList1)) {
-			 * serviceReqSearchCriteria.setCategory(categoryList1);
-			 * serviceReqSearchCriteria.setMohalla(sectorList);
-			 * 
-			 * System.out.println("categoryListForEscalatingOfficer1 : " +
-			 * categoryList1.toString());
-			 * System.out.println("sectorListForEscalatingOfficer1 : " +
-			 * sectorList.toString());
-			 * 
-			 * List<String> status = new ArrayList<String>();
-			 * status.add(WorkFlowConfigs.STATUS_ESCALATED_LEVEL1_PENDING);
-			 * serviceReqSearchCriteria.setStatus(status); searcherRequest =
-			 * pGRUtils.prepareSearchRequestWithDetails(uri, serviceReqSearchCriteria,
-			 * requestInfo); firstLevelResponse = serviceRequestRepository.fetchResult(uri,
-			 * searcherRequest); log.debug(PGRConstants.SEARCHER_RESPONSE_TEXT +
-			 * firstLevelResponse); if (null != firstLevelResponse) { firstLevelServiceList
-			 * = JsonPath.read(firstLevelResponse, PGRConstants.COMPLAINT_JSONPATH);
-			 * firstLevelActionHistoryList = JsonPath.read(firstLevelResponse,
-			 * PGRConstants.COMPLAINT_ACTION_HISTORY_JSONPATH); } }
-			 */
+			
+			if (!CollectionUtils.isEmpty(categoryList1)) {
+				serviceReqSearchCriteria.setCategory(categoryList1);
+				serviceReqSearchCriteria.setMohalla(sectorList);
+
+				System.out.println("categoryListForEscalatingOfficer1 : " + categoryList1.toString());
+				System.out.println("sectorListForEscalatingOfficer1 : " + sectorList.toString());
+
+				List<String> status = new ArrayList<String>();
+				status.add(WorkFlowConfigs.STATUS_ESCALATED_LEVEL1_PENDING);
+				serviceReqSearchCriteria.setStatus(status);
+				searcherRequest = pGRUtils.prepareSearchRequestWithDetails(uri, serviceReqSearchCriteria, requestInfo);
+				firstLevelResponse = serviceRequestRepository.fetchResult(uri, searcherRequest);
+				log.debug(PGRConstants.SEARCHER_RESPONSE_TEXT + firstLevelResponse);
+				if (null != firstLevelResponse) {
+					firstLevelServiceList = JsonPath.read(firstLevelResponse, PGRConstants.COMPLAINT_JSONPATH);
+					firstLevelActionHistoryList = JsonPath.read(firstLevelResponse,
+							PGRConstants.COMPLAINT_ACTION_HISTORY_JSONPATH);
+				}
+			}
+			 
 			
 			if (!CollectionUtils.isEmpty(categoryListForEscalatingOfficer2)) {
 				serviceReqSearchCriteria.setCategory(categoryListForEscalatingOfficer2);
