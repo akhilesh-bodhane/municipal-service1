@@ -638,6 +638,10 @@ public class GrievanceService {
 					status.remove(WorkFlowConfigs.STATUS_ESCALATED_LEVEL2_PENDING);
 					status.add(WorkFlowConfigs.STATUS_ESCALATED_LEVEL1_PENDING);
 					status.add(WorkFlowConfigs.STATUS_ESCALATED_LEVEL2_PENDING);
+				} else if(codes.contains(PGRConstants.ROLE_ESCALATION_OFFICER1)) {
+					status.add(WorkFlowConfigs.STATUS_ESCALATED_LEVEL1_PENDING);
+					status.remove(WorkFlowConfigs.STATUS_ESCALATED_LEVEL2_PENDING);
+					System.out.println("Status of EO1 : " + status.toString());
 				} else if(codes.contains(PGRConstants.ROLE_ESCALATION_OFFICER2)) {
 					status.add(WorkFlowConfigs.STATUS_ESCALATED_LEVEL2_PENDING);
 					status.remove(WorkFlowConfigs.STATUS_ESCALATED_LEVEL1_PENDING);
