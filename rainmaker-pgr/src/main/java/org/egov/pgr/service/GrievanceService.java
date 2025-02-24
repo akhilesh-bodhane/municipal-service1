@@ -1926,8 +1926,8 @@ public class GrievanceService {
 				List<String> status = new ArrayList<String>();
 				status.add(WorkFlowConfigs.STATUS_ESCALATED_LEVEL1_PENDING);
 				serviceReqSearchCriteria.setStatus(status);
-				serviceReqSearchCriteria.setAssignedTo(requestInfo.getUserInfo().getId().toString());
-				System.out.println("EO1 Assigned To id : " + serviceReqSearchCriteria.getAssignedTo());
+				//serviceReqSearchCriteria.setAssignedTo(requestInfo.getUserInfo().getId().toString());
+				//System.out.println("EO1 Assigned To id : " + serviceReqSearchCriteria.getAssignedTo());
 				searcherRequest = pGRUtils.prepareSearchRequestWithDetails(uri, serviceReqSearchCriteria, requestInfo);
 				firstLevelResponse = serviceRequestRepository.fetchResult(uri, searcherRequest);
 				log.debug(PGRConstants.SEARCHER_RESPONSE_TEXT + firstLevelResponse);
