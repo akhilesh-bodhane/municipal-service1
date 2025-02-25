@@ -169,4 +169,9 @@ public class ApiConfiguration {
 	@Value("${NIUASearch.service.obps.data.get}")
 	private String NIUASearchOBPSDataPath;
 	
+	@Value("${NIUAMCollect.service.data.get}")
+	private String NIUAMCollectServiceDataPath;
+	
+	
+	
 }
