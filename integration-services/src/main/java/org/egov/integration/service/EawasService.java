@@ -242,13 +242,13 @@ public class EawasService {
 		}
 	}
 	
-	public  Map<String, Object> searchNIUAScheduler(RequestInfoWrapper request) {
-		 Map<String, Object> licensesForNIUA = getTLNIUAData(request);
+	public  ResponseEntity<Map> searchNIUAScheduler(RequestInfoWrapper request) {
+		ResponseEntity<Map> licensesForNIUA = getTLNIUAData(request);
 		return licensesForNIUA;
 	}
 	
 	
-	public  Map<String, Object> getTLNIUAData(RequestInfoWrapper request) {
+	public  ResponseEntity<Map> getTLNIUAData(RequestInfoWrapper request) {
 
 	    LocalDate today = LocalDate.now();
 	    ZonedDateTime fromDateTime = today.atStartOfDay(ZoneId.of("Asia/Kolkata"));
@@ -256,7 +256,7 @@ public class EawasService {
 
 	    long fromDateMillis = fromDateTime.toInstant().toEpochMilli();
 	    long toDateMillis = toDateTime.toInstant().toEpochMilli();
-	    
+	    	    
 	    StringBuilder uri = new StringBuilder(apiConfiguration.getIntegrationHost());
 		uri.append(apiConfiguration.getNIUASearchServiceDataPath());
 		
@@ -283,14 +283,13 @@ public class EawasService {
 	            if (metrics != null) {
 	            	int todaysApplications = (int) metrics.getOrDefault("todaysApplications", 0);
 	                System.out.println("Today's Applications: " + todaysApplications);
-	                postToNIUADashboard(request,responseMap,todaysApplications);		                
+	                return postToNIUADashboard(request,responseMap,todaysApplications);		                
 	            }else {
 	            System.out.println("Metrics not found in the response.");
 	            }
-	            return responseMap;
 	        } else {
 	            System.out.println("Response is null or empty.");
-	            return new HashMap<>();
+	            return  ResponseEntity.ok(new HashMap<>());
 	        }
 	        
 	    } catch (HttpStatusCodeException e) {
@@ -300,10 +299,10 @@ public class EawasService {
 	    } catch (Exception e) {
 	        e.printStackTrace();
 	    } 
-	    return new HashMap<>();
+	    return  ResponseEntity.ok(new HashMap<>());
 	}
 	
-	public void postToNIUADashboard(RequestInfoWrapper request, Map<String, Object> responseData, int todaysApplications) {
+	public ResponseEntity<Map> postToNIUADashboard(RequestInfoWrapper request, Map<String, Object> responseData, int todaysApplications) {
 
 	    Map<String, Object> requestBody = new LinkedHashMap<>(); 
 
@@ -363,29 +362,34 @@ public class EawasService {
 	            System.out.println("upyog response:::"+response.getBody());
 	            if (response.getStatusCode().is2xxSuccessful()) {
 	                System.out.println("Successfully posted data to NIUA Dashboard");
+	                return response;
 	            } else {
 	                System.out.println("Failed to post data. Status: " + response.getStatusCode());
+	                return ResponseEntity.status(response.getStatusCode()).body(Collections.singletonMap("error", "Failed to post data"));
 	            }
 	        } else {
 	        	System.out.println("No applications today. Skipping data post.");
+	        	return ResponseEntity.ok(Collections.singletonMap("message", "No applications today"));
 	        }
 	    } catch (HttpStatusCodeException e) {
 	        System.out.println("HTTP Status Code: " + e.getStatusCode());
 	        System.out.println("Response Body: " + e.getResponseBodyAsString());
 	        e.printStackTrace();
+	        return ResponseEntity.status(e.getStatusCode()).body(Collections.singletonMap("error", e.getResponseBodyAsString()));
 	    } catch (Exception e) {
 	        e.printStackTrace();
+	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Collections.singletonMap("error", "Internal Server Error"));
 	    }
 	}
 	
 	
-	public  Map<String, Object> searchOBPSNIUAScheduler(RequestInfoWrap request) {
-		 Map<String, Object> OBPSForNIUA = getOBPSNIUAData(request);
+	public  ResponseEntity<Map> searchOBPSNIUAScheduler(RequestInfoWrap request) {
+		ResponseEntity<Map> OBPSForNIUA = getOBPSNIUAData(request);
 		return OBPSForNIUA;
 	}
 	
 	
-	public  Map<String, Object> getOBPSNIUAData(RequestInfoWrap request) {
+	public  ResponseEntity<Map> getOBPSNIUAData(RequestInfoWrap request) {
 	    
 	    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 	    
@@ -417,20 +421,17 @@ public class EawasService {
 	       if (processOBPSData != null && !processOBPSData.isEmpty()) {
 	        	
 	            Map<String, Object> metrics = (Map<String, Object>) processOBPSData.get("metrics");
-
 	            // Extract "todaysApplications" value
 	            if (metrics != null) {
 	            	int applicationsSubmitted = (int) metrics.getOrDefault("applicationsSubmitted", 0);
 	                System.out.println("Today's Applications Submitted: " + applicationsSubmitted);
-	                postToOBPSNIUADashboard(request,processOBPSData,applicationsSubmitted);		                
+	                return postToOBPSNIUADashboard(request,processOBPSData,applicationsSubmitted);		                
 	            }else {
 	            System.out.println("Metrics not found in the response.");
-	            }
-	            return responseMap;
-	            
+	            }	            
 	        } else {
 	            System.out.println("Response is null or empty.");
-	            return new HashMap<>();
+	            return ResponseEntity.ok(new HashMap<>());
 	        }
 	        
 	    } catch (HttpStatusCodeException e) {
@@ -440,7 +441,7 @@ public class EawasService {
 	    } catch (Exception e) {
 	        e.printStackTrace();
 	    } 
-	    return new HashMap<>();
+	    return ResponseEntity.ok(new HashMap<>());
 	}
 	
 
@@ -492,7 +493,7 @@ public class EawasService {
 	}
 	
 	
-	public void postToOBPSNIUADashboard(RequestInfoWrap request, Map<String, Object> responseData, int todaysApplications) {
+	public ResponseEntity<Map> postToOBPSNIUADashboard(RequestInfoWrap request, Map<String, Object> responseData, int todaysApplications) {
 
 	    Map<String, Object> requestBody = new LinkedHashMap<>(); 
 
@@ -552,18 +553,23 @@ public class EawasService {
 	            System.out.println("upyog OBPS response:::"+response.getBody());
 	            if (response.getStatusCode().is2xxSuccessful()) {
 	                System.out.println("Successfully posted OBPS data to NIUA Dashboard");
+	                return response;
 	            } else {
 	                System.out.println("Failed to post OBPS data. Status: " + response.getStatusCode());
+	                return ResponseEntity.status(response.getStatusCode()).body(Collections.singletonMap("error", "Failed to post data"));
 	            }
 	        } else {
 	        	System.out.println("No OBPS applications today. Skipping data post.");
+	        	return ResponseEntity.ok(Collections.singletonMap("message", "No applications today"));
 	        }
 	    } catch (HttpStatusCodeException e) {
 	        System.out.println("HTTP Status Code: " + e.getStatusCode());
 	        System.out.println("Response Body: " + e.getResponseBodyAsString());
 	        e.printStackTrace();
+	        return ResponseEntity.status(e.getStatusCode()).body(Collections.singletonMap("error", e.getResponseBodyAsString()));
 	    } catch (Exception e) {
 	        e.printStackTrace();
+	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Collections.singletonMap("error", "Internal Server Error"));
 	    }
 	}
 
