@@ -4,6 +4,7 @@ import java.util.Map;
 
 import javax.validation.Valid;
 
+import org.egov.integration.model.RequestInfoWrap;
 import org.egov.integration.model.RequestInfoWrapper;
 import org.egov.integration.service.EawasService;
 import org.json.JSONException;
@@ -25,7 +26,7 @@ public class ObpsniuaschedulerController {
 	}
 	
 	@PostMapping(value = "/Search")
-	public Object NIUASearch(@Valid @RequestBody RequestInfoWrapper request) throws JSONException {
+	public Object NIUASearch(@Valid @RequestBody RequestInfoWrap request) throws JSONException {
 		
 		 Map<String, Object> searchNIUAScheduler = service.searchOBPSNIUAScheduler(request);
 
