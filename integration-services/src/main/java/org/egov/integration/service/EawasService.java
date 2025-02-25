@@ -254,12 +254,9 @@ public class EawasService {
 	    ZonedDateTime fromDateTime = today.atStartOfDay(ZoneId.of("Asia/Kolkata"));
 	    ZonedDateTime toDateTime = today.plusDays(1).atStartOfDay(ZoneId.of("Asia/Kolkata"));
 
-	    //long fromDateMillis = fromDateTime.toInstant().toEpochMilli();
-	    //long toDateMillis = toDateTime.toInstant().toEpochMilli();
-	    
-	    long fromDateMillis =1739817000000L;
-	    long toDateMillis =1739903400000L;
-	    
+	    long fromDateMillis = fromDateTime.toInstant().toEpochMilli();
+	    long toDateMillis = toDateTime.toInstant().toEpochMilli();
+	    	    
 	    StringBuilder uri = new StringBuilder(apiConfiguration.getIntegrationHost());
 		uri.append(apiConfiguration.getNIUASearchServiceDataPath());
 		
