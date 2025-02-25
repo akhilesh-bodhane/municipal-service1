@@ -49,7 +49,7 @@ public class NIUADataPushService {
 			HttpEntity<RequestInfo> requestInfo2 = new HttpEntity<>(requestInfo, headers);
 
 			String integrationHost = apiConfiguration.getIntegrationHost();
-			String servicePath = apiConfiguration.getNIUASearchServiceDataPath();
+			String servicePath = apiConfiguration.getNIUAMCollectServiceDataPath();
 
 			StringBuilder uri = new StringBuilder(integrationHost);
 			uri.append(servicePath);
