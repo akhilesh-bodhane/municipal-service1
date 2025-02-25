@@ -675,7 +675,6 @@ public class GrievanceService {
 				searcherRequest = pGRUtils.prepareSearchRequestWithDetails(uri, serviceReqSearchCriteria, requestInfo);
 				Object assignedResponse = serviceRequestRepository.fetchResult(uri, searcherRequest);
 				System.out.println("Final Status : " + status.toString());
-				//System.out.println("assignedResponse : " + assignedResponse.toString());
 
 				if (null != assignedResponse) {
 					List assignedServiceList = JsonPath.read(assignedResponse, PGRConstants.COMPLAINT_JSONPATH);
@@ -716,6 +715,7 @@ public class GrievanceService {
 		ServiceResponse serviceResponse = prepareResult(response, requestInfo);
 		if (CollectionUtils.isEmpty(serviceResponse.getServices())) {
 			System.out.println("Inside response if condition");
+			System.out.println("Service Response : " + serviceResponse.toString());
 			return serviceResponse;
 		} else {
 			System.out.println("Inside response else condition");
