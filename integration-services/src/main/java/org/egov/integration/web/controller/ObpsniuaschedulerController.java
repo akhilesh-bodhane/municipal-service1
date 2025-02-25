@@ -9,6 +9,7 @@ import org.egov.integration.model.RequestInfoWrapper;
 import org.egov.integration.service.EawasService;
 import org.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,9 +29,9 @@ public class ObpsniuaschedulerController {
 	@PostMapping(value = "/Search")
 	public Object NIUASearch(@Valid @RequestBody RequestInfoWrap request) throws JSONException {
 		
-		 Map<String, Object> searchNIUAScheduler = service.searchOBPSNIUAScheduler(request);
+		 ResponseEntity<Map> searchOBPSNIUAScheduler = service.searchOBPSNIUAScheduler(request);
 
-		return searchNIUAScheduler;
+		return searchOBPSNIUAScheduler;
 	}
 
 }
