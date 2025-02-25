@@ -639,6 +639,7 @@ public class GrievanceService {
 					status.remove(WorkFlowConfigs.STATUS_ESCALATED_LEVEL2_PENDING);
 					status.add(WorkFlowConfigs.STATUS_ESCALATED_LEVEL1_PENDING);
 					status.add(WorkFlowConfigs.STATUS_ESCALATED_LEVEL2_PENDING);
+					System.out.println("Status of EO1 & EO2 : " + status.toString());
 				} else if(codes.contains(PGRConstants.ROLE_ESCALATION_OFFICER1) 
 						&& codes.contains(PGRConstants.ROLE_ESCALATION_OFFICER2)
 						&& codes.contains(PGRConstants.ROLE_PGR_LME)) {
@@ -647,16 +648,19 @@ public class GrievanceService {
 					status.add(WorkFlowConfigs.STATUS_ESCALATED_LEVEL1_PENDING);
 					status.add(WorkFlowConfigs.STATUS_ESCALATED_LEVEL2_PENDING);
 					status.add(WorkFlowConfigs.STATUS_ASSIGNED);
+					System.out.println("Status of EO1, EO2 and LME : " + status.toString());
 				} else if(codes.contains(PGRConstants.ROLE_ESCALATION_OFFICER1) 
 						&& codes.contains(PGRConstants.ROLE_PGR_LME)) {
 					status.remove(WorkFlowConfigs.STATUS_ESCALATED_LEVEL2_PENDING);
 					status.add(WorkFlowConfigs.STATUS_ESCALATED_LEVEL1_PENDING);
 					status.add(WorkFlowConfigs.STATUS_ASSIGNED);
+					System.out.println("Status of EO1 and LME : " + status.toString());
 				} else if(codes.contains(PGRConstants.ROLE_ESCALATION_OFFICER2)
 						&& codes.contains(PGRConstants.ROLE_PGR_LME)) {
 					status.remove(WorkFlowConfigs.STATUS_ESCALATED_LEVEL1_PENDING);
 					status.add(WorkFlowConfigs.STATUS_ESCALATED_LEVEL2_PENDING);
 					status.add(WorkFlowConfigs.STATUS_ASSIGNED);
+					System.out.println("Status of EO2 and LME : " + status.toString());
 				} else if(codes.contains(PGRConstants.ROLE_ESCALATION_OFFICER1)) {
 					status.add(WorkFlowConfigs.STATUS_ESCALATED_LEVEL1_PENDING);
 					status.remove(WorkFlowConfigs.STATUS_ESCALATED_LEVEL2_PENDING);
@@ -693,7 +697,7 @@ public class GrievanceService {
 							finalObj.addAll(obj1);
 							map1.put("services", finalObj);
 						} else {
-							System.out.println("Inside assigned response condition");
+							System.out.println("Inside else assigned response condition");
 							response = assignedResponse;
 						}
 					}
@@ -1947,8 +1951,8 @@ public class GrievanceService {
 			
 			if (!CollectionUtils.isEmpty(categoryListForEscalatingOfficer1)) {
 				serviceReqSearchCriteria.setCategory(categoryListForEscalatingOfficer1);
-				serviceReqSearchCriteria.setMohalla(sectorListForEscalatingOfficer1);
-				System.out.println("sectorListForEscalatingOfficer1 : " + sectorListForEscalatingOfficer1.toString());
+				//serviceReqSearchCriteria.setMohalla(sectorListForEscalatingOfficer1);
+				//System.out.println("sectorListForEscalatingOfficer1 : " + sectorListForEscalatingOfficer1.toString());
 				List<String> status = new ArrayList<String>();
 				status.add(WorkFlowConfigs.STATUS_ESCALATED_LEVEL1_PENDING);
 				serviceReqSearchCriteria.setStatus(status);
