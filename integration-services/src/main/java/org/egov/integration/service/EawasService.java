@@ -23,6 +23,7 @@ import org.egov.integration.model.EawasRequestInfoWrapper;
 //import org.egov.tl.web.models.TradeLicenseSearchCriteria;
 import org.egov.integration.model.Metrics;
 import org.egov.integration.model.RequestData;
+import org.egov.integration.model.RequestInfoWrap;
 import org.egov.integration.model.RequestInfoWrapper;
 import org.egov.integration.model.ResponseInfoWrapper;
 import org.egov.integration.model.TLBucket;
@@ -378,13 +379,13 @@ public class EawasService {
 	}
 	
 	
-	public  Map<String, Object> searchOBPSNIUAScheduler(RequestInfoWrapper request) {
+	public  Map<String, Object> searchOBPSNIUAScheduler(RequestInfoWrap request) {
 		 Map<String, Object> OBPSForNIUA = getOBPSNIUAData(request);
 		return OBPSForNIUA;
 	}
 	
 	
-	public  Map<String, Object> getOBPSNIUAData(RequestInfoWrapper request) {
+	public  Map<String, Object> getOBPSNIUAData(RequestInfoWrap request) {
 	    
 	    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 	    
@@ -399,7 +400,7 @@ public class EawasService {
 	    StringBuilder uri = new StringBuilder(apiConfiguration.getObpsHost());
 		uri.append(apiConfiguration.getNIUASearchOBPSDataPath());
 		
-		String queryParams = String.format("?tenantId=ch.chandigarh&fromDate=%d&toDate=%d", fromDate, toDate);
+		String queryParams = String.format("?tenantId=ch.chandigarh&fromDate=%s&toDate=%s", fromDate, toDate);
 		uri.append(queryParams);
 		String url = uri.toString();
 	    
@@ -409,10 +410,22 @@ public class EawasService {
 	    	 ObjectMapper mapper = new ObjectMapper();
 	       //response =  restTemplate.postForObject(url, request, Object.class);
 	       Map<String, Object> responseMap = restTemplate.postForObject(url, request, Map.class);
+	       
+	       Map<String, Object> processOBPSData = processOBPSData(responseMap);
 	      
 	        
-	       if (responseMap != null && !responseMap.isEmpty()) {
+	       if (processOBPSData != null && !processOBPSData.isEmpty()) {
 	        	
+	            Map<String, Object> metrics = (Map<String, Object>) processOBPSData.get("metrics");
+
+	            // Extract "todaysApplications" value
+	            if (metrics != null) {
+	            	int applicationsSubmitted = (int) metrics.getOrDefault("applicationsSubmitted", 0);
+	                System.out.println("Today's Applications Submitted: " + applicationsSubmitted);
+	                postToOBPSNIUADashboard(request,processOBPSData,applicationsSubmitted);		                
+	            }else {
+	            System.out.println("Metrics not found in the response.");
+	            }
 	            return responseMap;
 	            
 	        } else {
@@ -429,6 +442,132 @@ public class EawasService {
 	    } 
 	    return new HashMap<>();
 	}
+	
+
+	public Map<String, Object> processOBPSData(Map<String, Object> responseMap) {
+	    if (responseMap == null || responseMap.isEmpty()) {
+	        System.out.println("Response map is null or empty.");
+	        return responseMap;
+	    }
+
+	    // Step 1: Replace "NA" with "0" for specific keys
+	    Map<String, Object> metrics = (Map<String, Object>) responseMap.get("metrics");
+	    if (metrics != null) {
+	        replaceNAWithZero(metrics, "todaysCompletedApplicationsWithinSLAOC");
+	        replaceNAWithZero(metrics, "todaysCompletedApplicationsWithinSLAPermit");
+	        replaceNAWithZero(metrics, "slaComplianceOC");
+	        replaceNAWithZero(metrics, "slaCompliancePermit");
+	    }
+
+	    // Step 2: Convert groupBy keys to camel case
+	    List<Map<String, Object>> permitsIssued = (List<Map<String, Object>>) metrics.get("permitsIssued");
+	    if (permitsIssued != null) {
+	        for (Map<String, Object> group : permitsIssued) {
+	            String groupBy = (String) group.get("groupBy");
+	            if (groupBy != null) {
+	                group.put("groupBy", toCamelCase(groupBy));
+	            }
+	        }
+	    }
+
+	    return responseMap;
+	}
+
+	private void replaceNAWithZero(Map<String, Object> map, String key) {
+	    if (map.containsKey(key) && "NA".equals(map.get(key))) {
+	        map.put(key, "0");
+	    }
+	}
+
+	private String toCamelCase(String input) {
+	    if (input == null || input.isEmpty()) {
+	        return input;
+	    }
+	    String[] parts = input.split("(?=[A-Z])"); // Split by uppercase letters
+	    String result = parts[0].toLowerCase();
+	    for (int i = 1; i < parts.length; i++) {
+	        result += parts[i].substring(0, 1).toUpperCase() + parts[i].substring(1).toLowerCase();
+	    }
+	    return result;
+	}
+	
+	
+	public void postToOBPSNIUADashboard(RequestInfoWrap request, Map<String, Object> responseData, int todaysApplications) {
+
+	    Map<String, Object> requestBody = new LinkedHashMap<>(); 
+
+	    Map<String, Object> requestInfo = new LinkedHashMap<>();
+	    requestInfo.put("apiId", "asset-services");
+	    requestInfo.put("msgId", "search with from and to values");
+	    requestInfo.put("authToken", "655bf367-e365-49d8-a54a-60f7aac5ca24");
+
+	    Map<String, Object> userInfo = new LinkedHashMap<>();
+	    userInfo.put("id", 10229);
+	    userInfo.put("uuid", "c499b45b-7d65-418f-b003-5ce5db2220d2");
+	    userInfo.put("userName", "679087|sSTvGEwvzXtWV07onOvUHilYqNe01RSLLQ==");
+	    userInfo.put("name", "CHD NDA USER");
+	    userInfo.put("mobileNumber", "9999999943");
+	    userInfo.put("type", "SYSTEM");
+	    userInfo.put("tenantId", "chd.municipalcorporationchandigarh");
+	    userInfo.put("permanentCity", null);
+
+	    Map<String, Object> role = new LinkedHashMap<>();
+	    role.put("name", "National Dashboard Systeme user");
+	    role.put("code", "NDA_SYSTEM");
+	    role.put("tenantId", "chd.municipalcorporationchandigarh");
+
+	    userInfo.put("roles", Collections.singletonList(role));
+	    userInfo.put("active", true);
+
+	    requestInfo.put("userInfo", userInfo);
+	    requestBody.put("RequestInfo", requestInfo); // Ensure RequestInfo is first in the body
+
+	    Map<String, Object> dataEntry = new LinkedHashMap<>();
+
+	    String todayDate = LocalDate.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+	    dataEntry.put("date", todayDate);
+	    dataEntry.put("module", "OBPS");
+	    dataEntry.put("ward", "Chandigarh");
+	    dataEntry.put("ulb", "chd.municipalcorporationchandigarh");
+	    dataEntry.put("region", "Chandigarh");
+	    dataEntry.put("state", "Chandigarh");
+
+	    if (responseData != null && responseData.containsKey("metrics")) {
+	        dataEntry.put("metrics", responseData.get("metrics"));
+	    } else {
+	        dataEntry.put("metrics", responseData); 
+	    }
+
+	    requestBody.put("Data", Collections.singletonList(dataEntry)); // Add Data after RequestInfo
+	    
+	    StringBuilder uri = new StringBuilder(apiConfiguration.getUpyogniuaHost());
+		uri.append(apiConfiguration.getUpyogniuaingestPath());
+		String url = uri.toString();
+
+	    // Use RestTemplate to make the POST request
+	    RestTemplate restTemplate = requestFactory.getRestTemplate();
+	    try {
+	        if (todaysApplications > 0) {
+	        	ResponseEntity<Map> response = restTemplate.postForEntity(url, requestBody, Map.class);
+	            System.out.println("upyog OBPS response:::"+response.getBody());
+	            if (response.getStatusCode().is2xxSuccessful()) {
+	                System.out.println("Successfully posted OBPS data to NIUA Dashboard");
+	            } else {
+	                System.out.println("Failed to post OBPS data. Status: " + response.getStatusCode());
+	            }
+	        } else {
+	        	System.out.println("No OBPS applications today. Skipping data post.");
+	        }
+	    } catch (HttpStatusCodeException e) {
+	        System.out.println("HTTP Status Code: " + e.getStatusCode());
+	        System.out.println("Response Body: " + e.getResponseBodyAsString());
+	        e.printStackTrace();
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
+	}
+
+	
 	
 	
 

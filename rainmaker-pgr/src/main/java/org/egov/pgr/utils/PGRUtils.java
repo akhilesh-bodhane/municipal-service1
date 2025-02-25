@@ -125,6 +125,54 @@ public class PGRUtils {
 	
 	 @Value("${kafka.topics.notification.sms}")
 	 private String smsNotifTopic;
+	 
+	 @Value("${niua.service.host}")
+		private String niuaServiceHost;
+		
+
+		@Value("${niua.service.data.get}")
+		private String niuaDataGet;
+		
+		@Value("${upyog.service.host}")
+		private String upyogServiceHost;
+
+
+		@Value("${upyog.service.data.post}")
+		private String upyogDataPost;
+		
+		
+		public String getUpyogServiceHost() {
+			return upyogServiceHost;
+		}
+
+		public void setUpyogServiceHost(String upyogServiceHost) {
+			this.upyogServiceHost = upyogServiceHost;
+		}
+
+		public String getUpyogDataPost() {
+			return upyogDataPost;
+		}
+
+		public void setUpyogDataPost(String upyogDataPost) {
+			this.upyogDataPost = upyogDataPost;
+		}
+		
+
+		public String getNiuaServiceHost() {
+			return niuaServiceHost;
+		}
+
+		public void setNiuaServiceHost(String niuaServiceHost) {
+			this.niuaServiceHost = niuaServiceHost;
+		}
+		
+		public String getNiuaDataGet() {
+			return niuaDataGet;
+		}
+
+		public void setNiuaDataGet(String niuaDataGet) {
+			this.niuaDataGet = niuaDataGet;
+		}
 
 	@Autowired
 	private ResponseInfoFactory factory;
