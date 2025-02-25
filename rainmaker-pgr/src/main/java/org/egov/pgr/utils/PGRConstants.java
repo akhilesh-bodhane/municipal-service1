@@ -205,6 +205,7 @@ public class PGRConstants {
 	public static final String ROLE_CSR = "CSR";
 	public static final String ROLE_ESCALATION_OFFICER1 = "ESCALATION_OFFICER1";
 	public static final String ROLE_ESCALATION_OFFICER2 = "ESCALATION_OFFICER2";
+	public static final String ROLE_PGR_LME = "PGR_LME";
 	public static final String ROLE_SYSTEM = "SYSTEM";
 	
 	
