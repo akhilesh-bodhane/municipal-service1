@@ -674,7 +674,7 @@ public class GrievanceService {
 				//status.add(WorkFlowConfigs.STATUS_ASSIGNED);
 				status.add(WorkFlowConfigs.STATUS_REASSIGN_REQUESTED);
 				serviceReqSearchCriteria.setStatus(status);
-				serviceReqSearchCriteria.setCategory(null);
+				//serviceReqSearchCriteria.setCategory(null);
 				uri = new StringBuilder();
 				enrichRequest(requestInfo, serviceReqSearchCriteria);
 				searcherRequest = pGRUtils.prepareSearchRequestWithDetails(uri, serviceReqSearchCriteria, requestInfo);
