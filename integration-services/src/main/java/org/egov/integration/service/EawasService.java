@@ -5,6 +5,7 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -394,12 +395,15 @@ public class EawasService {
 	    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 	    
 	 // Get current date as fromDate
-        String fromDate = LocalDate.now().format(formatter);
-        System.out.println("From Date: " + fromDate);
+        //String fromDate = LocalDate.now().format(formatter);
+        //System.out.println("From Date: " + fromDate);
         
      // Get the next date as toDate
-        String toDate = LocalDate.now().plusDays(1).format(formatter);
-        System.out.println("To Date: " + toDate);
+        //String toDate = LocalDate.now().plusDays(1).format(formatter);
+        //System.out.println("To Date: " + toDate);
+        
+        String fromDate="01/02/2024";
+        String toDate ="31/02/2024";
 	    	    
 	    StringBuilder uri = new StringBuilder(apiConfiguration.getObpsHost());
 		uri.append(apiConfiguration.getNIUASearchOBPSDataPath());
@@ -470,9 +474,56 @@ public class EawasService {
 	            }
 	        }
 	    }
+	    List<Map<String, Object>> todaysCollection = (List<Map<String, Object>>) metrics.get("todaysCollection");
+        if (todaysCollection != null) {
+            for (Map<String, Object> collection : todaysCollection) {
+                if ("paymentMode".equals(collection.get("groupBy"))) {
+                    List<Map<String, Object>> buckets = (List<Map<String, Object>>) collection.get("buckets");
+                    
+                    LinkedHashMap<String, Object> categorizedPayments = processPayments(buckets);
+                    
+                    List<Map<String, Object>> transformedBuckets = new ArrayList<>();
+                    for (Map.Entry<String, Object> entry : categorizedPayments.entrySet()) {
+                        Map<String, Object> newBucket = new HashMap<>();
+                        newBucket.put("name", entry.getKey());
+                        newBucket.put("value", entry.getValue());
+                        transformedBuckets.add(newBucket);
+                    }
+                    collection.put("buckets", transformedBuckets);
+                }
+            }
+        }
 
 	    return responseMap;
 	}
+	
+	public static LinkedHashMap<String, Object> processPayments(List<Map<String, Object>> buckets) {
+		LinkedHashMap<String, Object> categorizedPayments = new LinkedHashMap<>();      
+		int digitalSum = 0;
+        int nonDigitalSum = 0;
+                
+        if (buckets != null && !buckets.isEmpty()) {
+        for (Map<String, Object> bucket : buckets) {
+        	String name = (String) bucket.get("name");
+        	int value = ((Number) bucket.get("value")).intValue(); // Convert to Integer
+
+            if (Arrays.asList("card", "online").contains(name)) {
+                digitalSum += value;
+            } else if (Arrays.asList("cash", "cheque/dd", "bankchallan").contains(name)) {
+                nonDigitalSum += value;
+            }
+        }
+        }      
+        // If value is 0, store as Integer (0); otherwise, store as formatted String with 2 decimal places
+        //categorizedPayments.put("Digital", digitalSum == 0 ? 0 : String.format("%.2f", digitalSum));
+        //categorizedPayments.put("Non Digital", nonDigitalSum == 0 ? 0 : String.format("%.2f", nonDigitalSum));
+        
+        // If value is 0, store as Integer (0); otherwise, store as Integer instead of String
+        categorizedPayments.put("Digital", digitalSum);
+        categorizedPayments.put("Non Digital", nonDigitalSum);
+      
+        return categorizedPayments;
+    }
 
 	private void replaceNAWithZero(Map<String, Object> map, String key) {
 	    if (map.containsKey(key) && "NA".equals(map.get(key))) {
