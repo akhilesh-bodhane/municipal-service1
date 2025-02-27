@@ -395,15 +395,15 @@ public class EawasService {
 	    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 	    
 	 // Get current date as fromDate
-        //String fromDate = LocalDate.now().format(formatter);
-        //System.out.println("From Date: " + fromDate);
+        String fromDate = LocalDate.now().format(formatter);
+        System.out.println("From Date: " + fromDate);
         
      // Get the next date as toDate
-        //String toDate = LocalDate.now().plusDays(1).format(formatter);
-        //System.out.println("To Date: " + toDate);
+        String toDate = LocalDate.now().plusDays(1).format(formatter);
+        System.out.println("To Date: " + toDate);
         
-        String fromDate="01/02/2024";
-        String toDate ="31/02/2024";
+        //String fromDate="01/02/2024";
+        //String toDate ="31/02/2024";
 	    	    
 	    StringBuilder uri = new StringBuilder(apiConfiguration.getObpsHost());
 		uri.append(apiConfiguration.getNIUASearchOBPSDataPath());
