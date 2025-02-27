@@ -29,6 +29,9 @@ public class Department   {
 
   @JsonProperty("code")
   private String code = null;
+  
+  @JsonProperty("value")
+  private String value = null;
 
   @JsonProperty("active")
   private Boolean active = null;

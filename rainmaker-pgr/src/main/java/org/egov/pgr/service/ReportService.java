@@ -362,6 +362,7 @@ public class ReportService {
 			for (int i = 0; i < responseJSONArray.size(); i++) {
 				Department dept = mapper.convertValue(responseJSONArray.get(i), Department.class);
 				deptMap.put(dept.getCode(), dept);
+				deptMap.put(dept.getValue(), dept);
 				deptMap.put(dept.getName(), dept);
 			}
 
