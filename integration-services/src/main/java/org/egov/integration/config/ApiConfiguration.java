@@ -172,6 +172,17 @@ public class ApiConfiguration {
 	@Value("${NIUAMCollect.service.data.get}")
 	private String NIUAMCollectServiceDataPath;
 	
+	@Value("${persister.save.obpsniuascheduler.log.topic}")
+	private String obpsNIUASchedulerLogSaveTopic;
+	
+	@Value("${persister.save.tlniuascheduler.log.topic}")
+	private String TLNIUASchedulerLogSaveTopic;
+	
+	@Value("${persister.save.mcollectniuascheduler.log.topic}")
+	private String MCOLLECTNIUASchedulerLogSaveTopic;
+	
+	
+	
 	
 	
 }

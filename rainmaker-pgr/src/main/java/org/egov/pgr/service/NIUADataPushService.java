@@ -5,14 +5,18 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.pgr.model.GrievanceReport;
-import org.egov.pgr.model.Metric;
+import org.egov.pgr.model.PGRNiuaSchedulerLog;
+import org.egov.pgr.model.PGRNiuaSchedulerRequest;
 import org.egov.pgr.model.RequestInfoWrapper;
+import org.egov.pgr.producer.PGRProducer;
 import org.egov.pgr.utils.ErrorConstants;
 import org.egov.pgr.utils.PGRUtils;
 import org.egov.tracer.model.CustomException;
@@ -25,11 +29,10 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpStatusCodeException;
-import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import com.google.gson.Gson;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.GsonBuilder;
 
 @Service
@@ -40,11 +43,17 @@ public class NIUADataPushService {
 	private final RestTemplate restTemplate = new RestTemplate();
 
 	private static final String TENANT_ID = "ch.chandigarh";
+	
+	@Autowired
+	private PGRProducer producer;
+	
+	private final ObjectMapper objectMapper;
 
 	@Autowired
-	public NIUADataPushService(PGRUtils pgrUtils) {
+	public NIUADataPushService(PGRUtils pgrUtils,ObjectMapper objectMapper) {
 		super();
 		this.pgrUtils = pgrUtils;
+		this.objectMapper = objectMapper;
 	}
 
 	public GrievanceReport fetchDataFromProduction(RequestInfoWrapper request) {
@@ -108,7 +117,7 @@ public class NIUADataPushService {
 	}
 
 
-	public ResponseEntity<String> pushDataToNIUA(GrievanceReport finalData) {
+	public ResponseEntity<Map> pushDataToNIUA(GrievanceReport finalData) {
 	    // Using LinkedHashMap to maintain insertion order
 	    Map<String, Object> requestBody = new LinkedHashMap<>();
 	    Map<String, Object> requestInfo = new LinkedHashMap<>();
@@ -170,6 +179,15 @@ public class NIUADataPushService {
 	    HttpHeaders headers = new HttpHeaders();
 	    headers.setContentType(MediaType.APPLICATION_JSON);
 	    HttpEntity<Map<String, Object>> requestEntity = new HttpEntity<>(requestBody, headers);
+	    
+		
+		String uuid = UUID.randomUUID().toString();
+		PGRNiuaSchedulerLog pgrSchedulerlog = new PGRNiuaSchedulerLog();
+		pgrSchedulerlog.setId(uuid);
+		pgrSchedulerlog.setTenantid(TENANT_ID);
+	    
+		PGRNiuaSchedulerRequest pgrNiuaSchedulerRequest = new PGRNiuaSchedulerRequest();
+		pgrNiuaSchedulerRequest.setPGRNiuaSchedulerRequest(pgrSchedulerlog);
 
 	    try {
 	        ResponseEntity<Map> response = restTemplate.exchange(url, HttpMethod.POST, requestEntity, Map.class);
@@ -178,20 +196,38 @@ public class NIUADataPushService {
 
 	        if (response.getStatusCode().is2xxSuccessful() && response.getBody() != null) {
 	            System.out.println("Data successfully pushed to NIUA API");
-	            String responseBody = new Gson().toJson(response.getBody());
-	            return ResponseEntity.status(response.getStatusCode()).body(responseBody);
+	            //String responseBody = new Gson().toJson(response.getBody());
+	            
+	            pgrSchedulerlog.setStatus("SUCCESS");               
+                pgrSchedulerlog.setDescription(objectMapper.writeValueAsString(response.getBody()) + " - Status Code: " + response.getStatusCode());
+                producer.push(pgrUtils.getPGRNIUASchedulerLogSaveTopic(), pgrNiuaSchedulerRequest);
+	            
+	            return response;
 	        } else {
 	            System.out.println("Failed to push data: " + response.getStatusCode());
-	            return ResponseEntity.status(response.getStatusCode()).body("Error: " + response.getStatusCode());
+	            
+	            pgrSchedulerlog.setStatus("FAILED");
+	            pgrSchedulerlog.setDescription("Failed to post PGR data::"+"-"+"Status Code::"+response.getStatusCode());
+	            producer.push(pgrUtils.getPGRNIUASchedulerLogSaveTopic(), pgrNiuaSchedulerRequest);
+				            
+	            return ResponseEntity.status(response.getStatusCode()).body(Collections.singletonMap("error", "Failed to push data to NIUA API"));
 	        }
 	    } catch (HttpStatusCodeException e) {
 	        System.out.println("HTTP Status Code: " + e.getStatusCode());
 	        System.out.println("Response Body: " + e.getResponseBodyAsString());
-	        return ResponseEntity.status(e.getStatusCode()).body(e.getResponseBodyAsString());
+	        
+	        pgrSchedulerlog.setStatus("FAILED");
+	        pgrSchedulerlog.setDescription("Failed to post PGR data HTTPStatusCodeException::"+"-"+"Response Body::"+e.getResponseBodyAsString()+"-"+"Status Code::"+e.getStatusCode());           
+            producer.push(pgrUtils.getPGRNIUASchedulerLogSaveTopic(), pgrNiuaSchedulerRequest);
+            
+	        return ResponseEntity.status(e.getStatusCode()).body(Collections.singletonMap("Error from PGR NIUA API:", e.getResponseBodyAsString()));
+	        
 	    } catch (Exception e) {
 	        e.printStackTrace();
-	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-	                .body("An unexpected error occurred: " + e.getMessage());
+	        pgrSchedulerlog.setStatus("FAILED");
+	        pgrSchedulerlog.setDescription("Failed to post PGR data Exception::"+e.getMessage());
+            producer.push(pgrUtils.getPGRNIUASchedulerLogSaveTopic(), pgrNiuaSchedulerRequest);
+	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Collections.singletonMap("error", "An unexpected error occurred while pushing data."));
 	    }
 	}
 }

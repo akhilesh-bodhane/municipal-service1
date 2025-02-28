@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.egov.common.contract.request.RequestInfo;
@@ -18,11 +19,13 @@ import org.egov.common.contract.response.ResponseInfo;
 import org.egov.integration.common.CommonConstants;
 import org.egov.integration.config.ApiConfiguration;
 import org.egov.integration.config.EawasConfiguration;
-import org.egov.integration.model.Bucket;
 import org.egov.integration.model.EawasRequestInfoWrapper;
+import org.egov.integration.model.McollectNiuaSchedulerRequest;
 //import org.egov.tl.web.models.TradeLicense;
 //import org.egov.tl.web.models.TradeLicenseSearchCriteria;
 import org.egov.integration.model.Metrics;
+import org.egov.integration.model.ObpsNiuaSchedulerLog;
+import org.egov.integration.model.ObpsNiuaSchedulerRequest;
 import org.egov.integration.model.RequestData;
 import org.egov.integration.model.RequestInfoWrap;
 import org.egov.integration.model.RequestInfoWrapper;
@@ -30,11 +33,14 @@ import org.egov.integration.model.ResponseInfoWrapper;
 import org.egov.integration.model.TLBucket;
 import org.egov.integration.model.TLDashboardRequestInfoWrapper;
 import org.egov.integration.model.TLNIUAModel;
+import org.egov.integration.model.TLNiuaSchedulerLog;
+import org.egov.integration.model.TLNiuaSchedulerRequest;
 import org.egov.integration.model.TLPublicDashboard;
 import org.egov.integration.model.TLPublicDashboardResponseInfo;
 import org.egov.integration.model.TodaysCollection;
 import org.egov.integration.model.applicationsMovedToday;
 import org.egov.integration.model.todaysTradeLicenses;
+import org.egov.integration.producer.Producer;
 import org.egov.integration.repository.TLniuaRepository;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -42,7 +48,6 @@ import org.json.XML;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -72,6 +77,18 @@ public class EawasService {
 	
 	@Autowired
 	private ApiConfiguration apiConfiguration;
+	
+	private static final String TENANT_ID = "ch.chandigarh";
+	
+	@Autowired
+	private Producer producer;
+	
+	private final ObjectMapper objectMapper;
+	
+	@Autowired
+	public EawasService(ObjectMapper objectMapper) {
+		this.objectMapper = objectMapper;
+	}
 
 	public ResponseEntity<ResponseInfoWrapper> get(EawasRequestInfoWrapper request) throws JSONException {
 		RestTemplate restTemplate = requestFactory.getRestTemplate();
@@ -357,29 +374,64 @@ public class EawasService {
 
 	    // Use RestTemplate to make the POST request
 	    RestTemplate restTemplate = requestFactory.getRestTemplate();
+	    
+		
+		String uuid = UUID.randomUUID().toString();
+		TLNiuaSchedulerLog tlSchedulerlog = new TLNiuaSchedulerLog();
+		tlSchedulerlog.setId(uuid);
+		tlSchedulerlog.setTenantid(TENANT_ID);
+	    
+	    TLNiuaSchedulerRequest tlNiuaSchedulerRequest = new TLNiuaSchedulerRequest();
+	    tlNiuaSchedulerRequest.setTLNiuaSchedulerRequest(tlSchedulerlog);
+	    
 	    try {
 	        if (todaysApplications > 0) {
 	        	ResponseEntity<Map> response = restTemplate.postForEntity(url, requestBody, Map.class);
 	            System.out.println("upyog response:::"+response.getBody());
 	            if (response.getStatusCode().is2xxSuccessful()) {
-	                System.out.println("Successfully posted data to NIUA Dashboard");
+	                System.out.println("Successfully posted data to NIUA Dashboard");	
+	                
+	                tlSchedulerlog.setStatus("SUCCESS");
+	                tlSchedulerlog.setDescription(objectMapper.writeValueAsString(response.getBody()) + " - Status Code: " + response.getStatusCode());
+	                producer.push(apiConfiguration.getTLNIUASchedulerLogSaveTopic(), tlNiuaSchedulerRequest);
+	                
 	                return response;
 	            } else {
-	                System.out.println("Failed to post data. Status: " + response.getStatusCode());
+	                System.out.println("Failed to post TL data. Status: " + response.getStatusCode());
+	                
+	                tlSchedulerlog.setStatus("FAILED");
+	                tlSchedulerlog.setDescription("Failed to post TL data::"+"-"+"Status Code::"+response.getStatusCode());
+	                producer.push(apiConfiguration.getTLNIUASchedulerLogSaveTopic(), tlNiuaSchedulerRequest);
+	                
 	                return ResponseEntity.status(response.getStatusCode()).body(Collections.singletonMap("error", "Failed to post data"));
 	            }
 	        } else {
-	        	System.out.println("No applications today. Skipping data post.");
+	        	System.out.println("No TL applications today. Skipping data post.");
+	        	
+	        	tlSchedulerlog.setStatus("FAILED");
+	        	tlSchedulerlog.setDescription("No TL applications today to Push The Data");
+                producer.push(apiConfiguration.getTLNIUASchedulerLogSaveTopic(), tlNiuaSchedulerRequest);
+	        	
 	        	return ResponseEntity.ok(Collections.singletonMap("message", "No applications today"));
 	        }
 	    } catch (HttpStatusCodeException e) {
 	        System.out.println("HTTP Status Code: " + e.getStatusCode());
 	        System.out.println("Response Body: " + e.getResponseBodyAsString());
 	        e.printStackTrace();
+	        		
+	        tlSchedulerlog.setStatus("FAILED");
+	        tlSchedulerlog.setDescription("Failed to post TL data HTTPStatusCodeException::"+"-"+"Response Body::"+e.getResponseBodyAsString()+"-"+"Status Code::"+e.getStatusCode());
+            producer.push(apiConfiguration.getTLNIUASchedulerLogSaveTopic(), tlNiuaSchedulerRequest);
+			        
 	        return ResponseEntity.status(e.getStatusCode()).body(Collections.singletonMap("error", e.getResponseBodyAsString()));
 	    } catch (Exception e) {
 	        e.printStackTrace();
-	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Collections.singletonMap("error", "Internal Server Error"));
+	        
+	        tlSchedulerlog.setStatus("FAILED");
+	        tlSchedulerlog.setDescription("Failed to post TL data Exception::"+e.getMessage());
+	         producer.push(apiConfiguration.getTLNIUASchedulerLogSaveTopic(), tlNiuaSchedulerRequest);
+	        
+	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Collections.singletonMap("error", "An unexpected error occurred while pushing data."));
 	    }
 	}
 	
@@ -402,8 +454,8 @@ public class EawasService {
         String toDate = LocalDate.now().plusDays(1).format(formatter);
         System.out.println("To Date: " + toDate);
         
-        //String fromDate="01/02/2024";
-        //String toDate ="31/02/2024";
+        //String fromDate="26/02/2025";
+        //String toDate ="27/02/2025";
 	    	    
 	    StringBuilder uri = new StringBuilder(apiConfiguration.getObpsHost());
 		uri.append(apiConfiguration.getNIUASearchOBPSDataPath());
@@ -418,18 +470,15 @@ public class EawasService {
 	    	 ObjectMapper mapper = new ObjectMapper();
 	       //response =  restTemplate.postForObject(url, request, Object.class);
 	       Map<String, Object> responseMap = restTemplate.postForObject(url, request, Map.class);
-	       
-	       Map<String, Object> processOBPSData = processOBPSData(responseMap);
-	      
-	        
-	       if (processOBPSData != null && !processOBPSData.isEmpty()) {
+	       	        
+	       if (responseMap != null && !responseMap.isEmpty()) {
 	        	
-	            Map<String, Object> metrics = (Map<String, Object>) processOBPSData.get("metrics");
+	            Map<String, Object> metrics = (Map<String, Object>) responseMap.get("metrics");
 	            // Extract "todaysApplications" value
 	            if (metrics != null) {
 	            	int applicationsSubmitted = (int) metrics.getOrDefault("applicationsSubmitted", 0);
 	                System.out.println("Today's Applications Submitted: " + applicationsSubmitted);
-	                return postToOBPSNIUADashboard(request,processOBPSData,applicationsSubmitted);		                
+	                return postToOBPSNIUADashboard(request,responseMap,applicationsSubmitted);		                
 	            }else {
 	            System.out.println("Metrics not found in the response.");
 	            }	            
@@ -446,101 +495,6 @@ public class EawasService {
 	        e.printStackTrace();
 	    } 
 	    return ResponseEntity.ok(new HashMap<>());
-	}
-	
-
-	public Map<String, Object> processOBPSData(Map<String, Object> responseMap) {
-	    if (responseMap == null || responseMap.isEmpty()) {
-	        System.out.println("Response map is null or empty.");
-	        return responseMap;
-	    }
-
-	    // Step 1: Replace "NA" with "0" for specific keys
-	    Map<String, Object> metrics = (Map<String, Object>) responseMap.get("metrics");
-	    if (metrics != null) {
-	        replaceNAWithZero(metrics, "todaysCompletedApplicationsWithinSLAOC");
-	        replaceNAWithZero(metrics, "todaysCompletedApplicationsWithinSLAPermit");
-	        replaceNAWithZero(metrics, "slaComplianceOC");
-	        replaceNAWithZero(metrics, "slaCompliancePermit");
-	    }
-
-	    // Step 2: Convert groupBy keys to camel case
-	    List<Map<String, Object>> permitsIssued = (List<Map<String, Object>>) metrics.get("permitsIssued");
-	    if (permitsIssued != null) {
-	        for (Map<String, Object> group : permitsIssued) {
-	            String groupBy = (String) group.get("groupBy");
-	            if (groupBy != null) {
-	                group.put("groupBy", toCamelCase(groupBy));
-	            }
-	        }
-	    }
-	    List<Map<String, Object>> todaysCollection = (List<Map<String, Object>>) metrics.get("todaysCollection");
-        if (todaysCollection != null) {
-            for (Map<String, Object> collection : todaysCollection) {
-                if ("paymentMode".equals(collection.get("groupBy"))) {
-                    List<Map<String, Object>> buckets = (List<Map<String, Object>>) collection.get("buckets");
-                    
-                    LinkedHashMap<String, Object> categorizedPayments = processPayments(buckets);
-                    
-                    List<Map<String, Object>> transformedBuckets = new ArrayList<>();
-                    for (Map.Entry<String, Object> entry : categorizedPayments.entrySet()) {
-                        Map<String, Object> newBucket = new HashMap<>();
-                        newBucket.put("name", entry.getKey());
-                        newBucket.put("value", entry.getValue());
-                        transformedBuckets.add(newBucket);
-                    }
-                    collection.put("buckets", transformedBuckets);
-                }
-            }
-        }
-
-	    return responseMap;
-	}
-	
-	public static LinkedHashMap<String, Object> processPayments(List<Map<String, Object>> buckets) {
-		LinkedHashMap<String, Object> categorizedPayments = new LinkedHashMap<>();      
-		int digitalSum = 0;
-        int nonDigitalSum = 0;
-                
-        if (buckets != null && !buckets.isEmpty()) {
-        for (Map<String, Object> bucket : buckets) {
-        	String name = (String) bucket.get("name");
-        	int value = ((Number) bucket.get("value")).intValue(); // Convert to Integer
-
-            if (Arrays.asList("card", "online").contains(name)) {
-                digitalSum += value;
-            } else if (Arrays.asList("cash", "cheque/dd", "bankchallan").contains(name)) {
-                nonDigitalSum += value;
-            }
-        }
-        }      
-        // If value is 0, store as Integer (0); otherwise, store as formatted String with 2 decimal places
-        //categorizedPayments.put("Digital", digitalSum == 0 ? 0 : String.format("%.2f", digitalSum));
-        //categorizedPayments.put("Non Digital", nonDigitalSum == 0 ? 0 : String.format("%.2f", nonDigitalSum));
-        
-        // If value is 0, store as Integer (0); otherwise, store as Integer instead of String
-        categorizedPayments.put("Digital", digitalSum);
-        categorizedPayments.put("Non Digital", nonDigitalSum);
-      
-        return categorizedPayments;
-    }
-
-	private void replaceNAWithZero(Map<String, Object> map, String key) {
-	    if (map.containsKey(key) && "NA".equals(map.get(key))) {
-	        map.put(key, "0");
-	    }
-	}
-
-	private String toCamelCase(String input) {
-	    if (input == null || input.isEmpty()) {
-	        return input;
-	    }
-	    String[] parts = input.split("(?=[A-Z])"); // Split by uppercase letters
-	    String result = parts[0].toLowerCase();
-	    for (int i = 1; i < parts.length; i++) {
-	        result += parts[i].substring(0, 1).toUpperCase() + parts[i].substring(1).toLowerCase();
-	    }
-	    return result;
 	}
 	
 	
@@ -595,6 +549,14 @@ public class EawasService {
 	    StringBuilder uri = new StringBuilder(apiConfiguration.getUpyogniuaHost());
 		uri.append(apiConfiguration.getUpyogniuaingestPath());
 		String url = uri.toString();
+		
+		String uuid = UUID.randomUUID().toString();
+	    ObpsNiuaSchedulerLog obpsSchedulerlog = new ObpsNiuaSchedulerLog();
+	    obpsSchedulerlog.setId(uuid);
+	    obpsSchedulerlog.setTenantid(TENANT_ID);
+	    
+	    ObpsNiuaSchedulerRequest obpsNiuaSchedulerRequest = new ObpsNiuaSchedulerRequest();
+	    obpsNiuaSchedulerRequest.setObpsNiuaSchedulerRequest(obpsSchedulerlog);
 
 	    // Use RestTemplate to make the POST request
 	    RestTemplate restTemplate = requestFactory.getRestTemplate();
@@ -604,23 +566,43 @@ public class EawasService {
 	            System.out.println("upyog OBPS response:::"+response.getBody());
 	            if (response.getStatusCode().is2xxSuccessful()) {
 	                System.out.println("Successfully posted OBPS data to NIUA Dashboard");
+	                
+	                obpsSchedulerlog.setStatus("SUCCESS");
+	                obpsSchedulerlog.setDescription(objectMapper.writeValueAsString(response.getBody()) + " - Status Code: " + response.getStatusCode());
+	                producer.push(apiConfiguration.getObpsNIUASchedulerLogSaveTopic(), obpsNiuaSchedulerRequest);
+	                
 	                return response;
 	            } else {
 	                System.out.println("Failed to post OBPS data. Status: " + response.getStatusCode());
-	                return ResponseEntity.status(response.getStatusCode()).body(Collections.singletonMap("error", "Failed to post data"));
+	                
+	                obpsSchedulerlog.setStatus("FAILED");
+	                obpsSchedulerlog.setDescription("Failed to post OBPS data::"+"-"+"Status Code::"+response.getStatusCode());
+	                producer.push(apiConfiguration.getObpsNIUASchedulerLogSaveTopic(), obpsNiuaSchedulerRequest);
+	                
+	                return ResponseEntity.status(response.getStatusCode()).body(Collections.singletonMap("error", "Failed to push data to NIUA API"));
 	            }
 	        } else {
 	        	System.out.println("No OBPS applications today. Skipping data post.");
+	        	
+	        	obpsSchedulerlog.setStatus("FAILED");
+                obpsSchedulerlog.setDescription("No OBPS applications today to push data");
+                producer.push(apiConfiguration.getObpsNIUASchedulerLogSaveTopic(), obpsNiuaSchedulerRequest);
+	        	
 	        	return ResponseEntity.ok(Collections.singletonMap("message", "No applications today"));
 	        }
 	    } catch (HttpStatusCodeException e) {
 	        System.out.println("HTTP Status Code: " + e.getStatusCode());
 	        System.out.println("Response Body: " + e.getResponseBodyAsString());
-	        e.printStackTrace();
-	        return ResponseEntity.status(e.getStatusCode()).body(Collections.singletonMap("error", e.getResponseBodyAsString()));
+	        obpsSchedulerlog.setStatus("FAILED");
+            obpsSchedulerlog.setDescription("Failed to post OBPS data HTTPStatusCodeException::"+"-"+"Response Body::"+e.getResponseBodyAsString()+"-"+"Status Code::"+e.getStatusCode());
+            producer.push(apiConfiguration.getObpsNIUASchedulerLogSaveTopic(), obpsNiuaSchedulerRequest);            
+	        return ResponseEntity.status(e.getStatusCode()).body(Collections.singletonMap("Error from NIUA API:", e.getResponseBodyAsString()));
 	    } catch (Exception e) {
-	        e.printStackTrace();
-	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Collections.singletonMap("error", "Internal Server Error"));
+	    	System.out.println("Exception: " + e);
+	        obpsSchedulerlog.setStatus("FAILED");
+            obpsSchedulerlog.setDescription("Failed to post OBPS data Exception::"+e.getMessage());
+            producer.push(apiConfiguration.getObpsNIUASchedulerLogSaveTopic(), obpsNiuaSchedulerRequest);
+	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Collections.singletonMap("error", "An unexpected error occurred while pushing data."));
 	    }
 	}
 

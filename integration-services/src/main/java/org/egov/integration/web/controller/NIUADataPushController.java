@@ -9,6 +9,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.ResponseEntity.BodyBuilder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 import javax.validation.Valid;
 
 @RestController
@@ -25,12 +27,12 @@ public class NIUADataPushController {
   
 
 	@PostMapping("/NIUASearch")
-	 public ResponseEntity<String> fetchAndPushData(@Valid @RequestBody RequestInfoWrapper request) {
+	 public Object fetchAndPushData(@Valid @RequestBody RequestInfoWrapper request) {
         try {
             UserChargesReport data = niuaDataPushService.fetchDataFromProduction(request);
 
             if (data != null && data.getMetrics() != null) {
-                ResponseEntity<String> response = niuaDataPushService.pushDataToNIUA(data);
+                ResponseEntity<Map> response = niuaDataPushService.pushDataToNIUA(data);
                 System.out.println("NIUA API Response: " + response.getBody());
                 return response;
             } else {

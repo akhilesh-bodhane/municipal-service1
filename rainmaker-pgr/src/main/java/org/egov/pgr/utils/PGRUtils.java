@@ -140,6 +140,9 @@ public class PGRUtils {
 		@Value("${upyog.service.data.post}")
 		private String upyogDataPost;
 		
+		@Value("${persister.save.pgrniuascheduler.log.topic}")
+		private String PGRNIUASchedulerLogSaveTopic;
+		
 		
 		public String getUpyogServiceHost() {
 			return upyogServiceHost;
@@ -173,6 +176,18 @@ public class PGRUtils {
 		public void setNiuaDataGet(String niuaDataGet) {
 			this.niuaDataGet = niuaDataGet;
 		}
+		
+		
+
+	    public String getPGRNIUASchedulerLogSaveTopic() {
+			return PGRNIUASchedulerLogSaveTopic;
+		}
+
+		public void setPGRNIUASchedulerLogSaveTopic(String pGRNIUASchedulerLogSaveTopic) {
+			PGRNIUASchedulerLogSaveTopic = pGRNIUASchedulerLogSaveTopic;
+		}
+
+
 
 	@Autowired
 	private ResponseInfoFactory factory;

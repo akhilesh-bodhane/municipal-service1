@@ -1,5 +1,7 @@
 package org.egov.pgr.controller;
 
+import java.util.Map;
+
 import javax.validation.Valid;
 
 import org.egov.pgr.model.GrievanceReport;
@@ -22,7 +24,7 @@ public class NIUADataPushController {
 	}
 
 	@PostMapping("/_NIUAData")
-	public ResponseEntity<String> fetchAndPushData(@Valid @RequestBody RequestInfoWrapper request) {
+	public Object fetchAndPushData(@Valid @RequestBody RequestInfoWrapper request) {
 	    try {
 	        GrievanceReport grievanceReport = niuaDataPushService.fetchDataFromProduction(request);
 
@@ -31,10 +33,10 @@ public class NIUADataPushController {
 	        }
 
 	        // Call pushDataToNIUA which now returns a ResponseEntity<String>
-	        ResponseEntity<String> pushResult = niuaDataPushService.pushDataToNIUA(grievanceReport);
+	         ResponseEntity<Map> response = niuaDataPushService.pushDataToNIUA(grievanceReport);
 
 	        // Return the exact response from the pushDataToNIUA method
-	        return ResponseEntity.status(pushResult.getStatusCode()).body(pushResult.getBody());
+	        return response;
 
 	    } catch (Exception e) {
 	        e.printStackTrace();

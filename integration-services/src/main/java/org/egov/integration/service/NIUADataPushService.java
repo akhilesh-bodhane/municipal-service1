@@ -4,21 +4,35 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.integration.config.ApiConfiguration;
+import org.egov.integration.model.McollectNiuaSchedulerLog;
+import org.egov.integration.model.McollectNiuaSchedulerRequest;
 import org.egov.integration.model.RequestInfoWrapper;
 import org.egov.integration.model.UserChargesReport;
+import org.egov.integration.producer.Producer;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.*;
 
 @Service
 public class NIUADataPushService {
@@ -26,11 +40,18 @@ public class NIUADataPushService {
 	private final RestTemplate restTemplate = new RestTemplate();
 	private final ApiConfiguration apiConfiguration;
 	private static final String TENANT_ID = "ch.chandigarh";
-
+	
 	@Autowired
-	public NIUADataPushService(ApiConfiguration apiConfiguration) {
+	private Producer producer;
+	
+	private final ObjectMapper objectMapper;
+	
+	
+	@Autowired
+	public NIUADataPushService(ApiConfiguration apiConfiguration,ObjectMapper objectMapper) {
 		super();
 		this.apiConfiguration = apiConfiguration;
+		this.objectMapper = objectMapper;
 	}
 
 	public UserChargesReport fetchDataFromProduction(RequestInfoWrapper request) {
@@ -84,7 +105,7 @@ public class NIUADataPushService {
 		return null;
 	}
 
-	public ResponseEntity<String> pushDataToNIUA(UserChargesReport finalData) {
+	public ResponseEntity<Map> pushDataToNIUA(UserChargesReport finalData) {
 		Map<String, Object> requestBody = new LinkedHashMap<>();
 		Map<String, Object> requestInfo = new LinkedHashMap<>();
 
@@ -133,26 +154,51 @@ public class NIUADataPushService {
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON);
 		HttpEntity<Map<String, Object>> requestEntity = new HttpEntity<>(requestBody, headers);
+		
+		
+		String uuid = UUID.randomUUID().toString();
+		McollectNiuaSchedulerLog mcollectSchedulerlog = new McollectNiuaSchedulerLog();
+		mcollectSchedulerlog.setId(uuid);
+		mcollectSchedulerlog.setTenantid(TENANT_ID);
+	    
+		McollectNiuaSchedulerRequest mcollectNiuaSchedulerRequest = new McollectNiuaSchedulerRequest();
+		mcollectNiuaSchedulerRequest.setMcollectNiuaSchedulerRequest(mcollectSchedulerlog);
 
 		try {
 			ResponseEntity<Map> response = restTemplate.exchange(url, HttpMethod.POST, requestEntity, Map.class);
-
+					
 			if (response.getStatusCode().is2xxSuccessful()) {
-				System.out.println("Data successfully pushed to NIUA API");
-				return ResponseEntity.ok("Data successfully pushed to NIUA API");
+				System.out.println("Data successfully pushed to MCOLLECT NIUA API");
+				
+				mcollectSchedulerlog.setStatus("SUCCESS");            
+                mcollectSchedulerlog.setDescription(objectMapper.writeValueAsString(response.getBody()) + " - Status Code: " + response.getStatusCode());
+                producer.push(apiConfiguration.getMCOLLECTNIUASchedulerLogSaveTopic(), mcollectNiuaSchedulerRequest);
+				return response;
 			} else {
 				System.out.println("Failed to push data. HTTP Status: " + response.getStatusCode());
-				return ResponseEntity.status(response.getStatusCode()).body("Failed to push data to NIUA API");
+				
+				mcollectSchedulerlog.setStatus("FAILED");
+				mcollectSchedulerlog.setDescription("Failed to post MCOLLECT data::"+"-"+"Status Code::"+response.getStatusCode());
+                producer.push(apiConfiguration.getMCOLLECTNIUASchedulerLogSaveTopic(), mcollectNiuaSchedulerRequest);
+				
+				return ResponseEntity.status(response.getStatusCode()).body(Collections.singletonMap("error", "Failed to push data to NIUA API"));
 			}
 		} catch (HttpStatusCodeException e) {
 			System.out.println("HTTP Error: " + e.getStatusCode());
 			System.out.println("Response Body: " + e.getResponseBodyAsString());
-			return ResponseEntity.status(e.getStatusCode()).body("Error from NIUA API: " + e.getResponseBodyAsString());
+			
+			mcollectSchedulerlog.setStatus("FAILED");
+			mcollectSchedulerlog.setDescription("Failed to post MCOLLECT data HTTPStatusCodeException::"+"-"+"Response Body::"+e.getResponseBodyAsString()+"-"+"Status Code::"+e.getStatusCode());
+            producer.push(apiConfiguration.getMCOLLECTNIUASchedulerLogSaveTopic(), mcollectNiuaSchedulerRequest);
+			
+			 return ResponseEntity.status(e.getStatusCode()).body(Collections.singletonMap("Error from NIUA API:", e.getResponseBodyAsString()));
 		} catch (Exception e) {
 			System.out.println("Unexpected Error: " + e.getMessage());
 			e.printStackTrace();
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-					.body("An unexpected error occurred while pushing data.");
+			mcollectSchedulerlog.setStatus("FAILED");
+			mcollectSchedulerlog.setDescription("Failed to post MCOLLECT data Exception::"+e.getMessage());
+	        producer.push(apiConfiguration.getMCOLLECTNIUASchedulerLogSaveTopic(), mcollectNiuaSchedulerRequest);
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Collections.singletonMap("error", "An unexpected error occurred while pushing data."));
 		}
 	}
 }
