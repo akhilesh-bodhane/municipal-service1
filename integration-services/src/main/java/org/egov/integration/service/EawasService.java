@@ -412,7 +412,7 @@ public class EawasService {
 	        	tlSchedulerlog.setDescription("No TL applications today to Push The Data");
                 producer.push(apiConfiguration.getTLNIUASchedulerLogSaveTopic(), tlNiuaSchedulerRequest);
 	        	
-	        	return ResponseEntity.ok(Collections.singletonMap("message", "No applications today"));
+	        	return ResponseEntity.ok(Collections.singletonMap("message", "No TL applications today to push data"));
 	        }
 	    } catch (HttpStatusCodeException e) {
 	        System.out.println("HTTP Status Code: " + e.getStatusCode());
@@ -588,7 +588,7 @@ public class EawasService {
                 obpsSchedulerlog.setDescription("No OBPS applications today to push data");
                 producer.push(apiConfiguration.getObpsNIUASchedulerLogSaveTopic(), obpsNiuaSchedulerRequest);
 	        	
-	        	return ResponseEntity.ok(Collections.singletonMap("message", "No applications today"));
+	        	return ResponseEntity.ok(Collections.singletonMap("message", "No OBPS applications today to push data"));
 	        }
 	    } catch (HttpStatusCodeException e) {
 	        System.out.println("HTTP Status Code: " + e.getStatusCode());

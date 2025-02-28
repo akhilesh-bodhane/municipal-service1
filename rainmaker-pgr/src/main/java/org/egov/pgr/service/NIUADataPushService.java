@@ -58,11 +58,17 @@ public class NIUADataPushService {
 
 	public GrievanceReport fetchDataFromProduction(RequestInfoWrapper request) {
 
+		String uuid = UUID.randomUUID().toString();
+		PGRNiuaSchedulerLog pgrSchedulerlog = new PGRNiuaSchedulerLog();
+		pgrSchedulerlog.setId(uuid);
+		pgrSchedulerlog.setTenantid(TENANT_ID);
+		PGRNiuaSchedulerRequest pgrNiuaSchedulerRequest = new PGRNiuaSchedulerRequest();
+		pgrNiuaSchedulerRequest.setPGRNiuaSchedulerRequest(pgrSchedulerlog);
 		try {
 			LocalDate today = LocalDate.now();
 			ZonedDateTime fromDateTime = today.atStartOfDay(ZoneId.of("Asia/Kolkata"));
 			ZonedDateTime toDateTime = today.plusDays(1).atStartOfDay(ZoneId.of("Asia/Kolkata"));
-
+			
 			long fromDateMillis = fromDateTime.toInstant().toEpochMilli();
 			long toDateMillis = toDateTime.toInstant().toEpochMilli();
 
@@ -105,15 +111,19 @@ public class NIUADataPushService {
 		    } else {
 		        // Handle null response
 		        System.out.println("Received null response from the API.");
+		        return null;
 		       
 		    }
 			
 				
 		
 		} catch (Exception e) {
+			pgrSchedulerlog.setStatus("FAILED");
+	        pgrSchedulerlog.setDescription("No data found for given date range::"+e.getMessage());
+            producer.push(pgrUtils.getPGRNIUASchedulerLogSaveTopic(), pgrNiuaSchedulerRequest);
 			throw new CustomException(ErrorConstants.ERROR_CODE_GRIVENCE, e.getMessage());
 		}
-		return null;
+		//return null;
 	}
 
 
