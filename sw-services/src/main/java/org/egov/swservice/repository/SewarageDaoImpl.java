@@ -1,11 +1,14 @@
 package org.egov.swservice.repository;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.swservice.config.SWConfiguration;
+import org.egov.swservice.model.PublicDashBoardSearchCritieria;
+import org.egov.swservice.model.ResponseData;
 import org.egov.swservice.model.SearchCriteria;
 import org.egov.swservice.model.SearchTotalCollectionCriteria;
 import org.egov.swservice.model.SewerageConnection;
@@ -168,6 +171,104 @@ public class SewarageDaoImpl implements SewarageDao {
 		}
 
 		return sewerageConnectionList;
+	}
+	
+	private int publicDashBoardAppicationReceived(PublicDashBoardSearchCritieria SearchTotalCollectionCriteria,
+			List<Object> preparedStatement) {
+
+		String query = swQueryBuilder.getSearchQueryStringPublicDashBoard(SearchTotalCollectionCriteria,
+				preparedStatement);
+
+		Integer applicationreceivedcount = jdbcTemplate.queryForObject(query, preparedStatement.toArray(),
+				Integer.class);
+
+		return applicationreceivedcount;
+	}
+	
+	private int publicDashBoardApproved(PublicDashBoardSearchCritieria SearchTotalCollectionCriteria,
+			List<Object> preparedStatement) {
+
+		String query = swQueryBuilder.getSearchQueryStringPublicDashBoardApproved(SearchTotalCollectionCriteria,
+				preparedStatement);
+
+		Integer applicationapprovedcount = jdbcTemplate.queryForObject(query, preparedStatement.toArray(),
+				Integer.class);
+
+		if (applicationapprovedcount == null) {
+			applicationapprovedcount = 0;
+		}
+
+		return applicationapprovedcount;
+	}
+	
+	private BigDecimal publicDashBoardTotalCollection(PublicDashBoardSearchCritieria SearchTotalCollectionCriteria,
+			List<Object> preparedStatement) {
+		
+		String query = swQueryBuilder.getSearchQueryStringPublicDashBoardTotalCollection(SearchTotalCollectionCriteria,
+				preparedStatement);
+		System.out.println("query::" + query);
+		BigDecimal applicationtotalcollection = jdbcTemplate.queryForObject(query, preparedStatement.toArray(),
+				BigDecimal.class);
+		System.out.println("publicDashBoardTimeTaken::" + applicationtotalcollection);
+		if (applicationtotalcollection == null) {
+			applicationtotalcollection = BigDecimal.ZERO;
+		}
+
+		return applicationtotalcollection;
+		
+	}
+	
+	private Double publicDashBoardTimeTaken(PublicDashBoardSearchCritieria SearchTotalCollectionCriteria,
+			List<Object> preparedStatement) {
+
+		String query = swQueryBuilder.getSearchQueryStringPublicDashBoardTimeTaken(SearchTotalCollectionCriteria,
+				preparedStatement);
+		System.out.println("query::" + query);
+		Double applicationapprovedtimetaken = jdbcTemplate.queryForObject(query, preparedStatement.toArray(),
+				Double.class);
+		System.out.println("publicDashBoardTimeTaken::" + applicationapprovedtimetaken);
+		if (applicationapprovedtimetaken == null) {
+			applicationapprovedtimetaken = 0.0;
+		}
+
+		return applicationapprovedtimetaken;
+	}
+	
+	@Override
+	public ResponseData searchPublicDashBoardCount(PublicDashBoardSearchCritieria SearchTotalCollectionCriteria) {
+		List<Object> preparedStatement = new ArrayList<>();
+
+		int ApplicationReceived = publicDashBoardAppicationReceived(SearchTotalCollectionCriteria, preparedStatement);
+
+		int ApplicationApproved = publicDashBoardApproved(SearchTotalCollectionCriteria, preparedStatement);
+		
+		BigDecimal TotalCollection = publicDashBoardTotalCollection(SearchTotalCollectionCriteria, preparedStatement);
+		
+		//String filestoreId = getpublicDashboardFilestoreId(SearchTotalCollectionCriteria, preparedStatement);
+		
+		//Long filestoreCreatedTime = getpublicDashboardFilestoreCreatedtime(SearchTotalCollectionCriteria, preparedStatement);
+
+		double ApplicationApprovedTimeTaken = publicDashBoardTimeTaken(SearchTotalCollectionCriteria,
+				preparedStatement);
+		System.out.println("ApplicationApprovedTimeTaken::" + ApplicationApprovedTimeTaken);
+		double ApplicationTimeTaken = 0.0;
+		int timeTakenForApproval = 0;
+		if (ApplicationApproved > 0) {
+			ApplicationTimeTaken = ApplicationApprovedTimeTaken / ApplicationApproved;
+			System.out.println("ApplicationTimeTaken::" + ApplicationTimeTaken);
+			timeTakenForApproval = (int) Math.ceil(ApplicationTimeTaken);
+			System.out.println("timeTakenForApproval::" + timeTakenForApproval);
+		}
+
+		ResponseData rs = new ResponseData();
+
+		rs.setTotalApplicationReceived(ApplicationReceived);
+		rs.setTotalApplicationsApproved(ApplicationApproved);
+		rs.setTimeTakenForApproval(timeTakenForApproval);
+		rs.setTotalCollection(TotalCollection);
+		rs.setFilestoreId(null);
+		rs.setCreatedTime(null);
+		return rs;
 	}
 
 }

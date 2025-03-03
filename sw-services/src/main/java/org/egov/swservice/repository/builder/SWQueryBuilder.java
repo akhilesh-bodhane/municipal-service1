@@ -8,6 +8,7 @@ import org.apache.commons.lang.StringUtils;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.swservice.config.SWConfiguration;
 import org.egov.swservice.model.Property;
+import org.egov.swservice.model.PublicDashBoardSearchCritieria;
 import org.egov.swservice.model.SearchCriteria;
 import org.egov.swservice.model.SearchTotalCollectionCriteria;
 import org.egov.swservice.util.SewerageServicesUtil;
@@ -100,6 +101,19 @@ public class SWQueryBuilder {
 			+ "			INNER JOIN eg_sw_property property ON property.swid  = conn.id\r\n"
 			+ "			 WHERE  conn.applicationno  LIKE 'SW_AP%'  AND bl.consumercode  LIKE 'SW_AP%'  \r\n"
 			+ "			 and py.totaldue  !=0 ";
+	
+    private static final String PUBLIC_DASHBOARD_SEWERAGE_APPLICATION_RECEIVIED_COUNT = "select count(*) from eg_sw_connection esc ";
+	
+	private static final String PUBLIC_DASHBOARD_SEWERAGE_SEARCH_APPROVED = "select SUM(case when esc.applicationstatus in ('CONNECTION_ACTIVATED','SEWERAGE_CONNECTION_ACTIVATED') then 1 else 0 end) \r\n"
+			+ "from eg_sw_connection esc ";
+	
+	private static final String PUBLIC_DASHBOARD_SEWERAGE_SEARCH_TIME_TAKEN_APPROVED = "select SUM(case when esc.applicationstatus in ('CONNECTION_ACTIVATED','SEWERAGE_CONNECTION_ACTIVATED') \r\n"
+			+ "then to_timestamp(esc.lastmodifiedtime / 1000)::date - to_timestamp(esc.createdtime / 1000)::date else 0 end) approveddays\r\n"
+			+ "from eg_sw_connection esc ";
+	
+	private static final String PUBLIC_DASHBOARD_SEWERAGE_TOTAL_COLLECTION = "select sum(ept.txn_amount) from eg_sw_connection esc inner join eg_pg_transactions ept\r\n"
+			+ "on esc.applicationno  = ept.consumer_code ";
+	
 	
 	
 	public String getSearchQueryString(SearchCriteria criteria, List<Object> preparedStatement,
@@ -366,6 +380,139 @@ public class SWQueryBuilder {
 		
 		//query.append(ORDER_BY_CLAUSE);
 		return query.toString() ;
+	}
+	
+	public String getSearchQueryStringPublicDashBoard(PublicDashBoardSearchCritieria SearchTotalCollectionCriteria,
+			List<Object> preparedStatement) {
+		preparedStatement.clear();
+		StringBuilder query = null;
+		query = new StringBuilder(PUBLIC_DASHBOARD_SEWERAGE_APPLICATION_RECEIVIED_COUNT);
+		if(SearchTotalCollectionCriteria.getDataPayload() !=null) {
+		if (SearchTotalCollectionCriteria.getDataPayload().getFromDate() != null) {
+			addClauseIfRequired(preparedStatement, query);
+			query.append("  esc.createdtime >= ?  ");
+			preparedStatement.add(SearchTotalCollectionCriteria.getDataPayload().getFromDate());
+		}
+		if (SearchTotalCollectionCriteria.getDataPayload().getToDate() != null) {
+			addClauseIfRequired(preparedStatement, query);
+			query.append("  esc.createdtime <= ? ");
+			preparedStatement.add(SearchTotalCollectionCriteria.getDataPayload().getToDate());
+		}
+		}
+		/*
+		 * if (SearchTotalCollectionCriteria.getDataPayload().getServicetype() != null)
+		 * { addClauseIfRequired(preparedStatement, query); if
+		 * ("CONNECTION_CONVERSION".equals(SearchTotalCollectionCriteria.getDataPayload(
+		 * ).getServicetype())) { query.
+		 * append("  ewa.activitytype in('CONNECTION_CONVERSION_TARIFF','CONNECTION_CONVERSION') "
+		 * ); } else { query.append("  ewa.activitytype = ? ");
+		 * preparedStatement.add(SearchTotalCollectionCriteria.getDataPayload().
+		 * getServicetype()); }
+		 * 
+		 * }
+		 */
+
+		return query.toString();
+
+	}
+	
+	public String getSearchQueryStringPublicDashBoardApproved(
+			PublicDashBoardSearchCritieria SearchTotalCollectionCriteria, List<Object> preparedStatement) {
+		preparedStatement.clear();
+		StringBuilder query = null;
+		query = new StringBuilder(PUBLIC_DASHBOARD_SEWERAGE_SEARCH_APPROVED);
+		if(SearchTotalCollectionCriteria.getDataPayload() !=null) {
+		if (SearchTotalCollectionCriteria.getDataPayload().getFromDate() != null) {
+			addClauseIfRequired(preparedStatement, query);
+			query.append("  esc.createdtime >= ?  ");
+			preparedStatement.add(SearchTotalCollectionCriteria.getDataPayload().getFromDate());
+		}
+		if (SearchTotalCollectionCriteria.getDataPayload().getToDate() != null) {
+			addClauseIfRequired(preparedStatement, query);
+			query.append("  esc.createdtime <= ? ");
+			preparedStatement.add(SearchTotalCollectionCriteria.getDataPayload().getToDate());
+		}
+		}
+		/*
+		 * if (SearchTotalCollectionCriteria.getDataPayload().getServicetype() != null)
+		 * { addClauseIfRequired(preparedStatement, query); if
+		 * ("CONNECTION_CONVERSION".equals(SearchTotalCollectionCriteria.getDataPayload(
+		 * ).getServicetype())) { query.
+		 * append("  ewa.activitytype in('CONNECTION_CONVERSION_TARIFF','CONNECTION_CONVERSION') "
+		 * ); } else { query.append("  ewa.activitytype = ? ");
+		 * preparedStatement.add(SearchTotalCollectionCriteria.getDataPayload().
+		 * getServicetype()); } }
+		 */
+
+		return query.toString();
+
+	}
+	
+	public String getSearchQueryStringPublicDashBoardTimeTaken(
+			PublicDashBoardSearchCritieria SearchTotalCollectionCriteria, List<Object> preparedStatement) {
+		preparedStatement.clear();
+		StringBuilder query = null;
+		query = new StringBuilder(PUBLIC_DASHBOARD_SEWERAGE_SEARCH_TIME_TAKEN_APPROVED);
+		if(SearchTotalCollectionCriteria.getDataPayload() !=null) {
+		if (SearchTotalCollectionCriteria.getDataPayload().getFromDate() != null) {
+			addClauseIfRequired(preparedStatement, query);
+			query.append("  esc.createdtime >= ?  ");
+			preparedStatement.add(SearchTotalCollectionCriteria.getDataPayload().getFromDate());
+		}
+		if (SearchTotalCollectionCriteria.getDataPayload().getToDate() != null) {
+			addClauseIfRequired(preparedStatement, query);
+			query.append("  esc.createdtime <= ? ");
+			preparedStatement.add(SearchTotalCollectionCriteria.getDataPayload().getToDate());
+		}
+		}
+		/*
+		 * if (SearchTotalCollectionCriteria.getDataPayload().getServicetype() != null)
+		 * { addClauseIfRequired(preparedStatement, query); if
+		 * ("CONNECTION_CONVERSION".equals(SearchTotalCollectionCriteria.getDataPayload(
+		 * ).getServicetype())) { query.
+		 * append("  ewa.activitytype in('CONNECTION_CONVERSION_TARIFF','CONNECTION_CONVERSION') "
+		 * ); } else { query.append("  ewa.activitytype = ? ");
+		 * preparedStatement.add(SearchTotalCollectionCriteria.getDataPayload().
+		 * getServicetype()); } }
+		 */
+
+		return query.toString();
+
+	}
+	
+	public String getSearchQueryStringPublicDashBoardTotalCollection(
+			PublicDashBoardSearchCritieria SearchTotalCollectionCriteria, List<Object> preparedStatement) {
+		preparedStatement.clear();
+		StringBuilder query = null;
+		query = new StringBuilder(PUBLIC_DASHBOARD_SEWERAGE_TOTAL_COLLECTION);
+		if(SearchTotalCollectionCriteria.getDataPayload() !=null) {
+		if (SearchTotalCollectionCriteria.getDataPayload().getFromDate() != null) {
+			addClauseIfRequired(preparedStatement, query);
+			query.append("  esc.createdtime >= ?  ");
+			preparedStatement.add(SearchTotalCollectionCriteria.getDataPayload().getFromDate());
+		}
+		if (SearchTotalCollectionCriteria.getDataPayload().getToDate() != null) {
+			addClauseIfRequired(preparedStatement, query);
+			query.append("  esc.createdtime <= ? ");
+			preparedStatement.add(SearchTotalCollectionCriteria.getDataPayload().getToDate());
+		}
+		}
+		/*
+		 * if (SearchTotalCollectionCriteria.getDataPayload().getServicetype() != null)
+		 * { addClauseIfRequired(preparedStatement, query); if
+		 * ("CONNECTION_CONVERSION".equals(SearchTotalCollectionCriteria.getDataPayload(
+		 * ).getServicetype())) { query.
+		 * append("  ewa.activitytype in('CONNECTION_CONVERSION_TARIFF','CONNECTION_CONVERSION') "
+		 * ); } else { query.append("  ewa.activitytype = ? ");
+		 * preparedStatement.add(SearchTotalCollectionCriteria.getDataPayload().
+		 * getServicetype()); } }
+		 */
+		
+		addClauseIfRequired(preparedStatement, query);
+		query.append("  ept.txn_status = 'SUCCESS' ");
+
+		return query.toString();
+
 	}
 
 }

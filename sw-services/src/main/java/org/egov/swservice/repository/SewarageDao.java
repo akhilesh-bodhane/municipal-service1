@@ -3,6 +3,8 @@ package org.egov.swservice.repository;
 import java.util.List;
 
 import org.egov.common.contract.request.RequestInfo;
+import org.egov.swservice.model.PublicDashBoardSearchCritieria;
+import org.egov.swservice.model.ResponseData;
 import org.egov.swservice.model.SearchCriteria;
 import org.egov.swservice.model.SearchTotalCollectionCriteria;
 import org.egov.swservice.model.SewerageConnection;
@@ -24,5 +26,7 @@ public interface SewarageDao {
 	public void updateSewerageConnection(SewerageConnectionRequest sewerageConnectionRequest, boolean isStateUpdatable);
 	
 	public List<SewerageTotalCollections> getSewerageConnectionTotalCollectionListCount(SearchTotalCollectionCriteria SearchTotalCollectionCriteria,RequestInfo requestInfo);
+	
+	public ResponseData searchPublicDashBoardCount(PublicDashBoardSearchCritieria SearchTotalCollectionCriteria);
 
 }

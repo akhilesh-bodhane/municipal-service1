@@ -8,6 +8,8 @@ import java.util.Set;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.swservice.config.SWConfiguration;
 import org.egov.swservice.model.Property;
+import org.egov.swservice.model.PublicDashBoardSearchCritieria;
+import org.egov.swservice.model.ResponseData;
 import org.egov.swservice.model.SearchCriteria;
 import org.egov.swservice.model.SearchTotalCollectionCriteria;
 import org.egov.swservice.model.SewerageConnection;
@@ -236,5 +238,18 @@ public class SewarageServiceImpl implements SewarageService {
 			RequestInfo requestInfo) {
 		return sewarageDao.getSewerageConnectionTotalCollectionListCount(SearchTotalCollectionCriteria, requestInfo);
 	}
+	
+	/**
+	 * 
+	 * @param criteria    SewerageConnectionSearchCriteria contains search criteria on
+	 *                    water & sewerage connection
+	 * @param requestInfo
+	 * @return List(Count) of matching water & sewerage connection
+	 */
+	public ResponseData searchPublicDashBoardCount(PublicDashBoardSearchCritieria SearchTotalCollectionCriteria) {
+		return sewarageDao.searchPublicDashBoardCount(SearchTotalCollectionCriteria);
+	}
+	
+	
 
 }

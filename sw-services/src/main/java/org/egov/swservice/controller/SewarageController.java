@@ -3,7 +3,11 @@ package org.egov.swservice.controller;
 import java.util.List;
 
 import javax.validation.Valid;
+
+import org.egov.swservice.model.PublicDashBoardSearchCritieria;
+import org.egov.swservice.model.PublicDashboardResponse;
 import org.egov.swservice.model.RequestInfoWrapper;
+import org.egov.swservice.model.ResponseData;
 import org.egov.swservice.model.SearchCriteria;
 import org.egov.swservice.model.SearchTotalCollectionCriteria;
 import org.egov.swservice.model.SewerageCollectionCountResponse;
@@ -101,6 +105,16 @@ public class SewarageController {
 						true))
 				.build();
 		return new ResponseEntity<>(response, HttpStatus.OK);
+	}
+	
+	@RequestMapping(value = "/_searchCountPublicDashBoard", method = RequestMethod.POST)
+	public ResponseEntity<PublicDashboardResponse> searchPublicDashBoardCount(@Valid @RequestBody PublicDashBoardSearchCritieria SearchTotalCollectionCriteria) {
+				
+		ResponseData searchTotalCollectionCount = sewarageService.searchPublicDashBoardCount(SearchTotalCollectionCriteria);	
+		
+		PublicDashboardResponse metricsResponsebody = PublicDashboardResponse.builder().responseData(searchTotalCollectionCount).build();
+
+        return new ResponseEntity<>( metricsResponsebody , HttpStatus.OK);
 	}
 
 }
