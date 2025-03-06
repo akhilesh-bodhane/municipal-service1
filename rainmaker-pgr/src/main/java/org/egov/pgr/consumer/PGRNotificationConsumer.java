@@ -221,6 +221,7 @@ public class PGRNotificationConsumer {
      * @return
      */
     public EventRequest prepareuserEvents(Service serviceReq, ActionInfo actionInfo, RequestInfo requestInfo) {
+    	System.out.println("prepareuserEvents method enter***************");
         List<Event> events = new ArrayList<>();
         if (StringUtils.isEmpty(actionInfo.getAssignee()) && !actionInfo.getAction().equals(WorkFlowConfigs.ACTION_OPEN)) {
             try {
@@ -233,6 +234,7 @@ public class PGRNotificationConsumer {
             /*if (role.equals(PGRConstants.ROLE_EMPLOYEE))
                 continue;*/
             String message = getMessageForSMS(serviceReq, actionInfo, requestInfo, role);
+            System.out.println("prepareuserEvents method inside message***************"+message);
             String data = notificationService.getMobileAndIdForNotificationService(requestInfo, serviceReq.getAccountId(), serviceReq.getTenantId(), actionInfo.getAssignee(), role);
             if (StringUtils.isEmpty(message))
                 continue;
@@ -250,6 +252,7 @@ public class PGRNotificationConsumer {
                 items.add(item);
                 action = Action.builder().actionUrls(items).build();
             }
+            System.out.println("prepareuserEvents method ***************"+message);
             Event event = Event.builder()
                     .tenantId(serviceReq.getTenantId())
                     .description(message)
@@ -303,9 +306,14 @@ public class PGRNotificationConsumer {
         if (null == NotificationService.localizedMessageMap.get(locale + "|" + tenantId)) // static map that saves code-message pair against locale | tenantId.
             notificationService.getLocalisedMessages(requestInfo, tenantId, locale, PGRConstants.LOCALIZATION_MODULE_NAME);
         Map<String, String> messageMap = NotificationService.localizedMessageMap.get(locale + "|" + tenantId);
+        System.out.println("getMessageForSMS method***************"+messageMap);
         if (null == messageMap)
             return null;
         List<Object> listOfValues = notificationService.getServiceType(serviceReq, requestInfo, locale);
+        
+        String message = getMessage(listOfValues, date, serviceReq, actionInfo, requestInfo, messageMap, role);
+        
+        System.out.println("getMessageForSMS method message***************"+message);
         
         return getMessage(listOfValues, date, serviceReq, actionInfo, requestInfo, messageMap, role);
 

@@ -244,6 +244,7 @@ public class NotificationService {
 			for (int i = 0; i < codes.size(); i++) {
 				mapOfCodesAndMessages.put(codes.get(i), messages.get(i));
 			}
+			System.out.println("getLocalisedMessages method mapOfCodesAndMessages***************"+mapOfCodesAndMessages);
 			localizedMessageMap.put(locale + "|" + tenantId, mapOfCodesAndMessages);
 		}
 	}
