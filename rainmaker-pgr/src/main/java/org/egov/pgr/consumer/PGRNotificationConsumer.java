@@ -180,7 +180,6 @@ public class PGRNotificationConsumer {
                     if (isNotificationEnabled(actionInfo.getStatus(), serviceReqRequest.getRequestInfo().getUserInfo().getType(), actionInfo.getComment(), actionInfo.getAction())) {
                         if (isSMSNotificationEnabled) {
                             List<SMSRequest> smsRequests = prepareSMSRequest(service, actionInfo, serviceReqRequest.getRequestInfo());
-                            System.out.println("smsRequests ::"+smsRequests);
                             if (CollectionUtils.isEmpty(smsRequests)) {
                                 log.info("Messages from localization couldn't be fetched!");
                                 continue;
@@ -271,7 +270,6 @@ public class PGRNotificationConsumer {
     }
 
     public List<SMSRequest> prepareSMSRequest(Service serviceReq, ActionInfo actionInfo, RequestInfo requestInfo) {
-    	System.out.println("prepareSMSRequest method");
         List<SMSRequest> smsRequestsTobeSent = new ArrayList<>();
         if (StringUtils.isEmpty(actionInfo.getAssignee()) && !actionInfo.getAction().equals(WorkFlowConfigs.ACTION_OPEN)) {
             try {
@@ -282,33 +280,15 @@ public class PGRNotificationConsumer {
         }
         for (String role : pGRUtils.getReceptorsOfNotification(actionInfo.getStatus(), actionInfo.getAction())) {
             log.info("SMS Role: {}",role);
+            System.out.println("SMS ROLE New log"+role);
         	String phoneNumberRetrived = notificationService.getMobileAndIdForNotificationService(requestInfo, serviceReq.getAccountId(), serviceReq.getTenantId(), actionInfo.getAssignee(), role);
-        	
             phoneNumberRetrived = phoneNumberRetrived.split("[|]")[0];
-            
             String phone = StringUtils.isEmpty(phoneNumberRetrived) ? serviceReq.getPhone() : phoneNumberRetrived;
-            System.out.println("phone no*******************"+phone);
             String message = getMessageForSMS(serviceReq, actionInfo, requestInfo, role);
-            System.out.println("prepareSMSRequest method citizenemessage::"+message);
             if (StringUtils.isEmpty(message))
                 continue;
             smsRequestsTobeSent.add(SMSRequest.builder().mobileNumber(phone).message(message).build());
-            
-            System.out.println("ACTION*******************"+actionInfo.getAction());
-            if(role.equals(PGRConstants.ROLE_CITIZEN) && null != actionInfo.getAction() && actionInfo.getAction().equals(WorkFlowConfigs.ACTION_REOPEN)) {
-            	 System.out.println("ACTION_REOPEN if condition*******************");
-            String employeePhoneNumberRetrived = notificationService.getEmployeeMobileAndIdForNotificationService(requestInfo, serviceReq.getAccountId(), serviceReq.getTenantId(), actionInfo.getAssignee(), role);
-            employeePhoneNumberRetrived = employeePhoneNumberRetrived.split("[|]")[0];
-            String employeePhone = employeePhoneNumberRetrived;
-            System.out.println("employeePhoneno*******************"+employeePhone);
-            String employeeMessage = getMessageForEmployeeSMS(serviceReq, actionInfo, requestInfo, role);
-            System.out.println("prepareSMSRequest method employeemessage::"+employeeMessage);
-            if (StringUtils.isEmpty(employeeMessage))
-                continue;
-            smsRequestsTobeSent.add(SMSRequest.builder().mobileNumber(employeePhone).message(employeeMessage).build());
-            }
         }
-        System.out.println("smsRequestsTobeSent ::"+smsRequestsTobeSent);
         return smsRequestsTobeSent;
     }
 
@@ -337,34 +317,6 @@ public class PGRNotificationConsumer {
         //System.out.println("getMessageForSMS method message***************"+message);
         
         return getMessage(listOfValues, date, serviceReq, actionInfo, requestInfo, messageMap, role);
-
-    }
-    
-    public String getMessageForEmployeeSMS(Service serviceReq, ActionInfo actionInfo, RequestInfo requestInfo, String role) {
-        SimpleDateFormat dateFormat = new SimpleDateFormat(notificationDateFormat);
-        String date = dateFormat.format(new Date());
-        String tenantId = serviceReq.getTenantId().split("[.]")[0]; // localization values are for now state-level.
-        String locale = null;
-        try {
-            locale = requestInfo.getMsgId().split("[|]")[1]; // Conventionally locale is sent in the first index of msgid split by |
-            if (StringUtils.isEmpty(locale))
-                locale = fallbackLocale;
-        } catch (Exception e) {
-            locale = fallbackLocale;
-        }
-        if (null == NotificationService.localizedMessageMap.get(locale + "|" + tenantId)) // static map that saves code-message pair against locale | tenantId.
-            notificationService.getLocalisedMessages(requestInfo, tenantId, locale, PGRConstants.LOCALIZATION_MODULE_NAME);
-        Map<String, String> messageMap = NotificationService.localizedMessageMap.get(locale + "|" + tenantId);
-        System.out.println("getMessageForEmployeeSMS method***************"+messageMap);
-        if (null == messageMap)
-            return null;
-        List<Object> listOfValues = notificationService.getServiceType(serviceReq, requestInfo, locale);
-        
-        //String employeemessage = getemployeeMessage(listOfValues, date, serviceReq, actionInfo, requestInfo, messageMap, role);
-        
-        //System.out.println("getMessageForEmployeeSMS method message***************"+employeemessage);
-        
-        return getemployeeMessage(listOfValues, date, serviceReq, actionInfo, requestInfo, messageMap, role);
 
     }
 
@@ -399,7 +351,6 @@ public class PGRNotificationConsumer {
             if (actionInfo.getStatus().equals(WorkFlowConfigs.STATUS_ESCALATED_LEVEL1_PENDING)|| actionInfo.getStatus().equals(WorkFlowConfigs.STATUS_ESCALATED_LEVEL2_PENDING)) {
                 if (null != actionInfo.getAction() && actionInfo.getAction().equals(WorkFlowConfigs.ACTION_REOPEN)) {
                     text = messageMap.get(PGRConstants.getActionRoleLocalizationKeyMap().get(WorkFlowConfigs.ACTION_REOPEN + "|" + role));
-                    System.out.println("text::"+text);
                     employeeDetails = notificationService.getEmployeeDetails(serviceReq.getTenantId(), actionInfo.getAssignee(), requestInfo);
                     text = text.replaceAll(PGRConstants.SMS_NOTIFICATION_EMP_NAME_KEY, employeeDetails.get("name"));
                 }
@@ -480,38 +431,6 @@ public class PGRNotificationConsumer {
                     .replaceAll(PGRConstants.SMS_NOTIFICATION_ULB_NAME, ulb)
                     .replaceAll(PGRConstants.SMS_NOTIFICATION_SLA_NAME, listOfValues.get(1).toString());
 
-        }
-        return text;
-    }
-    
-    // Get EmployeeMessage FOR CITIZEN REOPEN SMS TRIGGERED
-    public String getemployeeMessage(List<Object> listOfValues, String date, Service serviceReq, ActionInfo actionInfo, RequestInfo requestInfo, Map<String, String> messageMap, String role) {
-    	 System.out.println("getemployeeMessage method*************");
-    	if (null == listOfValues || null == listOfValues.get(0)) {
-            return getDefaultMessage(messageMap, actionInfo.getStatus(), actionInfo.getAction(), actionInfo.getComment());
-        }
-    	log.info("Status..."+actionInfo.getStatus());
-        String text = null;
-        String[] reasonForRejection = new String[2];
-        Map<String, String> employeeDetails = null;
-        System.out.println("actionInfo.getAssignee()::"+actionInfo.getAssignee());                                     
-        if(role.equals(PGRConstants.ROLE_CITIZEN) && null != actionInfo.getAction() && actionInfo.getAction().equals(WorkFlowConfigs.ACTION_REOPEN)) {
-                    	text = messageMap.get(PGRConstants.getActionRoleLocalizationKeyMap().get(WorkFlowConfigs.ACTION_REOPEN + "|" + PGRConstants.ROLE_EMPLOYEE));
-                    	employeeDetails = notificationService.getEmployeeDetails(serviceReq.getTenantId(), actionInfo.getAssignee(), requestInfo);
-                        text = text.replaceAll(PGRConstants.SMS_NOTIFICATION_EMP_NAME_KEY, employeeDetails.get("name"));
-                        System.out.println("employee text::"+text);
-         }                                  
-               
-        if (null != text) {
-            String ulb = null;
-            if (StringUtils.isEmpty(serviceReq.getTenantId().split("[.]")[1]))
-                ulb = "Punjab";
-            else {
-                ulb = StringUtils.capitalize(serviceReq.getTenantId().split("[.]")[1]);
-            }
-            return text.replaceAll(PGRConstants.SMS_NOTIFICATION_COMPLAINT_TYPE_KEY, listOfValues.get(0).toString())
-                    .replaceAll(PGRConstants.SMS_NOTIFICATION_ID_KEY, serviceReq.getServiceRequestId())
-                    .replaceAll(PGRConstants.SMS_NOTIFICATION_ULB_NAME, ulb);
         }
         return text;
     }

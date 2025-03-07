@@ -620,6 +620,7 @@ public class PGRUtils {
 			setOfRoles.clear();
 			setOfRoles.addAll(WorkFlowConfigs.getMapOfActionAndReceptors().get(action));
 		}
+		 System.out.println("setOfRoles New log"+setOfRoles);
 		return setOfRoles;
 	}
 

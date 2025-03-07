@@ -117,7 +117,7 @@ public class WorkFlowConfigs {
 		Map<String, List<String>> map = new HashMap<>();
 		
 		map.put(WorkFlowConfigs.ACTION_REASSIGN, Arrays.asList(PGRConstants.ROLE_CITIZEN, PGRConstants.ROLE_EMPLOYEE));
-		map.put(WorkFlowConfigs.ACTION_REOPEN, Arrays.asList(PGRConstants.ROLE_CITIZEN));
+		map.put(WorkFlowConfigs.ACTION_REOPEN, Arrays.asList(PGRConstants.ROLE_CITIZEN, PGRConstants.ROLE_EMPLOYEE));
 		
 		return map;
 	}
