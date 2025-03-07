@@ -287,20 +287,26 @@ public class PGRNotificationConsumer {
             phoneNumberRetrived = phoneNumberRetrived.split("[|]")[0];
             
             String phone = StringUtils.isEmpty(phoneNumberRetrived) ? serviceReq.getPhone() : phoneNumberRetrived;
+            System.out.println("phone no*******************"+phone);
             String message = getMessageForSMS(serviceReq, actionInfo, requestInfo, role);
             System.out.println("prepareSMSRequest method citizenemessage::"+message);
             if (StringUtils.isEmpty(message))
                 continue;
             smsRequestsTobeSent.add(SMSRequest.builder().mobileNumber(phone).message(message).build());
             
+            System.out.println("ACTION*******************"+actionInfo.getAction());
+            if(role.equals(PGRConstants.ROLE_CITIZEN) && null != actionInfo.getAction() && actionInfo.getAction().equals(WorkFlowConfigs.ACTION_REOPEN)) {
+            	 System.out.println("ACTION_REOPEN if condition*******************");
             String employeePhoneNumberRetrived = notificationService.getEmployeeMobileAndIdForNotificationService(requestInfo, serviceReq.getAccountId(), serviceReq.getTenantId(), actionInfo.getAssignee(), role);
             employeePhoneNumberRetrived = employeePhoneNumberRetrived.split("[|]")[0];
-            String employeePhone = StringUtils.isEmpty(employeePhoneNumberRetrived) ? serviceReq.getPhone() : employeePhoneNumberRetrived;
+            String employeePhone = employeePhoneNumberRetrived;
+            System.out.println("employeePhoneno*******************"+employeePhone);
             String employeeMessage = getMessageForEmployeeSMS(serviceReq, actionInfo, requestInfo, role);
             System.out.println("prepareSMSRequest method employeemessage::"+employeeMessage);
             if (StringUtils.isEmpty(employeeMessage))
                 continue;
             smsRequestsTobeSent.add(SMSRequest.builder().mobileNumber(employeePhone).message(employeeMessage).build());
+            }
         }
         System.out.println("smsRequestsTobeSent ::"+smsRequestsTobeSent);
         return smsRequestsTobeSent;
@@ -326,9 +332,9 @@ public class PGRNotificationConsumer {
             return null;
         List<Object> listOfValues = notificationService.getServiceType(serviceReq, requestInfo, locale);
         
-        String message = getMessage(listOfValues, date, serviceReq, actionInfo, requestInfo, messageMap, role);
+        //String message = getMessage(listOfValues, date, serviceReq, actionInfo, requestInfo, messageMap, role);
         
-        System.out.println("getMessageForSMS method message***************"+message);
+        //System.out.println("getMessageForSMS method message***************"+message);
         
         return getMessage(listOfValues, date, serviceReq, actionInfo, requestInfo, messageMap, role);
 
@@ -354,9 +360,9 @@ public class PGRNotificationConsumer {
             return null;
         List<Object> listOfValues = notificationService.getServiceType(serviceReq, requestInfo, locale);
         
-        String employeemessage = getemployeeMessage(listOfValues, date, serviceReq, actionInfo, requestInfo, messageMap, role);
+        //String employeemessage = getemployeeMessage(listOfValues, date, serviceReq, actionInfo, requestInfo, messageMap, role);
         
-        System.out.println("getMessageForEmployeeSMS method message***************"+employeemessage);
+        //System.out.println("getMessageForEmployeeSMS method message***************"+employeemessage);
         
         return getemployeeMessage(listOfValues, date, serviceReq, actionInfo, requestInfo, messageMap, role);
 
