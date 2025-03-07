@@ -260,6 +260,7 @@ public class NotificationService {
 	 * @return
 	 */
 	public String getMobileAndIdForNotificationService(RequestInfo requestInfo, String userId, String tenantId, String assignee, String role) {
+		System.out.println("getMobileAndIdForNotificationService method enter.....");
 		String phoneNumber = null;
 		String uuid = "uuid";
 		String name="";
@@ -268,6 +269,7 @@ public class NotificationService {
 		StringBuilder uri = new StringBuilder();
 		Object request = new HashMap<>();
 		if(role.equals(PGRConstants.ROLE_CITIZEN)) {
+			System.out.println("CITIZEN IF");
 			request = pGRUtils.prepareRequestForUserSearch(uri, requestInfo, userId, tenantId);
 			try {
 				response = serviceRequestRepository.fetchResult(uri, request);
@@ -281,6 +283,7 @@ public class NotificationService {
 				log.error("Couldn't fetch user for id: "+userId+" error: " + e);
 			}
 		}else if(role.equals(PGRConstants.ROLE_EMPLOYEE)) {
+			System.out.println("EMPLOYEE ELSE IF");
 			Map<String, String> employeeDetails = getEmployeeDetails(tenantId, assignee, requestInfo);
 			if(!StringUtils.isEmpty(employeeDetails.get("phone"))) {
 				phoneNumber = employeeDetails.get("phone");
