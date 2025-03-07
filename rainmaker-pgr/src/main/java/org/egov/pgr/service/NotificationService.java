@@ -278,12 +278,42 @@ public class NotificationService {
 					phoneNumber = res.getUser().get(0).getMobileNumber();
 					uuid = res.getUser().get(0).getUuid();
 					name = res.getUser().get(0).getName();
+					
+					// Added get Employee Details code for SMS triggered
+					Map<String, String> employeeDetails = getEmployeeDetails(tenantId, assignee, requestInfo);
+					System.out.println("assignee ::"+assignee);
+					if(!StringUtils.isEmpty(employeeDetails.get("phone"))) {
+						phoneNumber = employeeDetails.get("phone");
+						uuid = employeeDetails.get("uuid");
+						name = employeeDetails.get("name");
+					}
 				}
 			}catch(Exception e) {
 				log.error("Couldn't fetch user for id: "+userId+" error: " + e);
 			}
 		}else if(role.equals(PGRConstants.ROLE_EMPLOYEE)) {
 			System.out.println("EMPLOYEE ELSE IF");
+			Map<String, String> employeeDetails = getEmployeeDetails(tenantId, assignee, requestInfo);
+			if(!StringUtils.isEmpty(employeeDetails.get("phone"))) {
+				phoneNumber = employeeDetails.get("phone");
+				uuid = employeeDetails.get("uuid");
+				name = employeeDetails.get("name");
+			}
+		}
+		return phoneNumber + "|" + uuid + "|" + name;
+	}
+	
+	public String getEmployeeMobileAndIdForNotificationService(RequestInfo requestInfo, String userId, String tenantId, String assignee, String role) {
+		System.out.println("getEmployeeMobileAndIdForNotificationService method enter.....");
+		String phoneNumber = null;
+		String uuid = "uuid";
+		String name="";
+		Object response = null;
+		ObjectMapper mapper = pGRUtils.getObjectMapper();
+		StringBuilder uri = new StringBuilder();
+		Object request = new HashMap<>();
+		 if(!assignee.equals("") && assignee!=null) {
+			System.out.println("assignee ::"+assignee);
 			Map<String, String> employeeDetails = getEmployeeDetails(tenantId, assignee, requestInfo);
 			if(!StringUtils.isEmpty(employeeDetails.get("phone"))) {
 				phoneNumber = employeeDetails.get("phone");

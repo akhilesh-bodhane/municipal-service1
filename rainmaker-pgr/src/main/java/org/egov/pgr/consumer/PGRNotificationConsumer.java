@@ -180,6 +180,7 @@ public class PGRNotificationConsumer {
                     if (isNotificationEnabled(actionInfo.getStatus(), serviceReqRequest.getRequestInfo().getUserInfo().getType(), actionInfo.getComment(), actionInfo.getAction())) {
                         if (isSMSNotificationEnabled) {
                             List<SMSRequest> smsRequests = prepareSMSRequest(service, actionInfo, serviceReqRequest.getRequestInfo());
+                            System.out.println("smsRequests ::"+smsRequests);
                             if (CollectionUtils.isEmpty(smsRequests)) {
                                 log.info("Messages from localization couldn't be fetched!");
                                 continue;
@@ -270,6 +271,7 @@ public class PGRNotificationConsumer {
     }
 
     public List<SMSRequest> prepareSMSRequest(Service serviceReq, ActionInfo actionInfo, RequestInfo requestInfo) {
+    	System.out.println("prepareSMSRequest method");
         List<SMSRequest> smsRequestsTobeSent = new ArrayList<>();
         if (StringUtils.isEmpty(actionInfo.getAssignee()) && !actionInfo.getAction().equals(WorkFlowConfigs.ACTION_OPEN)) {
             try {
@@ -281,13 +283,24 @@ public class PGRNotificationConsumer {
         for (String role : pGRUtils.getReceptorsOfNotification(actionInfo.getStatus(), actionInfo.getAction())) {
             log.info("SMS Role: {}",role);
         	String phoneNumberRetrived = notificationService.getMobileAndIdForNotificationService(requestInfo, serviceReq.getAccountId(), serviceReq.getTenantId(), actionInfo.getAssignee(), role);
+        	
             phoneNumberRetrived = phoneNumberRetrived.split("[|]")[0];
+            
             String phone = StringUtils.isEmpty(phoneNumberRetrived) ? serviceReq.getPhone() : phoneNumberRetrived;
             String message = getMessageForSMS(serviceReq, actionInfo, requestInfo, role);
             if (StringUtils.isEmpty(message))
                 continue;
             smsRequestsTobeSent.add(SMSRequest.builder().mobileNumber(phone).message(message).build());
+            
+            String employeePhoneNumberRetrived = notificationService.getEmployeeMobileAndIdForNotificationService(requestInfo, serviceReq.getAccountId(), serviceReq.getTenantId(), actionInfo.getAssignee(), role);
+            employeePhoneNumberRetrived = employeePhoneNumberRetrived.split("[|]")[0];
+            String employeePhone = StringUtils.isEmpty(employeePhoneNumberRetrived) ? serviceReq.getPhone() : employeePhoneNumberRetrived;
+            String employeeMessage = getMessageForSMS(serviceReq, actionInfo, requestInfo, role);
+            if (StringUtils.isEmpty(employeeMessage))
+                continue;
+            smsRequestsTobeSent.add(SMSRequest.builder().mobileNumber(employeePhone).message(employeeMessage).build());
         }
+        System.out.println("smsRequestsTobeSent ::"+smsRequestsTobeSent);
         return smsRequestsTobeSent;
     }
 
@@ -350,6 +363,7 @@ public class PGRNotificationConsumer {
             if (actionInfo.getStatus().equals(WorkFlowConfigs.STATUS_ESCALATED_LEVEL1_PENDING)|| actionInfo.getStatus().equals(WorkFlowConfigs.STATUS_ESCALATED_LEVEL2_PENDING)) {
                 if (null != actionInfo.getAction() && actionInfo.getAction().equals(WorkFlowConfigs.ACTION_REOPEN)) {
                     text = messageMap.get(PGRConstants.getActionRoleLocalizationKeyMap().get(WorkFlowConfigs.ACTION_REOPEN + "|" + role));
+                    System.out.println("text::"+text);
                     employeeDetails = notificationService.getEmployeeDetails(serviceReq.getTenantId(), actionInfo.getAssignee(), requestInfo);
                     text = text.replaceAll(PGRConstants.SMS_NOTIFICATION_EMP_NAME_KEY, employeeDetails.get("name"));
                 }
