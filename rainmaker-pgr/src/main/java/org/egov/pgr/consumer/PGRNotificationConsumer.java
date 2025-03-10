@@ -283,8 +283,11 @@ public class PGRNotificationConsumer {
             System.out.println("SMS ROLE New log"+role);
         	String phoneNumberRetrived = notificationService.getMobileAndIdForNotificationService(requestInfo, serviceReq.getAccountId(), serviceReq.getTenantId(), actionInfo.getAssignee(), role);
             phoneNumberRetrived = phoneNumberRetrived.split("[|]")[0];
+            System.out.println("phoneNumberRetrived New log"+phoneNumberRetrived);
             String phone = StringUtils.isEmpty(phoneNumberRetrived) ? serviceReq.getPhone() : phoneNumberRetrived;
+            System.out.println("phone New log"+phone);
             String message = getMessageForSMS(serviceReq, actionInfo, requestInfo, role);
+            System.out.println("message New log"+message);
             if (StringUtils.isEmpty(message))
                 continue;
             smsRequestsTobeSent.add(SMSRequest.builder().mobileNumber(phone).message(message).build());
@@ -307,7 +310,7 @@ public class PGRNotificationConsumer {
         if (null == NotificationService.localizedMessageMap.get(locale + "|" + tenantId)) // static map that saves code-message pair against locale | tenantId.
             notificationService.getLocalisedMessages(requestInfo, tenantId, locale, PGRConstants.LOCALIZATION_MODULE_NAME);
         Map<String, String> messageMap = NotificationService.localizedMessageMap.get(locale + "|" + tenantId);
-        System.out.println("getMessageForSMS method***************"+messageMap);
+        //System.out.println("getMessageForSMS method***************"+messageMap);
         if (null == messageMap)
             return null;
         List<Object> listOfValues = notificationService.getServiceType(serviceReq, requestInfo, locale);
