@@ -244,7 +244,7 @@ public class NotificationService {
 			for (int i = 0; i < codes.size(); i++) {
 				mapOfCodesAndMessages.put(codes.get(i), messages.get(i));
 			}
-			System.out.println("getLocalisedMessages method mapOfCodesAndMessages***************"+mapOfCodesAndMessages);
+			//System.out.println("getLocalisedMessages method mapOfCodesAndMessages***************"+mapOfCodesAndMessages);
 			localizedMessageMap.put(locale + "|" + tenantId, mapOfCodesAndMessages);
 		}
 	}
@@ -278,15 +278,6 @@ public class NotificationService {
 					phoneNumber = res.getUser().get(0).getMobileNumber();
 					uuid = res.getUser().get(0).getUuid();
 					name = res.getUser().get(0).getName();
-					
-					// Added get Employee Details code for SMS triggered
-					Map<String, String> employeeDetails = getEmployeeDetails(tenantId, assignee, requestInfo);
-					System.out.println("assignee ::"+assignee);
-					if(!StringUtils.isEmpty(employeeDetails.get("phone"))) {
-						phoneNumber = employeeDetails.get("phone");
-						uuid = employeeDetails.get("uuid");
-						name = employeeDetails.get("name");
-					}
 				}
 			}catch(Exception e) {
 				log.error("Couldn't fetch user for id: "+userId+" error: " + e);
