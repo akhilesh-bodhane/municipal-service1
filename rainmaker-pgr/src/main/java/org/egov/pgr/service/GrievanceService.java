@@ -634,13 +634,6 @@ public class GrievanceService {
 				List<String> status = serviceReqSearchCriteria.getStatus();
 				
 				if (codes.contains(PGRConstants.ROLE_ESCALATION_OFFICER1)
-						&& codes.contains(PGRConstants.ROLE_ESCALATION_OFFICER2)) {
-					status.remove(WorkFlowConfigs.STATUS_ESCALATED_LEVEL1_PENDING);
-					status.remove(WorkFlowConfigs.STATUS_ESCALATED_LEVEL2_PENDING);
-					status.add(WorkFlowConfigs.STATUS_ESCALATED_LEVEL1_PENDING);
-					status.add(WorkFlowConfigs.STATUS_ESCALATED_LEVEL2_PENDING);
-					System.out.println("Status of EO1 & EO2 : " + status.toString());
-				} else if (codes.contains(PGRConstants.ROLE_ESCALATION_OFFICER1)
 						&& codes.contains(PGRConstants.ROLE_ESCALATION_OFFICER2)
 						&& codes.contains(PGRConstants.ROLE_PGR_LME)) {
 					status.remove(WorkFlowConfigs.STATUS_ESCALATED_LEVEL1_PENDING);
@@ -649,6 +642,13 @@ public class GrievanceService {
 					status.add(WorkFlowConfigs.STATUS_ESCALATED_LEVEL2_PENDING);
 					status.add(WorkFlowConfigs.STATUS_ASSIGNED);
 					System.out.println("Status of EO1, EO2 and LME : " + status.toString());
+				} else if (codes.contains(PGRConstants.ROLE_ESCALATION_OFFICER1)
+						&& codes.contains(PGRConstants.ROLE_ESCALATION_OFFICER2)) {
+					status.remove(WorkFlowConfigs.STATUS_ESCALATED_LEVEL1_PENDING);
+					status.remove(WorkFlowConfigs.STATUS_ESCALATED_LEVEL2_PENDING);
+					status.add(WorkFlowConfigs.STATUS_ESCALATED_LEVEL1_PENDING);
+					status.add(WorkFlowConfigs.STATUS_ESCALATED_LEVEL2_PENDING);
+					System.out.println("Status of EO1 & EO2 : " + status.toString());
 				} else if (codes.contains(PGRConstants.ROLE_ESCALATION_OFFICER1)
 						&& codes.contains(PGRConstants.ROLE_PGR_LME)) {
 					status.remove(WorkFlowConfigs.STATUS_ESCALATED_LEVEL2_PENDING);
