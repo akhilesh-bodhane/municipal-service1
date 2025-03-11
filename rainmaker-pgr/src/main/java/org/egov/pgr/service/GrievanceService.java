@@ -673,7 +673,12 @@ public class GrievanceService {
 				 
 				//status.add(WorkFlowConfigs.STATUS_ASSIGNED);
 				status.add(WorkFlowConfigs.STATUS_REASSIGN_REQUESTED);
-				serviceReqSearchCriteria.setStatus(status);
+				if(serviceReqSearchCriteria.getServiceRequestId() == null) {
+					serviceReqSearchCriteria.setStatus(status);
+				} else {
+					serviceReqSearchCriteria.setStatus(null);
+				}
+				
 				serviceReqSearchCriteria.setCategory(null);
 				uri = new StringBuilder();
 				enrichRequest(requestInfo, serviceReqSearchCriteria);
