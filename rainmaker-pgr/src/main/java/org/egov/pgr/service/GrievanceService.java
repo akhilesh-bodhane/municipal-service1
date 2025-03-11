@@ -815,9 +815,16 @@ public class GrievanceService {
 					List<String> codes = requestInfo.getUserInfo().getRoles().stream().map(Role::getCode)
 							.collect(Collectors.toList());
 					
+					
+					if ((codes.contains(PGRConstants.ROLE_ESCALATION_OFFICER2))
+							&& (!CollectionUtils.isEmpty(serviceReqSearchCriteria.getStatus())
+									&& (serviceReqSearchCriteria.getStatus()
+													.contains(WorkFlowConfigs.STATUS_ESCALATED_LEVEL2_PENDING)))) {
+						// Do not need to set assign anyone for escalation flow if the status is pending
+					}
 					//commented on 24/02/2025 to get escalation officer 1 complaints with assigned id
 					
-					if ((codes.contains(PGRConstants.ROLE_ESCALATION_OFFICER1)
+					/*if ((codes.contains(PGRConstants.ROLE_ESCALATION_OFFICER1)
 							|| codes.contains(PGRConstants.ROLE_ESCALATION_OFFICER2))
 							&& (!CollectionUtils.isEmpty(serviceReqSearchCriteria.getStatus())
 									&& (serviceReqSearchCriteria.getStatus()
@@ -825,7 +832,7 @@ public class GrievanceService {
 											|| serviceReqSearchCriteria.getStatus()
 													.contains(WorkFlowConfigs.STATUS_ESCALATED_LEVEL2_PENDING)))) {
 						// Do not need to set assign anyone for escalation flow if the status is pending
-					}
+					}*/
 					 
 					
 		
