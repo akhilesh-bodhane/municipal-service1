@@ -815,6 +815,13 @@ public class GrievanceService {
 					List<String> codes = requestInfo.getUserInfo().getRoles().stream().map(Role::getCode)
 							.collect(Collectors.toList());
 					
+					if ((codes.contains(PGRConstants.ROLE_ESCALATION_OFFICER1))
+							&& (!CollectionUtils.isEmpty(serviceReqSearchCriteria.getStatus())
+									&& (serviceReqSearchCriteria.getStatus()
+													.contains(WorkFlowConfigs.STATUS_ESCALATED_LEVEL1_PENDING)))) {
+						serviceReqSearchCriteria.setAssignedTo(requestInfo.getUserInfo().getId().toString());
+					}
+					
 					
 					if ((codes.contains(PGRConstants.ROLE_ESCALATION_OFFICER2))
 							&& (!CollectionUtils.isEmpty(serviceReqSearchCriteria.getStatus())
