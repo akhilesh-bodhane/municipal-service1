@@ -1962,7 +1962,7 @@ public class GrievanceService {
 			
 			if (!CollectionUtils.isEmpty(categoryListForEscalatingOfficer1)) {
 				serviceReqSearchCriteria.setCategory(categoryListForEscalatingOfficer1);
-				serviceReqSearchCriteria.setMohalla(sectorListForEscalatingOfficer1);
+				//serviceReqSearchCriteria.setMohalla(sectorListForEscalatingOfficer1);
 				System.out.println("sectorListForEscalatingOfficer1 : " + sectorListForEscalatingOfficer1.toString());
 				List<String> status = new ArrayList<String>();
 				status.add(WorkFlowConfigs.STATUS_ESCALATED_LEVEL1_PENDING);
