@@ -614,9 +614,16 @@ public class GrievanceService {
 		List<String> codes = requestInfo.getUserInfo().getRoles().stream().map(Role::getCode)
 				.collect(Collectors.toList());
 
-		if ((codes.contains(PGRConstants.ROLE_ESCALATION_OFFICER1))
-				|| (codes.contains(PGRConstants.ROLE_ESCALATION_OFFICER2))
+		
+		if ((codes.contains(PGRConstants.ROLE_ESCALATION_OFFICER2))
 				&& CollectionUtils.isEmpty(serviceReqSearchCriteria.getServiceRequestId())) {
+		
+		//commented on 12/03/2025 for removing EO1 check
+		/*
+		 * if ((codes.contains(PGRConstants.ROLE_ESCALATION_OFFICER1)) ||
+		 * (codes.contains(PGRConstants.ROLE_ESCALATION_OFFICER2)) &&
+		 * CollectionUtils.isEmpty(serviceReqSearchCriteria.getServiceRequestId())) {
+		 */
 			/*
 			 * if(!CollectionUtils.isEmpty(serviceReqSearchCriteria.getStatus()) &&
 			 * (serviceReqSearchCriteria.getStatus().contains(WorkFlowConfigs.
@@ -815,13 +822,6 @@ public class GrievanceService {
 					List<String> codes = requestInfo.getUserInfo().getRoles().stream().map(Role::getCode)
 							.collect(Collectors.toList());
 					
-					if ((codes.contains(PGRConstants.ROLE_ESCALATION_OFFICER1))
-							&& (!CollectionUtils.isEmpty(serviceReqSearchCriteria.getStatus())
-									&& (serviceReqSearchCriteria.getStatus()
-													.contains(WorkFlowConfigs.STATUS_ESCALATED_LEVEL1_PENDING)))) {
-						serviceReqSearchCriteria.setAssignedTo(requestInfo.getUserInfo().getId().toString());
-					}
-					
 					
 					if ((codes.contains(PGRConstants.ROLE_ESCALATION_OFFICER2))
 							&& (!CollectionUtils.isEmpty(serviceReqSearchCriteria.getStatus())
@@ -829,6 +829,7 @@ public class GrievanceService {
 													.contains(WorkFlowConfigs.STATUS_ESCALATED_LEVEL2_PENDING)))) {
 						// Do not need to set assign anyone for escalation flow if the status is pending
 					}
+					
 					//commented on 24/02/2025 to get escalation officer 1 complaints with assigned id
 					
 					/*if ((codes.contains(PGRConstants.ROLE_ESCALATION_OFFICER1)
@@ -1967,7 +1968,8 @@ public class GrievanceService {
 					.get(PGRConstants.MDMS_SECTOR_MASTER_NAME_SMALL);
 			List<String> categoryListForEscalatingOfficer2 = categoryList
 					.get(PGRConstants.MDMS_AUTOROUTING_ESCALATION_OFFICER2_NAME);
-
+			
+			Map<String, List<String>> categorySectorListMap = new HashMap<>();
 			
 			if (!CollectionUtils.isEmpty(categoryListForEscalatingOfficer1)) {
 				serviceReqSearchCriteria.setCategory(categoryListForEscalatingOfficer1);
