@@ -681,7 +681,6 @@ public class GrievanceService {
 				serviceReqSearchCriteria.setCategory(null);
 				uri = new StringBuilder();	
 				//enrichRequest(requestInfo, serviceReqSearchCriteria);
-				enrichRequestEO1(requestInfo, serviceReqSearchCriteria);
 				searcherRequest = pGRUtils.prepareSearchRequestWithDetails(uri, serviceReqSearchCriteria, requestInfo);
 				Object assignedResponse = serviceRequestRepository.fetchResult(uri, searcherRequest);
 				System.out.println("Final Status : " + status.toString());
@@ -815,11 +814,23 @@ public class GrievanceService {
 					List<String> codes = requestInfo.getUserInfo().getRoles().stream().map(Role::getCode)
 							.collect(Collectors.toList());
 					
+					if (codes.contains(PGRConstants.ROLE_ESCALATION_OFFICER1)
+							&& (!CollectionUtils.isEmpty(serviceReqSearchCriteria.getStatus())
+									&& (serviceReqSearchCriteria.getStatus()
+													.contains(WorkFlowConfigs.STATUS_ESCALATED_LEVEL1_PENDING)))) {
+						serviceReqSearchCriteria.setAssignedTo(requestInfo.getUserInfo().getId().toString());
+					}
 					
+					if (codes.contains(PGRConstants.ROLE_ESCALATION_OFFICER2)
+							&& (!CollectionUtils.isEmpty(serviceReqSearchCriteria.getStatus())
+									&& (serviceReqSearchCriteria.getStatus()
+													.contains(WorkFlowConfigs.STATUS_ESCALATED_LEVEL2_PENDING)))) {
+						// Do not need to set assign anyone for escalation flow if the status is pending
+					}
 					
 					//commented on 24/02/2025 to get escalation officer 1 complaints with assigned id
 					
-					if ((codes.contains(PGRConstants.ROLE_ESCALATION_OFFICER1)
+					/*if ((codes.contains(PGRConstants.ROLE_ESCALATION_OFFICER1)
 							|| codes.contains(PGRConstants.ROLE_ESCALATION_OFFICER2))
 							&& (!CollectionUtils.isEmpty(serviceReqSearchCriteria.getStatus())
 									&& (serviceReqSearchCriteria.getStatus()
@@ -827,7 +838,7 @@ public class GrievanceService {
 											|| serviceReqSearchCriteria.getStatus()
 													.contains(WorkFlowConfigs.STATUS_ESCALATED_LEVEL2_PENDING)))) {
 						// Do not need to set assign anyone for escalation flow if the status is pending
-					}
+					}*/
 					 
 					
 		
@@ -950,15 +961,12 @@ public class GrievanceService {
 					
 					//commented on 24/02/2025 to get escalation officer 1 complaints with assigned id
 					
-					/*if ((codes.contains(PGRConstants.ROLE_ESCALATION_OFFICER1)
-							|| codes.contains(PGRConstants.ROLE_ESCALATION_OFFICER2))
+					if ((codes.contains(PGRConstants.ROLE_ESCALATION_OFFICER2))
 							&& (!CollectionUtils.isEmpty(serviceReqSearchCriteria.getStatus())
 									&& (serviceReqSearchCriteria.getStatus()
-											.contains(WorkFlowConfigs.STATUS_ESCALATED_LEVEL1_PENDING)
-											|| serviceReqSearchCriteria.getStatus()
 													.contains(WorkFlowConfigs.STATUS_ESCALATED_LEVEL2_PENDING)))) {
 						// Do not need to set assign anyone for escalation flow if the status is pending
-					}*/
+					}
 					 
 					
 		
@@ -2091,7 +2099,7 @@ public class GrievanceService {
 			
 			if (!CollectionUtils.isEmpty(categoryListForEscalatingOfficer1)) {
 				serviceReqSearchCriteria.setCategory(categoryListForEscalatingOfficer1);
-				//serviceReqSearchCriteria.setMohalla(sectorListForEscalatingOfficer1);
+				serviceReqSearchCriteria.setMohalla(sectorListForEscalatingOfficer1);
 				System.out.println("sectorListForEscalatingOfficer1 : " + sectorListForEscalatingOfficer1.toString());
 				List<String> status = new ArrayList<String>();
 				status.add(WorkFlowConfigs.STATUS_ESCALATED_LEVEL1_PENDING);
@@ -2100,6 +2108,7 @@ public class GrievanceService {
 				firstLevelResponse = serviceRequestRepository.fetchResult(uri, searcherRequest);
 				log.debug(PGRConstants.SEARCHER_RESPONSE_TEXT + firstLevelResponse);
 				if (null != firstLevelResponse) {
+					System.out.println("firstLevelResponse is not null");
 					firstLevelServiceList = JsonPath.read(firstLevelResponse, PGRConstants.COMPLAINT_JSONPATH);
 					firstLevelActionHistoryList = JsonPath.read(firstLevelResponse,
 							PGRConstants.COMPLAINT_ACTION_HISTORY_JSONPATH);
@@ -2118,6 +2127,7 @@ public class GrievanceService {
 				secondLevelResponse = serviceRequestRepository.fetchResult(uri, searcherRequest);
 				log.debug(PGRConstants.SEARCHER_RESPONSE_TEXT + secondLevelResponse);
 				if (null != secondLevelResponse) {
+					System.out.println("secondLevelResponse is not null");
 					secondLevelServiceList = JsonPath.read(secondLevelResponse, PGRConstants.COMPLAINT_JSONPATH);
 					secondLevelActionHistoryList = JsonPath.read(secondLevelResponse,
 							PGRConstants.COMPLAINT_ACTION_HISTORY_JSONPATH);
