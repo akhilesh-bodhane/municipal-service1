@@ -683,8 +683,8 @@ public class GrievanceService {
 				serviceReqSearchCriteria.setCategory(null);
 				uri = new StringBuilder();	
 				
-				serviceReqSearchCriteria.setAssignedTo(requestInfo.getUserInfo().getId().toString());
 				enrichRequest(requestInfo, serviceReqSearchCriteria);
+				serviceReqSearchCriteria.setAssignedTo(requestInfo.getUserInfo().getId().toString());
 				searcherRequest = pGRUtils.prepareSearchRequestWithDetails(uri, serviceReqSearchCriteria, requestInfo);
 				Object assignedResponse = serviceRequestRepository.fetchResult(uri, searcherRequest);
 				System.out.println("Final Status : " + status.toString());
