@@ -818,7 +818,7 @@ public class GrievanceService {
 							&& (!CollectionUtils.isEmpty(serviceReqSearchCriteria.getStatus())
 									&& (serviceReqSearchCriteria.getStatus()
 											.contains(WorkFlowConfigs.STATUS_ESCALATED_LEVEL1_PENDING)))) {
-						//serviceReqSearchCriteria.setAssignedTo(requestInfo.getUserInfo().getId().toString());
+						serviceReqSearchCriteria.setAssignedTo(requestInfo.getUserInfo().getId().toString());
 					}
 					
 					
@@ -949,7 +949,7 @@ public class GrievanceService {
 							&& (!CollectionUtils.isEmpty(serviceReqSearchCriteria.getStatus())
 									&& (serviceReqSearchCriteria.getStatus()
 											.contains(WorkFlowConfigs.STATUS_ESCALATED_LEVEL1_PENDING)))) {
-						serviceReqSearchCriteria.setAssignedTo(requestInfo.getUserInfo().getId().toString());
+						//serviceReqSearchCriteria.setAssignedTo(requestInfo.getUserInfo().getId().toString());
 					}
 					
 					
