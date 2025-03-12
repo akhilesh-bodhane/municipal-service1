@@ -614,16 +614,9 @@ public class GrievanceService {
 		List<String> codes = requestInfo.getUserInfo().getRoles().stream().map(Role::getCode)
 				.collect(Collectors.toList());
 
-		
-		if ((codes.contains(PGRConstants.ROLE_ESCALATION_OFFICER2))
+		if ((codes.contains(PGRConstants.ROLE_ESCALATION_OFFICER1))
+				|| (codes.contains(PGRConstants.ROLE_ESCALATION_OFFICER2))
 				&& CollectionUtils.isEmpty(serviceReqSearchCriteria.getServiceRequestId())) {
-		
-		//commented on 12/03/2025 for removing EO1 check
-		/*
-		 * if ((codes.contains(PGRConstants.ROLE_ESCALATION_OFFICER1)) ||
-		 * (codes.contains(PGRConstants.ROLE_ESCALATION_OFFICER2)) &&
-		 * CollectionUtils.isEmpty(serviceReqSearchCriteria.getServiceRequestId())) {
-		 */
 			/*
 			 * if(!CollectionUtils.isEmpty(serviceReqSearchCriteria.getStatus()) &&
 			 * (serviceReqSearchCriteria.getStatus().contains(WorkFlowConfigs.
@@ -687,7 +680,9 @@ public class GrievanceService {
 				}
 				
 				serviceReqSearchCriteria.setCategory(null);
-				uri = new StringBuilder();
+				uri = new StringBuilder();	
+				
+				serviceReqSearchCriteria.setAssignedTo(requestInfo.getUserInfo().getId().toString());
 				enrichRequest(requestInfo, serviceReqSearchCriteria);
 				searcherRequest = pGRUtils.prepareSearchRequestWithDetails(uri, serviceReqSearchCriteria, requestInfo);
 				Object assignedResponse = serviceRequestRepository.fetchResult(uri, searcherRequest);
@@ -823,16 +818,10 @@ public class GrievanceService {
 							.collect(Collectors.toList());
 					
 					
-					if ((codes.contains(PGRConstants.ROLE_ESCALATION_OFFICER2))
-							&& (!CollectionUtils.isEmpty(serviceReqSearchCriteria.getStatus())
-									&& (serviceReqSearchCriteria.getStatus()
-													.contains(WorkFlowConfigs.STATUS_ESCALATED_LEVEL2_PENDING)))) {
-						// Do not need to set assign anyone for escalation flow if the status is pending
-					}
 					
 					//commented on 24/02/2025 to get escalation officer 1 complaints with assigned id
 					
-					/*if ((codes.contains(PGRConstants.ROLE_ESCALATION_OFFICER1)
+					if ((codes.contains(PGRConstants.ROLE_ESCALATION_OFFICER1)
 							|| codes.contains(PGRConstants.ROLE_ESCALATION_OFFICER2))
 							&& (!CollectionUtils.isEmpty(serviceReqSearchCriteria.getStatus())
 									&& (serviceReqSearchCriteria.getStatus()
@@ -840,7 +829,7 @@ public class GrievanceService {
 											|| serviceReqSearchCriteria.getStatus()
 													.contains(WorkFlowConfigs.STATUS_ESCALATED_LEVEL2_PENDING)))) {
 						// Do not need to set assign anyone for escalation flow if the status is pending
-					}*/
+					}
 					 
 					
 		
@@ -2005,6 +1994,7 @@ public class GrievanceService {
 							PGRConstants.COMPLAINT_ACTION_HISTORY_JSONPATH);
 				}
 			}
+			
 			if (CollectionUtils.isEmpty(firstLevelServiceList)) {
 				response = secondLevelResponse;
 			} else if (CollectionUtils.isEmpty(secondLevelServiceList)) {
