@@ -70,7 +70,7 @@ public class ServiceController {
 	private ResponseEntity<?> search(@RequestBody @Valid RequestInfoWrapper requestInfoWrapper,
 			@ModelAttribute @Valid ServiceReqSearchCriteria serviceReqSearchCriteria) {
 		pgrRequestValidator.validateSearch(serviceReqSearchCriteria, requestInfoWrapper.getRequestInfo());
-		Object serviceReqResponse = service.getServiceRequestDetailsNew(requestInfoWrapper.getRequestInfo(),
+		Object serviceReqResponse = service.getServiceRequestDetails(requestInfoWrapper.getRequestInfo(),
 				serviceReqSearchCriteria);
 		return new ResponseEntity<>(serviceReqResponse, HttpStatus.OK);
 	}
