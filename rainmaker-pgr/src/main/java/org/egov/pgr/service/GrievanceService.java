@@ -732,6 +732,93 @@ public class GrievanceService {
 		}
 			
 	}
+	
+	
+	
+	
+	public Object getServiceRequestDetailsNew(RequestInfo requestInfo, ServiceReqSearchCriteria serviceReqSearchCriteria) {
+		StringBuilder uri = new StringBuilder();
+		SearcherRequest searcherRequest = null;
+		try {
+			enrichRequest(requestInfo, serviceReqSearchCriteria);
+		} catch (CustomException e) {
+			if (e.getMessage().equals(ErrorConstants.NO_DATA_MSG))
+				return pGRUtils.getDefaultServiceResponse(requestInfo);
+			else
+				throw e;
+		}
+
+		Object response = null;
+		System.out.println("Inside new search method");
+		
+		List<String> codes = requestInfo.getUserInfo().getRoles().stream().map(Role::getCode)
+				.collect(Collectors.toList());
+		
+		List<String> status = serviceReqSearchCriteria.getStatus();
+		
+		if (codes.contains(PGRConstants.ROLE_ESCALATION_OFFICER1)
+				&& codes.contains(PGRConstants.ROLE_ESCALATION_OFFICER2)
+				&& codes.contains(PGRConstants.ROLE_PGR_LME)) {
+			status.remove(WorkFlowConfigs.STATUS_ESCALATED_LEVEL1_PENDING);
+			status.remove(WorkFlowConfigs.STATUS_ESCALATED_LEVEL2_PENDING);
+			status.add(WorkFlowConfigs.STATUS_ESCALATED_LEVEL1_PENDING);
+			status.add(WorkFlowConfigs.STATUS_ESCALATED_LEVEL2_PENDING);
+			status.add(WorkFlowConfigs.STATUS_ASSIGNED);
+			System.out.println("Status of EO1, EO2 and LME : " + status.toString());
+		} else if (codes.contains(PGRConstants.ROLE_ESCALATION_OFFICER1)
+				&& codes.contains(PGRConstants.ROLE_ESCALATION_OFFICER2)) {
+			status.remove(WorkFlowConfigs.STATUS_ESCALATED_LEVEL1_PENDING);
+			status.remove(WorkFlowConfigs.STATUS_ESCALATED_LEVEL2_PENDING);
+			status.add(WorkFlowConfigs.STATUS_ESCALATED_LEVEL1_PENDING);
+			status.add(WorkFlowConfigs.STATUS_ESCALATED_LEVEL2_PENDING);
+			System.out.println("Status of EO1 & EO2 : " + status.toString());
+		} else if (codes.contains(PGRConstants.ROLE_ESCALATION_OFFICER1)
+				&& codes.contains(PGRConstants.ROLE_PGR_LME)) {
+			status.remove(WorkFlowConfigs.STATUS_ESCALATED_LEVEL2_PENDING);
+			status.add(WorkFlowConfigs.STATUS_ESCALATED_LEVEL1_PENDING);
+			status.add(WorkFlowConfigs.STATUS_ASSIGNED);
+			System.out.println("Status of EO1 and LME : " + status.toString());
+		} else if (codes.contains(PGRConstants.ROLE_ESCALATION_OFFICER2)
+				&& codes.contains(PGRConstants.ROLE_PGR_LME)) {
+			status.remove(WorkFlowConfigs.STATUS_ESCALATED_LEVEL1_PENDING);
+			status.add(WorkFlowConfigs.STATUS_ESCALATED_LEVEL2_PENDING);
+			status.add(WorkFlowConfigs.STATUS_ASSIGNED);
+			System.out.println("Status of EO2 and LME : " + status.toString());
+		} else if (codes.contains(PGRConstants.ROLE_ESCALATION_OFFICER1)) {
+			status.add(WorkFlowConfigs.STATUS_ESCALATED_LEVEL1_PENDING);
+			status.remove(WorkFlowConfigs.STATUS_ESCALATED_LEVEL2_PENDING);
+			System.out.println("Status of EO1 : " + status.toString());
+		} else if (codes.contains(PGRConstants.ROLE_ESCALATION_OFFICER2)) {
+			status.add(WorkFlowConfigs.STATUS_ESCALATED_LEVEL2_PENDING);
+			status.remove(WorkFlowConfigs.STATUS_ESCALATED_LEVEL1_PENDING);
+			System.out.println("Status of EO2 : " + status.toString());
+		}				 
+		 
+		//status.add(WorkFlowConfigs.STATUS_ASSIGNED);
+		status.add(WorkFlowConfigs.STATUS_REASSIGN_REQUESTED);
+		if(serviceReqSearchCriteria.getServiceRequestId() == null) {
+			serviceReqSearchCriteria.setStatus(status);
+		} else {
+			serviceReqSearchCriteria.setStatus(null);
+		}
+		
+		searcherRequest = pGRUtils.prepareSearchRequestWithDetails(uri, serviceReqSearchCriteria, requestInfo);
+		response = serviceRequestRepository.fetchResult(uri, searcherRequest);
+		log.debug(PGRConstants.SEARCHER_RESPONSE_TEXT + response);
+
+		if (null == response)
+			return pGRUtils.getDefaultServiceResponse(requestInfo);
+		ServiceResponse serviceResponse = prepareResult(response, requestInfo);
+		if (CollectionUtils.isEmpty(serviceResponse.getServices())) {
+			System.out.println("Inside response if condition");
+			System.out.println("Service Response : " + serviceResponse.toString());
+			return serviceResponse;
+		} else {
+			System.out.println("Inside response else condition");
+			return enrichResult(requestInfo, serviceResponse);
+		}
+			
+	}
 
 	/**
 	 * Method to return service requests along with details to plain search
