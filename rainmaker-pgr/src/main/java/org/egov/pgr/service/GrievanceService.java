@@ -680,10 +680,7 @@ public class GrievanceService {
 				}
 				serviceReqSearchCriteria.setCategory(null);
 				uri = new StringBuilder();	
-				enrichRequest(requestInfo, serviceReqSearchCriteria);
-				serviceReqSearchCriteria.setAssignedTo(requestInfo.getUserInfo().getId().toString());
-				
-				System.out.println("############### serviceReqSearchCriteria : " + serviceReqSearchCriteria.toString());
+				enrichRequestNew(requestInfo, serviceReqSearchCriteria);				
 				searcherRequest = pGRUtils.prepareSearchRequestWithDetails(uri, serviceReqSearchCriteria, requestInfo);
 				Object assignedResponse = serviceRequestRepository.fetchResult(uri, searcherRequest);
 				System.out.println("Final Status : " + status.toString());
@@ -817,9 +814,24 @@ public class GrievanceService {
 					List<String> codes = requestInfo.getUserInfo().getRoles().stream().map(Role::getCode)
 							.collect(Collectors.toList());
 					
+					if (codes.contains(PGRConstants.ROLE_ESCALATION_OFFICER1)
+							&& (!CollectionUtils.isEmpty(serviceReqSearchCriteria.getStatus())
+									&& (serviceReqSearchCriteria.getStatus()
+											.contains(WorkFlowConfigs.STATUS_ESCALATED_LEVEL1_PENDING)))) {
+						//serviceReqSearchCriteria.setAssignedTo(requestInfo.getUserInfo().getId().toString());
+					}
+					
+					
+					if (codes.contains(PGRConstants.ROLE_ESCALATION_OFFICER2)
+							&& (!CollectionUtils.isEmpty(serviceReqSearchCriteria.getStatus())
+									&& (serviceReqSearchCriteria.getStatus()
+													.contains(WorkFlowConfigs.STATUS_ESCALATED_LEVEL2_PENDING)))) {
+						// Do not need to set assign anyone for escalation flow if the status is pending
+					}
+					
 					//commented on 24/02/2025 to get escalation officer 1 complaints with assigned id
 					
-					if ((codes.contains(PGRConstants.ROLE_ESCALATION_OFFICER1)
+					/*if ((codes.contains(PGRConstants.ROLE_ESCALATION_OFFICER1)
 							|| codes.contains(PGRConstants.ROLE_ESCALATION_OFFICER2))
 							&& (!CollectionUtils.isEmpty(serviceReqSearchCriteria.getStatus())
 									&& (serviceReqSearchCriteria.getStatus()
@@ -827,7 +839,138 @@ public class GrievanceService {
 											|| serviceReqSearchCriteria.getStatus()
 													.contains(WorkFlowConfigs.STATUS_ESCALATED_LEVEL2_PENDING)))) {
 						// Do not need to set assign anyone for escalation flow if the status is pending
+					}*/
+					 
+					
+		
+					/**
+					 * if(!CollectionUtils.isEmpty(serviceReqSearchCriteria.getStatus()) &&
+					 * (serviceReqSearchCriteria.getStatus().contains(WorkFlowConfigs.STATUS_ESCALATED_LEVEL1_PENDING)
+					 * ||
+					 * serviceReqSearchCriteria.getStatus().contains(WorkFlowConfigs.STATUS_ESCALATED_LEVEL2_PENDING))){
+					 * //Do not need to set assign anyone for escalation flow if the status is
+					 * pending }
+					 **/
+					else {
+						serviceReqSearchCriteria.setAssignedTo(requestInfo.getUserInfo().getId().toString());
 					}
+				}
+			}
+			/**
+			 * CSR can search complaints across the state.
+			 */
+			else if (precedentRole.equalsIgnoreCase(PGRConstants.ROLE_CSR)) {
+				serviceReqSearchCriteria.setTenantId(serviceReqSearchCriteria.getTenantId().split("[.]")[0]); // csr can
+																												// search
+																												// his
+																												// complaints
+																												// across
+																												// state.
+			}
+		}
+		if (!StringUtils.isEmpty(serviceReqSearchCriteria.getAssignedTo())) {
+			List<String> serviceRequestIds = getServiceRequestIdsOnAssignedTo(requestInfo, serviceReqSearchCriteria);
+			if (serviceRequestIds.isEmpty())
+				throw new CustomException(ErrorConstants.NO_DATA_KEY, ErrorConstants.NO_DATA_MSG);
+			serviceReqSearchCriteria.setServiceRequestId(serviceRequestIds);
+		}
+		if (!StringUtils.isEmpty(serviceReqSearchCriteria.getGroup())
+				&& CollectionUtils.isEmpty(serviceReqSearchCriteria.getServiceCodes())) {
+			List<String> departmentCodes = new ArrayList<>();
+			departmentCodes.add(serviceReqSearchCriteria.getGroup());
+			Object response = fetchServiceDefs(requestInfo, serviceReqSearchCriteria.getTenantId(), departmentCodes);
+			if (null == response) {
+				throw new CustomException(ErrorConstants.NO_DATA_KEY, ErrorConstants.NO_DATA_MSG);
+			}
+			try {
+				List<String> serviceCodes = JsonPath.read(response, PGRConstants.JSONPATH_SERVICE_CODES);
+				if (serviceCodes.isEmpty())
+					throw new CustomException(ErrorConstants.NO_DATA_KEY, ErrorConstants.NO_DATA_MSG);
+				serviceReqSearchCriteria.setServiceCodes(serviceCodes);
+			} catch (Exception e) {
+				throw new CustomException(ErrorConstants.NO_DATA_KEY, ErrorConstants.NO_DATA_MSG);
+			}
+		}
+		serviceReqSearchCriteria.setActive(true);
+	}
+	
+	public void enrichRequestNew(RequestInfo requestInfo, ServiceReqSearchCriteria serviceReqSearchCriteria) {
+		log.info("Enriching request for search");
+		String precedentRole = pGRUtils.getPrecedentRole(
+				requestInfo.getUserInfo().getRoles().stream().map(Role::getCode).collect(Collectors.toList()));
+		if (requestInfo.getUserInfo().getType().equalsIgnoreCase(PGRConstants.ROLE_CITIZEN)) {
+			serviceReqSearchCriteria.setAccountId(requestInfo.getUserInfo().getId().toString());
+			serviceReqSearchCriteria.setTenantId(serviceReqSearchCriteria.getTenantId().split("[.]")[0]); // citizen can
+																											// search
+																											// his
+																											// complaints
+																											// across
+																											// state.
+		} else if (requestInfo.getUserInfo().getType().equalsIgnoreCase(PGRConstants.ROLE_EMPLOYEE)) {
+			/**
+			 * GRO can search complaints belonging to only his tenant.
+			 */
+			if (precedentRole.equalsIgnoreCase(PGRConstants.ROLE_GRO)) {
+				serviceReqSearchCriteria.setTenantId(requestInfo.getUserInfo().getTenantId());
+			}
+			/**
+			 * DGRO belongs to a department and that department takes care of certain
+			 * complaint types. A DGRO can address/see only the complaints belonging to
+			 * those complaint types and to only his tenant.
+			 */
+			else if (precedentRole.equalsIgnoreCase(PGRConstants.ROLE_DGRO)) {
+				Object response = fetchServiceDefs(requestInfo, serviceReqSearchCriteria.getTenantId(),
+						getDepartmentCode(serviceReqSearchCriteria, requestInfo));
+				if (null == response) {
+					throw new CustomException(ErrorConstants.NO_DATA_KEY, ErrorConstants.NO_DATA_MSG);
+				}
+				try {
+					List<String> serviceCodes = JsonPath.read(response, PGRConstants.JSONPATH_SERVICE_CODES);
+					if (serviceCodes.isEmpty())
+						throw new CustomException(ErrorConstants.NO_DATA_KEY, ErrorConstants.NO_DATA_MSG);
+					log.info("serviceCodes: " + serviceCodes);
+					serviceReqSearchCriteria.setServiceCodes(serviceCodes);
+				} catch (Exception e) {
+					throw new CustomException(ErrorConstants.NO_DATA_KEY, ErrorConstants.NO_DATA_MSG);
+				}
+				serviceReqSearchCriteria.setTenantId(requestInfo.getUserInfo().getTenantId());
+			}
+			/**
+			 * An Employee can by default search only the complaints assigned to him.
+			 */
+			else if (precedentRole.equalsIgnoreCase(PGRConstants.ROLE_EMPLOYEE)) {
+				if (StringUtils.isEmpty(serviceReqSearchCriteria.getAssignedTo())
+						&& CollectionUtils.isEmpty(serviceReqSearchCriteria.getServiceRequestId())) {
+
+					List<String> codes = requestInfo.getUserInfo().getRoles().stream().map(Role::getCode)
+							.collect(Collectors.toList());
+					
+					if (codes.contains(PGRConstants.ROLE_ESCALATION_OFFICER1)
+							&& (!CollectionUtils.isEmpty(serviceReqSearchCriteria.getStatus())
+									&& (serviceReqSearchCriteria.getStatus()
+											.contains(WorkFlowConfigs.STATUS_ESCALATED_LEVEL1_PENDING)))) {
+						serviceReqSearchCriteria.setAssignedTo(requestInfo.getUserInfo().getId().toString());
+					}
+					
+					
+					if (codes.contains(PGRConstants.ROLE_ESCALATION_OFFICER2)
+							&& (!CollectionUtils.isEmpty(serviceReqSearchCriteria.getStatus())
+									&& (serviceReqSearchCriteria.getStatus()
+													.contains(WorkFlowConfigs.STATUS_ESCALATED_LEVEL2_PENDING)))) {
+						// Do not need to set assign anyone for escalation flow if the status is pending
+					}
+					
+					//commented on 24/02/2025 to get escalation officer 1 complaints with assigned id
+					
+					/*if ((codes.contains(PGRConstants.ROLE_ESCALATION_OFFICER1)
+							|| codes.contains(PGRConstants.ROLE_ESCALATION_OFFICER2))
+							&& (!CollectionUtils.isEmpty(serviceReqSearchCriteria.getStatus())
+									&& (serviceReqSearchCriteria.getStatus()
+											.contains(WorkFlowConfigs.STATUS_ESCALATED_LEVEL1_PENDING)
+											|| serviceReqSearchCriteria.getStatus()
+													.contains(WorkFlowConfigs.STATUS_ESCALATED_LEVEL2_PENDING)))) {
+						// Do not need to set assign anyone for escalation flow if the status is pending
+					}*/
 					 
 					
 		
