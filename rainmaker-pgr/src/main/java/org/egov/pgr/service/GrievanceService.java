@@ -49,6 +49,7 @@ import org.egov.pgr.utils.ResponseInfoFactory;
 import org.egov.pgr.utils.WorkFlowConfigs;
 import org.egov.pgr.validator.PGRRequestValidator;
 import org.egov.tracer.model.CustomException;
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -691,6 +692,27 @@ public class GrievanceService {
 					if (!CollectionUtils.isEmpty(assignedServiceList)) {
 						LinkedHashMap<String, Object> map = (LinkedHashMap<String, Object>) assignedResponse;
 						List obj = (List) map.get("services");
+						
+						JSONArray rootArray = new JSONArray(obj);
+				        //JSONObject firstObject = rootArray.getJSONObject(0);
+				        //JSONArray actionHistoryArray = firstObject.getJSONArray("actionhistory");
+				        //JSONObject firstActionHistory = actionHistoryArray.getJSONObject(0).getJSONObject("assignee");
+				        
+				        for (int i = 0; i < rootArray.length(); i++) {
+				        	JSONObject firstObject = rootArray.getJSONObject(i);
+				        	JSONArray servicesArray = firstObject.getJSONArray("services");
+				        	JSONObject serviceObject = rootArray.getJSONObject(i).getJSONObject("services");
+				        	
+				        	System.out.println("serviceObject : " + serviceObject.toString());
+				        	
+				        	JSONArray actionHistoryArray = firstObject.getJSONArray("actionhistory");
+				        	JSONObject firstAssignee = actionHistoryArray.getJSONObject(i).getJSONObject("assignee");
+				        	
+				        	System.out.println("Assignee : " + firstAssignee.toString());
+				        	
+				        	
+				        }
+				      
 
 						List<Object> finalObj = new ArrayList<Object>();
 						finalObj.addAll(obj);
