@@ -716,7 +716,8 @@ public class GrievanceService {
 										&& assignee.equalsIgnoreCase(requestInfo.getUserInfo().getId().toString())) {
 									System.out.println("######### Inside if condition of assignee check ##############");
 									finalObj.add(serviceObject);
-								} else {
+								} else if (assignee.equalsIgnoreCase(null) || assignee.equalsIgnoreCase("")
+										|| assignee.equalsIgnoreCase("N/A")){
 									System.out.println("######### Inside if condition of assignee check ##############");
 									finalObj.add(serviceObject);
 								}
@@ -724,9 +725,7 @@ public class GrievanceService {
 				        	
 				        	
 				        }
-				      
-
-						
+				      			
 						//finalObj.addAll(obj);
 
 						LinkedHashMap<String, Object> map1 = (LinkedHashMap<String, Object>) response;
