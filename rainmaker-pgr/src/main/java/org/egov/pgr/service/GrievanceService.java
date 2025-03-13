@@ -717,11 +717,11 @@ public class GrievanceService {
 										|| !assignee.equalsIgnoreCase("N/A"))
 										&& assignee.equalsIgnoreCase(requestInfo.getUserInfo().getId().toString())) {
 									System.out.println("######### Inside if condition of assignee check ##############");
-									finalObj.add(serviceObject);
+									finalObj.add(obj.get(i));
 								} else if (assignee.equalsIgnoreCase(null) || assignee.equalsIgnoreCase("")
 										|| assignee.equalsIgnoreCase("N/A")){
 									System.out.println("######### Inside else condition of assignee check ##############");
-									finalObj.add(serviceObject);
+									finalObj.add(obj.get(i));
 								}
 				        	}
 				        	
