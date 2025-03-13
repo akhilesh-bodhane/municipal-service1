@@ -704,7 +704,7 @@ public class GrievanceService {
 				        	
 				        	System.out.println("serviceObject : " + serviceObject.toString());
 				        	
-				        	System.out.println("serviceObject obj : " + obj.toString());
+				        	System.out.println("serviceObject obj : " + obj.get(i).toString());
 				        	
 				        	JSONArray actionHistoryArray = firstObject.getJSONArray("actionhistory");
 				        	
