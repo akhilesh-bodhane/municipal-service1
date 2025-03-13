@@ -700,7 +700,7 @@ public class GrievanceService {
 				        
 				        for (int i = 0; i < rootArray.length(); i++) {
 				        	JSONObject firstObject = rootArray.getJSONObject(i);
-				        	JSONArray servicesArray = firstObject.getJSONArray("services");
+				        	//JSONArray servicesArray = firstObject.getJSONArray("services");
 				        	JSONObject serviceObject = rootArray.getJSONObject(i).getJSONObject("services");
 				        	
 				        	System.out.println("serviceObject : " + serviceObject.toString());
