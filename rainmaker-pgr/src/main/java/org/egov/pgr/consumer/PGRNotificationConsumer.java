@@ -403,8 +403,11 @@ public class PGRNotificationConsumer {
                 //For this purpose we are trimming the last part of the message
                 if(notificationService.isEscalatedToLevel2(serviceReq, requestInfo)) {
                 	//if(!ArrayUtils.isEmpty(text.split("\\.")))
-                		//text = text.split("\\.")[0]+".";              	
+                		//text = text.split("\\.")[0]+".";   
+                 System.out.println("EscalationOfficer2 assignee value:::"+assignee);
+                 employeeDetails = notificationService.getEmployeeDetails(serviceReq.getTenantId(), assignee, requestInfo);
                  text = messageMap.get(PGRConstants.getEscalationTwoStatusRoleLocalizationKeyMap().get(actionInfo.getStatus() + "|" + role));
+                 text = text.replaceAll(PGRConstants.SMS_NOTIFICATION_EMP_NAME_KEY, employeeDetails.get("name"));
                  System.out.println("EscalationOfficer2 Resolved text new message:::"+text);
                 }
             }
