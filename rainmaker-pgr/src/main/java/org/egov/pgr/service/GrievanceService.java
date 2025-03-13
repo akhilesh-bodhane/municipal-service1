@@ -706,9 +706,13 @@ public class GrievanceService {
 				        	System.out.println("serviceObject : " + serviceObject.toString());
 				        	
 				        	JSONArray actionHistoryArray = firstObject.getJSONArray("actionhistory");
-				        	JSONObject firstAssignee = actionHistoryArray.getJSONObject(i).getJSONObject("assignee");
 				        	
-				        	System.out.println("Assignee : " + firstAssignee.toString());
+				        	if (actionHistoryArray.length() > 0) {
+				                JSONObject firstAction = actionHistoryArray.getJSONObject(0);
+				        	
+				                String assignee = firstAction.optString("assignee", "N/A");
+				        	
+				                System.out.println("Assignee : " + assignee);
 				        	
 				        	
 				        }
