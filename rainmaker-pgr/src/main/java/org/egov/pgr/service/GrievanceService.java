@@ -713,6 +713,7 @@ public class GrievanceService {
 				                String assignee = firstAction.optString("assignee", "N/A");
 				        	
 				                System.out.println("Assignee : " + assignee);
+				        	}
 				        	
 				        	
 				        }
