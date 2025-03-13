@@ -702,7 +702,9 @@ public class GrievanceService {
 				        	//JSONArray servicesArray = firstObject.getJSONArray("services");
 				        	JSONObject serviceObject = rootArray.getJSONObject(i).getJSONObject("services");
 				        	
-				        	//System.out.println("serviceObject : " + serviceObject.toString());
+				        	System.out.println("serviceObject : " + serviceObject.toString());
+				        	
+				        	System.out.println("serviceObject obj : " + obj.toString());
 				        	
 				        	JSONArray actionHistoryArray = firstObject.getJSONArray("actionhistory");
 				        	
