@@ -96,6 +96,8 @@ public class PGRConstants {
 	
 	public static final String LOCALIZATION_CODE_RESOLVE_CITIZEN = "pgr.sms.notification.resolve.citizen";
 	
+	public static final String LOCALIZATION_CODE_RESOLVE_ESCALATION_TWO_CITIZEN = "pgr.sms.notification.resolve.l2.citizen";
+	
 	public static final String LOCALIZATION_CODE_CLOSE_EMPLOYEE = "pgr.sms.notification.close.employee";
 	
 	public static final String LOCALIZATION_CODE_COMMENT = "pgr.sms.notification.comment";
@@ -225,6 +227,8 @@ public class PGRConstants {
 	private static Map<String, String> statusRoleLocalizationKeyMap = prepareStatusRoleLocalizationKeyMap();
 
 	private static Map<String, String> actionRoleLocalizationKeyMap = prepareActionRoleLocalizationKeyMap();
+	
+	private static Map<String, String> escalationtwostatusRoleLocalizationKeyMap = prepareEscalationTwoStatusRoleLocalizationKeyMap();
 
 	
 	private static Map<String, String> prepareStatusNotifKeyMap() {
@@ -280,6 +284,13 @@ public class PGRConstants {
 		return map;
 	}
 	
+	private static Map<String, String> prepareEscalationTwoStatusRoleLocalizationKeyMap() {
+
+		Map<String, String> map = new HashMap<>();
+		map.put(WorkFlowConfigs.STATUS_RESOLVED + "|" + PGRConstants.ROLE_CITIZEN, LOCALIZATION_CODE_RESOLVE_ESCALATION_TWO_CITIZEN);
+		return map;
+	}
+	
 	public static Map<String, String> getStatusNotifKeyMap(){
 		return statusNotifKeyMap;
 	}
@@ -294,6 +305,10 @@ public class PGRConstants {
 	
 	public static Map<String, String> getActionRoleLocalizationKeyMap(){
 		return actionRoleLocalizationKeyMap;
+	}
+	
+	public static Map<String, String> getEscalationTwoStatusRoleLocalizationKeyMap(){
+		return escalationtwostatusRoleLocalizationKeyMap;
 	}
 		
 }

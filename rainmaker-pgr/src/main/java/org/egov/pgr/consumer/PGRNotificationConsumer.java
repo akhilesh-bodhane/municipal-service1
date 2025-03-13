@@ -402,8 +402,10 @@ public class PGRNotificationConsumer {
                 //if complaint is resolved by escalation level2 officer, then citizen cannot re-open it.
                 //For this purpose we are trimming the last part of the message
                 if(notificationService.isEscalatedToLevel2(serviceReq, requestInfo)) {
-                	if(!ArrayUtils.isEmpty(text.split("\\.")))
-                		text = text.split("\\.")[0]+".";
+                	//if(!ArrayUtils.isEmpty(text.split("\\.")))
+                		//text = text.split("\\.")[0]+".";              	
+                 text = messageMap.get(PGRConstants.getEscalationTwoStatusRoleLocalizationKeyMap().get(actionInfo.getStatus() + "|" + role));
+                 System.out.println("EscalationOfficer2 Resolved text new message:::"+text);
                 }
             }
             if (actionInfo.getStatus().equals(WorkFlowConfigs.STATUS_CLOSED)) {
