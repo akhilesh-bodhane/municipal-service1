@@ -693,17 +693,16 @@ public class GrievanceService {
 						LinkedHashMap<String, Object> map = (LinkedHashMap<String, Object>) assignedResponse;
 						List obj = (List) map.get("services");
 						
+						List<Object> finalObj = new ArrayList<Object>();
+						
 						JSONArray rootArray = new JSONArray(obj);
-				        //JSONObject firstObject = rootArray.getJSONObject(0);
-				        //JSONArray actionHistoryArray = firstObject.getJSONArray("actionhistory");
-				        //JSONObject firstActionHistory = actionHistoryArray.getJSONObject(0).getJSONObject("assignee");
 				        
 				        for (int i = 0; i < rootArray.length(); i++) {
 				        	JSONObject firstObject = rootArray.getJSONObject(i);
 				        	//JSONArray servicesArray = firstObject.getJSONArray("services");
 				        	JSONObject serviceObject = rootArray.getJSONObject(i).getJSONObject("services");
 				        	
-				        	System.out.println("serviceObject : " + serviceObject.toString());
+				        	//System.out.println("serviceObject : " + serviceObject.toString());
 				        	
 				        	JSONArray actionHistoryArray = firstObject.getJSONArray("actionhistory");
 				        	
@@ -711,16 +710,24 @@ public class GrievanceService {
 				                JSONObject firstAction = actionHistoryArray.getJSONObject(0);
 				        	
 				                String assignee = firstAction.optString("assignee", "N/A");
-				        	
 				                System.out.println("Assignee : " + assignee);
+								if ((!assignee.equalsIgnoreCase(null) || !assignee.equalsIgnoreCase("")
+										|| !assignee.equalsIgnoreCase("N/A"))
+										&& assignee.equalsIgnoreCase(requestInfo.getUserInfo().getId().toString())) {
+									System.out.println("######### Inside if condition of assignee check ##############");
+									finalObj.add(serviceObject);
+								} else {
+									System.out.println("######### Inside if condition of assignee check ##############");
+									finalObj.add(serviceObject);
+								}
 				        	}
 				        	
 				        	
 				        }
 				      
 
-						List<Object> finalObj = new ArrayList<Object>();
-						finalObj.addAll(obj);
+						
+						//finalObj.addAll(obj);
 
 						LinkedHashMap<String, Object> map1 = (LinkedHashMap<String, Object>) response;
 						if (null != map1) {
