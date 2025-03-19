@@ -54,7 +54,7 @@ public class ServiceRequestRepository {
 
 	public static final String SERVICE_SEARCH_WITH_DETAILS = "select array_to_json(array_agg(row_to_json(serviceRequests))) from (select (select (select (row_to_json(services)) from ( select *, (select (select row_to_json(auditDetails) from (select createdtime, lastmodifiedtime, createdby, lastmodifiedby from eg_pgr_service where svc.serviceRequestId=eg_pgr_service.serviceRequestId) auditDetails) as auditDetails), (select (select (row_to_json(addressDetail)) from (select * from eg_pgr_address where eg_pgr_address.uuid=eg_pgr_service.addressid) addressDetail) as addressDetail) from eg_pgr_service svc where svc.serviceRequestId=eg_pgr_service.serviceRequestId order by createdtime desc) services) as services),(select (select array_to_json(array_agg(row_to_json(actionHistory))) from ( select * from eg_pgr_action where businessKey=eg_pgr_service.serviceRequestId order by \"when\" desc) actionHistory) as actionHistory) from eg_pgr_service WHERE ";
 
-	public static final String SERVICE_SEARCH_WITH_COUNT = "select array_to_json(array_agg(row_to_json(services))) from (select (row_to_json(services)) from ( select count(*) from eg_pgr_service where ";
+	public static final String SERVICE_SEARCH_WITH_COUNT = "select array_to_json(array_agg(row_to_json(services))) from (select ((services)) from ( select count(*) from eg_pgr_service where ";
 
 	/*
 	 * public static final String GRIEVANCE_SEARCH =
