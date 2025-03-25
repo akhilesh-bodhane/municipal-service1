@@ -114,6 +114,40 @@ public class SWQueryBuilder {
 	private static final String PUBLIC_DASHBOARD_SEWERAGE_TOTAL_COLLECTION = "select sum(ept.txn_amount) from eg_sw_connection esc inner join eg_pg_transactions ept\r\n"
 			+ "on esc.applicationno  = ept.consumer_code ";
 	
+	private static final String PUBLIC_DASHBOARD_SEWERAGE_SEARCH_MINIMUM_TIME_TAKEN_APPROVED = "SELECT MIN(\r\n"
+			+ "        CASE \r\n"
+			+ "            WHEN esc.applicationstatus in ('CONNECTION_ACTIVATED','SEWERAGE_CONNECTION_ACTIVATED') \r\n"
+			+ "            THEN CASE when (to_timestamp(esc.lastmodifiedtime / 1000)::date - to_timestamp(esc.createdtime / 1000)::date) =0\r\n"
+			+ "           THEN 1\r\n"
+			+ "               ELSE (to_timestamp(esc.lastmodifiedtime / 1000)::date - to_timestamp(esc.createdtime / 1000)::date)\r\n"
+			+ "             END\r\n"
+			+ "			ELSE NULL\r\n"
+			+ "	    END\r\n"
+			+ "    ) AS minimum_approved_days\r\n"
+			+ "FROM eg_sw_connection esc";
+	
+	private static final String PUBLIC_DASHBOARD_SEWERAGE_SEARCH_MAXIMUM_TIME_TAKEN_APPROVED = "SELECT MAX(\r\n"
+			+ "        CASE \r\n"
+			+ "            WHEN esc.applicationstatus in ('CONNECTION_ACTIVATED','SEWERAGE_CONNECTION_ACTIVATED')\r\n"
+			+ "            THEN CASE when (to_timestamp(esc.lastmodifiedtime / 1000)::date - to_timestamp(esc.createdtime / 1000)::date) = 0 \r\n"
+			+ "                 THEN 1\r\n"
+			+ "               ELSE (to_timestamp(esc.lastmodifiedtime / 1000)::date - to_timestamp(esc.createdtime / 1000)::date)\r\n"
+			+ "             END\r\n"
+			+ "			ELSE NULL\r\n"
+			+ "	    END\r\n"
+			+ "    ) AS maximum_approved_days\r\n"
+			+ "FROM eg_sw_connection esc";
+	
+	public static final String PUBLIC_DASHBOARD_SEWERAGE_SEARCH__APPROVED_DAYS = "SELECT CASE \r\n"
+			+ "			   WHEN esc.applicationstatus in ('CONNECTION_ACTIVATED','SEWERAGE_CONNECTION_ACTIVATED') \r\n"
+			+ "			   THEN CASE WHEN (to_timestamp(esc.lastmodifiedtime / 1000)::date - to_timestamp(esc.createdtime / 1000)::date) = 0 \r\n"
+			+ "		                 THEN 1\r\n"
+			+ "			                 ELSE (to_timestamp(esc.lastmodifiedtime / 1000)::date - to_timestamp(esc.createdtime / 1000)::date)\r\n"
+			+ "			          END\r\n"
+			+ "			       ELSE 0\r\n"
+			+ "			     END AS approveddays \r\n"
+			+ "			FROM eg_sw_connection esc";
+	
 	
 	
 	public String getSearchQueryString(SearchCriteria criteria, List<Object> preparedStatement,
@@ -399,18 +433,6 @@ public class SWQueryBuilder {
 			preparedStatement.add(SearchTotalCollectionCriteria.getDataPayload().getToDate());
 		}
 		}
-		/*
-		 * if (SearchTotalCollectionCriteria.getDataPayload().getServicetype() != null)
-		 * { addClauseIfRequired(preparedStatement, query); if
-		 * ("CONNECTION_CONVERSION".equals(SearchTotalCollectionCriteria.getDataPayload(
-		 * ).getServicetype())) { query.
-		 * append("  ewa.activitytype in('CONNECTION_CONVERSION_TARIFF','CONNECTION_CONVERSION') "
-		 * ); } else { query.append("  ewa.activitytype = ? ");
-		 * preparedStatement.add(SearchTotalCollectionCriteria.getDataPayload().
-		 * getServicetype()); }
-		 * 
-		 * }
-		 */
 
 		return query.toString();
 
@@ -433,17 +455,6 @@ public class SWQueryBuilder {
 			preparedStatement.add(SearchTotalCollectionCriteria.getDataPayload().getToDate());
 		}
 		}
-		/*
-		 * if (SearchTotalCollectionCriteria.getDataPayload().getServicetype() != null)
-		 * { addClauseIfRequired(preparedStatement, query); if
-		 * ("CONNECTION_CONVERSION".equals(SearchTotalCollectionCriteria.getDataPayload(
-		 * ).getServicetype())) { query.
-		 * append("  ewa.activitytype in('CONNECTION_CONVERSION_TARIFF','CONNECTION_CONVERSION') "
-		 * ); } else { query.append("  ewa.activitytype = ? ");
-		 * preparedStatement.add(SearchTotalCollectionCriteria.getDataPayload().
-		 * getServicetype()); } }
-		 */
-
 		return query.toString();
 
 	}
@@ -465,19 +476,75 @@ public class SWQueryBuilder {
 			preparedStatement.add(SearchTotalCollectionCriteria.getDataPayload().getToDate());
 		}
 		}
-		/*
-		 * if (SearchTotalCollectionCriteria.getDataPayload().getServicetype() != null)
-		 * { addClauseIfRequired(preparedStatement, query); if
-		 * ("CONNECTION_CONVERSION".equals(SearchTotalCollectionCriteria.getDataPayload(
-		 * ).getServicetype())) { query.
-		 * append("  ewa.activitytype in('CONNECTION_CONVERSION_TARIFF','CONNECTION_CONVERSION') "
-		 * ); } else { query.append("  ewa.activitytype = ? ");
-		 * preparedStatement.add(SearchTotalCollectionCriteria.getDataPayload().
-		 * getServicetype()); } }
-		 */
 
 		return query.toString();
 
+	}
+	
+	public String getSearchQueryStringPublicDashBoardMinimumTimeTaken(
+			PublicDashBoardSearchCritieria SearchTotalCollectionCriteria, List<Object> preparedStatement) {
+		preparedStatement.clear();
+		StringBuilder query = null;
+		query = new StringBuilder(PUBLIC_DASHBOARD_SEWERAGE_SEARCH_MINIMUM_TIME_TAKEN_APPROVED);
+		if (SearchTotalCollectionCriteria.getDataPayload().getFromDate() != null) {
+			addClauseIfRequired(preparedStatement, query);
+			query.append("  esc.createdtime >= ?  ");
+			preparedStatement.add(SearchTotalCollectionCriteria.getDataPayload().getFromDate());
+		}
+		if (SearchTotalCollectionCriteria.getDataPayload().getToDate() != null) {
+			addClauseIfRequired(preparedStatement, query);
+			query.append("  esc.createdtime <= ? ");
+			preparedStatement.add(SearchTotalCollectionCriteria.getDataPayload().getToDate());
+		}
+		
+		addClauseIfRequired(preparedStatement, query);
+		query.append(" esc.applicationstatus in ('CONNECTION_ACTIVATED','SEWERAGE_CONNECTION_ACTIVATED')");
+
+		return query.toString();
+	}
+	
+	public String getSearchQueryStringPublicDashBoardMaxmimumTimeTaken(
+			PublicDashBoardSearchCritieria SearchTotalCollectionCriteria, List<Object> preparedStatement) {
+		preparedStatement.clear();
+		StringBuilder query = null;
+		query = new StringBuilder(PUBLIC_DASHBOARD_SEWERAGE_SEARCH_MAXIMUM_TIME_TAKEN_APPROVED);
+		if (SearchTotalCollectionCriteria.getDataPayload().getFromDate() != null) {
+			addClauseIfRequired(preparedStatement, query);
+			query.append("  esc.createdtime >= ?  ");
+			preparedStatement.add(SearchTotalCollectionCriteria.getDataPayload().getFromDate());
+		}
+		if (SearchTotalCollectionCriteria.getDataPayload().getToDate() != null) {
+			addClauseIfRequired(preparedStatement, query);
+			query.append("  esc.createdtime <= ? ");
+			preparedStatement.add(SearchTotalCollectionCriteria.getDataPayload().getToDate());
+		}
+		
+		addClauseIfRequired(preparedStatement, query);
+		query.append(" esc.applicationstatus in ('CONNECTION_ACTIVATED','SEWERAGE_CONNECTION_ACTIVATED')");
+
+		return query.toString();
+	}
+	
+	public String getSearchQueryStringPublicDashBoardApprovedDays(
+			PublicDashBoardSearchCritieria SearchTotalCollectionCriteria, List<Object> preparedStatement) {
+		preparedStatement.clear();
+		StringBuilder query = null;
+		query = new StringBuilder(PUBLIC_DASHBOARD_SEWERAGE_SEARCH__APPROVED_DAYS);
+		if (SearchTotalCollectionCriteria.getDataPayload().getFromDate() != null) {
+			addClauseIfRequired(preparedStatement, query);
+			query.append("  esc.createdtime >= ?  ");
+			preparedStatement.add(SearchTotalCollectionCriteria.getDataPayload().getFromDate());
+		}
+		if (SearchTotalCollectionCriteria.getDataPayload().getToDate() != null) {
+			addClauseIfRequired(preparedStatement, query);
+			query.append("  esc.createdtime <= ? ");
+			preparedStatement.add(SearchTotalCollectionCriteria.getDataPayload().getToDate());
+		}
+		addClauseIfRequired(preparedStatement, query);
+		query.append("  esc.applicationstatus in ('CONNECTION_ACTIVATED','SEWERAGE_CONNECTION_ACTIVATED')");
+		query.append(" order by approveddays asc");
+
+		return query.toString();
 	}
 	
 	public String getSearchQueryStringPublicDashBoardTotalCollection(
@@ -496,18 +563,7 @@ public class SWQueryBuilder {
 			query.append("  esc.createdtime <= ? ");
 			preparedStatement.add(SearchTotalCollectionCriteria.getDataPayload().getToDate());
 		}
-		}
-		/*
-		 * if (SearchTotalCollectionCriteria.getDataPayload().getServicetype() != null)
-		 * { addClauseIfRequired(preparedStatement, query); if
-		 * ("CONNECTION_CONVERSION".equals(SearchTotalCollectionCriteria.getDataPayload(
-		 * ).getServicetype())) { query.
-		 * append("  ewa.activitytype in('CONNECTION_CONVERSION_TARIFF','CONNECTION_CONVERSION') "
-		 * ); } else { query.append("  ewa.activitytype = ? ");
-		 * preparedStatement.add(SearchTotalCollectionCriteria.getDataPayload().
-		 * getServicetype()); } }
-		 */
-		
+		}		
 		addClauseIfRequired(preparedStatement, query);
 		query.append("  ept.txn_status = 'SUCCESS' ");
 

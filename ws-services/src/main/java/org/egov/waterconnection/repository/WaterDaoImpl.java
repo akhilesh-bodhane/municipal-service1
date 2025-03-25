@@ -1,6 +1,7 @@
 package org.egov.waterconnection.repository;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -34,6 +35,8 @@ import org.egov.waterconnection.repository.rowmapper.WaterGetAPIRowMapper;
 import org.egov.waterconnection.repository.rowmapper.WaterNIUARowMapper;
 import org.egov.waterconnection.repository.rowmapper.WaterRowMapper;
 import org.egov.waterconnection.repository.rowmapper.WaterRowMapperCount;
+import org.egov.waterconnection.service.MasterDataService;
+import org.egov.waterconnection.validator.MDMSValidator;
 import org.javers.common.collections.Arrays;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -83,6 +86,9 @@ public class WaterDaoImpl implements WaterDao {
 
 	@Value("${egov.waterservice.createwatersubactivity}")
 	private String createWaterSubActivity;
+	
+	@Autowired
+	private MasterDataService masterDataService;
 
 	@Override
 	public void saveWaterConnection(WaterConnectionRequest waterConnectionRequest) {
@@ -587,6 +593,7 @@ public class WaterDaoImpl implements WaterDao {
 
 		double ApplicationApprovedTimeTaken = publicDashBoardTimeTaken(SearchTotalCollectionCriteria,
 				preparedStatement);
+				
 		System.out.println("ApplicationApprovedTimeTaken::" + ApplicationApprovedTimeTaken);
 		double ApplicationTimeTaken = 0.0;
 		int timeTakenForApproval = 0;
@@ -596,6 +603,25 @@ public class WaterDaoImpl implements WaterDao {
 			timeTakenForApproval = (int) Math.ceil(ApplicationTimeTaken);
 			System.out.println("timeTakenForApproval::" + timeTakenForApproval);
 		}
+		
+		int minimumTimeTakenForApproved = publicDashBoardMinimumTimeTaken(SearchTotalCollectionCriteria,
+				preparedStatement);
+				
+		int maximumTimeTakenForApproved = publicDashBoardMaximumTimeTaken(SearchTotalCollectionCriteria,
+				preparedStatement);
+		
+		List<Integer> approvedDays = publicDashBoardgetApprovedDays(SearchTotalCollectionCriteria,
+				preparedStatement);
+		
+		double median = calculateMedianUsingFormula(approvedDays);
+		System.out.println("Median using formula: " + median);
+		
+		BigDecimal AverageFeeTaken = BigDecimal.ZERO;
+	    if (ApplicationApproved > 0) {
+	        AverageFeeTaken = TotalCollection.divide(BigDecimal.valueOf(ApplicationApproved), 2, RoundingMode.HALF_UP);
+	    }
+	    
+	    String waterConnectionValue = masterDataService.getWaterConnectionValue(SearchTotalCollectionCriteria.getRequestInfo(), SearchTotalCollectionCriteria.getRequestInfo().getUserInfo().getTenantId());
 
 		ResponseData rs = new ResponseData();
 
@@ -605,7 +631,34 @@ public class WaterDaoImpl implements WaterDao {
 		rs.setTotalCollection(TotalCollection);
 		rs.setFilestoreId(filestoreId);
 		rs.setCreatedTime(filestoreCreatedTime);
+		rs.setMinimumTimeTakenForApproval(minimumTimeTakenForApproved);
+		rs.setMaximumTimeTakenForApproval(maximumTimeTakenForApproved);
+		rs.setMedianTimeTakenForApproval(median);
+		rs.setAverageFeeTaken(AverageFeeTaken);
+		rs.setPublicServiceGuaranteeAct(waterConnectionValue);
 		return rs;
+	}
+	
+	private double calculateMedianUsingFormula(List<Integer> approvedDays) {
+	    if (approvedDays == null || approvedDays.isEmpty()) {
+	        throw new IllegalArgumentException("List is empty or null");
+	    }
+
+	    // Sort the list
+	    Collections.sort(approvedDays);
+
+	    int n = approvedDays.size();
+
+	    if (n % 2 != 0) {
+	        // If n is odd, using the formula: Median = (n + 1) / 2th term
+	        int medianIndex = (n + 1) / 2 - 1; // -1 for zero-based index
+	        return approvedDays.get(medianIndex);
+	    } else {
+	        // If n is even, using the formula: Median = [(n/2)th term + ((n/2) + 1)th term] / 2
+	        int mid1Index = (n / 2) - 1;  // Zero-based index
+	        int mid2Index = (n / 2);
+	        return (approvedDays.get(mid1Index) + approvedDays.get(mid2Index)) / 2.0;
+	    }
 	}
 
 	private int publicDashBoardAppicationReceived(PublicDashBoardSearchCritieria SearchTotalCollectionCriteria,
@@ -650,6 +703,55 @@ public class WaterDaoImpl implements WaterDao {
 		}
 
 		return applicationapprovedtimetaken;
+	}
+	
+	private int publicDashBoardMinimumTimeTaken(PublicDashBoardSearchCritieria SearchTotalCollectionCriteria,
+			List<Object> preparedStatement) {
+
+		String query = wsQueryBuilder.getSearchQueryStringPublicDashBoardMinimumTimeTaken(SearchTotalCollectionCriteria,
+				preparedStatement);
+		System.out.println("query::" + query);
+		Integer applicationapprovedminimumtimetaken = jdbcTemplate.queryForObject(query, preparedStatement.toArray(),
+				Integer.class);
+		System.out.println("publicDashBoardMinimumTimeTaken::" + applicationapprovedminimumtimetaken);
+		if (applicationapprovedminimumtimetaken == null) {
+			applicationapprovedminimumtimetaken = 0;
+		}
+
+		return applicationapprovedminimumtimetaken;
+	}
+	
+	private int publicDashBoardMaximumTimeTaken(PublicDashBoardSearchCritieria SearchTotalCollectionCriteria,
+			List<Object> preparedStatement) {
+
+		String query = wsQueryBuilder.getSearchQueryStringPublicDashBoardMaxmimumTimeTaken(SearchTotalCollectionCriteria,
+				preparedStatement);
+		System.out.println("query::" + query);
+		Integer applicationapprovedmaximumtimetaken = jdbcTemplate.queryForObject(query, preparedStatement.toArray(),
+				Integer.class);
+		System.out.println("publicDashBoardMaximumTimeTaken::" + applicationapprovedmaximumtimetaken);
+		if (applicationapprovedmaximumtimetaken == null) {
+			applicationapprovedmaximumtimetaken = 0;
+		}
+
+		return applicationapprovedmaximumtimetaken;
+	}
+	
+	private List<Integer> publicDashBoardgetApprovedDays(PublicDashBoardSearchCritieria SearchTotalCollectionCriteria,
+			List<Object> preparedStatement) {
+
+		String query = wsQueryBuilder.getSearchQueryStringPublicDashBoardApprovedDays(SearchTotalCollectionCriteria,
+				preparedStatement);
+		System.out.println("query::" + query);
+		
+		// Execute query and retrieve results	    
+	    List<Integer> applicationApprovedDays = jdbcTemplate.query(query, preparedStatement.toArray(), 
+	            (rs, rowNum) -> rs.getInt(1));
+
+	    System.out.println("publicDashBoardApprovedDays::" + applicationApprovedDays);
+
+	    // Return an empty list if no results are found
+	    return applicationApprovedDays != null ? applicationApprovedDays : new ArrayList<>();
 	}
 	
 	private BigDecimal publicDashBoardTotalCollection(PublicDashBoardSearchCritieria SearchTotalCollectionCriteria,

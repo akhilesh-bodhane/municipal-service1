@@ -344,4 +344,14 @@ public class WCConstants {
 	public static final String WS_CONNECTION_CONVERSION_TARIFF = "CONNECTION_CONVERSION_TARIFF";
 
 	public static final String WS_APPLY_FOR_TT_CON = "TT_WATER_CONNECTION";
+	
+	public static final String PUBLIC_SERVICE_GUARANTEE_ACT = "publicServiceGuaranteeAct";
+	
+	public static final String WATER_CONNECTION = "WaterConnection";
+	
+	public static final String MDMS_COMMONMASTER_MOD_NAME = "common-masters";
+	
+	public static final String WATER_CONNECTION_VALUE = "value";
+	
+	public static final String JSONPATH_ROOT_FOR_WATER_CONNECTION = "$.MdmsRes.common-masters.publicServiceGuaranteeAct";
 }
