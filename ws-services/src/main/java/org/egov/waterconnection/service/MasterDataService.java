@@ -71,4 +71,40 @@ public class MasterDataService {
 		return (String) billingMap.get(WCConstants.BILLING_CYCLE_STRING);
 	}
 	
+	
+	private MdmsCriteriaReq getPublicServiceWaterConnection(RequestInfo requestInfo, String tenantId) {
+
+		MasterDetail mstrDetail = MasterDetail.builder().name(WCConstants.PUBLIC_SERVICE_GUARANTEE_ACT)
+				.filter("[?(@.active== " + true + " && @.name== '" + WCConstants.WATER_CONNECTION + "')]")
+				.build();
+		ModuleDetail moduleDetail = ModuleDetail.builder().moduleName(WCConstants.MDMS_COMMONMASTER_MOD_NAME)
+				.masterDetails(Arrays.asList(mstrDetail)).build();
+		MdmsCriteria mdmsCriteria = MdmsCriteria.builder().moduleDetails(Arrays.asList(moduleDetail)).tenantId(tenantId)
+				.build();
+		return MdmsCriteriaReq.builder().requestInfo(requestInfo).mdmsCriteria(mdmsCriteria).build();
+	}
+	
+	/**
+	 * 
+	 * @param requestInfo
+	 * @param connectionType
+	 * @param tenantId
+	 * @return Master For Water Connection
+	 */
+	public Map<String, Object> loadPublicServiceWaterMasterData(RequestInfo requestInfo, String tenantId) {
+		MdmsCriteriaReq mdmsCriteriaReq = getPublicServiceWaterConnection(requestInfo, tenantId);
+		StringBuilder uri = new StringBuilder(mdmsHost).append(mdmsEndpoint);
+		Object res = repository.fetchResult(uri, mdmsCriteriaReq);
+		if (res == null) {
+			throw new CustomException("MDMS_ERROR_FOR_BILLING_FREQUENCY", "ERROR IN FETCHING THE BILLING FREQUENCY");
+		}
+		List<Map<String, Object>> jsonOutput = JsonPath.read(res, WCConstants.JSONPATH_ROOT_FOR_WATER_CONNECTION);
+		return jsonOutput.get(0);
+	}
+	
+	public String getWaterConnectionValue(RequestInfo requestInfo, String tenantId) {
+		Map<String, Object> waterConnectionMap = loadPublicServiceWaterMasterData(requestInfo, tenantId);
+		return (String) waterConnectionMap.get(WCConstants.WATER_CONNECTION_VALUE);
+	}
+	
 }

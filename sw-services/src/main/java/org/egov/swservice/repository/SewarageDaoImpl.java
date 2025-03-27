@@ -1,6 +1,7 @@
 package org.egov.swservice.repository;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -21,6 +22,7 @@ import org.egov.swservice.repository.rowmapper.SewerageCountRowMapper;
 import org.egov.swservice.repository.rowmapper.SewerageRowMapper;
 import org.egov.swservice.repository.rowmapper.SewerageTotalCollectionsRowMapper;
 import org.egov.swservice.util.SWConstants;
+import org.egov.swservice.validator.MDMSValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -61,6 +63,9 @@ public class SewarageDaoImpl implements SewarageDao {
 
 	@Value("${egov.sewarageservice.updateconnection}")
 	private String updateSewarageConnection;
+	
+	@Autowired
+	private MDMSValidator MDMSValidator;
 
 	@Override
 	public void saveSewerageConnection(SewerageConnectionRequest sewerageConnectionRequest) {
@@ -234,6 +239,55 @@ public class SewarageDaoImpl implements SewarageDao {
 		return applicationapprovedtimetaken;
 	}
 	
+	private int publicDashBoardMinimumTimeTaken(PublicDashBoardSearchCritieria SearchTotalCollectionCriteria,
+			List<Object> preparedStatement) {
+
+		String query = swQueryBuilder.getSearchQueryStringPublicDashBoardMinimumTimeTaken(SearchTotalCollectionCriteria,
+				preparedStatement);
+		System.out.println("query::" + query);
+		Integer applicationapprovedminimumtimetaken = jdbcTemplate.queryForObject(query, preparedStatement.toArray(),
+				Integer.class);
+		System.out.println("publicDashBoardMinimumTimeTaken::" + applicationapprovedminimumtimetaken);
+		if (applicationapprovedminimumtimetaken == null) {
+			applicationapprovedminimumtimetaken = 0;
+		}
+
+		return applicationapprovedminimumtimetaken;
+	}
+	
+	private int publicDashBoardMaximumTimeTaken(PublicDashBoardSearchCritieria SearchTotalCollectionCriteria,
+			List<Object> preparedStatement) {
+
+		String query = swQueryBuilder.getSearchQueryStringPublicDashBoardMaxmimumTimeTaken(SearchTotalCollectionCriteria,
+				preparedStatement);
+		System.out.println("query::" + query);
+		Integer applicationapprovedmaximumtimetaken = jdbcTemplate.queryForObject(query, preparedStatement.toArray(),
+				Integer.class);
+		System.out.println("publicDashBoardMaximumTimeTaken::" + applicationapprovedmaximumtimetaken);
+		if (applicationapprovedmaximumtimetaken == null) {
+			applicationapprovedmaximumtimetaken = 0;
+		}
+
+		return applicationapprovedmaximumtimetaken;
+	}
+	
+	private List<Integer> publicDashBoardgetApprovedDays(PublicDashBoardSearchCritieria SearchTotalCollectionCriteria,
+			List<Object> preparedStatement) {
+
+		String query = swQueryBuilder.getSearchQueryStringPublicDashBoardApprovedDays(SearchTotalCollectionCriteria,
+				preparedStatement);
+		System.out.println("query::" + query);
+		
+		// Execute query and retrieve results	    
+	    List<Integer> applicationApprovedDays = jdbcTemplate.query(query, preparedStatement.toArray(), 
+	            (rs, rowNum) -> rs.getInt(1));
+
+	    System.out.println("publicDashBoardApprovedDays::" + applicationApprovedDays);
+
+	    // Return an empty list if no results are found
+	    return applicationApprovedDays != null ? applicationApprovedDays : new ArrayList<>();
+	}
+	
 	@Override
 	public ResponseData searchPublicDashBoardCount(PublicDashBoardSearchCritieria SearchTotalCollectionCriteria) {
 		List<Object> preparedStatement = new ArrayList<>();
@@ -259,6 +313,26 @@ public class SewarageDaoImpl implements SewarageDao {
 			timeTakenForApproval = (int) Math.ceil(ApplicationTimeTaken);
 			System.out.println("timeTakenForApproval::" + timeTakenForApproval);
 		}
+		
+		int minimumTimeTakenForApproved = publicDashBoardMinimumTimeTaken(SearchTotalCollectionCriteria,
+				preparedStatement);
+				
+		int maximumTimeTakenForApproved = publicDashBoardMaximumTimeTaken(SearchTotalCollectionCriteria,
+				preparedStatement);
+		
+		List<Integer> approvedDays = publicDashBoardgetApprovedDays(SearchTotalCollectionCriteria,
+				preparedStatement);
+		
+		double median = calculateMedianUsingFormula(approvedDays);
+		System.out.println("Median using formula: " + median);
+		
+		BigDecimal AverageFeeTaken = BigDecimal.ZERO;
+	    if (ApplicationApproved > 0) {
+	        AverageFeeTaken = TotalCollection.divide(BigDecimal.valueOf(ApplicationApproved), 2, RoundingMode.HALF_UP);
+	    }
+	    
+	    String waterConnectionValue = MDMSValidator.getSewerageConnectionValue(SearchTotalCollectionCriteria.getRequestInfo(), SearchTotalCollectionCriteria.getRequestInfo().getUserInfo().getTenantId());
+
 
 		ResponseData rs = new ResponseData();
 
@@ -268,7 +342,36 @@ public class SewarageDaoImpl implements SewarageDao {
 		rs.setTotalCollection(TotalCollection);
 		rs.setFilestoreId(null);
 		rs.setCreatedTime(null);
+		rs.setMinimumTimeTakenForApproval(minimumTimeTakenForApproved);
+		rs.setMaximumTimeTakenForApproval(maximumTimeTakenForApproved);
+		rs.setMedianTimeTakenForApproval(median);
+		rs.setAverageFeeTaken(AverageFeeTaken);
+		rs.setPublicServiceGuaranteeAct(waterConnectionValue);
 		return rs;
 	}
+	
+	private double calculateMedianUsingFormula(List<Integer> approvedDays) {
+	    if (approvedDays == null || approvedDays.isEmpty()) {
+	        throw new IllegalArgumentException("List is empty or null");
+	    }
+
+	    // Sort the list
+	    Collections.sort(approvedDays);
+
+	    int n = approvedDays.size();
+
+	    if (n % 2 != 0) {
+	        // If n is odd, using the formula: Median = (n + 1) / 2th term
+	        int medianIndex = (n + 1) / 2 - 1; // -1 for zero-based index
+	        return approvedDays.get(medianIndex);
+	    } else {
+	        // If n is even, using the formula: Median = [(n/2)th term + ((n/2) + 1)th term] / 2
+	        int mid1Index = (n / 2) - 1;  // Zero-based index
+	        int mid2Index = (n / 2);
+	        return (approvedDays.get(mid1Index) + approvedDays.get(mid2Index)) / 2.0;
+	    }
+	}
+	
+	
 
 }

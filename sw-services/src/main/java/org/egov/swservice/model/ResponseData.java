@@ -41,5 +41,20 @@ public class ResponseData {
 	
 	@JsonProperty("createdTime")
     private Long createdTime;
+	
+	@JsonProperty("minimumTimeTakenForApproval")
+    private int minimumTimeTakenForApproval;
+	
+	@JsonProperty("maximumTimeTakenForApproval")
+    private int maximumTimeTakenForApproval;
+	
+	@JsonProperty("medianTimeTakenForApproval")
+    private double medianTimeTakenForApproval;
+	
+	@JsonProperty("averageFeeTaken")
+    private BigDecimal averageFeeTaken;
+	
+	@JsonProperty("publicServiceGuaranteeAct")
+    private String publicServiceGuaranteeAct;
 
 }

@@ -10,13 +10,16 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.egov.common.contract.request.RequestInfo;
+import org.egov.mdms.model.MasterDetail;
+import org.egov.mdms.model.MdmsCriteria;
 import org.egov.mdms.model.MdmsCriteriaReq;
-import org.egov.tracer.model.CustomException;
+import org.egov.mdms.model.ModuleDetail;
 import org.egov.swservice.model.SewerageConnection;
 import org.egov.swservice.model.SewerageConnectionRequest;
 import org.egov.swservice.repository.ServiceRequestRepository;
 import org.egov.swservice.util.SWConstants;
 import org.egov.swservice.util.SewerageServicesUtil;
+import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -107,6 +110,41 @@ public class MDMSValidator {
 			errorMap.put("INVALID_WATER_ROAD_TYPE", messageBuilder.toString());
 		}
 		return errorMap;
+	}
+	
+	private MdmsCriteriaReq getPublicServiceWaterConnection(RequestInfo requestInfo, String tenantId) {
+
+		MasterDetail mstrDetail = MasterDetail.builder().name(SWConstants.PUBLIC_SERVICE_GUARANTEE_ACT)
+				.filter("[?(@.active== " + true + " && @.name== '" + SWConstants.SEWERAGE_CONNECTION + "')]")
+				.build();
+		ModuleDetail moduleDetail = ModuleDetail.builder().moduleName(SWConstants.MDMS_COMMONMASTER_MOD_NAME)
+				.masterDetails(Arrays.asList(mstrDetail)).build();
+		MdmsCriteria mdmsCriteria = MdmsCriteria.builder().moduleDetails(Arrays.asList(moduleDetail)).tenantId(tenantId)
+				.build();
+		return MdmsCriteriaReq.builder().requestInfo(requestInfo).mdmsCriteria(mdmsCriteria).build();
+	}
+	
+	/**
+	 * 
+	 * @param requestInfo
+	 * @param connectionType
+	 * @param tenantId
+	 * @return Master For Sewerage Connection
+	 */
+	public Map<String, Object> loadPublicServiceWaterMasterData(RequestInfo requestInfo, String tenantId) {
+		MdmsCriteriaReq mdmsCriteriaReq = getPublicServiceWaterConnection(requestInfo, tenantId);
+		StringBuilder uri = new StringBuilder(mdmsHost).append(mdmsEndpoint);
+		Object res = serviceRequestRepository.fetchResult(uri, mdmsCriteriaReq);
+		if (res == null) {
+			throw new CustomException("MDMS_ERROR_FOR_BILLING_FREQUENCY", "ERROR IN FETCHING THE BILLING FREQUENCY");
+		}
+		List<Map<String, Object>> jsonOutput = JsonPath.read(res, SWConstants.JSONPATH_ROOT_FOR_SEWERAGE_CONNECTION);
+		return jsonOutput.get(0);
+	}
+	
+	public String getSewerageConnectionValue(RequestInfo requestInfo, String tenantId) {
+		Map<String, Object> waterConnectionMap = loadPublicServiceWaterMasterData(requestInfo, tenantId);
+		return (String) waterConnectionMap.get(SWConstants.SEWERAGE_CONNECTION_VALUE);
 	}
 
 }

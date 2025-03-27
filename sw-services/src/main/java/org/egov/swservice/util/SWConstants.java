@@ -191,6 +191,16 @@ public class SWConstants {
 	
 	public static final long DAYS_CONST= 86400000l;
 	
+    public static final String PUBLIC_SERVICE_GUARANTEE_ACT = "publicServiceGuaranteeAct";
+	
+	public static final String SEWERAGE_CONNECTION = "SewerageConnection";
+	
+	public static final String MDMS_COMMONMASTER_MOD_NAME = "common-masters";
+	
+	public static final String SEWERAGE_CONNECTION_VALUE = "value";
+	
+	public static final String JSONPATH_ROOT_FOR_SEWERAGE_CONNECTION = "$.MdmsRes.common-masters.publicServiceGuaranteeAct";
+	
 	
 	
 }
