@@ -148,6 +148,11 @@ public class ViolationService {
 						.setLastModifiedTime(requestInfoWrapper.getAuditDetails().getLastModifiedTime());
 				violationMaster.getPaymentDetails().setTenantId(violationMaster.getTenantId());
 				violationMaster.getPaymentDetails().setViolationUuid(violationUuid);
+				
+				if(violationMaster.getSurveyedCovNo() == null || violationMaster.getSurveyedCovNo().equalsIgnoreCase("")) {
+					System.out.println("Inside Surveyed No Null Check Condition");
+					violationMaster.setSurveyedCovNo("0");
+				}
 
 				List<ChallanDetails> listdetails = new ArrayList<ChallanDetails>();
 				ChallanDetails challanDetails = new ChallanDetails();
