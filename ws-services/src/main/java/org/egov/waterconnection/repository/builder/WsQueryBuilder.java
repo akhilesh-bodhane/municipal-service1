@@ -583,10 +583,23 @@ public class WsQueryBuilder {
 			+ "'CONNECTION_UPDATED','CONNECTION_CLOSED','TEMPORARY_CONNECTION_CLOSED','METER_TESTED',"
 			+ "'CONNECTION_TARIFF_CHANGED','CONNECTION_ACCOUNT_NUMBER_CHANGED','CLOSED_CONNECTION') then 1 else 0 end) from eg_ws_application ewa ";
 
-	private static final String PUBLIC_DASHBOARD_WATER_SEARCH_TIME_TAKEN_APPROVED = "select SUM(case when ewa.applicationstatus in ('CONNECTION_ACTIVATED','METER_UPDATED',"
-			+ "	'CONNECTION_TYPE_CHANGED','TUBEWELL_CONNECTION_ACTIVATED','CONNECTION_REACTIVATED','CONNECTION_EXTENDED',"
-			+ "	'CONNECTION_UPDATED','CONNECTION_CLOSED','TEMPORARY_CONNECTION_CLOSED','METER_TESTED',"
-			+ "	'CONNECTION_TARIFF_CHANGED','CONNECTION_ACCOUNT_NUMBER_CHANGED','CLOSED_CONNECTION') then to_timestamp(ewa.lastmodifiedtime / 1000)::date - to_timestamp(ewa.createdtime / 1000)::date else 0 end) approveddays\r\n"
+	private static final String PUBLIC_DASHBOARD_WATER_SEARCH_TIME_TAKEN_APPROVED = "select SUM(\r\n"
+			+ "         CASE \r\n"
+			+ "              WHEN ewa.applicationstatus IN (\r\n"
+			+ "                    'CONNECTION_ACTIVATED', 'METER_UPDATED', 'CONNECTION_TYPE_CHANGED',\r\n"
+			+ "                    'TUBEWELL_CONNECTION_ACTIVATED', 'CONNECTION_REACTIVATED', 'CONNECTION_EXTENDED',\r\n"
+			+ "                    'CONNECTION_UPDATED', 'CONNECTION_CLOSED', 'TEMPORARY_CONNECTION_CLOSED', \r\n"
+			+ "                    'METER_TESTED', 'CONNECTION_TARIFF_CHANGED', 'CONNECTION_ACCOUNT_NUMBER_CHANGED',\r\n"
+			+ "                    'CLOSED_CONNECTION'\r\n"
+			+ "               ) \r\n"
+			+ "              THEN CASE \r\n"
+			+ "                    WHEN (to_timestamp(ewa.lastmodifiedtime / 1000)::date - to_timestamp(ewa.createdtime / 1000)::date) = 0 \r\n"
+			+ "                    THEN 1\r\n"
+			+ "                    ELSE (to_timestamp(ewa.lastmodifiedtime / 1000)::date - to_timestamp(ewa.createdtime / 1000)::date)\r\n"
+			+ "                    END\r\n"
+			+ "              ELSE NULL  \r\n"
+			+ "         END\r\n"
+			+ "    ) AS approvedday\r\n"
 			+ " from eg_ws_application ewa ";
 	
 	private static final String PUBLIC_DASHBOARD_WATER_SEARCH_MINIMUM_TIME_TAKEN_APPROVED = "SELECT MIN(\r\n"
@@ -1499,6 +1512,12 @@ public class WsQueryBuilder {
 				preparedStatement.add(SearchTotalCollectionCriteria.getDataPayload().getServicetype());
 			}
 		}
+		addClauseIfRequired(preparedStatement, query);
+		query.append("  ewa.applicationstatus IN ('CONNECTION_ACTIVATED', 'METER_UPDATED', 'CONNECTION_TYPE_CHANGED',\r\n"
+				+ "			'TUBEWELL_CONNECTION_ACTIVATED', 'CONNECTION_REACTIVATED', 'CONNECTION_EXTENDED',\r\n"
+				+ "		        'CONNECTION_UPDATED', 'CONNECTION_CLOSED', 'TEMPORARY_CONNECTION_CLOSED',\r\n"
+				+ "			'METER_TESTED', 'CONNECTION_TARIFF_CHANGED', 'CONNECTION_ACCOUNT_NUMBER_CHANGED',\r\n"
+				+ "		        'CLOSED_CONNECTION') and ewa.applicationno like '%WS_AP%'");
 
 		return query.toString();
 
@@ -1527,7 +1546,13 @@ public class WsQueryBuilder {
 				query.append("  ewa.activitytype = ? ");
 				preparedStatement.add(SearchTotalCollectionCriteria.getDataPayload().getServicetype());
 			}
-		}
+		}	
+		addClauseIfRequired(preparedStatement, query);
+		query.append("  ewa.applicationstatus IN ('CONNECTION_ACTIVATED', 'METER_UPDATED', 'CONNECTION_TYPE_CHANGED',\r\n"
+				+ "			'TUBEWELL_CONNECTION_ACTIVATED', 'CONNECTION_REACTIVATED', 'CONNECTION_EXTENDED',\r\n"
+				+ "		        'CONNECTION_UPDATED', 'CONNECTION_CLOSED', 'TEMPORARY_CONNECTION_CLOSED',\r\n"
+				+ "			'METER_TESTED', 'CONNECTION_TARIFF_CHANGED', 'CONNECTION_ACCOUNT_NUMBER_CHANGED',\r\n"
+				+ "		        'CLOSED_CONNECTION') and ewa.applicationno like '%WS_AP%'");
 
 		return query.toString();
 

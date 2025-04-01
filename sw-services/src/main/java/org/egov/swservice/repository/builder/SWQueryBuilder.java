@@ -108,7 +108,13 @@ public class SWQueryBuilder {
 			+ "from eg_sw_connection esc ";
 	
 	private static final String PUBLIC_DASHBOARD_SEWERAGE_SEARCH_TIME_TAKEN_APPROVED = "select SUM(case when esc.applicationstatus in ('CONNECTION_ACTIVATED','SEWERAGE_CONNECTION_ACTIVATED') \r\n"
-			+ "then to_timestamp(esc.lastmodifiedtime / 1000)::date - to_timestamp(esc.createdtime / 1000)::date else 0 end) approveddays\r\n"
+			+ "            THEN CASE when (to_timestamp(esc.lastmodifiedtime / 1000)::date - to_timestamp(esc.createdtime / 1000)::date) =0\r\n"
+			+ "           THEN 1\r\n"
+			+ "               ELSE (to_timestamp(esc.lastmodifiedtime / 1000)::date - to_timestamp(esc.createdtime / 1000)::date)\r\n"
+			+ "             END\r\n"
+			+ "			ELSE NULL\r\n"
+			+ "	    END\r\n"
+			+ " ) AS approveddays\r\n"
 			+ "from eg_sw_connection esc ";
 	
 	private static final String PUBLIC_DASHBOARD_SEWERAGE_TOTAL_COLLECTION = "select sum(ept.txn_amount) from eg_sw_connection esc inner join eg_pg_transactions ept\r\n"
