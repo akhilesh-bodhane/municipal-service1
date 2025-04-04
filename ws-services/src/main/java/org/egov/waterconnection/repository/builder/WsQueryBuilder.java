@@ -1438,7 +1438,9 @@ public class WsQueryBuilder {
 				preparedStatement.add(SearchTotalCollectionCriteria.getDataPayload().getServicetype());
 			}
 
-		}
+		}	
+		addClauseIfRequired(preparedStatement, query);
+		query.append(" ewa.applicationno like '%WS_AP%' ");
 
 		return query.toString();
 
