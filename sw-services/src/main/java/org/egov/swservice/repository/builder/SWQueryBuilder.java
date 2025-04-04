@@ -107,52 +107,32 @@ public class SWQueryBuilder {
 	private static final String PUBLIC_DASHBOARD_SEWERAGE_SEARCH_APPROVED = "select SUM(case when esc.applicationstatus in ('CONNECTION_ACTIVATED','SEWERAGE_CONNECTION_ACTIVATED') then 1 else 0 end) \r\n"
 			+ "from eg_sw_connection esc ";
 	
-	private static final String PUBLIC_DASHBOARD_SEWERAGE_SEARCH_TIME_TAKEN_APPROVED = "select SUM(case when esc.applicationstatus in ('CONNECTION_ACTIVATED','SEWERAGE_CONNECTION_ACTIVATED') \r\n"
-			+ "            THEN CASE when (to_timestamp(esc.lastmodifiedtime / 1000)::date - to_timestamp(esc.createdtime / 1000)::date) =0\r\n"
-			+ "           THEN 1\r\n"
-			+ "               ELSE (to_timestamp(esc.lastmodifiedtime / 1000)::date - to_timestamp(esc.createdtime / 1000)::date)\r\n"
-			+ "             END\r\n"
-			+ "			ELSE NULL\r\n"
-			+ "	    END\r\n"
-			+ " ) AS approveddays\r\n"
-			+ "from eg_sw_connection esc ";
+	private static final String PUBLIC_DASHBOARD_SEWERAGE_SEARCH_TIME_TAKEN_APPROVED = "SELECT \r\n"
+			+ "SUM(CEIL(\r\n"
+			+ "        EXTRACT(EPOCH FROM (TO_TIMESTAMP(esc.lastmodifiedtime / 1000) - TO_TIMESTAMP(esc.createdtime / 1000))) / 3600 / 24\r\n"
+			+ "    )) AS approveddays\r\n"
+			+ " from eg_sw_connection esc ";
 	
 	private static final String PUBLIC_DASHBOARD_SEWERAGE_TOTAL_COLLECTION = "select sum(ept.txn_amount) from eg_sw_connection esc inner join eg_pg_transactions ept\r\n"
 			+ "on esc.applicationno  = ept.consumer_code ";
 	
-	private static final String PUBLIC_DASHBOARD_SEWERAGE_SEARCH_MINIMUM_TIME_TAKEN_APPROVED = "SELECT MIN(\r\n"
-			+ "        CASE \r\n"
-			+ "            WHEN esc.applicationstatus in ('CONNECTION_ACTIVATED','SEWERAGE_CONNECTION_ACTIVATED') \r\n"
-			+ "            THEN CASE when (to_timestamp(esc.lastmodifiedtime / 1000)::date - to_timestamp(esc.createdtime / 1000)::date) =0\r\n"
-			+ "           THEN 1\r\n"
-			+ "               ELSE (to_timestamp(esc.lastmodifiedtime / 1000)::date - to_timestamp(esc.createdtime / 1000)::date)\r\n"
-			+ "             END\r\n"
-			+ "			ELSE NULL\r\n"
-			+ "	    END\r\n"
-			+ "    ) AS minimum_approved_days\r\n"
-			+ "FROM eg_sw_connection esc";
+	private static final String PUBLIC_DASHBOARD_SEWERAGE_SEARCH_MINIMUM_TIME_TAKEN_APPROVED = "SELECT \r\n"
+			+ "MIN(CEIL(\r\n"
+			+ "        EXTRACT(EPOCH FROM (TO_TIMESTAMP(esc.lastmodifiedtime / 1000) - TO_TIMESTAMP(esc.createdtime / 1000))) / 3600 / 24\r\n"
+			+ "    )) AS minimum_approved_days\r\n"
+			+ " FROM eg_sw_connection esc";
 	
-	private static final String PUBLIC_DASHBOARD_SEWERAGE_SEARCH_MAXIMUM_TIME_TAKEN_APPROVED = "SELECT MAX(\r\n"
-			+ "        CASE \r\n"
-			+ "            WHEN esc.applicationstatus in ('CONNECTION_ACTIVATED','SEWERAGE_CONNECTION_ACTIVATED')\r\n"
-			+ "            THEN CASE when (to_timestamp(esc.lastmodifiedtime / 1000)::date - to_timestamp(esc.createdtime / 1000)::date) = 0 \r\n"
-			+ "                 THEN 1\r\n"
-			+ "               ELSE (to_timestamp(esc.lastmodifiedtime / 1000)::date - to_timestamp(esc.createdtime / 1000)::date)\r\n"
-			+ "             END\r\n"
-			+ "			ELSE NULL\r\n"
-			+ "	    END\r\n"
-			+ "    ) AS maximum_approved_days\r\n"
-			+ "FROM eg_sw_connection esc";
+	private static final String PUBLIC_DASHBOARD_SEWERAGE_SEARCH_MAXIMUM_TIME_TAKEN_APPROVED = "SELECT \r\n"
+			+ "MAX(CEIL(\r\n"
+			+ "        EXTRACT(EPOCH FROM (TO_TIMESTAMP(esc.lastmodifiedtime / 1000) - TO_TIMESTAMP(esc.createdtime / 1000))) / 3600 / 24\r\n"
+			+ "    )) AS maximum_approved_days\r\n"
+			+ " FROM eg_sw_connection esc";
 	
-	public static final String PUBLIC_DASHBOARD_SEWERAGE_SEARCH__APPROVED_DAYS = "SELECT CASE \r\n"
-			+ "			   WHEN esc.applicationstatus in ('CONNECTION_ACTIVATED','SEWERAGE_CONNECTION_ACTIVATED') \r\n"
-			+ "			   THEN CASE WHEN (to_timestamp(esc.lastmodifiedtime / 1000)::date - to_timestamp(esc.createdtime / 1000)::date) = 0 \r\n"
-			+ "		                 THEN 1\r\n"
-			+ "			                 ELSE (to_timestamp(esc.lastmodifiedtime / 1000)::date - to_timestamp(esc.createdtime / 1000)::date)\r\n"
-			+ "			          END\r\n"
-			+ "			       ELSE 0\r\n"
-			+ "			     END AS approveddays \r\n"
-			+ "			FROM eg_sw_connection esc";
+	public static final String PUBLIC_DASHBOARD_SEWERAGE_SEARCH__APPROVED_DAYS = "SELECT    \r\n"
+			+ "CEIL(\r\n"
+			+ "        EXTRACT(EPOCH FROM (TO_TIMESTAMP(esc.lastmodifiedtime / 1000) - TO_TIMESTAMP(esc.createdtime / 1000))) / 3600 / 24\r\n"
+			+ "    ) AS approveddays\r\n"
+			+ " FROM eg_sw_connection esc";
 	
 	
 	
@@ -470,7 +450,6 @@ public class SWQueryBuilder {
 		preparedStatement.clear();
 		StringBuilder query = null;
 		query = new StringBuilder(PUBLIC_DASHBOARD_SEWERAGE_SEARCH_TIME_TAKEN_APPROVED);
-		if(SearchTotalCollectionCriteria.getDataPayload() !=null) {
 		if (SearchTotalCollectionCriteria.getDataPayload().getFromDate() != null) {
 			addClauseIfRequired(preparedStatement, query);
 			query.append("  esc.createdtime >= ?  ");
@@ -481,7 +460,9 @@ public class SWQueryBuilder {
 			query.append("  esc.createdtime <= ? ");
 			preparedStatement.add(SearchTotalCollectionCriteria.getDataPayload().getToDate());
 		}
-		}
+		
+		addClauseIfRequired(preparedStatement, query);
+		query.append(" esc.applicationstatus in ('CONNECTION_ACTIVATED','SEWERAGE_CONNECTION_ACTIVATED')");
 
 		return query.toString();
 
