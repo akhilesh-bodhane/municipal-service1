@@ -9,11 +9,13 @@ import org.egov.ec.config.EchallanConfiguration;
 import org.egov.ec.producer.Producer;
 import org.egov.ec.repository.builder.EcQueryBuilder;
 import org.egov.ec.repository.rowmapper.ColumnsRowMapper;
+import org.egov.ec.repository.rowmapper.DuplicateChallanRowMapper;
 import org.egov.ec.repository.rowmapper.ReceiptNoRowMapper;
 import org.egov.ec.repository.rowmapper.ViolationDetailCountRowMapper;
 import org.egov.ec.repository.rowmapper.ViolationDetailRowMapper;
 import org.egov.ec.repository.rowmapper.ViolationDetailRowMapperV2;
 import org.egov.ec.web.models.ChallanDataBckUp;
+import org.egov.ec.web.models.DuplicateChallanDetails;
 import org.egov.ec.web.models.EcPayment;
 import org.egov.ec.web.models.EcPaymentData;
 import org.egov.ec.web.models.EcSearchCriteria;
@@ -337,4 +339,70 @@ public class ViolationRepository {
 		}
 
 	}
+	
+	public List<DuplicateChallanDetails> getDuplicatechallanDetails(DuplicateChallanDetails duplicateChallanDetails) {
+	    List<DuplicateChallanDetails> sterilizationdog = new ArrayList<>();
+
+	    try {
+	        StringBuilder queryBuilder = new StringBuilder();
+	        List<Object> parameters = new ArrayList<>();
+
+	        queryBuilder.append("SELECT ")
+	                    .append("ecm.challan_id, ")
+	                    .append("ecm.challan_status, ")
+	                    .append("ecm.challan_amount, ")
+	                    .append("TO_CHAR(TO_TIMESTAMP(ecm.created_time / 1000), 'DD-MM-YYYY HH24:MI:SS') AS challan_date, ")
+	                    .append("evm.encroachment_type, ")
+	                    .append("evm.contact_number, ")
+	                    .append("evm.violator_name, ")
+	                    .append("evm.number_of_violation, ")
+	                    .append("ep.payment_mode, ")
+	                    .append("ep.payment_status, ")
+	                    .append("STRING_AGG(DISTINCT evd.item_name, ', ') AS item_names ")
+	                    .append("FROM egec_challan_detail ecd ")
+	                    .append("INNER JOIN egec_challan_master ecm ON ecm.challan_uuid = ecd.challan_uuid ")
+	                    .append("INNER JOIN egec_violation_master evm ON evm.violation_uuid = ecm.violation_uuid ")
+	                    .append("INNER JOIN egec_violation_detail evd ON evd.violation_uuid = evm.violation_uuid ")
+	                    .append("INNER JOIN egec_payment ep ON ep.challan_uuid = ecm.challan_uuid ")
+	                    .append("WHERE ecd.tenant_id = 'ch.chandigarh' AND ep.payment_status = 'PENDING' ");
+
+	        // Dynamic conditions
+	        if (duplicateChallanDetails.getEncroachmentType() != null) {
+	            queryBuilder.append("AND evm.encroachment_type = ? ");
+	            parameters.add(duplicateChallanDetails.getEncroachmentType());
+	        }
+
+	        if (duplicateChallanDetails.getMobileNumber() != null) {
+	            queryBuilder.append("AND evm.contact_number = ? ");
+	            parameters.add(duplicateChallanDetails.getMobileNumber());
+	        }
+
+	        if (duplicateChallanDetails.getNumberOfViolation() != null) {
+	            queryBuilder.append("AND evm.number_of_violation = ? ");
+	            parameters.add(duplicateChallanDetails.getNumberOfViolation());
+	        }
+
+	        queryBuilder.append("AND (evm.encroachment_type, evm.contact_number, evm.violator_name, evm.number_of_violation, TRIM(LOWER(evd.item_name))) IN ( ")
+	                    .append("SELECT evm2.encroachment_type, evm2.contact_number, evm2.violator_name, evm2.number_of_violation, TRIM(LOWER(evd2.item_name)) ")
+	                    .append("FROM egec_challan_master ecm2 ")
+	                    .append("INNER JOIN egec_violation_master evm2 ON evm2.violation_uuid = ecm2.violation_uuid ")
+	                    .append("INNER JOIN egec_violation_detail evd2 ON evd2.violation_uuid = evm2.violation_uuid ")
+	                    .append("INNER JOIN egec_payment ep2 ON ep2.challan_uuid = ecm2.challan_uuid ")
+	                    .append("WHERE ep2.payment_status = 'PENDING' AND ecm2.tenant_id = 'ch.chandigarh' ")
+	                    .append("GROUP BY evm2.encroachment_type, evm2.contact_number, evm2.violator_name, evm2.number_of_violation, TRIM(LOWER(evd2.item_name)) ")
+	                    .append("HAVING COUNT(*) > 1) ");
+
+	        queryBuilder.append("GROUP BY ecm.challan_id, ecm.challan_amount, ecm.created_time, ecm.challan_status, ")
+	                    .append("evm.encroachment_type, evm.violator_name, evm.number_of_violation, evm.contact_number, ")
+	                    .append("ep.payment_mode, ep.payment_status ")
+	                    .append("ORDER BY ecm.challan_id DESC");
+
+	        return jdbcTemplate.query(queryBuilder.toString(), parameters.toArray(), new DuplicateChallanRowMapper());
+
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        throw new CustomException("Exception", e.getMessage());
+	    }
+	}
+
 }

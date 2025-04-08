@@ -1,5 +1,9 @@
 package org.egov.ec.web.models;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
+import org.hibernate.validator.constraints.NotBlank;
 import org.json.simple.JSONArray;
 import org.springframework.validation.annotation.Validated;
 
@@ -48,7 +52,33 @@ public class ChallanDataBckUp {
 	private JSONArray egecViolationMaster ;
 	
 	
-	
+	@NotNull(message = "challanId  should not be empty or null")
+	@NotBlank(message = "challanId  should not be empty or null")
 	@JsonProperty("challanId")
 	private String challanId ;
+	
+	@NotNull(message = "comment  should not be empty or null")
+	@NotBlank(message = "comment  should not be empty or null")
+	@JsonProperty("comment")
+	private String comment ;
+	
+	@NotNull(message = "referenceChallanNo  should not be empty or null")
+	@NotBlank(message = "referenceChallanNo  should not be empty or null")
+	@JsonProperty("referenceChallanNo")
+	private String referenceChallanNo ;
+	
+	@JsonProperty("createdBy")
+	private String createdBy;
+
+	@JsonProperty("createdTime")
+	@NotNull(message = "createdTime should not be empty or null")
+	private Long createdTime;
+
+	@Size(max = 256)
+	@JsonProperty("lastModifiedBy")
+	private String lastModifiedBy;
+
+	@JsonProperty("lastModifiedTime")
+	@NotNull(message = "lastModifiedTime should not be empty or null")
+	private Long lastModifiedTime;
 }

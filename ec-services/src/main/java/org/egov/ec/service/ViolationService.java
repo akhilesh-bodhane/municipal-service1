@@ -16,17 +16,16 @@ import org.egov.ec.config.EchallanConfiguration;
 import org.egov.ec.producer.Producer;
 import org.egov.ec.repository.IdGenRepository;
 import org.egov.ec.repository.ViolationRepository;
-import org.egov.ec.repository.rowmapper.ColumnsRowMapper;
 import org.egov.ec.service.validator.CustomBeanValidator;
 import org.egov.ec.web.models.ChallanDataBckUp;
 import org.egov.ec.web.models.ChallanDetails;
+import org.egov.ec.web.models.DuplicateChallanDetails;
 import org.egov.ec.web.models.EcPayment;
 import org.egov.ec.web.models.EcPaymentData;
 import org.egov.ec.web.models.EcSearchCriteria;
 import org.egov.ec.web.models.NotificationTemplate;
 import org.egov.ec.web.models.RequestInfoWrapper;
 import org.egov.ec.web.models.ResponseInfoWrapper;
-import org.egov.ec.web.models.SMPKVendorDetail;
 import org.egov.ec.web.models.Violation;
 import org.egov.ec.web.models.ViolationCount;
 import org.egov.ec.web.models.Idgen.IdGenerationResponse;
@@ -34,7 +33,6 @@ import org.egov.ec.web.models.workflow.ProcessInstance;
 import org.egov.ec.web.models.workflow.ProcessInstanceRequest;
 import org.egov.ec.workflow.WorkflowIntegrator;
 import org.egov.tracer.model.CustomException;
-import org.json.simple.JSONArray;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -685,11 +683,29 @@ public class ViolationService {
 		bck.setEgecChallanMaster(repository.getdatChallanMaster(bck));
 		bck.setEgecViolationDetail(repository.getdatViolationDetail(bck));
 		bck.setEgecViolationMaster(repository.getdatViolationMaster(bck));
+		
+		bck.setCreatedBy(requestInfoWrapper.getAuditDetails().getCreatedBy());
+		bck.setCreatedTime(requestInfoWrapper.getAuditDetails().getCreatedTime());
+		bck.setLastModifiedBy(requestInfoWrapper.getAuditDetails().getLastModifiedBy());
+		bck.setLastModifiedTime(requestInfoWrapper.getAuditDetails().getLastModifiedTime());
 
 		repository.deleteChallan(bck);
 		return new ResponseEntity<>(ResponseInfoWrapper.builder()
 				.responseInfo(ResponseInfo.builder().status(EcConstants.STATUS_SUCCESS).build()).responseBody(bck)
 				.build(), HttpStatus.OK);
+	}
+	
+	public ResponseEntity<ResponseInfoWrapper> getDuplicateEchallan(DuplicateChallanDetails duplicateChallanDetails) {
+		try {
+					
+			List<DuplicateChallanDetails> DuplicateChallanDetailsResult = repository.getDuplicatechallanDetails(duplicateChallanDetails);
+			return new ResponseEntity<>(ResponseInfoWrapper.builder()
+					.responseInfo(ResponseInfo.builder().status(EcConstants.STATUS_SUCCESS).build())
+					.responseBody(DuplicateChallanDetailsResult).build(), HttpStatus.OK);
+		} catch (Exception e) {
+			log.error("getDuplicateEchallan Exception" + e.getMessage());
+			throw new CustomException("DUPLICATE_CHALLAN_SEARCH_EXCEPTION", e.getMessage());
+		}
 	}
 
 }

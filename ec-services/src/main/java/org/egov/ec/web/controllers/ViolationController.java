@@ -3,10 +3,12 @@ package org.egov.ec.web.controllers;
 import javax.validation.Valid;
 
 import org.egov.ec.service.ViolationService;
+import org.egov.ec.web.models.DuplicateChallanDetails;
 import org.egov.ec.web.models.RequestInfoWrapper;
 import org.egov.ec.web.models.ResponseInfoWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -162,4 +164,9 @@ public class ViolationController {
 				+ "."+ Thread.currentThread().getStackTrace()[1].getMethodName());
 		return genearateChallanService.sendMessage(requestInfoWrapper,requestHeader);
 	}
+	
+	@PostMapping(value = "/_searchEchallanDuplicate") 
+	  public ResponseEntity<ResponseInfoWrapper>getDuplicateChallanData(@ModelAttribute DuplicateChallanDetails duplicateChallanDetails) {
+	  return genearateChallanService.getDuplicateEchallan(duplicateChallanDetails);
+	  }
 }
