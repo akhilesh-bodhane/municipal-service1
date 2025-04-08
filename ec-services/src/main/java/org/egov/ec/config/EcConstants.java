@@ -78,6 +78,7 @@ public class EcConstants {
 	public static final String VENDDORCREATE = "VENDDORCREATE";
 	public static final String VENDDORGET = "VENDDORGET";
 	public static final String VENDDORUPDATE = "VENDDORUPDATE";
+	public static final String SPICVENDDORDATAINGEST = "SPICVENDDORDATAINGEST";
 	public static final String FINEMASTERCREATE = "FINEMASTERCREATE";
 	public static final String FINEMASTERUPDATE = "FINEMASTERUPDATE";
 	public static final String FINEMASTERGET = "FINEMASTERGET";

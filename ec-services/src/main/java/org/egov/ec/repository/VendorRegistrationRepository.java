@@ -126,5 +126,13 @@ public class VendorRegistrationRepository {
 		producer.push(config.getUpdateVendorSpicTopic(), infoWrapper);
 
 	}
+	
+	public void ingestSpicVendorData(@Valid SMPKVendorDetail spicVendorData) {
+		log.info("SpicVendorData Repository - ingestSpicVendorData Method");
+		
+		RequestInfoWrapper infoWrapper = RequestInfoWrapper.builder().requestBody(spicVendorData).build();
+		producer.push(config.getSpicVendorDataIngestTopic(), infoWrapper);
+
+	}
 
 }

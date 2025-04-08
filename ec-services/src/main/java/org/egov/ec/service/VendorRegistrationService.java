@@ -11,6 +11,7 @@ import org.egov.ec.web.models.EcSearchCriteria;
 import org.egov.ec.web.models.ItemMaster;
 import org.egov.ec.web.models.RequestInfoWrapper;
 import org.egov.ec.web.models.ResponseInfoWrapper;
+import org.egov.ec.web.models.SMPKVendorDetail;
 import org.egov.ec.web.models.VendorRegistration;
 import org.egov.ec.workflow.WorkflowIntegrator;
 import org.egov.tracer.model.CustomException;
@@ -212,6 +213,43 @@ public class VendorRegistrationService {
 		} catch (Exception e) {
 			log.error("Vendor Service - Update Vendor Exception" + e.getMessage());
 			throw new CustomException("VENDORREGISTRATION_UPDATE_EXCEPTION", e.getMessage());
+		}
+	}
+	
+	
+	public ResponseEntity<ResponseInfoWrapper> ingestSpicVendordata(RequestInfoWrapper requestInfoWrapper) {
+		log.info("SPIC Vendor Ingest Service - Ingest Vendor Data");
+		try {
+			SMPKVendorDetail spicVendorData = objectMapper.convertValue(requestInfoWrapper.getRequestBody(),
+					SMPKVendorDetail.class);
+
+			String responseValidate = "";
+
+			Gson gson = new Gson();
+			String payloadData = gson.toJson(spicVendorData, SMPKVendorDetail.class);
+
+			responseValidate = wfIntegrator.validateJsonAddUpdateData(payloadData, EcConstants.SPICVENDDORDATAINGEST);
+
+			if (responseValidate.equals("")) {
+
+				spicVendorData.getSpicVendorDataList().stream().forEach((c) -> {
+					c.setCreatedBy(requestInfoWrapper.getAuditDetails().getCreatedBy());
+					c.setCreatedTime(requestInfoWrapper.getAuditDetails().getCreatedTime());
+					c.setLastModifiedBy(requestInfoWrapper.getAuditDetails().getLastModifiedBy());
+					c.setLastModifiedTime(requestInfoWrapper.getAuditDetails().getLastModifiedTime());
+				});
+
+				repository.ingestSpicVendorData(spicVendorData);
+
+				return new ResponseEntity<>(ResponseInfoWrapper.builder()
+						.responseInfo(ResponseInfo.builder().status(EcConstants.STATUS_SUCCESS).build())
+						.responseBody(spicVendorData).build(), HttpStatus.OK);
+			} else {
+				throw new CustomException("SPICVENDORDATA_INGEST_EXCEPTION", responseValidate);
+			}
+		} catch (Exception e) {
+			log.error("SPIC Vendor Ingest Service - Ingest Spic Vendor Data Exception" + e.getMessage());
+			throw new CustomException("SPICVENDORDATA_INGEST_EXCEPTION", e.getMessage());
 		}
 	}
 
