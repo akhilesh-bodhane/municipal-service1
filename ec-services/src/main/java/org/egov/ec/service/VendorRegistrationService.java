@@ -227,11 +227,13 @@ public class VendorRegistrationService {
 
 			Gson gson = new Gson();
 			String payloadData = gson.toJson(spicVendorData, SMPKVendorDetail.class);
+			
+			System.out.println("Payload Vendor Update : " + payloadData.toString());
 
 			responseValidate = wfIntegrator.validateJsonAddUpdateData(payloadData, EcConstants.VENDDORUPDATE);
 
 			if (responseValidate.equals("")) {
-
+				System.out.println("########## Inside response validation Method ###############");
 				spicVendorData.getSpicVendorDataList().stream().forEach((c) -> {
 					c.setCreatedBy(requestInfoWrapper.getAuditDetails().getCreatedBy());
 					c.setCreatedTime(requestInfoWrapper.getAuditDetails().getCreatedTime());
