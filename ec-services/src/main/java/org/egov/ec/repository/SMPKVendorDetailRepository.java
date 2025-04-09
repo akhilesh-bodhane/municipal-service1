@@ -47,5 +47,20 @@ public class SMPKVendorDetailRepository {
 		producer.push(config.getSpicVendorDataIngestTopic(), infoWrapper);
 
 	}
+	
+	
+	public List<SMPKVendorDetail> getSpicVendorData(SMPKVendorDetail spicVendorData) {
+
+		log.info("ItemMaster Repository - getItem Method");
+		List<SMPKVendorDetail> masterItemList;
+
+		masterItemList = jdbcTemplate.query(EcQueryBuilder.GET_SPIC_VENDOR_DATA_MASTER,
+				new Object[] { spicVendorData.getCovNo() },
+
+				new BeanPropertyRowMapper<SMPKVendorDetail>(SMPKVendorDetail.class));
+
+		return masterItemList;
+
+	}
 
 }

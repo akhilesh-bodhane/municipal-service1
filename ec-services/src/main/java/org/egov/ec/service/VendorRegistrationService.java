@@ -232,7 +232,15 @@ public class VendorRegistrationService {
 			String payloadData = gson.toJson(spicVendorData, SMPKVendorDetail.class);
 			
 			System.out.println("Payload Vendor Update : " + payloadData.toString());
+			
+			List<SMPKVendorDetail> spicVendorDataGet = spicRepository.getSpicVendorData(spicVendorData);
+			
+			if(!spicVendorDataGet.get(0).getNoOfViolation().equals("5")) {
+				spicVendorData.setStatus(spicVendorDataGet.get(0).getStatus());
+				System.out.println("Current Status Inside Condition: " + spicVendorData.getStatus());
+			} 
 
+			System.out.println("Current Status Outside Condition: " + spicVendorData.getStatus());
 			responseValidate = wfIntegrator.validateJsonAddUpdateData(payloadData, EcConstants.VENDDORUPDATE);
 
 			if (responseValidate.equals("")) {
