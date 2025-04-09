@@ -17,6 +17,7 @@ import org.egov.ec.producer.Producer;
 import org.egov.ec.repository.IdGenRepository;
 import org.egov.ec.repository.ViolationRepository;
 import org.egov.ec.service.validator.CustomBeanValidator;
+import org.egov.ec.service.validator.EchallanFieldValidator;
 import org.egov.ec.web.models.ChallanDataBckUp;
 import org.egov.ec.web.models.ChallanDetails;
 import org.egov.ec.web.models.DuplicateChallanDetails;
@@ -60,11 +61,14 @@ public class ViolationService {
 	public static final int MAX_LIMIT = 300;
 
 	private IdGenRepository idgenrepository;
+	
+	
+	private EchallanFieldValidator echallanFieldValidator;
 
 	@Autowired
 	public ViolationService(WorkflowIntegrator wfIntegrator, ObjectMapper objectMapper, ViolationRepository repository,
 			CustomBeanValidator validate, EchallanConfiguration config, IdGenRepository idgenrepository,
-			Producer producer, DeviceSourceService deviceSource) {
+			Producer producer, DeviceSourceService deviceSource,EchallanFieldValidator echallanFieldValidator) {
 		this.objectMapper = objectMapper;
 		this.wfIntegrator = wfIntegrator;
 		this.idgenrepository = idgenrepository;
@@ -73,6 +77,7 @@ public class ViolationService {
 		this.config = config;
 		this.validate = validate;
 		this.deviceSource = deviceSource;
+		this.echallanFieldValidator=echallanFieldValidator;
 
 	}
 
@@ -673,27 +678,41 @@ public class ViolationService {
 	}
 
 	public ResponseEntity<ResponseInfoWrapper> deleteChallan(RequestInfoWrapper requestInfoWrapper) {
-		ChallanDataBckUp bck = objectMapper.convertValue(requestInfoWrapper.getRequestBody(), ChallanDataBckUp.class);
-
-		bck.setEgWfProcessinstanceV2(repository.getdataProcessInstance(bck));
-		bck.setEgecDocument(repository.getdataEgecDocument(bck));
-		bck.setEgecStoreItemRegister(repository.getdataStoreItem(bck));
-		bck.setEgecPayment(repository.getdatPayment(bck));
-		bck.setEgecChallanDetail(repository.getdatChallanDetail(bck));
-		bck.setEgecChallanMaster(repository.getdatChallanMaster(bck));
-		bck.setEgecViolationDetail(repository.getdatViolationDetail(bck));
-		bck.setEgecViolationMaster(repository.getdatViolationMaster(bck));
 		
-		bck.setCreatedBy(requestInfoWrapper.getAuditDetails().getCreatedBy());
-		bck.setCreatedTime(requestInfoWrapper.getAuditDetails().getCreatedTime());
-		bck.setLastModifiedBy(requestInfoWrapper.getAuditDetails().getLastModifiedBy());
-		bck.setLastModifiedTime(requestInfoWrapper.getAuditDetails().getLastModifiedTime());
+		try {		
+			
+			ChallanDataBckUp bck = objectMapper.convertValue(requestInfoWrapper.getRequestBody(), ChallanDataBckUp.class);
+			
+			echallanFieldValidator.validateFieldRequest(bck);
+			
+			bck.setEgWfProcessinstanceV2(repository.getdataProcessInstance(bck));
+			bck.setEgecDocument(repository.getdataEgecDocument(bck));
+			bck.setEgecStoreItemRegister(repository.getdataStoreItem(bck));
+			bck.setEgecPayment(repository.getdatPayment(bck));
+			bck.setEgecChallanDetail(repository.getdatChallanDetail(bck));
+			bck.setEgecChallanMaster(repository.getdatChallanMaster(bck));
+			bck.setEgecViolationDetail(repository.getdatViolationDetail(bck));
+			bck.setEgecViolationMaster(repository.getdatViolationMaster(bck));
+			
+			bck.setCreatedBy(requestInfoWrapper.getAuditDetails().getCreatedBy());
+			bck.setCreatedTime(requestInfoWrapper.getAuditDetails().getCreatedTime());
+			bck.setLastModifiedBy(requestInfoWrapper.getAuditDetails().getLastModifiedBy());
+			bck.setLastModifiedTime(requestInfoWrapper.getAuditDetails().getLastModifiedTime());
 
-		repository.deleteChallan(bck);
-		return new ResponseEntity<>(ResponseInfoWrapper.builder()
-				.responseInfo(ResponseInfo.builder().status(EcConstants.STATUS_SUCCESS).build()).responseBody(bck)
-				.build(), HttpStatus.OK);
+			repository.deleteChallan(bck);
+			return new ResponseEntity<>(ResponseInfoWrapper.builder()
+					.responseInfo(ResponseInfo.builder().status(EcConstants.STATUS_SUCCESS).build()).responseBody(bck)
+					.build(), HttpStatus.OK);
+			
+			
+		}catch (Exception e) {
+			log.error("deleteChallan Exception" + e.getMessage());
+			throw new CustomException("DELETE_CHALLAN_EXCEPTION", e.getMessage());
+		}
+		
 	}
+		
+			
 	
 	public ResponseEntity<ResponseInfoWrapper> getDuplicateEchallan(DuplicateChallanDetails duplicateChallanDetails) {
 		try {
@@ -707,5 +726,7 @@ public class ViolationService {
 			throw new CustomException("DUPLICATE_CHALLAN_SEARCH_EXCEPTION", e.getMessage());
 		}
 	}
+	
+	
 
 }
