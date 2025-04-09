@@ -5,6 +5,7 @@ import java.util.UUID;
 
 import org.egov.common.contract.response.ResponseInfo;
 import org.egov.ec.config.EcConstants;
+import org.egov.ec.repository.SMPKVendorDetailRepository;
 import org.egov.ec.repository.VendorRegistrationRepository;
 import org.egov.ec.service.validator.CustomBeanValidator;
 import org.egov.ec.web.models.EcSearchCriteria;
@@ -33,14 +34,16 @@ public class VendorRegistrationService {
 	private WorkflowIntegrator wfIntegrator;
 	private CustomBeanValidator validate;
 	private VendorRegistrationRepository repository;
+	private SMPKVendorDetailRepository spicRepository;
 	private DeviceSourceService deviceSource;
 
 	@Autowired
 	public VendorRegistrationService(WorkflowIntegrator wfIntegrator, ObjectMapper objectMapper,
-			CustomBeanValidator validate, VendorRegistrationRepository repository, DeviceSourceService deviceSource) {
+			CustomBeanValidator validate, VendorRegistrationRepository repository, DeviceSourceService deviceSource, SMPKVendorDetailRepository spicRepository) {
 		this.objectMapper = objectMapper;
 		this.wfIntegrator = wfIntegrator;
 		this.repository = repository;
+		this.spicRepository = spicRepository;
 		this.validate = validate;
 		this.deviceSource = deviceSource;
 	}
@@ -241,7 +244,7 @@ public class VendorRegistrationService {
 					c.setLastModifiedTime(requestInfoWrapper.getAuditDetails().getLastModifiedTime());
 				});
 
-				repository.ingestSpicVendorData(spicVendorData);
+				spicRepository.ingestSpicVendorData(spicVendorData);
 
 				return new ResponseEntity<>(ResponseInfoWrapper.builder()
 						.responseInfo(ResponseInfo.builder().status(EcConstants.STATUS_SUCCESS).build())
