@@ -7,7 +7,7 @@ public class EcQueryBuilder {
 
 	public static final String GET_ITEM_MASTER = "select * from egec_item_master where tenant_id=? and is_active = 'TRUE'::boolean order by last_modified_time desc";
 	
-	public static final String GET_SPIC_VENDOR_DATA_MASTER = "select * from egec_spic_vendor_details esvd where covno=? order by lastmodifieddate desc";
+	public static final String GET_SPIC_VENDOR_DATA_MASTER = "select * from egec_spic_vendor_details esvd where covno=?::character varying order by lastmodifieddate desc";
 	
 	public static final String GET_ITEM_MASTER_PENDING = "select * from egec_item_master where approval_status='PENDING' and tenant_id=?";
 	public static final String GET_FINE_MASTER = "select * from egec_fine_master where tenant_id=? and is_active = 'TRUE'::boolean order by last_modified_time desc";
