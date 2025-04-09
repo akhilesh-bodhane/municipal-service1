@@ -78,6 +78,4 @@ public class SMPKVendorDetail {
 	@NotNull(message = "lastTerminatedOn should not be empty or null")
 	private Long lastTerminatedOn;
 	
-	@JsonProperty("spicVendorDataList")
-	private List<SMPKVendorDetail> spicVendorDataList;
 }

@@ -237,19 +237,19 @@ public class VendorRegistrationService {
 
 			if (responseValidate.equals("")) {
 				System.out.println("########## Inside response validation Method ###############");
-				spicVendorData.getSpicVendorDataList().stream().forEach((c) -> {
-					c.setCreatedBy(requestInfoWrapper.getAuditDetails().getCreatedBy());
-					c.setCreatedTime(requestInfoWrapper.getAuditDetails().getCreatedTime());
-					c.setLastModifiedBy(requestInfoWrapper.getAuditDetails().getLastModifiedBy());
-					c.setLastModifiedTime(requestInfoWrapper.getAuditDetails().getLastModifiedTime());
-				});
+					spicVendorData.setCreatedBy(requestInfoWrapper.getAuditDetails().getCreatedBy());
+					spicVendorData.setCreatedTime(requestInfoWrapper.getAuditDetails().getCreatedTime());
+					spicVendorData.setLastModifiedBy(requestInfoWrapper.getAuditDetails().getLastModifiedBy());
+					spicVendorData.setLastModifiedTime(requestInfoWrapper.getAuditDetails().getLastModifiedTime());
+					
+					System.out.println("Spic Vendor Data : " + spicVendorData.toString());
 
-				spicRepository.ingestSpicVendorData(spicVendorData);
+					spicRepository.ingestSpicVendorData(spicVendorData);
 
-				return new ResponseEntity<>(ResponseInfoWrapper.builder()
-						.responseInfo(ResponseInfo.builder().status(EcConstants.STATUS_SUCCESS).build())
-						.responseBody(spicVendorData).build(), HttpStatus.OK);
-			} else {
+					return new ResponseEntity<>(ResponseInfoWrapper.builder()
+							.responseInfo(ResponseInfo.builder().status(EcConstants.STATUS_SUCCESS).build())
+							.responseBody(spicVendorData).build(), HttpStatus.OK);
+				} else {
 				throw new CustomException("SPICVENDORDATA_INGEST_EXCEPTION", responseValidate);
 			}
 		} catch (Exception e) {
