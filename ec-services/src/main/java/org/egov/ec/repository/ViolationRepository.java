@@ -344,6 +344,18 @@ public class ViolationRepository {
 	    List<DuplicateChallanDetails> sterilizationdog = new ArrayList<>();
 
 	    try {
+	    	
+	    	// Mandatory validation
+	        if (duplicateChallanDetails.getEncroachmentType() == null || duplicateChallanDetails.getMobileNumber() == null) {
+	            throw new CustomException("MANDATORY_FIELDS_MISSING", "Encroachment type and Mobile number are required.");
+	        }
+
+	        // Conditional validation based on encroachment type
+	        if ("Unauthorized/Unregistered Vendor".equalsIgnoreCase(duplicateChallanDetails.getEncroachmentType())
+	                && duplicateChallanDetails.getNumberOfViolation() == null) {
+	            throw new CustomException("MANDATORY_FIELDS_MISSING", "Number of violations is required for Unauthorized/Unregistered Vendor.");
+	        }
+	    	
 	        StringBuilder queryBuilder = new StringBuilder();
 	        List<Object> parameters = new ArrayList<>();
 
@@ -351,7 +363,7 @@ public class ViolationRepository {
 	                    .append("ecm.challan_id, ")
 	                    .append("ecm.challan_status, ")
 	                    .append("ecm.challan_amount, ")
-	                    .append("TO_CHAR(TO_TIMESTAMP(ecm.created_time / 1000), 'DD-MM-YYYY HH24:MI:SS') AS challan_date, ")
+	                    .append("TO_CHAR(TO_TIMESTAMP(ecm.created_time / 1000), 'DD-MM-YYYY') AS challan_date, ")
 	                    .append("evm.encroachment_type, ")
 	                    .append("evm.contact_number, ")
 	                    .append("evm.violator_name, ")
