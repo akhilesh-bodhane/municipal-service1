@@ -228,7 +228,7 @@ public class VendorRegistrationService {
 			Gson gson = new Gson();
 			String payloadData = gson.toJson(spicVendorData, SMPKVendorDetail.class);
 
-			responseValidate = wfIntegrator.validateJsonAddUpdateData(payloadData, EcConstants.SPICVENDDORDATAINGEST);
+			responseValidate = wfIntegrator.validateJsonAddUpdateData(payloadData, EcConstants.VENDDORUPDATE);
 
 			if (responseValidate.equals("")) {
 
