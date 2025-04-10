@@ -237,6 +237,7 @@ public class VendorRegistrationService {
 			
 			if(!spicVendorDataGet.get(0).getNoOfViolation().equals("5")) {
 				spicVendorData.setStatus(spicVendorDataGet.get(0).getStatus());
+				spicVendorData.setNoOfViolation(spicVendorDataGet.get(0).getNoOfViolation());
 				System.out.println("Current Status Inside Condition: " + spicVendorData.getStatus());
 			} else {
 				if(spicVendorData.getStatus().equals("Active")) {
@@ -245,8 +246,9 @@ public class VendorRegistrationService {
 				} else {
 					spicVendorData.setNoOfViolation(spicVendorDataGet.get(0).getNoOfViolation());
 				}
-				System.out.println("No of Violation : " + spicVendorDataGet.get(0).getNoOfViolation());
 			}
+			
+			System.out.println("No of Violation : " + spicVendorData.getNoOfViolation());
 
 			System.out.println("Current Status Outside Condition: " + spicVendorData.getStatus());
 			responseValidate = wfIntegrator.validateJsonAddUpdateData(payloadData, EcConstants.VENDDORUPDATE);
