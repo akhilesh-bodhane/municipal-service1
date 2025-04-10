@@ -238,7 +238,12 @@ public class VendorRegistrationService {
 			if(!spicVendorDataGet.get(0).getNoOfViolation().equals("5")) {
 				spicVendorData.setStatus(spicVendorDataGet.get(0).getStatus());
 				System.out.println("Current Status Inside Condition: " + spicVendorData.getStatus());
-			} 
+			} else {
+				if(spicVendorDataGet.get(0).getStatus().equals("Active")) {
+					spicVendorData.setNoOfViolation("0");
+				}
+				System.out.println("No of Violation : " + spicVendorDataGet.get(0).getNoOfViolation());
+			}
 
 			System.out.println("Current Status Outside Condition: " + spicVendorData.getStatus());
 			responseValidate = wfIntegrator.validateJsonAddUpdateData(payloadData, EcConstants.VENDDORUPDATE);
@@ -262,7 +267,7 @@ public class VendorRegistrationService {
 			}
 		} catch (Exception e) {
 			log.error("SPIC Vendor Ingest Service - Ingest Spic Vendor Data Exception" + e.getMessage());
-			throw new CustomException("SPICVENDORDATA_INGEST_EXCEPTION", e.getMessage());
+			throw new CustomException("SPICVENDORDATA_INGEST_EXCEPTION", "Covno not found");
 		}
 	}
 
