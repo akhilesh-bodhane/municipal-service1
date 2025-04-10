@@ -242,6 +242,8 @@ public class VendorRegistrationService {
 				if(spicVendorData.getStatus().equals("Active")) {
 					System.out.println("######### Inside Status Check Condition ##########");
 					spicVendorData.setNoOfViolation("0");
+				} else {
+					spicVendorData.setNoOfViolation(spicVendorDataGet.get(0).getNoOfViolation());
 				}
 				System.out.println("No of Violation : " + spicVendorDataGet.get(0).getNoOfViolation());
 			}
