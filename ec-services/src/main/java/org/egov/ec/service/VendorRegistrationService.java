@@ -251,7 +251,6 @@ public class VendorRegistrationService {
 					} catch (Exception e){
 						throw new CustomException("SPICVENDORDATA_INGEST_EXCEPTION", "Please input the correct status");
 					}
-					
 					spicVendorData.setStatus(spicVendorDataGet.get(0).getStatus());
 				}
 			}
@@ -285,7 +284,7 @@ public class VendorRegistrationService {
 	}
 	
 	public void validateStatus(SMPKVendorDetail spicVendorData) {
-		if(!spicVendorData.getStatus().equals("Active")) {	
+		if(spicVendorData.getStatus().equals("Active")) {	
 		}
 	}
 
