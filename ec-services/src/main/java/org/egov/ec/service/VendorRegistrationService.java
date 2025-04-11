@@ -235,6 +235,7 @@ public class VendorRegistrationService {
 			
 			List<SMPKVendorDetail> spicVendorDataGet = spicRepository.getSpicVendorData(spicVendorData);
 			
+			spicVendorData.setNoOfViolation(spicVendorDataGet.get(0).getNoOfViolation());
 			if(!spicVendorDataGet.get(0).getNoOfViolation().equals("5")) {
 				spicVendorData.setStatus(spicVendorDataGet.get(0).getStatus());
 				spicVendorData.setNoOfViolation(spicVendorDataGet.get(0).getNoOfViolation());
@@ -244,14 +245,8 @@ public class VendorRegistrationService {
 					System.out.println("######### Inside Status Check Condition ##########");
 					spicVendorData.setNoOfViolation("0");
 					spicVendorData.setStatus("Active");
-				} else {
-					spicVendorData.setNoOfViolation(spicVendorDataGet.get(0).getNoOfViolation());
-					try {
-						validateStatus(spicVendorData);
-					} catch (Exception e){
-						throw new CustomException("SPICVENDORDATA_INGEST_EXCEPTION", "Please input the correct status");
-					}
-					spicVendorData.setStatus(spicVendorDataGet.get(0).getStatus());
+				} else {	
+					throw new CustomException("SPICVENDORDATA_INGEST_EXCEPTION", "Please input correct status");
 				}
 			}
 			
@@ -280,11 +275,6 @@ public class VendorRegistrationService {
 		} catch (Exception e) {
 			log.error("SPIC Vendor Ingest Service - Ingest Spic Vendor Data Exception" + e.getMessage());
 			throw new CustomException("SPICVENDORDATA_INGEST_EXCEPTION", "Covno not found");
-		}
-	}
-	
-	public void validateStatus(SMPKVendorDetail spicVendorData) {
-		if(spicVendorData.getStatus().equals("Active")) {	
 		}
 	}
 
