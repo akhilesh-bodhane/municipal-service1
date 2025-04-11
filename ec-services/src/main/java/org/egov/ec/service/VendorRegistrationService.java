@@ -246,7 +246,12 @@ public class VendorRegistrationService {
 					spicVendorData.setStatus("Active");
 				} else {
 					spicVendorData.setNoOfViolation(spicVendorDataGet.get(0).getNoOfViolation());
-					validateStatus(spicVendorData);
+					try {
+						validateStatus(spicVendorData);
+					} catch (Exception e){
+						throw new CustomException("SPICVENDORDATA_INGEST_EXCEPTION", "Please input the correct status");
+					}
+					
 					spicVendorData.setStatus(spicVendorDataGet.get(0).getStatus());
 				}
 			}
@@ -280,8 +285,7 @@ public class VendorRegistrationService {
 	}
 	
 	public void validateStatus(SMPKVendorDetail spicVendorData) {
-		if(!spicVendorData.getStatus().equals("Active")) {
-			throw new CustomException("SPICVENDORDATA_INGEST_EXCEPTION", "Please input the correct status");	
+		if(!spicVendorData.getStatus().equals("Active")) {	
 		}
 	}
 
