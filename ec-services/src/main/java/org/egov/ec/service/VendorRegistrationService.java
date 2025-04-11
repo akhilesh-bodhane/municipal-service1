@@ -222,6 +222,7 @@ public class VendorRegistrationService {
 	
 	public ResponseEntity<ResponseInfoWrapper> ingestSpicVendordata(RequestInfoWrapper requestInfoWrapper) {
 		log.info("SPIC Vendor Ingest Service - Ingest Vendor Data");
+		String errMessage = "Cov not found";
 		try {
 			SMPKVendorDetail spicVendorData = objectMapper.convertValue(requestInfoWrapper.getRequestBody(),
 					SMPKVendorDetail.class);
@@ -246,7 +247,8 @@ public class VendorRegistrationService {
 					spicVendorData.setNoOfViolation("0");
 					spicVendorData.setStatus("Active");
 				} else {	
-					throw new CustomException("SPICVENDORDATA_INGEST_EXCEPTION", "Please input correct status");
+					errMessage = "Please input correct status";
+					throw new CustomException("SPICVENDORDATA_INGEST_EXCEPTION", errMessage);
 				}
 			}
 			
@@ -273,8 +275,8 @@ public class VendorRegistrationService {
 				throw new CustomException("SPICVENDORDATA_INGEST_EXCEPTION", responseValidate);
 			}
 		} catch (Exception e) {
-			log.error("SPIC Vendor Ingest Service - Ingest Spic Vendor Data Exception" + e.getMessage());
-			throw new CustomException("SPICVENDORDATA_INGEST_EXCEPTION", "Covno not found");
+			log.error("SPIC Vendor Ingest Service - Ingest Spic Vendor Data Exception" + errMessage);
+			throw new CustomException("SPICVENDORDATA_INGEST_EXCEPTION", errMessage);
 		}
 	}
 
