@@ -243,8 +243,11 @@ public class VendorRegistrationService {
 				if(spicVendorData.getStatus().equals("Active")) {
 					System.out.println("######### Inside Status Check Condition ##########");
 					spicVendorData.setNoOfViolation("0");
+					spicVendorData.setStatus("Active");
 				} else {
 					spicVendorData.setNoOfViolation(spicVendorDataGet.get(0).getNoOfViolation());
+					validateStatus(spicVendorData);
+					spicVendorData.setStatus(spicVendorDataGet.get(0).getStatus());
 				}
 			}
 			
@@ -273,6 +276,12 @@ public class VendorRegistrationService {
 		} catch (Exception e) {
 			log.error("SPIC Vendor Ingest Service - Ingest Spic Vendor Data Exception" + e.getMessage());
 			throw new CustomException("SPICVENDORDATA_INGEST_EXCEPTION", "Covno not found");
+		}
+	}
+	
+	public void validateStatus(SMPKVendorDetail spicVendorData) {
+		if(!spicVendorData.getStatus().equals("Active")) {
+			throw new CustomException("SPICVENDORDATA_INGEST_EXCEPTION", "Please input the correct status");	
 		}
 	}
 
