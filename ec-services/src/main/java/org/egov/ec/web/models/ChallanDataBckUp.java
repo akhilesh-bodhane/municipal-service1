@@ -67,6 +67,9 @@ public class ChallanDataBckUp {
 	@JsonProperty("referenceChallanNo")
 	private String referenceChallanNo ;
 	
+	@JsonProperty("isActive")
+	private Boolean isActive;
+	
 	@JsonProperty("createdBy")
 	private String createdBy;
 

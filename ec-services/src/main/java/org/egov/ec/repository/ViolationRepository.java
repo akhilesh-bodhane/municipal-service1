@@ -351,9 +351,9 @@ public class ViolationRepository {
 	        }
 
 	        // Conditional validation based on encroachment type
-	        if ("Unauthorized/Unregistered Vendor".equalsIgnoreCase(duplicateChallanDetails.getEncroachmentType())
+	        if ("Registered Street Vendors".equalsIgnoreCase(duplicateChallanDetails.getEncroachmentType())
 	                && duplicateChallanDetails.getNumberOfViolation() == null) {
-	            throw new CustomException("MANDATORY_FIELDS_MISSING", "Number of violations is required for Unauthorized/Unregistered Vendor.");
+	            throw new CustomException("MANDATORY_FIELDS_MISSING", "Number of violations is required for Registered Street Vendors.");
 	        }
 	    	
 	        StringBuilder queryBuilder = new StringBuilder();
@@ -376,7 +376,7 @@ public class ViolationRepository {
 	                    .append("INNER JOIN egec_violation_master evm ON evm.violation_uuid = ecm.violation_uuid ")
 	                    .append("INNER JOIN egec_violation_detail evd ON evd.violation_uuid = evm.violation_uuid ")
 	                    .append("INNER JOIN egec_payment ep ON ep.challan_uuid = ecm.challan_uuid ")
-	                    .append("WHERE ecd.tenant_id = 'ch.chandigarh' AND ep.payment_status = 'PENDING' ");
+	                    .append("WHERE ecd.tenant_id = 'ch.chandigarh' AND ep.payment_status = 'PENDING' and ecm.is_active=true ");
 
 	        // Dynamic conditions
 	        if (duplicateChallanDetails.getEncroachmentType() != null) {

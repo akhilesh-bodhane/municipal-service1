@@ -698,6 +698,7 @@ public class ViolationService {
 			bck.setCreatedTime(requestInfoWrapper.getAuditDetails().getCreatedTime());
 			bck.setLastModifiedBy(requestInfoWrapper.getAuditDetails().getLastModifiedBy());
 			bck.setLastModifiedTime(requestInfoWrapper.getAuditDetails().getLastModifiedTime());
+			bck.setIsActive(false);
 
 			repository.deleteChallan(bck);
 			return new ResponseEntity<>(ResponseInfoWrapper.builder()

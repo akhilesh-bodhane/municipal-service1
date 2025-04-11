@@ -87,7 +87,7 @@ public class EcQueryBuilder {
 			+ " 		left join egec_spic_vendor_details esvd on violation.license_no_cov = esvd.covno \n"
 			+ "    		where violation.contact_number ilike ? or challan.challan_id ilike ? or challan.challan_uuid ilike ? \n"
 			+ "    		or violation.violator_name ilike ? or violation.license_no_cov ilike ? or violation.si_name ilike ? \n"
-			+ "    		or violation.sector ilike ? or violation.encroachment_type ilike ? and violation.tenant_id=? order by violation.last_modified_time desc";
+			+ "    		or violation.sector ilike ? or violation.encroachment_type ilike ? and violation.tenant_id=? and challan.is_active=true order by violation.last_modified_time desc";
 
 
 	public static final String EG_PF_TRANSACTION_DATA = "select txn_id from eg_pg_transactions ep where ep.consumer_code =?";
@@ -114,7 +114,7 @@ public class EcQueryBuilder {
 	public static final String GET_SEIZURE_REPORT = "select *,(select case when (select store.item_store_deposit_date from egec_store_item_register store where store.challan_uuid=challan.challan_uuid limit 1)< now()- interval '30 days' and challan.challan_status <> 'CLOSED' and master.encroachment_type <> 'Seizure of Vehicles' then 'PENDING FOR AUCTION' when challan.challan_status='CLOSED' and ((select count(*) from egec_store_item_register store where store.violation_uuid=master.violation_uuid) > 0) then 'RELEASED FROM STORE' when challan.challan_status='CLOSED' and ((select count(*) from egec_store_item_register store where store.violation_uuid=master.violation_uuid) = 0) then 'RELEASED ON GROUND' else challan.challan_status end  )as challan_status \n"
 			+ " from egec_violation_master master, egec_challan_master challan, egec_payment payment where master.violation_uuid=challan.violation_uuid and challan.violation_uuid=payment.violation_uuid and master.violation_date between ?  and  ? and (?  ilike '' or master.si_name ilike ?)  and(? ilike '' or master.encroachment_type ilike ?) and (? ilike '' or master.sector ilike ?) \n"
 			+ " and(? ilike '' or ((select case when ((select count(*) from egec_store_item_register store where store.violation_uuid=master.violation_uuid) > 0) and  challan.challan_status='CLOSED' then 'RELEASED FROM STORE' when challan.challan_status='CLOSED' and ((select count(*) from egec_store_item_register store where store.violation_uuid=master.violation_uuid) = 0) then 'RELEASED ON GROUND' else challan.challan_status end  )) ilike ?) \n"
-			+ " and master.tenant_id=? order by master.created_time";
+			+ " and master.tenant_id=? and challan.is_active=true order by master.created_time";
 	public static final String GET_ITEM_AGING_REPORT1 = "select item_name, (quantity -auctioned_quantity)as item_quantity,challan.challan_id,item_store_deposit_date, (now()::date - item_store_deposit_date::date)::int as age, challan.challan_status from egec_store_item_register store, egec_violation_master master, egec_challan_master challan where master.violation_uuid=store.violation_uuid and challan.violation_uuid=store.violation_uuid and item_store_deposit_date < now()- interval '0 days'  and item_store_deposit_date > now()- interval '11 days'  and challan.challan_status <> 'CLOSED' and master.tenant_id=? order by master.created_time";
 	public static final String GET_ITEM_AGING_REPORT2 = "select item_name, (quantity -auctioned_quantity)as item_quantity,challan.challan_id,item_store_deposit_date, (now()::date - item_store_deposit_date::date)::int as age, challan.challan_status from egec_store_item_register store, egec_violation_master master, egec_challan_master challan where master.violation_uuid=store.violation_uuid and challan.violation_uuid=store.violation_uuid and item_store_deposit_date < now()- interval '11 days'  and item_store_deposit_date > now()- interval '21 days'  and challan.challan_status <> 'CLOSED' and master.tenant_id=? order by master.created_time";
 	public static final String GET_ITEM_AGING_REPORT3 = "select item_name, (quantity -auctioned_quantity)as item_quantity,challan.challan_id,item_store_deposit_date, (now()::date - item_store_deposit_date::date)::int as age, challan.challan_status from egec_store_item_register store, egec_violation_master master, egec_challan_master challan where master.violation_uuid=store.violation_uuid and challan.violation_uuid=store.violation_uuid and item_store_deposit_date < now()- interval '21 days'  and item_store_deposit_date > now()- interval '31 days'  and challan.challan_status <> 'CLOSED' and master.tenant_id=? order by master.created_time";
@@ -136,7 +136,7 @@ public class EcQueryBuilder {
 			+ "	 JOIN egec_payment payment on violation.violation_uuid = payment.violation_uuid \n"
 			+ "	 LEFT JOIN egec_document doc on violation.violation_uuid = doc.violation_uuid \n"
 			+ "	 where challan.challan_uuid in (select challan_uuid from egec_store_item_register  where isverified in (false)) \n"
-			+ "	 and violation.tenant_id=? and challan.challan_status <> 'CLOSED' order by violation.last_modified_time desc";
+			+ "	 and violation.tenant_id=? and challan.challan_status <> 'CLOSED' and challan.is_active=true  order by violation.last_modified_time desc";
 
 	public static final String GET_VIOLATION_MASTER_AUCTION_HOD = "select *,(select head_amount from egec_challan_detail ch where ch.budget_head ='FINE_AMOUNT' and ch.challan_uuid=challan.challan_uuid) as fineAmount,  \n"
 			+ "    		(select head_amount from egec_challan_detail ch where ch.budget_head ='PENALTY_AMOUNT' and ch.challan_uuid=challan.challan_uuid) as penaltyAmount \n"
@@ -146,7 +146,7 @@ public class EcQueryBuilder {
 			+ " JOIN egec_payment payment on violation.violation_uuid = payment.violation_uuid \n"
 			+ " JOIN egec_auction_master auction on violation.violation_uuid = auction.violation_uuid \n"
 			+ " LEFT JOIN egec_document doc on violation.violation_uuid = doc.violation_uuid \n"
-			+ " where auction.status='PENDING' and violation.tenant_id=? \n"
+			+ " where auction.status='PENDING' and violation.tenant_id=? and challan.is_active=true \n"
 			+ "	order by violation.last_modified_time desc	";
 
 	public static final String GET_AUCTION_CHALLAN_MASTER = "\n"
@@ -157,7 +157,7 @@ public class EcQueryBuilder {
 	public static final String GET_AUCTIONED_AVAILABLE_COUNT = "select b.challan_uuid,b.challan_id from (select ( (select count(*) from egec_store_item_register sr where sr.quantity::int != auctioned_quantity::int  and sr.challan_uuid = a.challan_uuid ) +(select count(*) from egec_auction_master am where am.status = 'PENDING' and am.challan_uuid = a.challan_uuid )) as quantityCount ,a.challan_uuid,a.challan_id from (select * from egec_challan_master where challan_status = 'PENDING FOR AUCTION' and tenant_id = ?) a group by a.challan_uuid,a.challan_uuid,a.challan_id) b where b.quantityCount = 0 ";
 	public static final String GET_FINE_VALIDATION_DATE = "select count(*) as  from egec_fine_master where encroachment_type = ?::varchar and number_of_violation=?::varchar and is_active = 'TRUE'::boolean  and approval_status = 'APPROVED' and fine_Uuid != ? and ( effective_start_date BETWEEN ? AND ?::date  or  effective_end_date BETWEEN ? AND ?::date  )";
 	public static final String GET_DASHBOARD_DETAILS_SI = "select count(distinct challan.challan_id) as challanCount from egec_violation_master violation, egec_violation_detail item, egec_document doc, egec_challan_master challan, egec_payment payment \n"
-			+ " where violation.violation_uuid = item.violation_uuid and violation.violation_uuid = doc.violation_uuid and violation.violation_uuid=challan.violation_uuid and violation.violation_uuid = payment.violation_uuid and violation.tenant_id=?";
+			+ " where violation.violation_uuid = item.violation_uuid and violation.violation_uuid = doc.violation_uuid and violation.violation_uuid=challan.violation_uuid and violation.violation_uuid = payment.violation_uuid and violation.tenant_id=? and challan.is_active=true";
 	public static final String GET_DASHBOARD_DETAILS_SM = "select (select count(distinct challan.challan_id) from egec_violation_master violation, egec_violation_detail item, egec_challan_master challan, egec_payment payment \n"
 			+ " where violation.violation_uuid = item.violation_uuid and violation.violation_uuid=challan.violation_uuid and violation.violation_uuid = payment.violation_uuid and violation.tenant_id=? and challan.challan_status not in ('CLOSED' ,'CHALLAN ISSUED')) as challanCount,\n"
 			+ "(select count(distinct challan.challan_id)\n"
@@ -165,7 +165,7 @@ public class EcQueryBuilder {
 			+ "			where violation.violation_uuid = item.violation_uuid and storeItem.violation_uuid = violation.violation_uuid and\n"
 			+ "			violation.violation_uuid=challan.violation_uuid  and violation.tenant_id=?\n"
 			+ "			and violation.violation_uuid = payment.violation_uuid\n"
-			+ "			and challan.challan_status='PENDING FOR AUCTION' as auctionCount";
+			+ "			and challan.challan_status='PENDING FOR AUCTION' as auctionCount and challan.is_active=true";
 
 	public static final String GET_DASHBOARD_DETAILS_HOD = "select (select count(*) from egec_fine_master where tenant_id=? and approval_status='PENDING'  and is_active = 'TRUE'::boolean) as fineCount, \n"
 			+ " 			(select count(distinct auction.auction_uuid)  \n"
@@ -178,7 +178,7 @@ public class EcQueryBuilder {
 			+ "			where violation.violation_uuid = item.violation_uuid and\n"
 			+ "			violation.violation_uuid=challan.violation_uuid and violation.violation_uuid = payment.violation_uuid \n"
 			+ "			and challan.challan_uuid in (select challan_uuid from egec_store_item_register  where isverified in (false))\n"
-			+ "			and violation.tenant_id=? and challan.challan_status <> 'CLOSED' ) as challanCount";
+			+ "			and violation.tenant_id=? and challan.challan_status <> 'CLOSED' ) as challanCount and challan.is_active=true";
 
 	public static final String GET_DASHBOARD_DETAILS_SI_SM = "select(select count(distinct challan.challan_id) as challanCount from egec_violation_master violation, egec_violation_detail item, egec_challan_master challan, egec_payment payment \n"
 			+ " where violation.violation_uuid = item.violation_uuid and violation.violation_uuid=challan.violation_uuid and violation.violation_uuid = payment.violation_uuid and violation.tenant_id=?) as challanCount, \n"
@@ -187,7 +187,7 @@ public class EcQueryBuilder {
 			+ "			where violation.violation_uuid = item.violation_uuid and storeItem.violation_uuid = violation.violation_uuid and\n"
 			+ "			violation.violation_uuid=challan.violation_uuid  and violation.tenant_id=?\n"
 			+ "			and violation.violation_uuid = payment.violation_uuid\n"
-			+ "			and challan.challan_status='PENDING FOR AUCTION' as auctionCount";
+			+ "			and challan.challan_status='PENDING FOR AUCTION' as auctionCount and challan.is_active=true";
 
 	public static final String GET_DASHBOARD_DETAILS_SI_HOD = "select(select count(distinct challan.challan_id) as challanCount from egec_violation_master violation, egec_violation_detail item, egec_challan_master challan, egec_payment payment \n"
 			+ " where violation.violation_uuid = item.violation_uuid and violation.violation_uuid=challan.violation_uuid and violation.violation_uuid = payment.violation_uuid and violation.tenant_id=?) as challanCount, \n"
@@ -196,7 +196,7 @@ public class EcQueryBuilder {
 			+ "    		from egec_violation_master violation, egec_violation_detail item, egec_challan_master challan, egec_auction_master auction, egec_payment payment\n"
 			+ "        	where violation.violation_uuid = item.violation_uuid and\n"
 			+ "    		violation.violation_uuid=challan.violation_uuid and violation.tenant_id=? \n"
-			+ "			and violation.violation_uuid = auction.violation_uuid and violation.violation_uuid = payment.violation_uuid and auction.status='PENDING') as auctionCount";
+			+ "			and violation.violation_uuid = auction.violation_uuid and violation.violation_uuid = payment.violation_uuid and auction.status='PENDING') as auctionCount and challan.is_active=true";
 
 	public static final String GET_DASHBOARD_DETAILS_SM_HOD = "select (select count(distinct challan.challan_id) from egec_violation_master violation, egec_violation_detail item, egec_challan_master challan, egec_payment payment \n"
 			+ " where violation.violation_uuid = item.violation_uuid and violation.violation_uuid=challan.violation_uuid and violation.violation_uuid = payment.violation_uuid and violation.tenant_id=? and challan.challan_status not in ('CLOSED' ,'CHALLAN ISSUED')) as challanCount,\n"
@@ -211,7 +211,7 @@ public class EcQueryBuilder {
 			+ "			where violation.violation_uuid = item.violation_uuid and storeItem.violation_uuid = violation.violation_uuid and\n"
 			+ "			violation.violation_uuid=challan.violation_uuid  and violation.tenant_id=?\n"
 			+ "			and violation.violation_uuid = payment.violation_uuid\n"
-			+ "			and challan.challan_status='PENDING FOR AUCTION' as auctionCount";
+			+ "			and challan.challan_status='PENDING FOR AUCTION' as auctionCount and challan.is_active=true";
 
 	public static final String GET_DASHBOARD_DETAILS_SI_SM_HOD = "select (select count(distinct challan.challan_id) from egec_violation_master violation, egec_violation_detail item, egec_challan_master challan, egec_payment payment \n"
 			+ " where violation.violation_uuid = item.violation_uuid and violation.violation_uuid=challan.violation_uuid and violation.violation_uuid = payment.violation_uuid and violation.tenant_id=?) as challanCount,\n"
@@ -226,7 +226,7 @@ public class EcQueryBuilder {
 			+ "			where violation.violation_uuid = item.violation_uuid and storeItem.violation_uuid = violation.violation_uuid and\n"
 			+ "			violation.violation_uuid=challan.violation_uuid  and violation.tenant_id=?\n"
 			+ "			and violation.violation_uuid = payment.violation_uuid\n"
-			+ "			and challan.challan_status='PENDING FOR AUCTION' as auctionCount";
+			+ "			and challan.challan_status='PENDING FOR AUCTION' as auctionCount and challan.is_active=true";
 
 //	public static final String SEARCH_VIOLATION_MASTER = "select (select case when ((select count(*) from egec_store_item_register store where store.violation_uuid=violation.violation_uuid) > 0) and  challan.challan_status='CLOSED' then 'RELEASED FROM STORE' when challan.challan_status='CLOSED' and ((select count(*) from egec_store_item_register store where store.violation_uuid=violation.violation_uuid) = 0) then 'RELEASED ON GROUND' else challan.challan_status end  )as challan_status,*,(select head_amount from egec_challan_detail ch where ch.budget_head ='FINE_AMOUNT' and ch.challan_uuid=challan.challan_uuid) as fineAmount,\r\n"
 //			+ "(select head_amount from egec_challan_detail ch where ch.budget_head ='PENALTY_AMOUNT' and ch.challan_uuid=challan.challan_uuid) as penaltyAmount\r\n"
@@ -242,7 +242,7 @@ public class EcQueryBuilder {
 //			+ " and violation.tenant_id=? and UPPER(challan.challan_id) like concat('%',case when UPPER(?)<>'' then UPPER(?) else UPPER(challan.challan_id) end,'%') order by violation.last_modified_time desc";
 
 	public static final String SEARCH_VIOLATION_MASTER = "select 	max(case when store.item_store_deposit_date < now()- interval '30 days' and challan.challan_status <> 'CLOSED' and violation.encroachment_type <> 'Seizure of Vehicles' then 'PENDING FOR AUCTION' when challan.challan_status = 'CLOSED' and store.violation_uuid is not null then 'RELEASED FROM STORE' when challan.challan_status = 'CLOSED' and store.violation_uuid is null then 'RELEASED ON GROUND' else challan.challan_status end) as challan_status, max(violation.created_time) created_time, max(violation.last_modified_time) last_modified_time,	max(coalesce(ch.head_amount, 0)) as fineAmount, max(coalesce(chs.head_amount, 0)) as penaltyAmount,	max(violation.violation_uuid) as violation_uuid,max(contact_number) contact_number,	max(challan.challan_uuid) as challan_uuid,max(challan.tenant_Id) as tenant_Id,max(challan.challan_Id) as challan_Id,max(violation.encroachment_type) as encroachment_type,max(violation.violation_date) as violation_date,max(violation.violator_name) as violator_name,max(violation.sector) as sector,	max(violation.si_name) si_name,case when max(item.violation_item_uuid) is not null then json_agg(json_build_object('itemName', item.item_name, 'quantity', item.quantity)) else json_agg(json_build_object()) end violation_item, max(payment.payment_status) payment_status, max(esvd.status) violator_status,\r\n"
-			+ "	max(esvd.licensecanceltilldate) licensecanceltilldate, max(esvd.tradetype) tradetype, max(esvd.sovno) sovno, max(esvd.feesoutstanding) feesoutstanding from egec_violation_master violation left join egec_challan_master challan on violation.violation_uuid = challan.violation_uuid left join egec_payment payment on 	violation.violation_uuid = payment.violation_uuid left join (select distinct violation_uuid,item_store_deposit_date from egec_store_item_register) store on store.violation_uuid = violation.violation_uuid left join egec_challan_detail ch on ch.budget_head = 'FINE_AMOUNT' and ch.challan_uuid = challan.challan_uuid left join  egec_challan_detail chs on chs.budget_head = 'PENALTY_AMOUNT' and chs.challan_uuid = challan.challan_uuid left join egec_violation_detail item on violation.violation_uuid = item.violation_uuid left join egec_spic_vendor_details esvd on violation.license_no_cov = esvd.covno where case when store.item_store_deposit_date < now()- interval '30 days' and challan.challan_status <> 'CLOSED' and violation.encroachment_type <> 'Seizure of Vehicles' then 'PENDING FOR AUCTION' when challan.challan_status = 'CLOSED' and store.violation_uuid is not null then 'RELEASED FROM STORE' when challan.challan_status = 'CLOSED'	and  store.violation_uuid is null then 'RELEASED ON GROUND' else challan.challan_status end = case when ?<>'' then ? else case when store.item_store_deposit_date < now()- interval '30 days' and challan.challan_status <> 'CLOSED' and violation.encroachment_type <> 'Seizure of Vehicles' then 'PENDING FOR AUCTION' 		when challan.challan_status = 'CLOSED' and store.violation_uuid is not null then 'RELEASED FROM STORE' when challan.challan_status = 'CLOSED' and store.violation_uuid is null then 'RELEASED ON GROUND' else challan.challan_status end end and violation.violation_date >= case when ?<> '' then DATE(?) 		else violation.violation_date end and violation.violation_date <= case when ?<> '' then DATE(?) else violation.violation_date end and violation.encroachment_type = case when ?<>'' then ? else violation.encroachment_type end and violation.si_name = case when ?<>'' then ? else violation.si_name end and violation.sector = case when ?<>'' then ? else violation.sector end and violation.sovno = case when ?<>'' then ? else violation.sovno end and challan.challan_Id like concat(concat('%', case when ?<> '' then ? else challan.challan_Id end),'%') group by challan.challan_Id";
+			+ "	max(esvd.licensecanceltilldate) licensecanceltilldate, max(esvd.tradetype) tradetype, max(esvd.sovno) sovno, max(esvd.feesoutstanding) feesoutstanding from egec_violation_master violation left join egec_challan_master challan on violation.violation_uuid = challan.violation_uuid left join egec_payment payment on 	violation.violation_uuid = payment.violation_uuid left join (select distinct violation_uuid,item_store_deposit_date from egec_store_item_register) store on store.violation_uuid = violation.violation_uuid left join egec_challan_detail ch on ch.budget_head = 'FINE_AMOUNT' and ch.challan_uuid = challan.challan_uuid left join  egec_challan_detail chs on chs.budget_head = 'PENALTY_AMOUNT' and chs.challan_uuid = challan.challan_uuid left join egec_violation_detail item on violation.violation_uuid = item.violation_uuid left join egec_spic_vendor_details esvd on violation.license_no_cov = esvd.covno where case when store.item_store_deposit_date < now()- interval '30 days' and challan.challan_status <> 'CLOSED' and violation.encroachment_type <> 'Seizure of Vehicles' then 'PENDING FOR AUCTION' when challan.challan_status = 'CLOSED' and store.violation_uuid is not null then 'RELEASED FROM STORE' when challan.challan_status = 'CLOSED'	and  store.violation_uuid is null then 'RELEASED ON GROUND' else challan.challan_status end = case when ?<>'' then ? else case when store.item_store_deposit_date < now()- interval '30 days' and challan.challan_status <> 'CLOSED' and violation.encroachment_type <> 'Seizure of Vehicles' then 'PENDING FOR AUCTION' 		when challan.challan_status = 'CLOSED' and store.violation_uuid is not null then 'RELEASED FROM STORE' when challan.challan_status = 'CLOSED' and store.violation_uuid is null then 'RELEASED ON GROUND' else challan.challan_status end end and violation.violation_date >= case when ?<> '' then DATE(?) 		else violation.violation_date end and violation.violation_date <= case when ?<> '' then DATE(?) else violation.violation_date end and violation.encroachment_type = case when ?<>'' then ? else violation.encroachment_type end and violation.si_name = case when ?<>'' then ? else violation.si_name end and violation.sector = case when ?<>'' then ? else violation.sector end and violation.sovno = case when ?<>'' then ? else violation.sovno end and challan.challan_Id like concat(concat('%', case when ?<> '' then ? else challan.challan_Id end),'%') and challan.is_active=true group by challan.challan_Id";
 
 	/*
 	 * public static final String SEARCH_VIOLATION_MASTER_COUNT = "select " // +
@@ -292,7 +292,7 @@ public class EcQueryBuilder {
 			+ "JOIN egec_payment payment on violation.violation_uuid = payment.violation_uuid\r\n"
 			+ "LEFT JOIN egec_store_item_register store on violation.violation_uuid = store.violation_uuid\r\n"
 			+ "where violation.violation_date >= CASE WHEN ?<>'' THEN DATE(?) ELSE violation.violation_date END   \r\n"
-			+ "AND violation.violation_date <= CASE WHEN ?<>'' THEN DATE(?) ELSE violation.violation_date end";
+			+ "AND violation.violation_date <= CASE WHEN ?<>'' THEN DATE(?) ELSE violation.violation_date end and challan.is_active=true";
 
 	public static final String GET_AUCTION_UUID_CHALLAN_MASTER = "\n"
 			+ "		select auction.*,violation.si_name,violation.violator_name,violation.encroachment_type,violation.sector,challan.challan_id,violation.violation_date,violation.contact_number from egec_auction_master auction \n"
@@ -330,7 +330,7 @@ public class EcQueryBuilder {
 			+ "egec_challan_master ec   \r\n" + "INNER JOIN egcl_bill bill ON bill.consumercode  = ec.challan_id \r\n"
 			+ "INNER JOIN egcl_paymentdetail pyd ON pyd.billid  = bill.id  \r\n"
 			+ "INNER JOIN egcl_payment ep   ON ep.id = pyd.paymentid  \r\n"
-			+ "where bill.consumercode  =? AND ec.tenant_id  = 'ch.chandigarh' ";
+			+ "where bill.consumercode  =? AND ec.tenant_id  = 'ch.chandigarh' and ec.is_active=true ";
 	
 	
 	public static final String GET_DUPLICATE_ECHLLAN_DATA ="SELECT   \r\n"
