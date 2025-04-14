@@ -297,6 +297,9 @@ public class VendorRegistrationService {
 		} catch (Exception e) {
 			SMPKVendorDetail spicVendorData = objectMapper.convertValue(requestInfoWrapper.getRequestBody(),
 					SMPKVendorDetail.class);
+			Gson gson = new Gson();
+			String payloadData = gson.toJson(spicVendorData, SMPKVendorDetail.class);
+			
 			List<SMPKVendorDetail> spicVendorDataGet2 = spicRepository.getSpicVendorData(spicVendorData);
 			
 			SMPKVendorDetail2 spicVendorDataLog = new SMPKVendorDetail2();

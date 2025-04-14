@@ -27,8 +27,6 @@ public class SMPKVendorDetail2 {
 
 	
 	@JsonProperty("covNo")
-	@NotNull(message = "covNo should not be empty or null")
-	@NotBlank(message = "covNo should not be empty or null")
 	private int covNo;
 	
 	@JsonProperty("vendorName")
@@ -48,7 +46,6 @@ public class SMPKVendorDetail2 {
 	private String createdBy;
 	
 	@JsonProperty("createdTime")
-	@NotNull(message = "createdTime should not be empty or null")
 	private Long createdTime;
 	
 	@Size(max = 256)
@@ -56,7 +53,6 @@ public class SMPKVendorDetail2 {
 	private String lastModifiedBy;
 	
 	@JsonProperty("lastModifiedTime")
-	@NotNull(message = "lastModifiedTime should not be empty or null")
 	private Long lastModifiedTime;
 	
 	@JsonProperty("noOfViolation")
