@@ -251,6 +251,8 @@ public class VendorRegistrationService {
 					spicVendorData.setStatus("Active");
 				} else {	
 					errMessage = "Please input correct status";
+					spicVendorData.setResponseMessage(errMessage);
+					spicRepository.ingestSpicVendorLogData(spicVendorData);
 					throw new CustomException("SPICVENDORDATA_INGEST_EXCEPTION", errMessage);
 				}
 			}
@@ -267,8 +269,8 @@ public class VendorRegistrationService {
 					spicVendorData.setLastModifiedBy(requestInfoWrapper.getAuditDetails().getLastModifiedBy());
 					spicVendorData.setLastModifiedTime(requestInfoWrapper.getAuditDetails().getLastModifiedTime());
 					
-					spicVendorData.setErrMessage(EcConstants.STATUS_SUCCESS);
-					System.out.println("Spic Vendor Data Status : " + spicVendorData.getErrMessage());
+					spicVendorData.setResponseMessage(EcConstants.STATUS_SUCCESS);
+					System.out.println("Spic Vendor Data Status : " + spicVendorData.getResponseMessage());
 
 					spicRepository.ingestSpicVendorData(spicVendorData);
 					
@@ -276,7 +278,9 @@ public class VendorRegistrationService {
 							.responseInfo(ResponseInfo.builder().status(EcConstants.STATUS_SUCCESS).build())
 							.responseBody(spicVendorData).build(), HttpStatus.OK);
 				} else {
-				throw new CustomException("SPICVENDORDATA_INGEST_EXCEPTION", responseValidate);
+				   spicVendorData.setResponseMessage(errMessage);
+				   spicRepository.ingestSpicVendorLogData(spicVendorData);
+				   throw new CustomException("SPICVENDORDATA_INGEST_EXCEPTION", responseValidate);
 			}
 		} catch (Exception e) {
 			log.error("SPIC Vendor Ingest Service - Ingest Spic Vendor Data Exception" + errMessage);

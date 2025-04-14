@@ -48,6 +48,14 @@ public class SMPKVendorDetailRepository {
 	}
 	
 	
+	public void ingestSpicVendorLogData(@Valid SMPKVendorDetail spicVendorData) {
+		log.info("SpicVendorData Repository - ingestSpicVendorData Method");
+		
+		RequestInfoWrapper infoWrapper = RequestInfoWrapper.builder().requestBody(spicVendorData).build();
+		producer.push(config.getSpicVendorDataIngestTopic(), infoWrapper);
+	}
+	
+	
 	public List<SMPKVendorDetail> getSpicVendorData(SMPKVendorDetail spicVendorData) {
 
 		log.info("SMPKVendorDetail Repository - SPIC Vendor Data Ingest Method");
