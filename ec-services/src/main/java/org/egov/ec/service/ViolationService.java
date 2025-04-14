@@ -125,6 +125,14 @@ public class ViolationService {
 				violationMaster.setLastModifiedBy(requestInfoWrapper.getAuditDetails().getLastModifiedBy());
 				violationMaster.setLastModifiedTime(requestInfoWrapper.getAuditDetails().getLastModifiedTime());
 
+				System.out.println("Violator Mobile NUmber : " + violationMaster.getContactNumber());
+				int violationCount = repository.getViolationMobile(violationMaster);
+				 if(violationCount > 0) {
+					 System.out.println("############## Inside duplicate violation check ################");
+					 throw new CustomException("VIOLATION_GENERATE_CHALLAN_EXCEPTION", EcConstants.DUPLICATE_VIOLATION_DATA);
+				 }			
+				
+				
 				String penaltyAmount = repository.getpenalty(violationMaster);
 				if (penaltyAmount == null) {
 					throw new CustomException(HttpStatus.INTERNAL_SERVER_ERROR.toString(),

@@ -36,6 +36,8 @@ public class EcConstants {
 	public static final String INVALID_FINE_DATA = "Fine data does not exist";
 
 	public static final String FAILED_IDGEN_CHALLANID = "ChallanID Generation Failed";
+	
+	public static final String DUPLICATE_VIOLATION_DATA = "Challan with same mobile number is already in process. Please try after 15 mins";
 
 	// EC actions
 

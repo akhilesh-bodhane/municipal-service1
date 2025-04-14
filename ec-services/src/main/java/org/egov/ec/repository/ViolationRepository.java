@@ -171,6 +171,36 @@ public class ViolationRepository {
 		return x;
 
 	}
+	
+	
+	
+	
+	
+	/**
+	 * fetches the violation as per mobile number and 15 minutes time gap validation
+	 *
+	 * @param violationMaster Violation model
+	 * @return Returns the penalty amount
+	 */
+	public int getViolationMobile(@Valid Violation violationMaster) {
+		log.info("Violation Repository - getViolationMobile Method");
+		int x = 0;
+		long currentEpochMillis = System.currentTimeMillis();
+        long pastEpochMillis = currentEpochMillis - (15 * 60 * 1000);
+        
+        System.out.println("Current time epoch : " + currentEpochMillis);
+        System.out.println("15 mins delay time epoch : " + pastEpochMillis);
+        
+		try {
+			x = jdbcTemplate.queryForObject(EcQueryBuilder.GET_VIOLATION_MOBILE,
+					new Object[] { violationMaster.getContactNumber(), currentEpochMillis, pastEpochMillis },
+					(Integer.class));
+		} catch (Exception e) {
+			return x;
+		}
+		return x;
+
+	}
 
 	/**
 	 * Pushes the request in AddpaymentHistory topic to to maintain payment history

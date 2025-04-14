@@ -45,6 +45,10 @@ public class EcQueryBuilder {
 
 	public static final String GET_FINE_PENALTY_AMOUNT = "select penalty_amount from egec_fine_master where encroachment_type = ?::varchar and number_of_violation=?::varchar  and is_active = 'TRUE'::boolean and now()::date BETWEEN effective_start_date \n"
 			+ "                 AND effective_end_date::date and approval_status = 'APPROVED'";
+	
+	
+	public static final String GET_VIOLATION_MOBILE = "select count(*) from egec_violation_master evm where evm.contact_number = ?::varchar and evm.created_time between ? and ?";
+	
 	/*
 	 * public static final String GET_VIOLATION_MASTER_SEARCH =
 	 * "select (select case when ((select count(*) from egec_store_item_register store where store.violation_uuid=violation.violation_uuid) > 0) and  challan.challan_status='CLOSED' then 'RELEASED FROM STORE' when challan.challan_status='CLOSED' and ((select count(*) from egec_store_item_register store where store.violation_uuid=violation.violation_uuid) = 0) then 'RELEASED ON GROUND' else challan.challan_status end  )as challan_status,\n"
