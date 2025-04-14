@@ -271,13 +271,15 @@ public class VendorRegistrationService {
 
 					spicRepository.ingestSpicVendorData(spicVendorData);
 					
+					List<SMPKVendorDetail> spicVendorDataGet2 = spicRepository.getSpicVendorData(spicVendorData);
+					
 					SMPKVendorDetail2 spicVendorDataLog = new SMPKVendorDetail2();
-					spicVendorDataLog.setCovNo(spicVendorData.getCovNo());
-					spicVendorDataLog.setVendorName(spicVendorData.getVendorName());
-					spicVendorDataLog.setTradeType(spicVendorData.getTradeType());
-					spicVendorDataLog.setStatus(spicVendorData.getStatus());
-					spicVendorDataLog.setLocation(spicVendorData.getLocation());
-					spicVendorDataLog.setNoOfViolation(spicVendorData.getNoOfViolation());
+					spicVendorDataLog.setCovNo(spicVendorDataGet2.get(0).getCovNo());
+					spicVendorDataLog.setVendorName(spicVendorDataGet2.get(0).getVendorName());
+					spicVendorDataLog.setTradeType(spicVendorDataGet2.get(0).getTradeType());
+					spicVendorDataLog.setStatus(spicVendorDataGet2.get(0).getStatus());
+					spicVendorDataLog.setLocation(spicVendorDataGet2.get(0).getLocation());
+					spicVendorDataLog.setNoOfViolation(spicVendorDataGet2.get(0).getNoOfViolation());
 					spicVendorDataLog.setResponseMessage(EcConstants.STATUS_SUCCESS);
 					spicVendorDataLog.setCreatedBy(requestInfoWrapper.getAuditDetails().getCreatedBy());
 					spicVendorDataLog.setCreatedTime(requestInfoWrapper.getAuditDetails().getCreatedTime());
@@ -295,14 +297,15 @@ public class VendorRegistrationService {
 		} catch (Exception e) {
 			SMPKVendorDetail spicVendorData = objectMapper.convertValue(requestInfoWrapper.getRequestBody(),
 					SMPKVendorDetail.class);
+			List<SMPKVendorDetail> spicVendorDataGet2 = spicRepository.getSpicVendorData(spicVendorData);
 			
 			SMPKVendorDetail2 spicVendorDataLog = new SMPKVendorDetail2();
-			spicVendorDataLog.setCovNo(spicVendorData.getCovNo());
-			spicVendorDataLog.setVendorName(spicVendorData.getVendorName());
-			spicVendorDataLog.setTradeType(spicVendorData.getTradeType());
-			spicVendorDataLog.setStatus(spicVendorData.getStatus());
-			spicVendorDataLog.setLocation(spicVendorData.getLocation());
-			spicVendorDataLog.setNoOfViolation(spicVendorData.getNoOfViolation());
+			spicVendorDataLog.setCovNo(spicVendorDataGet2.get(0).getCovNo());
+			spicVendorDataLog.setVendorName(spicVendorDataGet2.get(0).getVendorName());
+			spicVendorDataLog.setTradeType(spicVendorDataGet2.get(0).getTradeType());
+			spicVendorDataLog.setStatus(spicVendorDataGet2.get(0).getStatus());
+			spicVendorDataLog.setLocation(spicVendorDataGet2.get(0).getLocation());
+			spicVendorDataLog.setNoOfViolation(spicVendorDataGet2.get(0).getNoOfViolation());
 			spicVendorDataLog.setResponseMessage(errMessage);
 			spicVendorDataLog.setCreatedBy(requestInfoWrapper.getAuditDetails().getCreatedBy());
 			spicVendorDataLog.setCreatedTime(requestInfoWrapper.getAuditDetails().getCreatedTime());
