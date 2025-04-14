@@ -173,6 +173,9 @@ public class EchallanConfiguration {
 	@Value("${persister.ingest.vendor.spic.data.topic}")
  	private String spicVendorDataIngestTopic;
 	
+	@Value("${persister.ingest.vendor.spic.data.log.topic}")
+ 	private String spicVendorDataIngestLogTopic;
+	
 	@Value("${echallan.notification.flag}")
 	public String echallanNotificationFlag;
 

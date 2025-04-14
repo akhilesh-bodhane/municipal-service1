@@ -20,7 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Repository
-public class SMPKVendorDetailRepository {
+public class SMPKVendorDetail2Repository {
 
 	private JdbcTemplate jdbcTemplate;
 
@@ -29,7 +29,7 @@ public class SMPKVendorDetailRepository {
 	private EchallanConfiguration config;
 
 	@Autowired
-	public SMPKVendorDetailRepository(JdbcTemplate jdbcTemplate, Producer producer, EchallanConfiguration config) {
+	public SMPKVendorDetail2Repository(JdbcTemplate jdbcTemplate, Producer producer, EchallanConfiguration config) {
 		this.jdbcTemplate = jdbcTemplate;
 		this.producer = producer;
 		this.config = config;
@@ -41,7 +41,7 @@ public class SMPKVendorDetailRepository {
      *
      * @param spicVendorDetail SMPKVendorDetail Update request
      */
-	public void ingestSpicVendorData(@Valid SMPKVendorDetail spicVendorData) {
+	public void ingestSpicVendorData(@Valid SMPKVendorDetail2 spicVendorData) {
 		log.info("SpicVendorData Repository - ingestSpicVendorData Method");
 		
 		RequestInfoWrapper infoWrapper = RequestInfoWrapper.builder().requestBody(spicVendorData).build();
@@ -55,7 +55,7 @@ public class SMPKVendorDetailRepository {
 	}
 	
 	
-	public List<SMPKVendorDetail> getSpicVendorData(SMPKVendorDetail spicVendorData) {
+	public List<SMPKVendorDetail> getSpicVendorData(SMPKVendorDetail2 spicVendorData) {
 
 		log.info("SMPKVendorDetail Repository - SPIC Vendor Data Ingest Method");
 		List<SMPKVendorDetail> spicVendorDataList;

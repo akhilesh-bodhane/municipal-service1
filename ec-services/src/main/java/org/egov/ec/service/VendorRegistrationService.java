@@ -5,6 +5,7 @@ import java.util.UUID;
 
 import org.egov.common.contract.response.ResponseInfo;
 import org.egov.ec.config.EcConstants;
+import org.egov.ec.repository.SMPKVendorDetail2Repository;
 import org.egov.ec.repository.SMPKVendorDetailRepository;
 import org.egov.ec.repository.VendorRegistrationRepository;
 import org.egov.ec.service.validator.CustomBeanValidator;
@@ -13,6 +14,7 @@ import org.egov.ec.web.models.ItemMaster;
 import org.egov.ec.web.models.RequestInfoWrapper;
 import org.egov.ec.web.models.ResponseInfoWrapper;
 import org.egov.ec.web.models.SMPKVendorDetail;
+import org.egov.ec.web.models.SMPKVendorDetail2;
 import org.egov.ec.web.models.VendorRegistration;
 import org.egov.ec.workflow.WorkflowIntegrator;
 import org.egov.tracer.model.CustomException;
@@ -35,6 +37,7 @@ public class VendorRegistrationService {
 	private CustomBeanValidator validate;
 	private VendorRegistrationRepository repository;
 	private SMPKVendorDetailRepository spicRepository;
+	private SMPKVendorDetail2Repository spicRepositoryLog;
 	private DeviceSourceService deviceSource;
 
 	@Autowired
@@ -267,7 +270,22 @@ public class VendorRegistrationService {
 					System.out.println("Spic Vendor Data : " + spicVendorData.toString());
 
 					spicRepository.ingestSpicVendorData(spicVendorData);
-
+					
+					SMPKVendorDetail2 spicVendorDataLog = new SMPKVendorDetail2();
+					spicVendorDataLog.setCovNo(spicVendorData.getCovNo());
+					spicVendorDataLog.setVendorName(spicVendorData.getVendorName());
+					spicVendorDataLog.setTradeType(spicVendorData.getTradeType());
+					spicVendorDataLog.setStatus(spicVendorData.getStatus());
+					spicVendorDataLog.setLocation(spicVendorData.getLocation());
+					spicVendorDataLog.setNoOfViolation(spicVendorData.getNoOfViolation());
+					spicVendorDataLog.setResponseMessage(EcConstants.STATUS_SUCCESS);
+					spicVendorDataLog.setCreatedBy(requestInfoWrapper.getAuditDetails().getCreatedBy());
+					spicVendorDataLog.setCreatedTime(requestInfoWrapper.getAuditDetails().getCreatedTime());
+					spicVendorDataLog.setLastModifiedBy(requestInfoWrapper.getAuditDetails().getLastModifiedBy());
+					spicVendorDataLog.setLastModifiedTime(requestInfoWrapper.getAuditDetails().getLastModifiedTime());
+					
+					spicRepositoryLog.ingestSpicVendorLogData(spicVendorDataLog);
+					
 					return new ResponseEntity<>(ResponseInfoWrapper.builder()
 							.responseInfo(ResponseInfo.builder().status(EcConstants.STATUS_SUCCESS).build())
 							.responseBody(spicVendorData).build(), HttpStatus.OK);
@@ -275,6 +293,24 @@ public class VendorRegistrationService {
 				throw new CustomException("SPICVENDORDATA_INGEST_EXCEPTION", responseValidate);
 			}
 		} catch (Exception e) {
+			SMPKVendorDetail spicVendorData = objectMapper.convertValue(requestInfoWrapper.getRequestBody(),
+					SMPKVendorDetail.class);
+			
+			SMPKVendorDetail2 spicVendorDataLog = new SMPKVendorDetail2();
+			spicVendorDataLog.setCovNo(spicVendorData.getCovNo());
+			spicVendorDataLog.setVendorName(spicVendorData.getVendorName());
+			spicVendorDataLog.setTradeType(spicVendorData.getTradeType());
+			spicVendorDataLog.setStatus(spicVendorData.getStatus());
+			spicVendorDataLog.setLocation(spicVendorData.getLocation());
+			spicVendorDataLog.setNoOfViolation(spicVendorData.getNoOfViolation());
+			spicVendorDataLog.setResponseMessage(errMessage);
+			spicVendorDataLog.setCreatedBy(requestInfoWrapper.getAuditDetails().getCreatedBy());
+			spicVendorDataLog.setCreatedTime(requestInfoWrapper.getAuditDetails().getCreatedTime());
+			spicVendorDataLog.setLastModifiedBy(requestInfoWrapper.getAuditDetails().getLastModifiedBy());
+			spicVendorDataLog.setLastModifiedTime(requestInfoWrapper.getAuditDetails().getLastModifiedTime());
+			
+			spicRepositoryLog.ingestSpicVendorLogData(spicVendorDataLog);
+			
 			log.error("SPIC Vendor Ingest Service - Ingest Spic Vendor Data Exception" + errMessage);
 			throw new CustomException("SPICVENDORDATA_INGEST_EXCEPTION", errMessage);
 		}
