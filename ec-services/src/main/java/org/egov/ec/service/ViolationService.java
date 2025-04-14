@@ -498,6 +498,8 @@ public class ViolationService {
 			if (responseValidate.equals("")) {
 
 				violationMaster.setContactNumber(violationMaster.getContactNumber());
+				violationMaster.setLastModifiedBy(requestInfoWrapper.getAuditDetails().getLastModifiedBy());
+				violationMaster.setLastModifiedTime(requestInfoWrapper.getAuditDetails().getLastModifiedTime());
 				repository.editChallan(violationMaster);
 				return new ResponseEntity<>(ResponseInfoWrapper.builder()
 						.responseInfo(ResponseInfo.builder().status(EcConstants.STATUS_SUCCESS).build())
