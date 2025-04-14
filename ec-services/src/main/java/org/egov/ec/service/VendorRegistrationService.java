@@ -273,6 +273,9 @@ public class VendorRegistrationService {
 					
 					List<SMPKVendorDetail> spicVendorDataGet2 = spicRepository.getSpicVendorData(spicVendorData);
 					
+					System.out.println("Spic Vendor Data : " + spicVendorData.toString());
+					System.out.println("Spic vendor dasta get 2 : " + spicVendorDataGet2.get(0).toString());
+					
 					SMPKVendorDetail2 spicVendorDataLog = new SMPKVendorDetail2();
 					spicVendorDataLog.setCovNo(spicVendorDataGet2.get(0).getCovNo());
 					spicVendorDataLog.setVendorName(spicVendorDataGet2.get(0).getVendorName());
@@ -295,28 +298,6 @@ public class VendorRegistrationService {
 				throw new CustomException("SPICVENDORDATA_INGEST_EXCEPTION", responseValidate);
 			}
 		} catch (Exception e) {
-			SMPKVendorDetail spicVendorData = objectMapper.convertValue(requestInfoWrapper.getRequestBody(),
-					SMPKVendorDetail.class);
-			Gson gson = new Gson();
-			String payloadData = gson.toJson(spicVendorData, SMPKVendorDetail.class);
-			
-			List<SMPKVendorDetail> spicVendorDataGet2 = spicRepository.getSpicVendorData(spicVendorData);
-			
-			SMPKVendorDetail2 spicVendorDataLog = new SMPKVendorDetail2();
-			spicVendorDataLog.setCovNo(spicVendorDataGet2.get(0).getCovNo());
-			spicVendorDataLog.setVendorName(spicVendorDataGet2.get(0).getVendorName());
-			spicVendorDataLog.setTradeType(spicVendorDataGet2.get(0).getTradeType());
-			spicVendorDataLog.setStatus(spicVendorDataGet2.get(0).getStatus());
-			spicVendorDataLog.setLocation(spicVendorDataGet2.get(0).getLocation());
-			spicVendorDataLog.setNoOfViolation(spicVendorDataGet2.get(0).getNoOfViolation());
-			spicVendorDataLog.setResponseMessage(errMessage);
-			spicVendorDataLog.setCreatedBy(requestInfoWrapper.getAuditDetails().getCreatedBy());
-			spicVendorDataLog.setCreatedTime(requestInfoWrapper.getAuditDetails().getCreatedTime());
-			spicVendorDataLog.setLastModifiedBy(requestInfoWrapper.getAuditDetails().getLastModifiedBy());
-			spicVendorDataLog.setLastModifiedTime(requestInfoWrapper.getAuditDetails().getLastModifiedTime());
-			
-			spicRepositoryLog.ingestSpicVendorLogData(spicVendorDataLog);
-			
 			log.error("SPIC Vendor Ingest Service - Ingest Spic Vendor Data Exception" + errMessage);
 			throw new CustomException("SPICVENDORDATA_INGEST_EXCEPTION", errMessage);
 		}

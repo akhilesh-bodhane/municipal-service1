@@ -10,7 +10,6 @@ import org.egov.ec.repository.builder.EcQueryBuilder;
 import org.egov.ec.web.models.ItemMaster;
 import org.egov.ec.web.models.RequestInfoWrapper;
 import org.egov.ec.web.models.SMPKVendorDetail;
-import org.egov.ec.web.models.SMPKVendorDetail2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -46,12 +45,6 @@ public class SMPKVendorDetailRepository {
 		
 		RequestInfoWrapper infoWrapper = RequestInfoWrapper.builder().requestBody(spicVendorData).build();
 		producer.push(config.getSpicVendorDataIngestTopic(), infoWrapper);
-	}
-	
-	public void ingestSpicVendorLogData(@Valid SMPKVendorDetail2 spicVendorDataLog) {
-		log.info("SpicVendorLogData Repository - ingestSpicVendorData Method");
-		RequestInfoWrapper infoWrapper = RequestInfoWrapper.builder().requestBody(spicVendorDataLog).build();
-		producer.push(config.getSpicVendorDataIngestLogTopic(), infoWrapper);
 	}
 	
 	
