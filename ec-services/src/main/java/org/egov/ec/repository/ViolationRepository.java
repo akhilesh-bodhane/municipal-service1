@@ -193,7 +193,7 @@ public class ViolationRepository {
         
 		try {
 			x = jdbcTemplate.queryForObject(EcQueryBuilder.GET_VIOLATION_MOBILE,
-					new Object[] { violationMaster.getContactNumber(), currentEpochMillis, pastEpochMillis },
+					new Object[] { violationMaster.getContactNumber(), pastEpochMillis, currentEpochMillis },
 					(Integer.class));
 		} catch (Exception e) {
 			return x;
