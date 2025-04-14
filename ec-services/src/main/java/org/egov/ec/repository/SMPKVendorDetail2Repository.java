@@ -41,32 +41,10 @@ public class SMPKVendorDetail2Repository {
      *
      * @param spicVendorDetail SMPKVendorDetail Update request
      */
-	public void ingestSpicVendorData(@Valid SMPKVendorDetail2 spicVendorData) {
-		log.info("SpicVendorData Repository - ingestSpicVendorData Method");
-		
-		RequestInfoWrapper infoWrapper = RequestInfoWrapper.builder().requestBody(spicVendorData).build();
-		producer.push(config.getSpicVendorDataIngestTopic(), infoWrapper);
-	}
-	
 	public void ingestSpicVendorLogData(@Valid SMPKVendorDetail2 spicVendorDataLog) {
 		log.info("SpicVendorLogData Repository - ingestSpicVendorData Method");
 		RequestInfoWrapper infoWrapper = RequestInfoWrapper.builder().requestBody(spicVendorDataLog).build();
 		producer.push(config.getSpicVendorDataIngestLogTopic(), infoWrapper);
-	}
-	
-	
-	public List<SMPKVendorDetail> getSpicVendorData(SMPKVendorDetail2 spicVendorData) {
-
-		log.info("SMPKVendorDetail Repository - SPIC Vendor Data Ingest Method");
-		List<SMPKVendorDetail> spicVendorDataList;
-
-		spicVendorDataList = jdbcTemplate.query(EcQueryBuilder.GET_SPIC_VENDOR_DATA_MASTER,
-				new Object[] { spicVendorData.getCovNo() },
-
-				new BeanPropertyRowMapper<SMPKVendorDetail>(SMPKVendorDetail.class));
-
-		return spicVendorDataList;
-
 	}
 
 }

@@ -272,24 +272,7 @@ public class VendorRegistrationService {
 					spicRepository.ingestSpicVendorData(spicVendorData);
 					
 					List<SMPKVendorDetail> spicVendorDataGet2 = spicRepository.getSpicVendorData(spicVendorData);
-					
-					System.out.println("Spic Vendor Data : " + spicVendorData.toString());
-					System.out.println("Spic vendor dasta get 2 : " + spicVendorDataGet2.get(0).toString());
-					
-					SMPKVendorDetail2 spicVendorDataLog = new SMPKVendorDetail2();
-					spicVendorDataLog.setCovNo(spicVendorDataGet2.get(0).getCovNo());
-					spicVendorDataLog.setVendorName(spicVendorDataGet2.get(0).getVendorName());
-					spicVendorDataLog.setTradeType(spicVendorDataGet2.get(0).getTradeType());
-					spicVendorDataLog.setStatus(spicVendorDataGet2.get(0).getStatus());
-					spicVendorDataLog.setLocation(spicVendorDataGet2.get(0).getLocation());
-					spicVendorDataLog.setNoOfViolation(spicVendorDataGet2.get(0).getNoOfViolation());
-					spicVendorDataLog.setResponseMessage(EcConstants.STATUS_SUCCESS);
-					spicVendorDataLog.setCreatedBy(requestInfoWrapper.getAuditDetails().getCreatedBy());
-					spicVendorDataLog.setCreatedTime(requestInfoWrapper.getAuditDetails().getCreatedTime());
-					spicVendorDataLog.setLastModifiedBy(requestInfoWrapper.getAuditDetails().getLastModifiedBy());
-					spicVendorDataLog.setLastModifiedTime(requestInfoWrapper.getAuditDetails().getLastModifiedTime());
-					
-					spicRepositoryLog.ingestSpicVendorLogData(spicVendorDataLog);
+					System.out.println("Spic Vendor Data Get 2 : " + spicVendorDataGet2.get(0).toString());
 					
 					return new ResponseEntity<>(ResponseInfoWrapper.builder()
 							.responseInfo(ResponseInfo.builder().status(EcConstants.STATUS_SUCCESS).build())
