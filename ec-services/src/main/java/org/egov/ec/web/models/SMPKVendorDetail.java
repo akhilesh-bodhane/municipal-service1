@@ -80,4 +80,7 @@ public class SMPKVendorDetail {
 	
 	@JsonProperty("spicVendorDataList")
  	private List<SMPKVendorDetail> spicVendorDataList;
+	
+	@JsonProperty("errMessage")
+ 	private String errMessage;
 }

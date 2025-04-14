@@ -267,12 +267,10 @@ public class VendorRegistrationService {
 					spicVendorData.setLastModifiedBy(requestInfoWrapper.getAuditDetails().getLastModifiedBy());
 					spicVendorData.setLastModifiedTime(requestInfoWrapper.getAuditDetails().getLastModifiedTime());
 					
-					System.out.println("Spic Vendor Data : " + spicVendorData.toString());
+					spicVendorData.setErrMessage(EcConstants.STATUS_SUCCESS);
+					System.out.println("Spic Vendor Data Status : " + spicVendorData.getErrMessage());
 
 					spicRepository.ingestSpicVendorData(spicVendorData);
-					
-					List<SMPKVendorDetail> spicVendorDataGet2 = spicRepository.getSpicVendorData(spicVendorData);
-					System.out.println("Spic Vendor Data Get 2 : " + spicVendorDataGet2.get(0).toString());
 					
 					return new ResponseEntity<>(ResponseInfoWrapper.builder()
 							.responseInfo(ResponseInfo.builder().status(EcConstants.STATUS_SUCCESS).build())
