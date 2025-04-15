@@ -441,6 +441,10 @@ public class SWQueryBuilder {
 			preparedStatement.add(SearchTotalCollectionCriteria.getDataPayload().getToDate());
 		}
 		}
+		
+		addClauseIfRequired(preparedStatement, query);
+		query.append(" esc.applicationstatus in ('CONNECTION_ACTIVATED','SEWERAGE_CONNECTION_ACTIVATED')");
+				
 		return query.toString();
 
 	}
