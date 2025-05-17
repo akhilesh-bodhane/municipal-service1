@@ -345,20 +345,10 @@ public class SWCalculationServiceImpl implements SWCalculationService {
 			
 		if (finYear.equalsIgnoreCase("2025-26")) {
 			System.out.println("Inside Fin Yr 2025-26");
-			// if(Date.compareTo("13-06-2023") < 0) {
-			if (request.getCalculationCriteria().get(0).getSewerageConnection().getAuditDetails().getCreatedTime()
-					.toString().compareTo("1743445799000") < 0) {
-				System.out.println("Inside Fin Yr Not equal to 2025-26 and Date compare");
-				Map<String, Object> masterData = mDataService.loadExcemptionMasterPrev(request.getRequestInfo(),
-						request.getCalculationCriteria().get(0).getTenantId());
-				calculations = getFeeCalculation(request, masterData);
-				unsetSewerageConnection(calculations);
-			} else {
-				Map<String, Object> masterData = mDataService.loadExcemptionMaster(request.getRequestInfo(),
-						request.getCalculationCriteria().get(0).getTenantId());
-				calculations = getFeeCalculation(request, masterData);
-				unsetSewerageConnection(calculations);
-			}			
+			Map<String, Object> masterData = mDataService.loadExcemptionMaster(request.getRequestInfo(),
+					request.getCalculationCriteria().get(0).getTenantId());
+			calculations = getFeeCalculation(request, masterData);
+			unsetSewerageConnection(calculations);
 		} else {
 			System.out.println("Inside Fin Yr Not equal to 2025-26");
 			Map<String, Object> masterData = mDataService.loadExcemptionMasterPrev(request.getRequestInfo(),
