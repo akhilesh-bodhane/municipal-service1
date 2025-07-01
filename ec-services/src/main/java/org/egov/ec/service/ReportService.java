@@ -53,10 +53,14 @@ public class ReportService {
 			String paymentStatus = reportData.getPaymentStatus();
 			
 			System.out.println("Report Type : " + reportType + " sector : " + sector + " payment status : " + paymentStatus);
-			if(!reportType.equalsIgnoreCase("Item Age") && (sector.equalsIgnoreCase("") || sector.equalsIgnoreCase(null))) {
-				throw new CustomException("REPORT_GET_EXCEPTION", "Please select sector");
-			} else if(reportType.equalsIgnoreCase("Payment") && (paymentStatus.equalsIgnoreCase("") || paymentStatus.equalsIgnoreCase(null))) {
-				throw new CustomException("REPORT_GET_EXCEPTION", "Please select payment status");
+			if(!reportType.equalsIgnoreCase("Item Age") && !reportType.equalsIgnoreCase("Payment")) {
+				if (sector.equalsIgnoreCase("") || sector.equalsIgnoreCase(null)) {
+					throw new CustomException("REPORT_GET_EXCEPTION", "Please select sector");
+				}				
+			} else if(reportType.equalsIgnoreCase("Payment")) {
+				if (paymentStatus.equalsIgnoreCase("") || paymentStatus.equalsIgnoreCase(null)){
+					throw new CustomException("REPORT_GET_EXCEPTION", "Please select payment status");
+				}				
 			}
 			
 			String responseValidate = "";
@@ -79,7 +83,7 @@ public class ReportService {
 				throw new CustomException("REPORT_GET_EXCEPTION", responseValidate);
 			}
 		} catch (Exception e) {
-			log.error("Report Service - Get Report Exception"+e.getMessage());
+			log.error("Report Service - Get Report Exception"+ e.getMessage());
 			throw new CustomException("REPORT_GET_EXCEPTION", e.getMessage());
 		}
 	}
