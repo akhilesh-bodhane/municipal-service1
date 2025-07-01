@@ -48,9 +48,15 @@ public class ReportService {
 		try {
 			Report reportData = objectMapper.convertValue(requestInfoWrapper.getRequestBody(), Report.class);
 			
-			System.out.println("Report Type : " + reportData.getReportType());
+			String reportType = reportData.getReportType();
+			String sector = reportData.getSector();
+			String paymentStatus = reportData.getPaymentStatus();
 			
-			System.out.println("Sector : " + reportData.getSector());
+			if(reportType.equalsIgnoreCase("Item Age") && sector.equalsIgnoreCase(null)) {
+				throw new CustomException("REPORT_GET_EXCEPTION", "Please select sector");
+			} else if(reportType.equalsIgnoreCase("Payment") && paymentStatus.equalsIgnoreCase(null)) {
+				throw new CustomException("REPORT_GET_EXCEPTION", "Please select payment status");
+			}
 			
 			String responseValidate = "";
 			
