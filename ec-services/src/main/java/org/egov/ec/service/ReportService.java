@@ -48,6 +48,10 @@ public class ReportService {
 		try {
 			Report reportData = objectMapper.convertValue(requestInfoWrapper.getRequestBody(), Report.class);
 			
+			System.out.println("Report Type : " + reportData.getReportType());
+			
+			System.out.println("Sector : " + reportData.getSector());
+			
 			String responseValidate = "";
 			
 			Gson gson = new Gson();
