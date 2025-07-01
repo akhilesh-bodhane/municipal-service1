@@ -52,9 +52,10 @@ public class ReportService {
 			String sector = reportData.getSector();
 			String paymentStatus = reportData.getPaymentStatus();
 			
-			if(reportType.equalsIgnoreCase("Item Age") && sector.equalsIgnoreCase(null)) {
+			System.out.println("Report Type : " + reportType + " sector : " + sector + " payment status : " + paymentStatus);
+			if(reportType.equalsIgnoreCase("Item Age") && (sector.equalsIgnoreCase("") || sector.equalsIgnoreCase(null))) {
 				throw new CustomException("REPORT_GET_EXCEPTION", "Please select sector");
-			} else if(reportType.equalsIgnoreCase("Payment") && paymentStatus.equalsIgnoreCase(null)) {
+			} else if(reportType.equalsIgnoreCase("Payment") && (paymentStatus.equalsIgnoreCase("") || paymentStatus.equalsIgnoreCase(null))) {
 				throw new CustomException("REPORT_GET_EXCEPTION", "Please select payment status");
 			}
 			
