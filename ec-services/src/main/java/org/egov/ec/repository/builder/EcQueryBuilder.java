@@ -300,12 +300,11 @@ public class EcQueryBuilder {
 			+ "		JOIN egec_challan_master challan ON auction.violation_uuid=challan.violation_uuid\n"
 			+ "		where auction.auction_uuid=? and auction.tenant_id=? and auction.status='PENDING' order by violation.last_modified_time desc";
 
-	public static final String GET_CHALLAN_PENDING_AUCTION = "select challan.challan_uuid,challan.challan_id from egec_challan_master challan JOIN egec_violation_master violation on challan.violation_uuid=violation.violation_uuid JOIN egec_payment payment ON challan.challan_uuid=payment.challan_uuid\n"
-			+ "	where challan.tenant_id=? and challan.challan_uuid in \n"
-			+ "	(select store.challan_uuid from egec_store_item_register store where (select store.item_store_deposit_date from egec_store_item_register store where store.challan_uuid=challan.challan_uuid limit 1)\n"
-			+ "	< now()- interval '30 days' and challan.challan_status <> 'CLOSED' and violation.encroachment_type <> 'Seizure of Vehicles')\n"
-			+ "   and ((payment.payment_status = 'PENDING' and violation.encroachment_type <> 'Unauthorized/Unregistered Vendor') OR (violation.encroachment_type = 'Unauthorized/Unregistered Vendor')) and challan.challan_status <> 'CLOSED'";
-	
+	public static final String GET_CHALLAN_PENDING_AUCTION = "SELECT  c.challan_uuid,c.challan_id FROM egec_challan_master c JOIN egec_violation_master v  ON c.violation_uuid = v.violation_uuid "
+			+ "JOIN egec_payment p ON c.challan_uuid = p.challan_uuid WHERE c.tenant_id = 'ch.chandigarh' AND c.challan_status <> 'CLOSED' AND v.encroachment_type <> 'Seizure of Vehicles'"
+			+ "  AND EXISTS (SELECT 1 FROM egec_store_item_register s WHERE s.challan_uuid = c.challan_uuid AND s.item_store_deposit_date < NOW() - INTERVAL '30 days' "
+			+ "  ) AND ((p.payment_status = 'PENDING' AND v.encroachment_type <> 'Unauthorized/Unregistered Vendor')  OR (v.encroachment_type = 'Unauthorized/Unregistered Vendor'))";
+			
 	public static final String GET_CHALLAN_PENDING_AUCTION_VIOLATION = "select ecm.challan_uuid,\r\n"
 			+ "	ecm.challan_id from egec_challan_master ecm\r\n"
 			+ "	inner join egec_violation_master evd on evd.violation_uuid =ecm.violation_uuid \r\n"
