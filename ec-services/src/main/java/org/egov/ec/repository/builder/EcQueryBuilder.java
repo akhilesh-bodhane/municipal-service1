@@ -142,7 +142,9 @@ public class EcQueryBuilder {
 			+ "		JOIN egec_violation_master violation ON auction.violation_uuid=violation.violation_uuid \n"
 			+ "		JOIN egec_challan_master challan ON auction.violation_uuid=challan.violation_uuid\n"
 			+ "		where auction.tenant_id=? and auction.status='PENDING' order by violation.last_modified_time desc";
-	public static final String GET_AUCTIONED_AVAILABLE_COUNT = "select b.challan_uuid,b.challan_id from (select ( (select count(*) from egec_store_item_register sr where sr.quantity::int != auctioned_quantity::int  and sr.challan_uuid = a.challan_uuid ) +(select count(*) from egec_auction_master am where am.status = 'PENDING' and am.challan_uuid = a.challan_uuid )) as quantityCount ,a.challan_uuid,a.challan_id from (select * from egec_challan_master where challan_status = 'PENDING FOR AUCTION' and tenant_id = ?) a group by a.challan_uuid,a.challan_uuid,a.challan_id) b where b.quantityCount = 0 ";
+    //public static final String GET_AUCTIONED_AVAILABLE_COUNT = "select b.challan_uuid,b.challan_id from (select ( (select count(*) from egec_store_item_register sr where sr.quantity::int != auctioned_quantity::int  and sr.challan_uuid = a.challan_uuid ) +(select count(*) from egec_auction_master am where am.status = 'PENDING' and am.challan_uuid = a.challan_uuid )) as quantityCount ,a.challan_uuid,a.challan_id from (select * from egec_challan_master where challan_status = 'PENDING FOR AUCTION' and tenant_id = ?) a group by a.challan_uuid,a.challan_uuid,a.challan_id) b where b.quantityCount = 0 ";
+
+	public static final String GET_AUCTIONED_AVAILABLE_COUNT = "SELECT cm.challan_uuid,cm.challan_id FROM egec_challan_master cm WHERE cm.challan_status = 'PENDING FOR AUCTION' AND cm.tenant_id = ?  AND NOT EXISTS ( SELECT 1 FROM egec_store_item_register sr WHERE sr.challan_uuid = cm.challan_uuid AND sr.quantity <> sr.auctioned_quantity ) AND NOT EXISTS ( SELECT 1 FROM egec_auction_master am WHERE am.challan_uuid = cm.challan_uuid AND am.status = 'PENDING')";
 	public static final String GET_FINE_VALIDATION_DATE = "select count(*) as  from egec_fine_master where encroachment_type = ?::varchar and number_of_violation=?::varchar and is_active = 'TRUE'::boolean  and approval_status = 'APPROVED' and fine_Uuid != ? and ( effective_start_date BETWEEN ? AND ?::date  or  effective_end_date BETWEEN ? AND ?::date  )";
 	public static final String GET_DASHBOARD_DETAILS_SI = "select count(distinct challan.challan_id) as challanCount from egec_violation_master violation, egec_violation_detail item, egec_document doc, egec_challan_master challan, egec_payment payment \n"
 			+ " where violation.violation_uuid = item.violation_uuid and violation.violation_uuid = doc.violation_uuid and violation.violation_uuid=challan.violation_uuid and violation.violation_uuid = payment.violation_uuid and violation.tenant_id=?";
@@ -287,12 +289,18 @@ public class EcQueryBuilder {
 			+ "		JOIN egec_challan_master challan ON auction.violation_uuid=challan.violation_uuid\n"
 			+ "		where auction.auction_uuid=? and auction.tenant_id=? and auction.status='PENDING' order by violation.last_modified_time desc";
 
-	public static final String GET_CHALLAN_PENDING_AUCTION = "select challan.challan_uuid,challan.challan_id from egec_challan_master challan JOIN egec_violation_master violation on challan.violation_uuid=violation.violation_uuid JOIN egec_payment payment ON challan.challan_uuid=payment.challan_uuid\n"
-			+ "	where challan.tenant_id=? and challan.challan_uuid in \n"
-			+ "	(select store.challan_uuid from egec_store_item_register store where (select store.item_store_deposit_date from egec_store_item_register store where store.challan_uuid=challan.challan_uuid limit 1)\n"
-			+ "	< now()- interval '30 days' and challan.challan_status <> 'CLOSED' and violation.encroachment_type <> 'Seizure of Vehicles')\n"
-			+ "   and ((payment.payment_status = 'PENDING' and violation.encroachment_type <> 'Unauthorized/Unregistered Vendor') OR (violation.encroachment_type = 'Unauthorized/Unregistered Vendor')) and challan.challan_status <> 'CLOSED'";
+	// public static final String GET_CHALLAN_PENDING_AUCTION = "select challan.challan_uuid,challan.challan_id from egec_challan_master challan JOIN egec_violation_master violation on challan.violation_uuid=violation.violation_uuid JOIN egec_payment payment ON challan.challan_uuid=payment.challan_uuid\n"
+	// 		+ "	where challan.tenant_id=? and challan.challan_uuid in \n"
+	// 		+ "	(select store.challan_uuid from egec_store_item_register store where (select store.item_store_deposit_date from egec_store_item_register store where store.challan_uuid=challan.challan_uuid limit 1)\n"
+	// 		+ "	< now()- interval '30 days' and challan.challan_status <> 'CLOSED' and violation.encroachment_type <> 'Seizure of Vehicles')\n"
+	// 		+ "   and ((payment.payment_status = 'PENDING' and violation.encroachment_type <> 'Unauthorized/Unregistered Vendor') OR (violation.encroachment_type = 'Unauthorized/Unregistered Vendor')) and challan.challan_status <> 'CLOSED'";
 
+	public static final String GET_CHALLAN_PENDING_AUCTION = "SELECT  c.challan_uuid,c.challan_id FROM egec_challan_master c JOIN egec_violation_master v  ON c.violation_uuid = v.violation_uuid "
+			+ "JOIN egec_payment p ON c.challan_uuid = p.challan_uuid WHERE c.tenant_id = ? AND c.challan_status <> 'CLOSED' AND v.encroachment_type <> 'Seizure of Vehicles'"
+			+ "  AND EXISTS (SELECT 1 FROM egec_store_item_register s WHERE s.challan_uuid = c.challan_uuid AND s.item_store_deposit_date < NOW() - INTERVAL '30 days' "
+			+ "  ) AND ((p.payment_status = 'PENDING' AND v.encroachment_type <> 'Unauthorized/Unregistered Vendor')  OR (v.encroachment_type = 'Unauthorized/Unregistered Vendor'))";
+			
+	
 	public static final String SEARCH_PROCESS_INSTANCE = "select * from eg_wf_processinstance_v2 ewpv where businessid in (select challan_uuid from egec_challan_master ecm where challan_id in ( ?)\r\n"
 			+ "union select challan_id from egec_challan_master ecm where challan_id in (?))";
 	public static final String SEARCH_DOCUMENt = "select * from egec_document where challan_uuid in (select challan_uuid from egec_challan_master ecm where challan_id in ( ?));";
