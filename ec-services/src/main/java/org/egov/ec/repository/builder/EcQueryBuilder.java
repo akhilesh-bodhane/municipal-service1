@@ -296,7 +296,7 @@ public class EcQueryBuilder {
 	// 		+ "   and ((payment.payment_status = 'PENDING' and violation.encroachment_type <> 'Unauthorized/Unregistered Vendor') OR (violation.encroachment_type = 'Unauthorized/Unregistered Vendor')) and challan.challan_status <> 'CLOSED'";
 
 	public static final String GET_CHALLAN_PENDING_AUCTION = "SELECT  c.challan_uuid,c.challan_id FROM egec_challan_master c JOIN egec_violation_master v  ON c.violation_uuid = v.violation_uuid "
-			+ "JOIN egec_payment p ON c.challan_uuid = p.challan_uuid WHERE c.tenant_id = ? AND c.challan_status <> 'CLOSED' AND v.encroachment_type <> 'Seizure of Vehicles'"
+			+ "JOIN egec_payment p ON c.challan_uuid = p.challan_uuid WHERE c.tenant_id = ? AND c.challan_status <> 'CLOSED' AND c.challan_status <> 'PENDING FOR AUCTION' AND c.challan_status='ADDED TO STORE' AND v.encroachment_type <> 'Seizure of Vehicles'"
 			+ "  AND EXISTS (SELECT 1 FROM egec_store_item_register s WHERE s.challan_uuid = c.challan_uuid AND s.item_store_deposit_date < NOW() - INTERVAL '30 days' "
 			+ "  ) AND ((p.payment_status = 'PENDING' AND v.encroachment_type <> 'Unauthorized/Unregistered Vendor')  OR (v.encroachment_type = 'Unauthorized/Unregistered Vendor'))";
 			
