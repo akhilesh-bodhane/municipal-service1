@@ -120,8 +120,8 @@ public class WSCalculationServiceImpl implements WSCalculationService {
 			 */
 			
 			
-			if (finYear.equalsIgnoreCase("2025-26")) {
-				System.out.println("Inside Fin Yr 2025-26");				
+			if (finYear.equalsIgnoreCase("2026-27")) {
+				System.out.println("Inside Fin Yr 2026-27");				
 				Map<String, Object> masterData = masterDataService.loadExemptionMaster(request.getRequestInfo(),
 						request.getCalculationCriteria().get(0).getTenantId());
 				log.info("master data is " + masterData.toString());
@@ -130,7 +130,7 @@ public class WSCalculationServiceImpl implements WSCalculationService {
 						request.getIsconnectionCalculation());
 				unsetWaterConnection(calculations);		
 			} else {
-				System.out.println("Inside Fin Yr Not equal to 2025-26");
+				System.out.println("Inside Fin Yr Not equal to 2026-27");
 				Map<String, Object> masterData = masterDataService.loadExemptionMasterPrev(request.getRequestInfo(),
 						request.getCalculationCriteria().get(0).getTenantId());
 				calculations = getFeeCalculation(request, masterData);
@@ -210,14 +210,14 @@ public class WSCalculationServiceImpl implements WSCalculationService {
 		 */
 		
 		
-		if (finYear.equalsIgnoreCase("2025-26")) {
-			System.out.println("Inside Fin Yr 2025-26");
+		if (finYear.equalsIgnoreCase("2026-27")) {
+			System.out.println("Inside Fin Yr 2026-27");
 			Map<String, Object> masterData = masterDataService.loadExemptionMaster(request.getRequestInfo(),
 					request.getCalculationCriteria().get(0).getTenantId());
 			calculations = getFeeCalculation(request, masterData);
 			unsetWaterConnection(calculations);			
 		} else {
-			System.out.println("Inside Fin Yr Not equal to 2025-26");
+			System.out.println("Inside Fin Yr Not equal to 2026-27");
 			Map<String, Object> masterData = masterDataService.loadExemptionMasterPrev(request.getRequestInfo(),
 					request.getCalculationCriteria().get(0).getTenantId());
 			calculations = getFeeCalculation(request, masterData);
