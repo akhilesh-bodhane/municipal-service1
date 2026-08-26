@@ -106,6 +106,9 @@ public class ApplicationService {
 						if (rolecode.startsWith("ES_MM")) {
 							employeeBranches.add(PSConstants.APPLICATION_MANI_MAJRA);
 						}
+						if (rolecode.startsWith("SAMPARK")) {
+							employeeBranches.add(PSConstants.APPLICATION_MANI_MAJRA);
+						}
 						if (rolecode.equalsIgnoreCase("ES_ADDITIONAL_COMMISSIONER")) {
 							employeeBranches.add(PSConstants.APPLICATION_ESTATE_BRANCH);
 							employeeBranches.add(PSConstants.APPLICATION_BUILDING_BRANCH);

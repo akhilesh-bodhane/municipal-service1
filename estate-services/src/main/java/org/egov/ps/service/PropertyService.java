@@ -325,6 +325,9 @@ public class PropertyService {
 				if (rolecode.startsWith("ES_MM")) {
 					employeeBranches.add(PSConstants.MANI_MAJRA);
 				}
+				if (rolecode.startsWith("SAMPARK")) {
+					employeeBranches.add(PSConstants.MANI_MAJRA);
+				}
 				if (rolecode.equalsIgnoreCase("ES_ADDITIONAL_COMMISSIONER")) {
 					employeeBranches.add(PSConstants.ESTATE_BRANCH);
 					employeeBranches.add(PSConstants.BUILDING_BRANCH);
